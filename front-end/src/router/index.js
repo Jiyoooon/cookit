@@ -6,7 +6,6 @@ import LogoutView from '../views/accounts/LogoutView.vue'
 import UserDeleteView from '../views/accounts/UserDeleteView.vue'
 import UserUpdateView from '../views/accounts/UserUpdateView.vue'
 import UserInfoView from '../views/accounts/UserInfoView.vue'
-import UserInfoView from '../views/accounts/UserInfoView.vue'
 import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 
 Vue.use(VueRouter)
