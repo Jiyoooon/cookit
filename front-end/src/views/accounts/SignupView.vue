@@ -81,7 +81,7 @@
         <div class="mt-3">Selected file: {{ file2 ? file2.name : '' }}</div>
       </b-col>
     </b-row>
-    
+    <b-textarea></b-textarea>
     
     <div>
       <b-button variant="danger">취소</b-button>
