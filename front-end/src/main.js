@@ -5,6 +5,7 @@ import './plugins/bootstrap-vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import vuetify from './plugins/vuetify';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import vuetify from './plugins/vuetify';
 
