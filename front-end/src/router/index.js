@@ -27,12 +27,12 @@ Vue.use(VueRouter)
     component: LogoutView
   },
   {
-    path: '/userdelete/:userId',
+    path: '/userDelete/:userId',
     name: 'UserDelete',
     component: UserDeleteView
   },
   {
-    path: '/userupdate',
+    path: '/userUpdate',
     name: 'UserUpdate',
     component: UserUpdateView
   },

@@ -1,7 +1,8 @@
 <template>
-  <div>
-    <UserDetail></UserDetail>
-  </div>  
+  <div id="userDetail">
+    <h2>회원정보 조회</h2>
+    <userDetail />
+  </div>
 </template>
 
 <script>
@@ -11,10 +12,13 @@ export default {
     components: {
       UserDetail
     },
-
 }
 </script>
 
 <style>
-
+  #userDetail {
+    width: 50%;
+    display: block;
+    margin: 0px auto;
+  }
 </style>

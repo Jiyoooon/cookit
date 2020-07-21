@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link to="/userupdate">go</router-link>
+    <router-link to="/userInfo">userInfo</router-link>
     <router-view></router-view>
   </div>
 </template>
@@ -11,7 +11,6 @@ export default {
   name: 'App',
 
   components: {
-
   },
 
   data: () => ({
