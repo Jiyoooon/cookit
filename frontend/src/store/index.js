@@ -67,7 +67,7 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    accounts: modulelAccounts,
+    accounts: moduleAccounts,
     recipes: moduleRecipes,
     myrecipes: moduleMyRecipes,
   }
