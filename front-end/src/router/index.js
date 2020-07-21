@@ -53,11 +53,6 @@ Vue.use(VueRouter)
     name: 'EmailAuthView',
     component: EmailAuthView
   },
-  {
-    path: '/signUp',
-    name: 'SignupView',
-    component: SignupView
-  },
 ]
 
 const router = new VueRouter({
