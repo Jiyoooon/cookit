@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app">
     <h1>개인정보 조회</h1>
     <h3>아이디 {{ user.username }}</h3>
     <h3>이메일 {{ user.email }} </h3>
@@ -14,8 +14,6 @@
 </template>
 
 <script>
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 export default {
     name: 'UserDetail',
     props: {
