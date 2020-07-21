@@ -1,15 +1,40 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import SignupView from '../views/accounts/SignupView.vue'
+import LoginView from '../views/accounts/LoginView.vue'
+import LogoutView from '../views/accounts/LogoutView.vue'
+import UserDeleteView from '../views/accounts/UserDeleteView.vue'
+import UserUpdateView from '../views/accounts/UserUpdateView.vue'
+import UserInfoView from '../views/accounts/UserInfoView.vue'
 
 Vue.use(VueRouter)
 
   const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: '/signup',
+    name: 'Signup',
+    component: SignupView
   },
+  {
+    path: '/login',
+    name: 'Login',
+    component: LoginView
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: LogoutView
+  },
+  {
+    path: '/userdelete/:userId',
+    name: 'UserDelete',
+    component: UserDeleteView
+  },
+  {
+    path: '/userupdate/:userId',
+    name: 'UserUpdate',
+    component: UserUpdateView
+  },s
 ]
 
 const router = new VueRouter({
