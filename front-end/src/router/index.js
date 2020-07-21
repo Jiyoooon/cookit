@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import UserInfoView from '../views/UserInfoView.vue'
+import PasswordAuthView from '..views/PasswordAuthView.vue'
 
 Vue.use(VueRouter)
 
@@ -9,6 +11,16 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/userInfo',
+    name: 'UserInfoView',
+    component: UserInfoView
+  },
+  {
+    path: '/passwordAuth',
+    name: 'PasswordAuthView',
+    component: PasswordAuthView
   },
 ]
 
