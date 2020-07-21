@@ -8,7 +8,6 @@ import UserUpdateView from '../views/accounts/UserUpdateView.vue'
 import UserInfoView from '../views/accounts/UserInfoView.vue'
 import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 import EmailAuthView from '../views/accounts/EmailAuthView.vue'
-import SignupView from '../views/accounts/SignupView.vue'
 
 Vue.use(VueRouter)
 
