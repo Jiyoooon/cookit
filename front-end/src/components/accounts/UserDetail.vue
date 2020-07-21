@@ -54,7 +54,7 @@
         <b-button type="submit" variant="primary" id="updateButton" to="/userUpdate" block>수정</b-button>
       </b-col>
       <b-col sm="4">
-        <b-button variant="danger" id="deleteButton" block>탈퇴</b-button>
+        <b-button variant="danger" id="deleteButton" to="/userDelete" block>탈퇴</b-button>
       </b-col>
       <b-col sm="2"></b-col>
     </b-row>
