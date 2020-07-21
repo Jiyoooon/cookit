@@ -11,5 +11,5 @@
 - 프로젝트 기능 명세서 [ [마크다운 ver.](notes/specification.md) ] [ [엑셀 ver.](notes/specification.xlsx) ]
 - [To-do 리스트](notes/todo.md)
 - Front-end : [Mock-up](https://ovenapp.io/view/od8RcDZbTz2JoipOmIimfEljjwdyftTq/)
-- Back-end : [ERD](https://www.erdcloud.com/d/5YwxPnjPkcbL2JwrX)
+- Back-end : [ERD](https://www.erdcloud.com/d/JiWq5ZapHeiiuqMjw)
 
