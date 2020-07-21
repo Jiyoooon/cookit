@@ -32,7 +32,7 @@ Vue.use(VueRouter)
     component: UserDeleteView
   },
   {
-    path: '/userupdate/:userId',
+    path: '/userupdate',
     name: 'UserUpdate',
     component: UserUpdateView
   },

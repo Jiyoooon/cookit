@@ -701,8 +701,13 @@
 
 "@babel/polyfill@^7.7.0":
   version "7.10.4"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/@babel/polyfill/download/@babel/polyfill-7.10.4.tgz#915e5bfe61490ac0199008e35ca9d7d151a8e45a"
   integrity sha1-kV5b/mFJCsAZkAjjXKnX0VGo5Fo=
+=======
+  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.10.4.tgz#915e5bfe61490ac0199008e35ca9d7d151a8e45a"
+  integrity sha512-8BYcnVqQ5kMD2HXoHInBH7H1b/uP3KdnwCYXOqFnXqguOyuu443WXusbIUbWEfY3Z0Txk0M1uG/8YuAMhNl6zg==
+>>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
   dependencies:
     core-js "^2.6.5"
     regenerator-runtime "^0.13.4"
@@ -884,8 +889,13 @@
 
 "@nuxt/opencollective@^0.3.0":
   version "0.3.0"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/@nuxt/opencollective/download/@nuxt/opencollective-0.3.0.tgz#11d8944dcf2d526e31660bb69570be03f8fb72b7"
   integrity sha1-EdiUTc8tUm4xZgu2lXC+A/j7crc=
+=======
+  resolved "https://registry.yarnpkg.com/@nuxt/opencollective/-/opencollective-0.3.0.tgz#11d8944dcf2d526e31660bb69570be03f8fb72b7"
+  integrity sha512-Vf09BxCdj1iT2IRqVwX5snaY2WCTkvM0O4cWWSO1ThCFuc4if0Q/nNwAgCxRU0FeYHJ7DdyMUNSdswCLKlVqeg==
+>>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
   dependencies:
     chalk "^2.4.2"
     consola "^2.10.1"
@@ -1771,8 +1781,13 @@ boolbase@^1.0.0, boolbase@~1.0.0:
 
 bootstrap-vue@^2.15.0:
   version "2.15.0"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/bootstrap-vue/download/bootstrap-vue-2.15.0.tgz#0dfc12c054496c0f10efed510da1def41697cf3c"
   integrity sha1-DfwSwFRJbA8Q7+1RDaHe9BaXzzw=
+=======
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.15.0.tgz#0dfc12c054496c0f10efed510da1def41697cf3c"
+  integrity sha512-ncxWkDG0mKFVot314wWKJELi+ESO7k6ngV//qvJFs9iVzlFI8Hx3rBVbpcPW2vrJ+0vitH8N2SOwn4fdQ3frMQ==
+>>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
   dependencies:
     "@nuxt/opencollective" "^0.3.0"
     bootstrap ">=4.5.0 <5.0.0"
@@ -1782,8 +1797,13 @@ bootstrap-vue@^2.15.0:
 
 "bootstrap@>=4.5.0 <5.0.0", bootstrap@^4.5.0:
   version "4.5.0"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/bootstrap/download/bootstrap-4.5.0.tgz#97d9dbcb5a8972f8722c9962483543b907d9b9ec"
   integrity sha1-l9nby1qJcvhyLJliSDVDuQfZuew=
+=======
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.5.0.tgz#97d9dbcb5a8972f8722c9962483543b907d9b9ec"
+  integrity sha512-Z93QoXvodoVslA+PWNdk23Hze4RBYIkpb5h8I2HY2Tu2h7A0LpAgLcyrhrSUyo2/Oxm2l1fRZPs1e5hnxnliXA==
+>>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -2415,8 +2435,13 @@ connect-history-api-fallback@^1.6.0:
 
 consola@^2.10.1:
   version "2.14.0"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/consola/download/consola-2.14.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fconsola%2Fdownload%2Fconsola-2.14.0.tgz#162ee903b6c9c4de25077d93f34ab902ebcb4dac"
   integrity sha1-Fi7pA7bJxN4lB32T80q5AuvLTaw=
+=======
+  resolved "https://registry.yarnpkg.com/consola/-/consola-2.14.0.tgz#162ee903b6c9c4de25077d93f34ab902ebcb4dac"
+  integrity sha512-A2j1x4u8d6SIVikhZROfpFJxQZie+cZOfQMyI/tu2+hWXe8iAv7R6FW6s6x04/7zBCst94lPddztot/d6GJiuQ==
+>>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
 
 console-browserify@^1.1.0:
   version "1.2.0"
@@ -2509,8 +2534,13 @@ core-js-compat@^3.6.2, core-js-compat@^3.6.5:
 
 core-js@^2.6.5:
   version "2.6.11"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/core-js/download/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha1-OIMUafmSK97Y7iHJ3EaYXgOZMIw=
+=======
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
+  integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
+>>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
 
 core-js@^3.6.5:
   version "3.6.5"
@@ -5306,8 +5336,13 @@ multicast-dns@^6.0.1:
 
 mutationobserver-shim@^0.3.3:
   version "0.3.7"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/mutationobserver-shim/download/mutationobserver-shim-0.3.7.tgz#8bf633b0c0b0291a1107255ed32c13088a8c5bf3"
   integrity sha1-i/YzsMCwKRoRByVe0ywTCIqMW/M=
+=======
+  resolved "https://registry.yarnpkg.com/mutationobserver-shim/-/mutationobserver-shim-0.3.7.tgz#8bf633b0c0b0291a1107255ed32c13088a8c5bf3"
+  integrity sha512-oRIDTyZQU96nAiz2AQyngwx1e89iApl2hN5AOYwyxLUB47UYsU3Wv9lJWqH5y/QdiYkc5HQLi23ZNB3fELdHcQ==
+>>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
 
 mute-stream@0.0.8:
   version "0.0.8"
@@ -5374,8 +5409,13 @@ no-case@^2.2.0:
 
 node-fetch@^2.6.0:
   version "2.6.0"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/node-fetch/download/node-fetch-2.6.0.tgz?cache=0&sync_timestamp=1591866674789&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnode-fetch%2Fdownload%2Fnode-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha1-5jNFY4bUqlWGP2dqerDaqP3ssP0=
+=======
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
+  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+>>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
 
 node-forge@0.9.0:
   version "0.9.0"
@@ -5970,6 +6010,7 @@ pnp-webpack-plugin@^1.6.4:
 
 popper.js@^1.16.0, popper.js@^1.16.1:
   version "1.16.1"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/popper.js/download/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
   integrity sha1-KiI8s9x7YhPXQOQDcr5A3kPmWxs=
 
@@ -5977,6 +6018,15 @@ portal-vue@^2.1.6, portal-vue@^2.1.7:
   version "2.1.7"
   resolved "https://registry.npm.taobao.org/portal-vue/download/portal-vue-2.1.7.tgz#ea08069b25b640ca08a5b86f67c612f15f4e4ad4"
   integrity sha1-6ggGmyW2QMoIpbhvZ8YS8V9OStQ=
+=======
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
+  integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
+
+portal-vue@^2.1.6, portal-vue@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/portal-vue/-/portal-vue-2.1.7.tgz#ea08069b25b640ca08a5b86f67c612f15f4e4ad4"
+  integrity sha512-+yCno2oB3xA7irTt0EU5Ezw22L2J51uKAacE/6hMPMoO/mx3h4rXFkkBkT4GFsMDv/vEe8TNKC3ujJJ0PTwb6g==
+>>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
 
 portfinder@^1.0.26:
   version "1.0.27"
@@ -7974,6 +8024,7 @@ vm-browserify@^1.0.1:
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 vue-cli-plugin-bootstrap-vue@~0.6.0:
   version "0.6.0"
   resolved "https://registry.npm.taobao.org/vue-cli-plugin-bootstrap-vue/download/vue-cli-plugin-bootstrap-vue-0.6.0.tgz#cc500263b2ffd2c3d7ca1c3e5436860b0b20bb74"
@@ -7984,6 +8035,13 @@ vue-cli-plugin-vuetify@~2.0.7:
   resolved "https://registry.npm.taobao.org/vue-cli-plugin-vuetify/download/vue-cli-plugin-vuetify-2.0.7.tgz#fcb4f1655e7c9199ee40dcbf6465e2355fd074d5"
   integrity sha1-/LTxZV58kZnuQNy/ZGXiNV/QdNU=
 =======
+=======
+vue-cli-plugin-bootstrap-vue@~0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-bootstrap-vue/-/vue-cli-plugin-bootstrap-vue-0.6.0.tgz#cc500263b2ffd2c3d7ca1c3e5436860b0b20bb74"
+  integrity sha512-sgW3hPlD26AHGJSCoPmEeF1l3KeB/r18nfOAq9RkhIZx5hEwV4jZuiBCxdiyOsha0L5PiegKoofA4gn4c0eLcQ==
+
+>>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
 vue-cli-plugin-vuetify@~2.0.7:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.0.7.tgz#fcb4f1655e7c9199ee40dcbf6465e2355fd074d5"
@@ -8008,8 +8066,13 @@ vue-eslint-parser@^7.0.0:
 
 vue-functional-data-merge@^3.1.0:
   version "3.1.0"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/vue-functional-data-merge/download/vue-functional-data-merge-3.1.0.tgz#08a7797583b7f35680587f8a1d51d729aa1dc657"
   integrity sha1-CKd5dYO381aAWH+KHVHXKaodxlc=
+=======
+  resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-3.1.0.tgz#08a7797583b7f35680587f8a1d51d729aa1dc657"
+  integrity sha512-leT4kdJVQyeZNY1kmnS1xiUlQ9z1B/kdBFCILIjYYQDqZgLqCLa0UhjSSeRX6c3mUe6U5qYeM8LrEqkHJ1B4LA==
+>>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"

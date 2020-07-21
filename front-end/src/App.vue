@@ -1,6 +1,7 @@
 <template>
   <div>
-    
+    <router-link to="/userupdate">go</router-link>
+    <router-view></router-view>
   </div>
 </template>
 
