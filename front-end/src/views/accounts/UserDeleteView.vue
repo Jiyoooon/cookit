@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    name: 'MyPageView',
+    name: 'UserDeleteView',
 }
 </script>
 
