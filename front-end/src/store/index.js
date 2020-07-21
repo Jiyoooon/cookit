@@ -20,7 +20,10 @@ const moduleAccounts = {
   actions: {
     RedirectAfterUserUpdate() {
       console.log('!!!')
-      router.push({ name: 'UserInfo'})
+      router.push({ name: 'UserInfoView' })
+    },
+    RedirectAfterUserDelete() {
+      router.push({ name: 'UserInfoView' })
     },
   },
 }
