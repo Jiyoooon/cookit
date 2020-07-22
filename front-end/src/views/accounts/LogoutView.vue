@@ -9,9 +9,12 @@ import { mapActions } from 'vuex'
 
 export default {
     name: 'LogoutView',
+    methods: {
+        ...mapActions('accounts', ['logout'])
+    },
     created() {
-        logout
-    }
+        this.logout
+    },
 }
 </script>
 
