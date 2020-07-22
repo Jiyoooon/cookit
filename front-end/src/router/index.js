@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import SignupView from '../views/accounts/SignupView.vue'
 import LoginView from '../views/accounts/LoginView.vue'
-import LogoutView from '../views/accounts/LogoutView.vue'
 import UserDeleteView from '../views/accounts/UserDeleteView.vue'
 import UserUpdateView from '../views/accounts/UserUpdateView.vue'
 import UserInfoView from '../views/accounts/UserInfoView.vue'
@@ -21,11 +20,6 @@ Vue.use(VueRouter)
     path: '/login',
     name: 'Login',
     component: LoginView
-  },
-  {
-    path: '/logout',
-    name: 'Logout',
-    component: LogoutView
   },
   {
     path: '/userDelete/:userId',
