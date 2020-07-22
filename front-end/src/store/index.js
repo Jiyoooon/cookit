@@ -56,11 +56,13 @@ const moduleAccounts = {
         .catch( err => console.log(err.response))
     },
 
-    logout() {
-      axios.post('logouturl', null, state.config)
+    logout({ getters, commit }) {
+      axios.post('logouturl', null, getters.config)
         .then(res => {
           console.log(res.data)
           router.push({ name: '첫화면'})
+          commit('SET_TOKEN', null)
+          cookies.remove('auth-token')
         })
         .catch(err => console.log(err.response))
     },
