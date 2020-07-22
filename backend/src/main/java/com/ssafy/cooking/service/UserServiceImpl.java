@@ -17,8 +17,7 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	public User signin(String email, String password) {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.signin(email, password);
 	}
 
 	@Override
@@ -28,32 +27,27 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User delete(String uid) {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.delete(uid);
 	}
 
 	@Override
 	public User getUser(String uid) {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.getUser(uid);
 	}
 
 	@Override
 	public User reviseUser(String uid, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.reviseUser(uid, user);
 	}
 
 	@Override
 	public List<User> getFollowers(String uid) {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.getFollowers(uid);
 	}
 
 	@Override
 	public List<Comment> getCommnets(String uid) {
-		// TODO Auto-generated method stub
-		return null;
+		return userDao.getCommnets(uid);
 	}
 
 
