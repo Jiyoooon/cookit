@@ -2,13 +2,13 @@
   <div>
       <div>
       <label for="login-id">Id : </label>
-      <input v-model="LoginData.Id" type="text" id="login-id">
+      <input v-model="loginData.Id" type="text" id="login-id">
     </div> 
     <div>
       <label for="login-password">password : </label>
-      <input v-model="LoginData.password" type="password" id="login-password">
+      <input v-model="loginData.password" type="password" id="login-password">
     </div>
-    <button>login</button>
+    <button @click="login(loginData)">login</button>
   </div>
 </template>
 
@@ -19,12 +19,15 @@ export default {
     name: 'Login',
     data() {
         return {
-            LoginData: {
+            loginData: {
                 Id: null,
                 password: null,
             },
         }
     },
+    methods: {
+        ...mapActions('accounts', ['login'])
+    }
 
 }
 </script>
