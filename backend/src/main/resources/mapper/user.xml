@@ -40,11 +40,6 @@
 						, now()
 					)
 	</insert>
-<<<<<<< HEAD
-	
-</mapper>
-=======
-	-->
 	
 	<select id="signin" resultType="User">
 		SELECT user_id, id, email, nickname, profile_image, intro
@@ -86,4 +81,3 @@
 		WHERE u.user_id = #{uid};
 	</select>
 </mapper>
->>>>>>> 01b70fceda7c638ca30697fa65e25723356a62a1
