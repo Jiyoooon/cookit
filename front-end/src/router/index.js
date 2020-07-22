@@ -62,7 +62,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const RequiredLoggedInPages = ['Logout', 'UserDelete', 'UserUpdate', 'PasswordAuthView'] //'UserInfoView' 추가
+  const RequiredLoggedInPages = ['Logout', 'UserDelete', 'PasswordAuthView'] //'UserInfoView', 'UserUpdate'추가
   const RequiredLoggedOutPages = ['Login', 'Signup']
 
   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
