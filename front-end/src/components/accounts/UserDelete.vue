@@ -1,27 +1,25 @@
 <template>
   <div>
-      <div id="app">
-  <v-app id="inspire">
-    <div>
-      <v-alert
+      <v-card
+    class="mx-auto"
+    max-width="500"
+    shaped="true"
+  >
+    <v-card-text>
+      <p class=" text--primary font-weight-regular">
+        탈퇴되었습니다.
+      </p>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn
         text
-        color="info"
+        color="deep-purple accent-4"
+        @click="RedirectAfterUserUpdate"
       >
-        <h3 class="headline">회원 탈퇴</h3>
-        <div>탈퇴되었습니다.</div>
-        <v-col class="shrink">
-            <v-btn
-              color="info"
-              outlined
-              @click="RedirectAfterUserUpdate"
-            >
-              확인
-            </v-btn>
-          </v-col>
-      </v-alert>
-    </div>
-  </v-app>
-</div>
+        확인
+      </v-btn>
+    </v-card-actions>
+  </v-card>
   </div>
 </template>
 
