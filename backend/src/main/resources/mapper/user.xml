@@ -4,7 +4,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="com.ssafy.cooking.dao.UserDao">
-<!--  
+ 
 	<select id="isDupEmail" parameterType="string" resultType="int">
 		select count(id) from User where email = #{email}
 	</select>
@@ -40,5 +40,50 @@
 						, now()
 					)
 	</insert>
-	-->
+<<<<<<< HEAD
+	
 </mapper>
+=======
+	-->
+	
+	<select id="signin" resultType="User">
+		SELECT user_id, id, email, nickname, profile_image, intro
+		FROM USER
+		WHERE email = #{email} AND password = #{password}
+	</select>
+	
+	<delete id="delete">
+		DELETE 
+		FROM User 
+		WHERE user_id = #{uid}
+	</delete>
+	
+	<select id="getUser" resultType="User">
+		SELECT user_id, id, email, nickname, profile_image, intro
+		FROM User
+		WHERE user_id = #{uid}
+	</select>
+	
+	<update id="reviseUser" parameterType="User">
+		UPDATE User
+		SET nickname = #{nickname}
+			, profile_image = #{profile_image}
+			, intro = #{intro}
+		WHERE user_id= #{user_id}
+	</update>
+	
+	<select id="getFollowers" resultType="User">
+		SELECT u.user_id, u.id, u.email, u.nickname, u.profile_image, u.intro
+		FROM User u
+		JOIN Following f ON u.user_id = f.from_user
+		WHERE u.user_id = #{uid};
+	</select>
+	
+	<select id="getCommnets" resultType="Comment">
+		SELECT c.recipe_id, c.description, c.create_date
+		FROM Comments c
+		JOIN User u ON u.user_id = c.comm_user
+		WHERE u.user_id = #{uid};
+	</select>
+</mapper>
+>>>>>>> 01b70fceda7c638ca30697fa65e25723356a62a1
