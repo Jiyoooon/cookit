@@ -1,31 +1,25 @@
 <template>
-  <div>
-    <div>
-      <label for="nickname">nickname : </label>
-      <input type="text" id="nickname">
-    </div> 
-     <div>
-      <label for="email">email : </label>
-      <input type="text" id="email">
-    </div>
-    <div>
-      <label for="password1">nickname : </label>
-      <input type="password" id="password1">
-    </div>
-    <div>
-      <label for="password2">nickname : </label>
-      <input type="password" id="password">
-    </div>
-    <button>signup</button>
+  <div id="signupForm">
+    <h2>회원가입</h2>
+    <hr>
+    <signupForm/>
   </div>
 </template>
 
 <script>
-export default {
+  import SignupForm from "@/components/accounts/SignupForm.vue"
+  export default {
     name: 'SignupView',
-}
+    components:{
+      SignupForm
+    },
+  }
 </script>
 
 <style>
-
+  #signupForm{
+    width: 50%;
+    display: block;
+    margin: 0px auto;
+  }
 </style>
