@@ -4,10 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
-<<<<<<< HEAD
 import javax.servlet.http.HttpServletRequest;
-=======
->>>>>>> 01b70fceda7c638ca30697fa65e25723356a62a1
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -48,7 +45,7 @@ public class UserController {
 	@Autowired
 	private JavaMailSender mailSender;	// 메일 서비스 사용
 	
-	//이메일 중복 체크
+	//이메일 중복 체크 
 	@ApiOperation(value = "이메일 중복 체크", notes = "fail : 중복되는 이메일 있음 | success : 중복되는 이메일 없음")
 	@GetMapping("/dup/email/{email}")
 	public ResponseEntity<HashMap<String, Object>> signupEmailCheck(@PathVariable("email") String email) throws Exception {
@@ -217,9 +214,7 @@ public class UserController {
    	public ResponseEntity<List<Comment>> getCommnets(@PathVariable("id") String uid) throws Exception {
    		return new ResponseEntity<List<Comment>>(userService.getCommnets(uid), HttpStatus.OK);
    	}
-<<<<<<< HEAD
+    
     
     //내 필터링 정보 가져오기, 추가하기, 삭제하기
-=======
->>>>>>> 01b70fceda7c638ca30697fa65e25723356a62a1
 }
