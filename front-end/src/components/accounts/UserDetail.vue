@@ -48,6 +48,15 @@
       id="textarea" rows="3" max-rows="6"></b-form-textarea>
       </b-col>
     </b-row>
+    <b-row align-v="center">
+      <b-col sm="3">메인화면 선택</b-col>
+      <b-col sm="9">
+        <b-form-radio-group v-model="mainSelected" name="radio-options-slots">
+          <b-form-radio value="blog">내 블로그</b-form-radio>
+          <b-form-radio value="browsing">둘러보기</b-form-radio>
+        </b-form-radio-group>
+      </b-col>
+    </b-row>
     <b-row align-v="center" align-h="center">
       <b-col sm="2"></b-col>
       <b-col sm="4">
@@ -65,6 +74,14 @@
 <script>
 export default {
     name: 'UserDetail',
+    data() {
+      return {
+        password: '',
+        passwordAgain: '',
+        profileImage: '',
+        mainSelected: '',
+      }
+    },
     computed: {
       passwordValid() {
         const len = this.password.length
@@ -85,13 +102,6 @@ export default {
         return false;
       }
     },
-    data() {
-      return {
-        password: "",
-        passwordAgain: "",
-        profileImage: ""
-      }
-    }
 }
 </script>
 
