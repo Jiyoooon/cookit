@@ -1,6 +1,7 @@
 <template>
   <div id="userDetail">
     <h2>회원정보 조회</h2>
+    <hr>
     <userDetail />
   </div>
 </template>

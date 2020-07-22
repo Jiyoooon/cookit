@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.ssafy.cooking.dao.UserDao">
+<!--  
+	<select id="isDupEmail" parameterType="string" resultType="int">
+		select count(id) from User where email = #{email}
+	</select>
+	
+	<select id="isDupNickname" parameterType="string" resultType="int">
+		select count(id) from User where nickname = #{nickname}
+	</select>
+	
+	<insert id="signup" parameterType="User">
+		insert into User(
+						id
+						, password
+						, nickname
+						, email
+						<if test="profile_image != null and profile_image != ''">
+							, profile_image
+						</if>
+						<if test="intro != null and intro != ''">
+							, intro
+						</if>
+						, create_date
+					) values(
+						#{id}
+						, #{password}
+						, #{nickname}
+						, #{email}
+						<if test="profile_image != null and profile_image != ''">
+							, #{profile_image}
+						</if>
+						<if test="intro != null and intro != ''">
+							, #{intro}
+						</if>
+						, now()
+					)
+	</insert>
+	-->
+</mapper>

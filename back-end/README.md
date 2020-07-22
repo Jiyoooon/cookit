@@ -1,2 +1,0 @@
-# cooking_blog
-
