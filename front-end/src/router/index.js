@@ -6,6 +6,7 @@ import UserDeleteView from '../views/accounts/UserDeleteView.vue'
 import UserUpdateView from '../views/accounts/UserUpdateView.vue'
 import UserInfoView from '../views/accounts/UserInfoView.vue'
 import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
+import EmailAuthView from '../views/accounts/EmailAuthView.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,12 @@ Vue.use(VueRouter)
     path: '/passwordAuth',
     name: 'PasswordAuthView',
     component: PasswordAuthView
+  },
+
+  {
+    path: '/emailAuth',
+    name: 'EmailAuthView',
+    component: EmailAuthView
   },
 ]
 
