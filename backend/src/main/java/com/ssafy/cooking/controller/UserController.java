@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,11 +47,11 @@ public class UserController {
 	
 	//이메일 중복 체크
 	@ApiOperation(value = "이메일 중복 체크", notes = "fail : 중복되는 이메일 있음 | success : 중복되는 이메일 없음")
-	@GetMapping("/mail/{mail}")
-	public ResponseEntity<HashMap<String, Object>> signupEmailCheck(@PathVariable("mail") String mail) throws Exception {
+	@GetMapping("/dup/email/{email}")
+	public ResponseEntity<HashMap<String, Object>> signupEmailCheck(@PathVariable("email") String email) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
-		if(userService.isDupEmail(mail)) {//이미 존재하는 계정
+		if(userService.isDupEmail(email)) {//이미 존재하는 계정
 			map.put("result", "fail");
 			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
 		}else {
@@ -59,26 +61,27 @@ public class UserController {
 	}
 	
 	//이메일 인증
-	@ApiOperation(value = "이메일 본인 인증")
-	@GetMapping("/verification/{mail}")
-	public ResponseEntity<HashMap<String, Object>> signupVerification(@PathVariable("mail") String email) throws Exception {
-		
+	@ApiOperation(value = "인증키 발송 요청")
+	@GetMapping("/verification/send/{email}")
+	public ResponseEntity<HashMap<String, Object>> signupSendCheckEmail(@PathVariable("email") String email, HttpServletRequest request) throws Exception {
+		HttpSession session = request.getSession();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		String key = new TempKey().getKey(30, false);  // 인증키 생성
+		String random = new TempKey().getKey(30, false);  // 인증키 생성
 		
 		String title = "요리조리 회원가입 인증 코드입니다.";
-		String content = "\n\n안녕하세요 회원님, 저희 홈페이지를 찾아주셔서 감사합니다.\n\n 인증코드 : " +key; // 내용
+		String content = "\n\n안녕하세요 회원님, 저희 홈페이지를 찾아주셔서 감사합니다.\n\n 인증코드 : " + random; // 내용
             
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-                    true, "UTF-8");
- 
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+//            messageHelper.setFrom("kjy951207@naver.com");
             messageHelper.setTo(email); // 받는사람 이메일
             messageHelper.setSubject(title); // 메일제목
             messageHelper.setText(content); // 메일 내용
             
             mailSender.send(message);
+
+            session.setAttribute("random", random);
         } catch (Exception e) {
             e.printStackTrace();
             map.put("result", "fail");
@@ -89,9 +92,26 @@ public class UserController {
 		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
 	}
 	
+	
+	@ApiOperation(value = "인증키 확인 요청")
+	@GetMapping("/verification/check/{random}")
+	public ResponseEntity<HashMap<String, Object>> signupVerification(@PathVariable("random") String random, HttpServletRequest request) throws Exception {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		HttpSession session = request.getSession();
+		
+        if(random.equals(session.getAttribute("random"))){
+        	map.put("result", "success");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } else {
+        	map.put("result", "fail");
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        }
+        
+	}
+	
 	//닉네임 중복체크
 	@ApiOperation(value = "닉네임 중복 체크", notes = "fail : 중복되는 닉네임 있음 | success : 중복되는 닉네임 없음")
-	@GetMapping("/nickname/{nickname}")
+	@GetMapping("/dup/nickname/{nickname}")
 	public ResponseEntity<HashMap<String, Object>> signupNicknameCheck(@PathVariable("nickname") String nickname) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(userService.isDupNickname(nickname)) {//이미 존재하는 닉네임
@@ -174,4 +194,5 @@ public class UserController {
    		return new ResponseEntity<List<Comment>>(userService.getCommnets(), HttpStatus.OK);
    	}
     
+    //내 필터링 정보 가져오기, 추가하기, 삭제하기
 }
