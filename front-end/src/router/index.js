@@ -54,4 +54,25 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  const RequiredLoggedInPages = ['Logout', 'UserDelete', 'PasswordAuthView'] //'UserInfoView', 'UserUpdate'추가
+  const RequiredLoggedOutPages = ['Login', 'Signup']
+
+  const IsLoggedIn = Vue.$cookies.isKey('auth-token')
+  const LoggedInRequired = RequiredLoggedInPages.includes(to.name)
+  const LoggedOutRequired = RequiredLoggedOutPages.includes(to.name)
+
+  if (!IsLoggedIn && LoggedInRequired) {
+    next({ name: 'Login'})
+  } else {
+    next()
+  }
+
+  if (IsLoggedIn && LoggedOutRequired) {
+    next({ name: '첫화면'})
+  } else {
+    next()
+  }
+})
+
 export default router
