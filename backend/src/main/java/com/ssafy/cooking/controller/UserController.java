@@ -110,6 +110,7 @@ public class UserController {
 	public ResponseEntity<HashMap<String, Object>> signupUser(@RequestBody User user) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
+    	String idPt = "^[a-zA-Z0-9]{3,12}$";
     	String pwPt = "^[0-9a-zA-Z~`!@#$%\\\\^&*()-]{8,12}$";//특수,대소문자,숫자 포함 8자리 이상
     	String emailPt = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     	
@@ -120,6 +121,10 @@ public class UserController {
     	}
     	if(user.getNickname() == null || user.getNickname() == "") {
     		map.put("cause", "닉네임 입력 필수");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    	}
+    	if(!user.getId().matches(idPt)) {
+    		map.put("cause", "아이디 형식 오류");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
     	if(!user.getPassword().matches(pwPt)) {
@@ -144,14 +149,13 @@ public class UserController {
    	public ResponseEntity<HashMap<String, Object>> signinUser(String email, String password, HttpSession session) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	User user = userService.signin(email, password);
-    	
     	if (user == null) {
     		map.put("result", "fail");
 		} else {
 			map.put("result", "success");
-			session.setAttribute("uid", user.getId());
+			map.put("uid", user.getUser_id());
+			session.setAttribute("uid", user.getUser_id());
 		}
-    	
 		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
    	}
     
@@ -163,7 +167,7 @@ public class UserController {
    	}
     
     @ApiOperation(value = "회원탈퇴")
-   	@DeleteMapping("/{id}")
+   	@DeleteMapping()
    	public ResponseEntity<User> deleteUser(@PathVariable("id") String uid) throws Exception {
    		return new ResponseEntity<User>(userService.delete(uid), HttpStatus.OK);
    	}
@@ -191,5 +195,4 @@ public class UserController {
    	public ResponseEntity<List<Comment>> getCommnets(@PathVariable("id") String uid) throws Exception {
    		return new ResponseEntity<List<Comment>>(userService.getCommnets(uid), HttpStatus.OK);
    	}
-    
 }
