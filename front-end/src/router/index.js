@@ -2,11 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import SignupView from '../views/accounts/SignupView.vue'
 import LoginView from '../views/accounts/LoginView.vue'
-import LogoutView from '../views/accounts/LogoutView.vue'
 import UserDeleteView from '../views/accounts/UserDeleteView.vue'
 import UserUpdateView from '../views/accounts/UserUpdateView.vue'
 import UserInfoView from '../views/accounts/UserInfoView.vue'
 import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
+import EmailAuthView from '../views/accounts/EmailAuthView.vue'
 
 Vue.use(VueRouter)
 
@@ -20,11 +20,6 @@ Vue.use(VueRouter)
     path: '/login',
     name: 'Login',
     component: LoginView
-  },
-  {
-    path: '/logout',
-    name: 'Logout',
-    component: LogoutView
   },
   {
     path: '/userDelete/:userId',
@@ -46,12 +41,38 @@ Vue.use(VueRouter)
     name: 'PasswordAuthView',
     component: PasswordAuthView
   },
+  {
+    path: '/emailAuth',
+    name: 'EmailAuthView',
+    component: EmailAuthView
+  },
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const RequiredLoggedInPages = ['Logout', 'UserDelete', 'PasswordAuthView'] //'UserInfoView', 'UserUpdate'추가
+  const RequiredLoggedOutPages = ['Login', 'Signup']
+
+  const IsLoggedIn = Vue.$cookies.isKey('auth-token')
+  const LoggedInRequired = RequiredLoggedInPages.includes(to.name)
+  const LoggedOutRequired = RequiredLoggedOutPages.includes(to.name)
+
+  if (!IsLoggedIn && LoggedInRequired) {
+    next({ name: 'Login'})
+  } else {
+    next()
+  }
+
+  if (IsLoggedIn && LoggedOutRequired) {
+    next({ name: '첫화면'})
+  } else {
+    next()
+  }
 })
 
 export default router

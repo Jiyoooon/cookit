@@ -701,13 +701,8 @@
 
 "@babel/polyfill@^7.7.0":
   version "7.10.4"
-<<<<<<< HEAD
-  resolved "https://registry.npm.taobao.org/@babel/polyfill/download/@babel/polyfill-7.10.4.tgz#915e5bfe61490ac0199008e35ca9d7d151a8e45a"
-  integrity sha1-kV5b/mFJCsAZkAjjXKnX0VGo5Fo=
-=======
   resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.10.4.tgz#915e5bfe61490ac0199008e35ca9d7d151a8e45a"
   integrity sha512-8BYcnVqQ5kMD2HXoHInBH7H1b/uP3KdnwCYXOqFnXqguOyuu443WXusbIUbWEfY3Z0Txk0M1uG/8YuAMhNl6zg==
->>>>>>> 364152b3a1e8cac3a0e75bddc7c999ba038775a0
   dependencies:
     core-js "^2.6.5"
     regenerator-runtime "^0.13.4"

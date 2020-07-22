@@ -6,6 +6,9 @@
       <v-alert
         text
         color="info"
+        width="50vw"
+        type="success"
+        
       >
         <h3 class="headline">회원정보 수정</h3>
         <div>수정되었습니다.</div>
@@ -22,6 +25,10 @@
     </div>
   </v-app>
 </div>
+<b-button v-b-modal.modal-1>Launch demo modal</b-button>
+<b-modal id="modal-1" title="BootstrapVue">
+    <p class="my-4">Hello from modal!</p>
+  </b-modal>
   </div>
 </template>
 
