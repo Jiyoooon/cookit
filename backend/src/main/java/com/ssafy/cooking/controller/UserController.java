@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
+<<<<<<< HEAD
 import javax.servlet.http.HttpServletRequest;
+=======
+>>>>>>> 01b70fceda7c638ca30697fa65e25723356a62a1
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -129,6 +132,7 @@ public class UserController {
 	public ResponseEntity<HashMap<String, Object>> signupUser(@RequestBody User user) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
+    	String idPt = "^[a-zA-Z0-9]{3,12}$";
     	String pwPt = "^[0-9a-zA-Z~`!@#$%\\\\^&*()-]{8,12}$";//특수,대소문자,숫자 포함 8자리 이상
     	String emailPt = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     	
@@ -139,6 +143,10 @@ public class UserController {
     	}
     	if(user.getNickname() == null || user.getNickname() == "") {
     		map.put("cause", "닉네임 입력 필수");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    	}
+    	if(!user.getId().matches(idPt)) {
+    		map.put("cause", "아이디 형식 오류");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
     	if(!user.getPassword().matches(pwPt)) {
@@ -160,39 +168,58 @@ public class UserController {
     
     @ApiOperation(value = "로그인")
    	@PostMapping("/login")
-   	public ResponseEntity<User> signinUser() throws Exception {
-   		return new ResponseEntity<User>(userService.signin(), HttpStatus.OK);
+   	public ResponseEntity<HashMap<String, Object>> signinUser(String email, String password, HttpSession session) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	User user = userService.signin(email, password);
+    	if (user == null) {
+    		map.put("result", "fail");
+		} else {
+			map.put("result", "success");
+			map.put("uid", user.getUser_id());
+			session.setAttribute("uid", user.getUser_id());
+		}
+		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   	}
+    
+    @ApiOperation(value = "로그아웃")
+    @RequestMapping("/logout")
+   	public String signoutUser(HttpSession session) throws Exception {
+    	session.invalidate();
+    	return "index";
    	}
     
     @ApiOperation(value = "회원탈퇴")
-   	@DeleteMapping("/{id}")
-   	public ResponseEntity<User> deleteUser() throws Exception {
-   		return new ResponseEntity<User>(userService.delete(), HttpStatus.OK);
+   	@DeleteMapping()
+   	public ResponseEntity<User> deleteUser(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<User>(userService.delete(uid), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "회원정보 가져오기")
    	@GetMapping("/{id}")
-   	public ResponseEntity<User> getUser() throws Exception {
-   		return new ResponseEntity<User>(userService.getUser(), HttpStatus.OK);
+   	public ResponseEntity<User> getUser(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<User>(userService.getUser(uid), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "회원정보 수정하기")
    	@PutMapping("/{id}")
-   	public ResponseEntity<User> reviseUser() throws Exception {
-   		return new ResponseEntity<User>(userService.reviseUser(), HttpStatus.OK);
+   	public ResponseEntity<User> reviseUser(@PathVariable("id") String uid, @RequestBody User user) throws Exception {
+   		return new ResponseEntity<User>(userService.reviseUser(uid, user), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "팔로워 가져오기")
    	@GetMapping("/follwers/{id}")
-   	public ResponseEntity<List<User>> getFollowers() throws Exception {
-   		return new ResponseEntity<List<User>>(userService.getFollowers(), HttpStatus.OK);
+   	public ResponseEntity<List<User>> getFollowers(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<List<User>>(userService.getFollowers(uid), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "내가 쓴 댓글 가져오기")
    	@GetMapping("/comments/{id}")
-   	public ResponseEntity<List<Comment>> getCommnets() throws Exception {
-   		return new ResponseEntity<List<Comment>>(userService.getCommnets(), HttpStatus.OK);
+   	public ResponseEntity<List<Comment>> getCommnets(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<List<Comment>>(userService.getCommnets(uid), HttpStatus.OK);
    	}
+<<<<<<< HEAD
     
     //내 필터링 정보 가져오기, 추가하기, 삭제하기
+=======
+>>>>>>> 01b70fceda7c638ca30697fa65e25723356a62a1
 }
