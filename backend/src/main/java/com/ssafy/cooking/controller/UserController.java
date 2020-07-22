@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,38 +141,55 @@ public class UserController {
     
     @ApiOperation(value = "로그인")
    	@PostMapping("/login")
-   	public ResponseEntity<User> signinUser() throws Exception {
-   		return new ResponseEntity<User>(userService.signin(), HttpStatus.OK);
+   	public ResponseEntity<HashMap<String, Object>> signinUser(String email, String password, HttpSession session) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	User user = userService.signin(email, password);
+    	
+    	if (user == null) {
+    		map.put("result", "fail");
+		} else {
+			map.put("result", "success");
+			session.setAttribute("uid", user.getId());
+		}
+    	
+		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   	}
+    
+    @ApiOperation(value = "로그아웃")
+    @RequestMapping("/logout")
+   	public String signoutUser(HttpSession session) throws Exception {
+    	session.invalidate();
+    	return "index";
    	}
     
     @ApiOperation(value = "회원탈퇴")
    	@DeleteMapping("/{id}")
-   	public ResponseEntity<User> deleteUser() throws Exception {
-   		return new ResponseEntity<User>(userService.delete(), HttpStatus.OK);
+   	public ResponseEntity<User> deleteUser(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<User>(userService.delete(uid), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "회원정보 가져오기")
    	@GetMapping("/{id}")
-   	public ResponseEntity<User> getUser() throws Exception {
-   		return new ResponseEntity<User>(userService.getUser(), HttpStatus.OK);
+   	public ResponseEntity<User> getUser(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<User>(userService.getUser(uid), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "회원정보 수정하기")
    	@PutMapping("/{id}")
-   	public ResponseEntity<User> reviseUser() throws Exception {
-   		return new ResponseEntity<User>(userService.reviseUser(), HttpStatus.OK);
+   	public ResponseEntity<User> reviseUser(@PathVariable("id") String uid, @RequestBody User user) throws Exception {
+   		return new ResponseEntity<User>(userService.reviseUser(uid, user), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "팔로워 가져오기")
    	@GetMapping("/follwers/{id}")
-   	public ResponseEntity<List<User>> getFollowers() throws Exception {
-   		return new ResponseEntity<List<User>>(userService.getFollowers(), HttpStatus.OK);
+   	public ResponseEntity<List<User>> getFollowers(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<List<User>>(userService.getFollowers(uid), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "내가 쓴 댓글 가져오기")
    	@GetMapping("/comments/{id}")
-   	public ResponseEntity<List<Comment>> getCommnets() throws Exception {
-   		return new ResponseEntity<List<Comment>>(userService.getCommnets(), HttpStatus.OK);
+   	public ResponseEntity<List<Comment>> getCommnets(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<List<Comment>>(userService.getCommnets(uid), HttpStatus.OK);
    	}
     
 }
