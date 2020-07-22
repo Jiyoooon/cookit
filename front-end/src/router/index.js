@@ -41,7 +41,6 @@ Vue.use(VueRouter)
     name: 'PasswordAuthView',
     component: PasswordAuthView
   },
-
   {
     path: '/emailAuth',
     name: 'EmailAuthView',
