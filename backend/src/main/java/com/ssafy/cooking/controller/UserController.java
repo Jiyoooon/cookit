@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,13 +45,13 @@ public class UserController {
 	@Autowired
 	private JavaMailSender mailSender;	// 메일 서비스 사용
 	
-	//이메일 중복 체크
+	//이메일 중복 체크 
 	@ApiOperation(value = "이메일 중복 체크", notes = "fail : 중복되는 이메일 있음 | success : 중복되는 이메일 없음")
-	@GetMapping("/mail/{mail}")
-	public ResponseEntity<HashMap<String, Object>> signupEmailCheck(@PathVariable("mail") String mail) throws Exception {
+	@GetMapping("/dup/email/{email}")
+	public ResponseEntity<HashMap<String, Object>> signupEmailCheck(@PathVariable("email") String email) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
-		if(userService.isDupEmail(mail)) {//이미 존재하는 계정
+		if(userService.isDupEmail(email)) {//이미 존재하는 계정
 			map.put("result", "fail");
 			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
 		}else {
@@ -59,26 +61,27 @@ public class UserController {
 	}
 	
 	//이메일 인증
-	@ApiOperation(value = "이메일 본인 인증")
-	@GetMapping("/verification/{mail}")
-	public ResponseEntity<HashMap<String, Object>> signupVerification(@PathVariable("mail") String email) throws Exception {
-		
+	@ApiOperation(value = "인증키 발송 요청")
+	@GetMapping("/verification/send/{email}")
+	public ResponseEntity<HashMap<String, Object>> signupSendCheckEmail(@PathVariable("email") String email, HttpServletRequest request) throws Exception {
+		HttpSession session = request.getSession();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		String key = new TempKey().getKey(30, false);  // 인증키 생성
+		String random = new TempKey().getKey(30, false);  // 인증키 생성
 		
 		String title = "요리조리 회원가입 인증 코드입니다.";
-		String content = "\n\n안녕하세요 회원님, 저희 홈페이지를 찾아주셔서 감사합니다.\n\n 인증코드 : " +key; // 내용
+		String content = "\n\n안녕하세요 회원님, 저희 홈페이지를 찾아주셔서 감사합니다.\n\n 인증코드 : " + random; // 내용
             
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-                    true, "UTF-8");
- 
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+//            messageHelper.setFrom("kjy951207@naver.com");
             messageHelper.setTo(email); // 받는사람 이메일
             messageHelper.setSubject(title); // 메일제목
             messageHelper.setText(content); // 메일 내용
             
             mailSender.send(message);
+
+            session.setAttribute("random", random);
         } catch (Exception e) {
             e.printStackTrace();
             map.put("result", "fail");
@@ -89,9 +92,26 @@ public class UserController {
 		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
 	}
 	
+	
+	@ApiOperation(value = "인증키 확인 요청")
+	@GetMapping("/verification/check/{random}")
+	public ResponseEntity<HashMap<String, Object>> signupVerification(@PathVariable("random") String random, HttpServletRequest request) throws Exception {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		HttpSession session = request.getSession();
+		
+        if(random.equals(session.getAttribute("random"))){
+        	map.put("result", "success");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        } else {
+        	map.put("result", "fail");
+            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+        }
+        
+	}
+	
 	//닉네임 중복체크
 	@ApiOperation(value = "닉네임 중복 체크", notes = "fail : 중복되는 닉네임 있음 | success : 중복되는 닉네임 없음")
-	@GetMapping("/nickname/{nickname}")
+	@GetMapping("/dup/nickname/{nickname}")
 	public ResponseEntity<HashMap<String, Object>> signupNicknameCheck(@PathVariable("nickname") String nickname) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(userService.isDupNickname(nickname)) {//이미 존재하는 닉네임
@@ -109,6 +129,7 @@ public class UserController {
 	public ResponseEntity<HashMap<String, Object>> signupUser(@RequestBody User user) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
+    	String idPt = "^[a-zA-Z0-9]{3,12}$";
     	String pwPt = "^[0-9a-zA-Z~`!@#$%\\\\^&*()-]{8,12}$";//특수,대소문자,숫자 포함 8자리 이상
     	String emailPt = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     	
@@ -119,6 +140,10 @@ public class UserController {
     	}
     	if(user.getNickname() == null || user.getNickname() == "") {
     		map.put("cause", "닉네임 입력 필수");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    	}
+    	if(!user.getId().matches(idPt)) {
+    		map.put("cause", "아이디 형식 오류");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
     	if(!user.getPassword().matches(pwPt)) {
@@ -140,38 +165,56 @@ public class UserController {
     
     @ApiOperation(value = "로그인")
    	@PostMapping("/login")
-   	public ResponseEntity<User> signinUser() throws Exception {
-   		return new ResponseEntity<User>(userService.signin(), HttpStatus.OK);
+   	public ResponseEntity<HashMap<String, Object>> signinUser(String email, String password, HttpSession session) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	User user = userService.signin(email, password);
+    	if (user == null) {
+    		map.put("result", "fail");
+		} else {
+			map.put("result", "success");
+			map.put("uid", user.getUser_id());
+			session.setAttribute("uid", user.getUser_id());
+		}
+		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   	}
+    
+    @ApiOperation(value = "로그아웃")
+    @RequestMapping("/logout")
+   	public String signoutUser(HttpSession session) throws Exception {
+    	session.invalidate();
+    	return "index";
    	}
     
     @ApiOperation(value = "회원탈퇴")
-   	@DeleteMapping("/{id}")
-   	public ResponseEntity<User> deleteUser() throws Exception {
-   		return new ResponseEntity<User>(userService.delete(), HttpStatus.OK);
+   	@DeleteMapping()
+   	public ResponseEntity<User> deleteUser(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<User>(userService.delete(uid), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "회원정보 가져오기")
    	@GetMapping("/{id}")
-   	public ResponseEntity<User> getUser() throws Exception {
-   		return new ResponseEntity<User>(userService.getUser(), HttpStatus.OK);
+   	public ResponseEntity<User> getUser(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<User>(userService.getUser(uid), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "회원정보 수정하기")
    	@PutMapping("/{id}")
-   	public ResponseEntity<User> reviseUser() throws Exception {
-   		return new ResponseEntity<User>(userService.reviseUser(), HttpStatus.OK);
+   	public ResponseEntity<User> reviseUser(@PathVariable("id") String uid, @RequestBody User user) throws Exception {
+   		return new ResponseEntity<User>(userService.reviseUser(uid, user), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "팔로워 가져오기")
    	@GetMapping("/follwers/{id}")
-   	public ResponseEntity<List<User>> getFollowers() throws Exception {
-   		return new ResponseEntity<List<User>>(userService.getFollowers(), HttpStatus.OK);
+   	public ResponseEntity<List<User>> getFollowers(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<List<User>>(userService.getFollowers(uid), HttpStatus.OK);
    	}
     
     @ApiOperation(value = "내가 쓴 댓글 가져오기")
    	@GetMapping("/comments/{id}")
-   	public ResponseEntity<List<Comment>> getCommnets() throws Exception {
-   		return new ResponseEntity<List<Comment>>(userService.getCommnets(), HttpStatus.OK);
+   	public ResponseEntity<List<Comment>> getCommnets(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<List<Comment>>(userService.getCommnets(uid), HttpStatus.OK);
    	}
     
+    
+    //내 필터링 정보 가져오기, 추가하기, 삭제하기
 }
