@@ -6,26 +6,18 @@ import cookies from 'vue-cookies'
 import SERVER from '../api/url.js'
 
 
-<<<<<<< HEAD
 
 Vue.use(Vuex)
 axios.defaults.baseURL = SERVER.URL;
-=======
-Vue.use(Vuex)
-axios.defaults.baseURL = 'http://6d04d76f2aaa.ngrok.io';
->>>>>>> master
 const moduleAccounts = {
   namespaced: true,
   state: {
     authToken: cookies.get('auth-token'),
-<<<<<<< HEAD
     // authUser: cookies.get('auth-user')
-=======
-    
->>>>>>> master
+    userEmail: cookies.get('user-email'),
   },
   getters: {
-    IsLoggedIn(state) {
+    isLoggedIn(state) {
       if (state.authToken) {
         return true
       } else {
@@ -46,6 +38,11 @@ const moduleAccounts = {
        state.authToken = token
        cookies.set('auth-token', token)
      },
+
+     SET_EMAIL(state, email) {
+       state.userEmail = email
+       cookies.set('user-email', email)
+     },
   },
 
   actions: {
@@ -57,13 +54,35 @@ const moduleAccounts = {
           console.log('성ㅇ공성공')
           commit('SET_TOKEN', null)
           cookies.remove('auth-token')
-          router.push({ name: 'UserDelete' })
+          router.push({ name: 'Home' })
         })
         .catch(err => console.log(err.response))
     },
 
+    GoHome({ getters, state }) {
+      router.push({ name: 'Home'})
+      console.log(getters.IsLoggedIn)
+      console.log(state.authToken)
+    },
+
     GoSignup() {
       router.push({ name: 'Signup'})
+    },
+
+    GoLogin() {
+      router.push({ name: 'Login'})
+    },
+
+    GoLogout() {
+      router.push({ name: 'Logout'})
+    },
+
+    GoUserInfo() {
+      router.push({ name: 'UserInfoView'})
+    },
+
+    GoEmailAuth() {
+      router.push({ name: 'EmailAuthView'})
     },
 
     RedirectAfterUserUpdate() {
@@ -76,60 +95,41 @@ const moduleAccounts = {
     },
 
     login({ commit }, loginData) {
-<<<<<<< HEAD
-      console.log(loginData)
       axios.post(SERVER.ROUTES.accounts.login, loginData)
         .then((res) => {
           console.log(res.data)
-          commit('SET_TOKEN', res.data)
-          router.push({ name: 'UserInfoView'})
+          commit('SET_TOKEN', res.data.uid)
+          router.push({ name: 'Home'})
         })
         .catch((err) => {
-          console.log(err)
           console.log(err.response)
-          console.log('!!!!')
-          alert(err.response.data.error)
+          alert(err.response.result)
         })
     },
 
-    logout() {
-      console.log('11111111')
+    logout({ commit }) {
       axios.get(SERVER.ROUTES.accounts.logout)
         .then(res => {
           console.log(res.data)
-          router.push({ name: '첫화면'})
+          commit('SET_TOKEN', null)
+          cookies.remove('auth-token')
+          router.push({ name: 'Home'})
         })
         .catch(err => console.log(err.response))
     },
-=======
-      axios.post('loginurl', loginData)
-        .then((res) => {
-          console.log(res.data)
-          commit('SET_TOKEN', res.data)
-          router.push({ name: '첫화면'})
-        })
-        .catch( err => console.log(err.response))
-    },
 
-    // logout() {
-    //   axios.post('logouturl', null, state.config)
-    //     .then(res => {
-    //       console.log(res.data)
-    //       router.push({ name: '첫화면'})
-    //     })
-    //     .catch(err => console.log(err.response))
-    // },
-
-    emailAuthCodeSend(context, email) {
+    emailAuthCodeSend({ commit }, email) {
       console.log(email)
+      alert('인증코드가 발송되었습니다')
       axios.get(`/user/verification/send/${String(email)}`)
       .then(res => {
         console.log(`Code send: ${String(res.data.result)}`)
+        commit('SET_EMAIL', email)
       })
       .catch(err => console.log(err.response))
     },
 
-    emailAuthCodeCheck(context, code) {
+    emailAuthCodeCheck({ commit }, code) {
       console.log(code)
       axios.get(`/user/verification/check/${String(code)}`)
       .then(res => {
@@ -137,9 +137,30 @@ const moduleAccounts = {
         if (res.data.result == 'success') router.push({name: 'SignUp'})
         else if (res.data.result == 'fail') alert("코드가 맞지 않습니다.")
       })
-      .catch(err => console.log(err.response))
+      .catch(err => {
+        console.log(err.response)
+        commit('SET_EMAIL', null)
+        alert('!!!!!!')
+       })
+    },
+    signup({ commit }, signupData) {
+      axios.post(SERVER.ROUTES.accounts.signup, signupData)
+        .then((res) => {
+          console.log(res.data)
+          commit('SET_TOKEN', res.data.uid)
+          router.push({ name: 'Home'})
+        })
+        .catch((err) => {
+          console.log(err.response)
+          alert('!!!!!!')
+        })
+    },
+    nicknameCheck(context, nickname) {
+      axios.get(SERVER.ROUTES.accounts.nicknameCheck + String(nickname))
+        .then((res) => {
+          console.log(res)
+        })
     }
->>>>>>> master
   },
 }
 
