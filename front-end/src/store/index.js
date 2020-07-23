@@ -1,17 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '../router'
-// import axios from 'axios'
+import axios from 'axios'
 import cookies from 'vue-cookies'
+import SERVER from '../api/url.js'
 
 
 
 Vue.use(Vuex)
-
+axios.defaults.baseURL = SERVER.URL;
 const moduleAccounts = {
   namespaced: true,
   state: {
     authToken: cookies.get('auth-token'),
+    // authUser: cookies.get('auth-user')
   },
   getters: {
     IsLoggined(state) {
@@ -38,16 +40,17 @@ const moduleAccounts = {
   },
 
   actions: {
-    DeleteUser() {
-      console.log('aaaa')
-        // axios.delete('deleteurl')
-        //   .then((res) => {
-        //     console.log(res.data)
-        //     commit('SET_TOKEN', null)
-        //     cookies.remove('auth-token')
-            router.push({ name: 'UserDelete' })
-      // }
-    },
+    // DeleteUser({ commit, getters }) {
+    //   console.log('aaaa')
+    //   axios.delete(SERVER.ROUTES.accounts.baseuser + )
+    //     .then((res) => {
+    //       console.log(res.data)
+    //       commit('SET_TOKEN', null)
+    //       cookies.remove('auth-token')
+    //       router.push({ name: 'UserDelete' })
+    //     })
+    //     .catch(err => console.log(err.response))
+    // },
 
     GoSignup() {
       router.push({ name: 'Signup'})
@@ -62,24 +65,24 @@ const moduleAccounts = {
       router.push({ name: 'UserInfoView' })
     },
 
-    // login({ commit }, loginData) {
-    //   axios.post('loginurl', loginData)
-    //     .then((res) => {
-    //       console.log(res.data)
-    //       commit('SET_TOKEN', res.data)
-    //       router.push({ name: '첫화면'})
-    //     })
-    //     .catch( err => console.log(err.response))
-    // },
+    login({ commit }, loginData) {
+      axios.post(SERVER.ROUTES.accounts.login, loginData)
+        .then((res) => {
+          console.log(res.data)
+          commit('SET_TOKEN', res.data)
+          router.push({ name: '첫화면'})
+        })
+        .catch( err => console.log(err.response))
+    },
 
-    // logout() {
-    //   axios.post('logouturl', null, state.config)
-    //     .then(res => {
-    //       console.log(res.data)
-    //       router.push({ name: '첫화면'})
-    //     })
-    //     .catch(err => console.log(err.response))
-    // },
+    logout({ getters }) {
+      axios.post(SERVER.ROUTES.accounts.logout, null, getters.config)
+        .then(res => {
+          console.log(res.data)
+          router.push({ name: '첫화면'})
+        })
+        .catch(err => console.log(err.response))
+    },
   },
 }
 

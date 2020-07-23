@@ -3,19 +3,19 @@
     <b-container fluid="lg" id ="login-container">
       <b-row align-v = "center">
         <b-col sm="2">
-          <label for="login-id">Id:</label>
+          <label for="login-email">Email:</label>
         </b-col>
         <b-col sm="6">
           <b-form-input 
-            id="login-id" 
+            id="login-email" 
             v-model="loginData.Id"
             :state="idValid"
-            aria-describedby="input-id-feedback"
-            placeholder="Id"
+            aria-describedby="input-email-feedback"
+            placeholder="email"
             trim
             >
           </b-form-input>
-          <b-form-invalid-feedback id="input-id-feedback">
+          <b-form-invalid-feedback id="input-email-feedback">
             영어와 숫자를 혼합하여 입력하여 주세요.(3자이상 8자이하)
           </b-form-invalid-feedback>
         </b-col>
