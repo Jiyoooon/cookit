@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public User delete(String uid) {
+	public int delete(String uid) {
 		return userDao.delete(uid);
 	}
 
@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public User reviseUser(String uid, User user) {
-		return userDao.reviseUser(uid, user);
+	public int reviseUser(User user) {
+		return userDao.reviseUser(user);
 	}
 
 	@Override
