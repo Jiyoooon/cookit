@@ -74,7 +74,6 @@ public class UserController {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
-//            messageHelper.setFrom("kjy951207@naver.com");
             messageHelper.setTo(email); // 받는사람 이메일
             messageHelper.setSubject(title); // 메일제목
             messageHelper.setText(content); // 메일 내용
@@ -165,8 +164,10 @@ public class UserController {
     
     @ApiOperation(value = "로그인")
    	@PostMapping("/login")
-   	public ResponseEntity<HashMap<String, Object>> signinUser(String email, String password, HttpSession session) throws Exception {
+   	public ResponseEntity<HashMap<String, Object>> signinUser(String email, String password, HttpServletRequest request) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
+    	HttpSession session = request.getSession();
+    	
     	User user = userService.signin(email, password);
     	if (user == null) {
     		map.put("result", "fail");
@@ -179,28 +180,87 @@ public class UserController {
    	}
     
     @ApiOperation(value = "로그아웃")
-    @RequestMapping("/logout")
-   	public String signoutUser(HttpSession session) throws Exception {
-    	session.invalidate();
+    @GetMapping("/logout")
+   	public String signoutUser(HttpServletRequest request) throws Exception {
+    	request.getSession().invalidate();
     	return "index";
    	}
     
     @ApiOperation(value = "회원탈퇴")
    	@DeleteMapping()
-   	public ResponseEntity<User> deleteUser(@PathVariable("id") String uid) throws Exception {
-   		return new ResponseEntity<User>(userService.delete(uid), HttpStatus.OK);
+   	public ResponseEntity<HashMap<String, Object>> deleteUser(HttpServletRequest request) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	HttpSession session = request.getSession();
+    	
+    	map.put("result", "fail");
+
+    	if(session.getAttribute("uid") == null) {
+    		map.put("cause", "로그인 먼저 하세요");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    	}
+    	
+    	int uid = (int)session.getAttribute("uid");
+    	
+   		try {
+   			userService.delete(Integer.toString(uid));
+   			map.put("result", "success");
+   			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   		}catch(Exception e){
+   			map.put("cause", "서버 오류");
+   			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.BAD_GATEWAY);    		
+   			
+   		}
    	}
+    
     
     @ApiOperation(value = "회원정보 가져오기")
-   	@GetMapping("/{id}")
-   	public ResponseEntity<User> getUser(@PathVariable("id") String uid) throws Exception {
-   		return new ResponseEntity<User>(userService.getUser(uid), HttpStatus.OK);
+   	@GetMapping()
+   	public ResponseEntity<HashMap<String, Object>> getUser(HttpServletRequest request) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	HttpSession session = request.getSession();
+    	
+    	map.put("result", "fail");
+
+    	if(session.getAttribute("uid") == null) {
+    		map.put("cause", "로그인 먼저 하세요");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    	}
+    	
+    	int uid = (int)session.getAttribute("uid");
+    	try {
+    		map.put("result", userService.getUser(Integer.toString(uid)));
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    		
+    	}catch(Exception e){
+    		map.put("cause", "서버 오류");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.BAD_GATEWAY);    		
+   		}
    	}
+
     
     @ApiOperation(value = "회원정보 수정하기")
-   	@PutMapping("/{id}")
-   	public ResponseEntity<User> reviseUser(@PathVariable("id") String uid, @RequestBody User user) throws Exception {
-   		return new ResponseEntity<User>(userService.reviseUser(uid, user), HttpStatus.OK);
+   	@PutMapping()
+   	public ResponseEntity<HashMap<String, Object>> reviseUser(@RequestBody User user, HttpServletRequest request) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	HttpSession session = request.getSession();
+    	
+    	map.put("result", "fail");
+
+    	if(session.getAttribute("uid") == null) {
+    		map.put("cause", "로그인 먼저 하세요");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    	}
+    	
+    	user.setUser_id((int)session.getAttribute("uid"));
+    	try {
+    		userService.reviseUser(user);
+    		map.put("result", "success");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    	}catch(Exception e){
+    		map.put("cause", "서버 오류");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.BAD_GATEWAY);    		
+    	
+   		}
    	}
     
     @ApiOperation(value = "팔로워 가져오기")

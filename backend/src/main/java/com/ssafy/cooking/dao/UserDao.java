@@ -14,9 +14,9 @@ public interface UserDao {
 	public int signup(User user);
 	
 	public User signin(String email, String password);
-	public User delete(String uid);
+	public int delete(String uid);
 	public User getUser(String uid);
-	public User reviseUser(String uid, User user);
+	public int reviseUser(User user);
 	public List<User> getFollowers(String uid);
 	public List<Comment> getCommnets(String uid);
 }
