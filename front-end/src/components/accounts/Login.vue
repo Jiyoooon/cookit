@@ -8,8 +8,7 @@
         <b-col sm="6">
           <b-form-input 
             id="login-email" 
-            v-model="loginData.Id"
-            :state="idValid"
+            v-model="loginData.email"
             aria-describedby="input-email-feedback"
             placeholder="email"
             trim
@@ -30,7 +29,6 @@
             type="password" 
             id="login-passwod" 
             v-model="loginData.password"
-            :state="passwordValid"
             aria-describedby="input-password-feedback"
             placeholder="Password"
             trim
@@ -63,39 +61,12 @@ export default {
     data() {
         return {
             loginData: {
-                Id: null,
+                email: null,
                 password: null,
             },
         }
     },
     computed: {
-      // idValid() {
-      //   if (this.loginData.Id == null) return null;
-      //   const idLength = this.loginData.Id.length
-      //   if (idLength < 3 || idLength > 12) return false;
-      //   return true
-
-        // var alphaFlag = false, numFlag = false
-
-        // for (var i=0; i < idLength; i++){
-        //   const ch = this.loginData.Id[i]
-        //   if ('0' <= ch && ch <= '9') numFlag = true;
-        //   else if ('a' <= ch && ch <= 'z') alphaFlag = true;
-        // }
-        // return numFlag && alphaFlag
-      // },
-      // passwordValid() {
-      //   if (this.loginData.password == null) return null;
-      //   const len = this.loginData.password.length
-      //   if (len < 8) return false;
-      //   var numFlag = false, alphaFlag = false
-      //   for (var i = 0; i < len; i++) {
-      //     const ch = this.loginData.password[i]
-      //     if ('0' <= ch && ch <= '9') numFlag = true
-      //     else if ('a' <= ch && ch <= 'z') alphaFlag= true
-      //   }
-      //   return numFlag && alphaFlag
-      // },
     },
     methods: {
         ...mapActions('accounts', ['login', 'GoSignup'])

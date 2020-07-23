@@ -1,5 +1,5 @@
 export default {
-    URL: 'http://i3a201.p.ssafy.io:8080/cooking-0.0.1-SNAPSHOT/v2/api-docs',
+    URL: 'http://8ef703d9f822.ngrok.io',
     ROUTES: {
         accounts: {
             signup: '/user/join',
