@@ -7,7 +7,19 @@
         </b-col>
         <!-- 아이디 대신 이메일~--> 
         <b-col sm="9">
-          {{ this.emailAdress }}
+          <!-- <b-form-input 
+            id="input-userid" 
+            v-model="userid"
+            :state="useridState"
+            aria-describedby="input-userid-help input-userid-feedback"
+            placeholder="아이디 입력 (최소 8글자, 영어만 사용가능)"
+            trim
+            >
+          </b-form-input>
+          <b-form-invalid-feedback id="userid-feedback" >
+            아이디가 올바르지 않습니다.(최소 8글자, 영어만 사용가능)
+          </b-form-invalid-feedback> -->
+          {{ userEmail }}
         </b-col>
       </b-row>
 
@@ -39,10 +51,10 @@
         <b-col sm="3">
           <label for="input-userid">닉네임<span style="color: red">*</span></label>
         </b-col>
-        <b-col sm="9">
+        <b-col sm="8">
           <b-form-input 
             id="input-userid" 
-            v-model="signupData.NickName"
+            v-model="signupData.nickname"
             :state="NickNameinValid"
             aria-describedby="input-userid-help input-userid-feedback"
             toLowerCase
@@ -52,6 +64,10 @@
             닉네임이 올바르지 않습니다.(4~12글자 한글은 최대 6글자)
           </b-form-invalid-feedback>
         </b-col>
+        <b-col sm="1">
+          <b-button v-if="!NickNameState" disabled variant="primary" block>중복확인</b-button>
+          <b-button v-else variant="primary" @click='nicknameCheck(signupData.nickname)'>중복확인</b-button>
+        </b-col>
       </b-row>
 
 
@@ -60,17 +76,16 @@
           프로필사진
         </b-col>
         <b-col sm="9">
-          <b-form-file ref = "file-input" v-model="signupData.File2" class="mt-3" accept=".jpg, .png, .jpeg" plain></b-form-file>
+          <b-form-file ref = "file-input" v-model="signupData.profile_image" class="mt-3" accept=".jpg, .png, .jpeg" plain></b-form-file>
           
-          <div class="mt-3"><b-button variant="primary" @click="clearFiles" plain>파일 제거</b-button> 선택된사진: {{ signupData.File2 ? signupData.File2.name : '' }}</div>
-          
+          <div class="mt-3"><b-button variant="primary" @click="clearFiles" plain>파일 제거</b-button> 선택된사진: {{ signupData.profile_image ?signupData.profile_image.name : '' }}</div>
         </b-col>
       </b-row>
       <b-row align-v="center">
         <b-col sm="3">소개글</b-col>
         <b-col sm="9">
             <b-form-textarea
-            id="textarea" rows="3" max-rows="6" v-model="signupData.Comment" :state="CommentLimit" aria-describedby="comment-len-feedback">
+            id="textarea" rows="3" max-rows="6" v-model="signupData.intro" :state="CommentLimit" aria-describedby="comment-len-feedback">
             
             </b-form-textarea>
             <b-form-invalid-feedback id="comment-len-feedback">
@@ -80,7 +95,7 @@
         <b-row align-v="center" align-h="center">
             <b-col sm="2"></b-col>
             <b-col sm="4">
-                <b-button type="submit" variant="primary" id="signButton" to="/SignupForm" block>확인</b-button>
+                <b-button type="submit" variant="primary" id="signButton" @click="signup(signupData)" block>확인</b-button>
             </b-col>
             <b-col sm="4">
                 <b-button variant="danger" id="cancelButton" to="/SignupView" block>취소</b-button>
@@ -97,27 +112,27 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
   export default {
     name:'signup',
     data() {
       return {
-        signupData:{
-          EmailAdress:'',
-          Id: '',
-          Password: '',
-          PasswordAgain:'',
-          NickName:'',
-          File:null,
-          Comment:'',
+        signupData: {
+          email: null,
+          password: null,
+          nickname: null,
+          profile_image: null,
+          intro: null,
         },
+        file:null,
+        passwordAgain: null,
       }
     },
     computed: {
       //패스워드 유효성
       //3~12 영어와 숫자만가능
-      ...mapState('accounts', ['emailAdress']),
+      ...mapState('accounts', ['userEmail']),
       passwordValid() {
         var availablepassword = /^[0-9a-zA-Z~`!@#$%\\^&*()-]{8,12}$/
         var numberpattern = /[0-9]/
@@ -170,10 +185,12 @@ import { mapState } from 'vuex'
         return commentState
       },
     },
+    
     methods:{
       clearFiles() {
         this.$refs['file-input'].reset()
       },
+      ...mapActions('accounts', ['signup']),
     }
   }
 </script>
