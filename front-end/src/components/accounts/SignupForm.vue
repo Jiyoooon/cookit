@@ -29,7 +29,7 @@
           <label for="input-none">비밀번호<span style="color: red">*</span></label>
         </b-col>
         <b-col sm="9">
-          <b-form-input type="password" id="password" aria-describedby="password-feedback" v-model="signupData.Password" :state="passwordValid" ></b-form-input>
+          <b-form-input type="password" id="password" aria-describedby="password-feedback" v-model="signupData.password" :state="passwordValid" ></b-form-input>
           <b-form-invalid-feedback id="password-feedback">
           영문과 숫자를 포함해 8글자 이상으로 입력하세요. </b-form-invalid-feedback>
         </b-col>
@@ -65,7 +65,7 @@
           </b-form-invalid-feedback>
         </b-col>
         <b-col sm="1">
-          <b-button v-if="!NickNameState" disabled variant="primary" block>중복확인</b-button>
+          <b-button v-if="!NickNameinValid" disabled variant="primary" block>중복확인</b-button>
           <b-button v-else variant="primary" @click='nicknameCheck(signupData.nickname)'>중복확인</b-button>
         </b-col>
       </b-row>
@@ -139,29 +139,25 @@ import { mapState, mapActions } from 'vuex'
         var alphapattern = /[a-zA-Z]/
         var IsAvailable = true
         //console.log(this.signupData.Password)
-        const len = this.signupData.Password.length
-        if(len==0){
+        if (!this.signupData.password) {
           return null
         }
-        if (!(alphapattern.test(this.signupData.Password)&&numberpattern.test(this.signupData.Password)&&availablepassword.test(this.signupData.Password))) IsAvailable = false
+        
+        if (!(alphapattern.test(this.signupData.password)&&numberpattern.test(this.signupData.password)&&availablepassword.test(this.signupData.password))) IsAvailable = false
         return IsAvailable
       },
       passwordAgainValid() {
-        if(this.signupData.PasswordAgain.length==0){
-          return null
-        }
-        if(this.signupData.PasswordAgain.length > 0 && this.signupData.Password == this.signupData.PasswordAgain) return true;
+        if(!this.passwordAgain) return null
+        if(this.passwordAgain.length > 0 && this.signupData.password == this.passwordAgain) return true;
         return false;
       },
       NickNameinValid(){
-        const len = this.signupData.NickName.length
-        if(len==0){
-          return null
-        }
+        if(!this.signupData.nickname) return null
+        const len = this.signupData.nickname.length
         var NickNamelen = 0
         var nameflag = true
         for (var i = 0; i < len; i++) {
-          const ch = this.signupData.NickName[i]
+          const ch = this.signupData.nickname[i]
           console.log("ch: " + ch)
           if(('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'z')||('A' <= ch && ch <= 'Z')){
             NickNamelen++
@@ -180,7 +176,8 @@ import { mapState, mapActions } from 'vuex'
       },
       CommentLimit(){
         var commentState = null
-        if(this.signupData.Comment.length >100)
+        if(!this.signupData.intro) return null
+        if(this.signupData.intro.length >100)
           commentState = false
         return commentState
       },
