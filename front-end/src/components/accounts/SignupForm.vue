@@ -40,7 +40,7 @@
           <label for="input-none">비밀번호 재입력<span style="color: red">*</span></label>
         </b-col>
         <b-col sm="9">
-          <b-form-input type="password" id="password" aria-describedby="password-again-feedback" v-model="signupData.PasswordAgain" :state="passwordAgainValid" ></b-form-input>
+          <b-form-input type="password" id="password" aria-describedby="password-again-feedback" v-model="passwordAgain" :state="passwordAgainValid" ></b-form-input>
           <b-form-invalid-feedback id="password-again-feedback">
           비밀번호가 다릅니다.</b-form-invalid-feedback>
         </b-col>
