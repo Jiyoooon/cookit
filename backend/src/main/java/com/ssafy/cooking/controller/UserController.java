@@ -28,6 +28,7 @@ import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.TempKey;
 import com.ssafy.cooking.dto.User;
 import com.ssafy.cooking.service.UserService;
+import com.ssafy.cooking.util.SHA256;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -153,6 +154,9 @@ public class UserController {
     		map.put("cause", "이메일 형식 오류");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
+
+    	
+    	user.setPassword(SHA256.testSHA256(user.getPassword()));
     	
     	map.put("result", "success");
     	if(userService.signup(user) > 0) {
@@ -168,7 +172,7 @@ public class UserController {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	HttpSession session = request.getSession();
     	
-    	User user = userService.signin(email, password);
+    	User user = userService.signin(email, SHA256.testSHA256(password));
     	if (user == null) {
     		map.put("result", "fail");
 		} else {
