@@ -37,6 +37,7 @@
         </b-col>
         <b-col sm="1"></b-col>
       </b-row>
+      <b-row><b-col></b-col></b-row>
       <b-row align-v="center" align-h="center" >
           <b-col sm="2"></b-col>
           <b-col sm="4">
