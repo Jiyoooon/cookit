@@ -2,7 +2,7 @@
   <div>
     <h1>로그인</h1>
     <hr>
-    <Login />
+    <Login id='login-vue'/>
   </div>
 </template>
 
@@ -18,5 +18,9 @@ export default {
 </script>
 
 <style>
-
+  #login-vue{
+    width: 50%;
+    display: block;
+    margin: 0px auto;
+  }
 </style>
