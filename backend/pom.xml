@@ -12,6 +12,7 @@
 	<groupId>com.example</groupId>
 	<artifactId>cooking</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>cooking</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -21,6 +22,50 @@
 	</properties>
 
 	<dependencies>
+
+
+		<!-- jwt -->	
+		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt</artifactId>
+		    <version>0.9.1</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
+<!-- 
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		    <version>2.3.1.RELEASE</version>
+		</dependency>
+ -->				
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+		
+		<!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf -->
+		<dependency>
+		    <groupId>org.thymeleaf</groupId>
+		    <artifactId>thymeleaf</artifactId>
+		    <version>3.0.11.RELEASE</version>
+		</dependency>
+				
+		
+		<dependency>
+		    <groupId>org.projectlombok</groupId>
+		    <artifactId>lombok</artifactId>
+		    <version>1.16.10</version> <!--버전은 그때 맞춰서-->
+		</dependency>
+		
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>

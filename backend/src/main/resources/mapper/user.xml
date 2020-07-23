@@ -15,8 +15,7 @@
 	
 	<insert id="signup" parameterType="User">
 		insert into User(
-						id
-						, password
+						password
 						, nickname
 						, email
 						<if test="profile_image != null and profile_image != ''">
@@ -27,8 +26,7 @@
 						</if>
 						, create_date
 					) values(
-						#{id}
-						, #{password}
+						#{password}
 						, #{nickname}
 						, #{email}
 						<if test="profile_image != null and profile_image != ''">
@@ -42,7 +40,7 @@
 	</insert>
 	
 	<select id="signin" resultType="User">
-		SELECT user_id, id, email, nickname, profile_image, intro
+		SELECT user_id, email, nickname, profile_image, intro
 		FROM User
 		WHERE email = #{email} AND password = #{password}
 	</select>
@@ -54,7 +52,7 @@
 	</delete>
 	
 	<select id="getUser" resultType="User">
-		SELECT user_id, id, email, nickname, profile_image, intro, create_date
+		SELECT user_id, email, nickname, profile_image, intro, create_date
 		FROM User
 		WHERE user_id = #{uid}
 	</select>
