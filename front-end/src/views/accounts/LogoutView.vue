@@ -13,6 +13,7 @@ export default {
         ...mapActions('accounts', ['logout'])
     },
     created() {
+        console.log('22222')
         this.logout
     },
 }

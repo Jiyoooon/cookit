@@ -51,7 +51,8 @@ export default {
             this.isActive = !this.isActive
             console.log(this.isActive)
         },
-        // ...mapActions([ 'logout' ])
+        
+        // ...mapActions('accounts', [ 'logout' ])
     }
 }
 </script>

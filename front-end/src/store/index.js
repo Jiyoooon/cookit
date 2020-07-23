@@ -3,15 +3,26 @@ import Vuex from 'vuex'
 import router from '../router'
 import axios from 'axios'
 import cookies from 'vue-cookies'
+import SERVER from '../api/url.js'
 
+
+<<<<<<< HEAD
 
 Vue.use(Vuex)
+axios.defaults.baseURL = SERVER.URL;
+=======
+Vue.use(Vuex)
 axios.defaults.baseURL = 'http://6d04d76f2aaa.ngrok.io';
+>>>>>>> master
 const moduleAccounts = {
   namespaced: true,
   state: {
     authToken: cookies.get('auth-token'),
+<<<<<<< HEAD
+    // authUser: cookies.get('auth-user')
+=======
     
+>>>>>>> master
   },
   getters: {
     IsLoggedIn(state) {
@@ -38,6 +49,23 @@ const moduleAccounts = {
   },
 
   actions: {
+    DeleteUser({ commit }) {
+      console.log('aaaa')
+      axios.delete(SERVER.ROUTES.accounts.baseuser)
+        .then((res) => {
+          console.log(res.data)
+          console.log('성ㅇ공성공')
+          commit('SET_TOKEN', null)
+          cookies.remove('auth-token')
+          router.push({ name: 'UserDelete' })
+        })
+        .catch(err => console.log(err.response))
+    },
+
+    GoSignup() {
+      router.push({ name: 'Signup'})
+    },
+
     RedirectAfterUserUpdate() {
       console.log('!!!')
       router.push({ name: 'UserInfoView' })
@@ -48,6 +76,32 @@ const moduleAccounts = {
     },
 
     login({ commit }, loginData) {
+<<<<<<< HEAD
+      console.log(loginData)
+      axios.post(SERVER.ROUTES.accounts.login, loginData)
+        .then((res) => {
+          console.log(res.data)
+          commit('SET_TOKEN', res.data)
+          router.push({ name: 'UserInfoView'})
+        })
+        .catch((err) => {
+          console.log(err)
+          console.log(err.response)
+          console.log('!!!!')
+          alert(err.response.data.error)
+        })
+    },
+
+    logout() {
+      console.log('11111111')
+      axios.get(SERVER.ROUTES.accounts.logout)
+        .then(res => {
+          console.log(res.data)
+          router.push({ name: '첫화면'})
+        })
+        .catch(err => console.log(err.response))
+    },
+=======
       axios.post('loginurl', loginData)
         .then((res) => {
           console.log(res.data)
@@ -85,6 +139,7 @@ const moduleAccounts = {
       })
       .catch(err => console.log(err.response))
     }
+>>>>>>> master
   },
 }
 

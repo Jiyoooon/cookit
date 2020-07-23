@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import SignupView from '../views/accounts/SignupView.vue'
 import LoginView from '../views/accounts/LoginView.vue'
+import LogoutView from '../views/accounts/LogoutView.vue'
 import UserDeleteView from '../views/accounts/UserDeleteView.vue'
 import UserUpdateView from '../views/accounts/UserUpdateView.vue'
 import UserInfoView from '../views/accounts/UserInfoView.vue'
@@ -22,7 +23,12 @@ Vue.use(VueRouter)
     component: LoginView
   },
   {
-    path: '/userDelete/:userId',
+    path: '/logout',
+    name: 'Logout',
+    component: LogoutView
+  },
+  {
+    path: '/userDelete',
     name: 'UserDelete',
     component: UserDeleteView
   },
@@ -55,7 +61,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const RequiredLoggedInPages = ['Logout', 'UserDelete', 'PasswordAuthView'] //'UserInfoView', 'UserUpdate'추가
+  const RequiredLoggedInPages = ['Logout', 'PasswordAuthView'] //'UserInfoView', 'UserUpdate', 'UserDelete' 추가
   const RequiredLoggedOutPages = ['Login', 'Signup']
 
   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
@@ -69,7 +75,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (IsLoggedIn && LoggedOutRequired) {
-    next({ name: '첫화면'})
+    next({ name: 'UserInfoView'})
   } else {
     next()
   }
