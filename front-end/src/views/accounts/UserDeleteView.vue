@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserDelete />
+    <UserDelete id="userdelete-vue"/>
   </div>
 </template>
 
@@ -15,5 +15,9 @@ export default {
 </script>
 
 <style>
-
+  #userdelete-vue{
+    width: 40%;
+    display: block;
+    margin: 0px auto;
+  }
 </style>

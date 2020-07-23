@@ -22,7 +22,7 @@ Vue.use(VueRouter)
     component: LoginView
   },
   {
-    path: '/userDelete/:userId',
+    path: '/userDelete',
     name: 'UserDelete',
     component: UserDeleteView
   },
@@ -55,7 +55,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const RequiredLoggedInPages = ['Logout', 'UserDelete', 'PasswordAuthView'] //'UserInfoView', 'UserUpdate'추가
+  const RequiredLoggedInPages = ['Logout', 'PasswordAuthView'] //'UserInfoView', 'UserUpdate', 'UserDelete' 추가
   const RequiredLoggedOutPages = ['Login', 'Signup']
 
   const IsLoggedIn = Vue.$cookies.isKey('auth-token')

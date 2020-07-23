@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserUpdate />
+    <UserUpdate id="userupdate-vue"/>
   </div>
 </template>
 
@@ -17,5 +17,9 @@ export default {
 </script>
 
 <style>
-
+  #userupdate-vue{
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 </style>

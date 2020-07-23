@@ -1,6 +1,6 @@
 <template>
   <div>
-<v-card
+<!-- <v-card
     class="mx-auto"
     max-width="500"
     shaped="true"
@@ -19,7 +19,14 @@
         확인
       </v-btn>
     </v-card-actions>
-  </v-card>
+  </v-card> -->
+
+  <b-card bg-variant="dark" text-variant="white" title="User Info Updated!">
+  <b-card-text>
+    수정되었습니다.
+  </b-card-text>
+  <b-button @click="RedirectAfterUserUpdate" variant="info">확인</b-button>
+  </b-card>
   </div>
 </template>
 
@@ -36,7 +43,5 @@ export default {
 </script>
 
 <style>
-v-card-text {
-  font-size: 1.2em;
-}
+
 </style>
