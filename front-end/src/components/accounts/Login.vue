@@ -3,7 +3,7 @@
     <b-container fluid="lg" id ="login-container">
       <b-row align-v = "center">
         <b-col sm="2">
-          <label for="login-id">Id : </label>
+          <label for="login-id">Id:</label>
         </b-col>
         <b-col sm="6">
           <b-form-input 
@@ -23,7 +23,7 @@
 
       <b-row align-v = "center">
         <b-col sm="2">
-          <label for="login-password">Password : </label>
+          <label for="login-password">Password:</label>
         </b-col>
         <b-col sm="6">
           <b-form-input
@@ -45,10 +45,10 @@
       <b-row align-v="center">
           <b-col sm="2"></b-col>
           <b-col sm="2">
-            <b-button variant="primary" @click="login(loginData)" block>로그인</b-button>
+            <b-button variant="info" @click="login(loginData)" block>로그인</b-button>
           </b-col>
           <b-col sm="2">
-            <b-button variant="primary" to="/signup" block>회원가입</b-button>
+            <b-button variant="info" @click="GoSignup" block>회원가입</b-button>
           </b-col>
       </b-row>    
     </b-container>
@@ -69,11 +69,11 @@ export default {
         }
     },
     computed: {
-      idValid() {
-        if (this.loginData.Id == null) return null;
-        const idLength = this.loginData.Id.length
-        if (idLength < 3 || idLength > 12) return false;
-        return true
+      // idValid() {
+      //   if (this.loginData.Id == null) return null;
+      //   const idLength = this.loginData.Id.length
+      //   if (idLength < 3 || idLength > 12) return false;
+      //   return true
 
         // var alphaFlag = false, numFlag = false
 
@@ -83,27 +83,30 @@ export default {
         //   else if ('a' <= ch && ch <= 'z') alphaFlag = true;
         // }
         // return numFlag && alphaFlag
-      },
-      passwordValid() {
-        if (this.loginData.password == null) return null;
-        const len = this.loginData.password.length
-        if (len < 8) return false;
-        var numFlag = false, alphaFlag = false
-        for (var i = 0; i < len; i++) {
-          const ch = this.loginData.password[i]
-          if ('0' <= ch && ch <= '9') numFlag = true
-          else if ('a' <= ch && ch <= 'z') alphaFlag= true
-        }
-        return numFlag && alphaFlag
-      },
+      // },
+      // passwordValid() {
+      //   if (this.loginData.password == null) return null;
+      //   const len = this.loginData.password.length
+      //   if (len < 8) return false;
+      //   var numFlag = false, alphaFlag = false
+      //   for (var i = 0; i < len; i++) {
+      //     const ch = this.loginData.password[i]
+      //     if ('0' <= ch && ch <= '9') numFlag = true
+      //     else if ('a' <= ch && ch <= 'z') alphaFlag= true
+      //   }
+      //   return numFlag && alphaFlag
+      // },
     },
     methods: {
-        ...mapActions('accounts', ['login'])
+        ...mapActions('accounts', ['login', 'GoSignup'])
     }
   }
 
 </script>
 
 <style>
-
+#login-container{
+  margin-left: auto;
+  margin-right: auto;
+}
 </style>

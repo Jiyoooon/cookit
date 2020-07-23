@@ -37,6 +37,10 @@ const moduleAccounts = {
   },
 
   actions: {
+    GoSignup() {
+      router.push({ name: 'Signup'})
+    },
+    
     RedirectAfterUserUpdate() {
       console.log('!!!')
       router.push({ name: 'UserInfoView' })
