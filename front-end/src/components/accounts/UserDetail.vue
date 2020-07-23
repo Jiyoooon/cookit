@@ -63,7 +63,7 @@
         <b-button type="submit" variant="primary" id="updateButton" to="/userUpdate" block>수정</b-button>
       </b-col>
       <b-col sm="4">
-        <b-button variant="danger" id="deleteButton" @click="DeleteUser" block>탈퇴</b-button>
+        <b-button variant="danger" id="deleteButton" @click="showMsgBoxTwo" block>탈퇴</b-button>
       </b-col>
       <b-col sm="2"></b-col>
     </b-row>
@@ -105,7 +105,27 @@ export default {
       }
     },
     methods: {
-      ...mapActions('accounts', ['DeleteUser'])
+      ...mapActions('accounts', ['DeleteUser']),
+      showMsgBoxTwo() {
+        this.boxTwo = ''
+        this.$bvModal.msgBoxConfirm('데이ㅓ 복구 ㄴㄴ', {
+          title: '정말로 탈퇴하시겠습니까?',
+          size: 'lg',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'YES',
+          cancelTitle: 'NO',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+          .then((ans) => {
+            if (ans) {
+              this.DeleteUser()
+            }
+          })
+          .catch(err => console.log(err.response))
+      }
     }
 }
 </script>
