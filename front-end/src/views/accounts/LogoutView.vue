@@ -12,8 +12,8 @@ export default {
     methods: {
         ...mapActions('accounts', ['logout'])
     },
-    created() {
-        this.logout
+    mounted() {
+        this.logout()
     },
 }
 </script>
