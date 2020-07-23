@@ -15,13 +15,13 @@ public class User {
 	private String profile_image;
 	private int hits;
 
-	private Date create_date;
-	private Date update_date;
-	private Date delete_date;
+	private String create_date;
+	private String update_date;
+	private String delete_date;
 
 	private String sns_type;
 	private String sns_token_id;
-	private Date sns_connect_date;
+	private String sns_connect_date;
 	
 	
 	public int getUser_id() {
@@ -84,22 +84,23 @@ public class User {
 	public void setHits(int hits) {
 		this.hits = hits;
 	}
-	public Date getCreate_date() {
+	
+	public String getCreate_date() {
 		return create_date;
 	}
-	public void setCreate_date(Date create_date) {
+	public void setCreate_date(String create_date) {
 		this.create_date = create_date;
 	}
-	public Date getUpdate_date() {
+	public String getUpdate_date() {
 		return update_date;
 	}
-	public void setUpdate_date(Date update_date) {
+	public void setUpdate_date(String update_date) {
 		this.update_date = update_date;
 	}
-	public Date getDelete_date() {
+	public String getDelete_date() {
 		return delete_date;
 	}
-	public void setDelete_date(Date delete_date) {
+	public void setDelete_date(String delete_date) {
 		this.delete_date = delete_date;
 	}
 	public String getSns_type() {
@@ -114,10 +115,10 @@ public class User {
 	public void setSns_token_id(String sns_token_id) {
 		this.sns_token_id = sns_token_id;
 	}
-	public Date getSns_connect_date() {
+	public String getSns_connect_date() {
 		return sns_connect_date;
 	}
-	public void setSns_connect_date(Date sns_connect_date) {
+	public void setSns_connect_date(String sns_connect_date) {
 		this.sns_connect_date = sns_connect_date;
 	}
 	@Override

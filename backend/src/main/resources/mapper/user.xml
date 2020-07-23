@@ -43,7 +43,7 @@
 	
 	<select id="signin" resultType="User">
 		SELECT user_id, id, email, nickname, profile_image, intro
-		FROM USER
+		FROM User
 		WHERE email = #{email} AND password = #{password}
 	</select>
 	
@@ -54,7 +54,7 @@
 	</delete>
 	
 	<select id="getUser" resultType="User">
-		SELECT user_id, id, email, nickname, profile_image, intro
+		SELECT user_id, id, email, nickname, profile_image, intro, create_date
 		FROM User
 		WHERE user_id = #{uid}
 	</select>
@@ -64,6 +64,7 @@
 		SET nickname = #{nickname}
 			, profile_image = #{profile_image}
 			, intro = #{intro}
+			, update_date = now()
 		WHERE user_id= #{user_id}
 	</update>
 	
