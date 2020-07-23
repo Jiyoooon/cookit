@@ -3,11 +3,11 @@
     <b-container fluid="lg">
       <b-row align-v="center">
         <b-col sm="3">
-          <label for="input-userid">아이디<span style="color: red">*</span></label>
+          <label for="input-userid">아이디(이메일)<span style="color: red">*</span></label>
         </b-col>
         <!-- 아이디 대신 이메일~--> 
         <b-col sm="9">
-          이메일
+          {{ this.emailAdress }}
         </b-col>
       </b-row>
 
@@ -60,17 +60,21 @@
           프로필사진
         </b-col>
         <b-col sm="9">
-          <b-form-file v-model="signupData.File2" class="mt-3" plain></b-form-file>
-          <div class="mt-3">Selected file: {{ signupData.File2 ? signupData.File2.name : '' }}</div>
+          <b-form-file ref = "file-input" v-model="signupData.File2" class="mt-3" accept=".jpg, .png, .jpeg" plain></b-form-file>
+          
+          <div class="mt-3"><b-button variant="primary" @click="clearFiles" plain>파일 제거</b-button> 선택된사진: {{ signupData.File2 ? signupData.File2.name : '' }}</div>
+          
         </b-col>
       </b-row>
       <b-row align-v="center">
         <b-col sm="3">소개글</b-col>
         <b-col sm="9">
             <b-form-textarea
-            placeholder="소개글을 적어주세요"
-            id="textarea" rows="3" max-rows="6">
+            id="textarea" rows="3" max-rows="6" v-model="signupData.Comment" :state="CommentLimit" aria-describedby="comment-len-feedback">
+            
             </b-form-textarea>
+            <b-form-invalid-feedback id="comment-len-feedback">
+            최대 100자 까지 가능합니다.</b-form-invalid-feedback>
         </b-col>
       </b-row>
         <b-row align-v="center" align-h="center">
@@ -83,7 +87,6 @@
             </b-col>
             <b-col sm="2"></b-col>
         </b-row>
-      
     </b-container>
     <!--이미지 입력Form-->
     <!-- Plain mode -->
@@ -94,39 +97,39 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
   export default {
     name:'signup',
     data() {
       return {
         signupData:{
+          EmailAdress:'',
           Id: '',
           Password: '',
           PasswordAgain:'',
           NickName:'',
           File:null,
-          File2:null,
-        }
+          Comment:'',
+        },
       }
     },
     computed: {
       //패스워드 유효성
       //3~12 영어와 숫자만가능
+      ...mapState('accounts', ['emailAdress']),
       passwordValid() {
+        var availablepassword = /^[0-9a-zA-Z~`!@#$%\\^&*()-]{8,12}$/
+        var numberpattern = /[0-9]/
+        var alphapattern = /[a-zA-Z]/
+        var IsAvailable = true
+        //console.log(this.signupData.Password)
         const len = this.signupData.Password.length
         if(len==0){
           return null
         }
-        if (len < 8 || len >12) return false;
-        var numFlag = false, alphaFlag = false , otherFlag =true
-        for (var i = 0; i < len; i++) {
-          const ch = this.signupData.Password[i]
-          if ('0' <= ch && ch <= '9') numFlag = true
-          else if ('a' <= ch && ch <= 'z') {
-            alphaFlag = true
-          }
-          else otherFlag = false
-        }
-        return numFlag && alphaFlag &&otherFlag
+        if (!(alphapattern.test(this.signupData.Password)&&numberpattern.test(this.signupData.Password)&&availablepassword.test(this.signupData.Password))) IsAvailable = false
+        return IsAvailable
       },
       passwordAgainValid() {
         if(this.signupData.PasswordAgain.length==0){
@@ -160,7 +163,18 @@
         }
         return nameflag
       },
+      CommentLimit(){
+        var commentState = null
+        if(this.signupData.Comment.length >100)
+          commentState = false
+        return commentState
+      },
     },
+    methods:{
+      clearFiles() {
+        this.$refs['file-input'].reset()
+      },
+    }
   }
 </script>
 
