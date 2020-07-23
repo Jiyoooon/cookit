@@ -6,7 +6,7 @@ import cookies from 'vue-cookies'
 
 
 Vue.use(Vuex)
-axios.defaults.baseURL = 'http://6d04d76f2aaa.ngrok.io';
+axios.defaults.baseURL = 'http://8ef703d9f822.ngrok.io/';
 const moduleAccounts = {
   namespaced: true,
   state: {
@@ -66,6 +66,15 @@ const moduleAccounts = {
     //     .catch(err => console.log(err.response))
     // },
 
+    emailDupCheck(context, email) {
+      console.log("email dup check")
+      axios.get(`/user/dup/email/${String(email)}`)
+      .then(res => {
+        if (res.data.result == 'success') return true
+        else if (res.data.result == 'fail') return false
+      })
+    },
+
     emailAuthCodeSend(context, email) {
       console.log(email)
       axios.get(`/user/verification/send/${String(email)}`)
@@ -76,7 +85,7 @@ const moduleAccounts = {
     },
 
     emailAuthCodeCheck(context, code) {
-      console.log(code)
+      console.log(`${String(code)}`)
       axios.get(`/user/verification/check/${String(code)}`)
       .then(res => {
         console.log(`Code check: ${String(res.data.result)}`)
