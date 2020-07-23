@@ -11,6 +11,7 @@ const moduleAccounts = {
   namespaced: true,
   state: {
     authToken: cookies.get('auth-token'),
+    emailAdress: 'ckqhfka4520@naver.com',
   },
   getters: {
     IsLoggined(state) {
