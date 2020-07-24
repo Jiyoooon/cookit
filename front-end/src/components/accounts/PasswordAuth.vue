@@ -7,7 +7,7 @@
         <b-form-input type="password" id="password" aria-describedby="password-feedback" placeholder="비밀번호를 입력하세요."></b-form-input>
       </b-col>
       <b-col sm="2">
-        <b-button type="submit" variant="primary" id="okButton" to="/userInfo" block>확인</b-button>
+        <b-button @click="passwordCheck" type="submit" variant="primary" id="okButton"  block>확인</b-button>
       </b-col>
       <b-col sm="2"></b-col>
     </b-row>
@@ -16,8 +16,17 @@
 </template>
 
 <script>
+
+import { mapActions } from 'vuex'
+
 export default {
-    name: 'PasswordAuth',
+  name: 'PasswordAuth',
+  methods:{
+    // 버튼을 누르면 api이용 비밀번호일치여부를 받아야함 => action
+    ...mapActions('accounts',[
+      'passwordCheck'
+    ])
+  }
 }
 </script>
 
