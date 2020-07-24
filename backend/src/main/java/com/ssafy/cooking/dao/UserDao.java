@@ -19,4 +19,6 @@ public interface UserDao {
 	public int reviseUser(User user);
 	public List<User> getFollowers(String uid);
 	public List<Comment> getCommnets(String uid);
+	public int checkPassword(String uid, String password);
+	public int updatePassword(String uid, String password);
 }
