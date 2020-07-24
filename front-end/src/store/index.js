@@ -16,6 +16,7 @@ const moduleAccounts = {
     // authUser: cookies.get('auth-user')
     userEmail: cookies.get('user-email'),
   },
+
   getters: {
     isLoggedIn(state) {
       if (state.authToken) {
@@ -83,6 +84,10 @@ const moduleAccounts = {
 
     GoEmailAuth() {
       router.push({ name: 'EmailAuthView'})
+    },
+
+    GoPasswordFind(){
+      router.push({ name: 'PasswordFindView'})
     },
 
     RedirectAfterUserUpdate() {
@@ -160,6 +165,22 @@ const moduleAccounts = {
         .then((res) => {
           console.log(res)
         })
+    },
+    //수정중
+    passwordCheck(){
+      axios.get(SERVER.ROUTES.accounts.requestkey + "ckqhfka2@naver.com")
+      .then((res) => {
+        alert("비밀번호가 일치합니다")
+        if(res){
+          router.push({name: 'UserInfoView'})
+        }
+      })
+      .catch((err) => {
+        alert(err.response)
+      })
+    },
+    sendNewPassword({state},email){
+      alert('새 비밀번호 전송!'+state.authToken+email)
     }
   },
 }
