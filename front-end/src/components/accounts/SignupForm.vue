@@ -7,18 +7,6 @@
         </b-col>
         <!-- 아이디 대신 이메일~--> 
         <b-col sm="9">
-          <!-- <b-form-input 
-            id="input-userid" 
-            v-model="userid"
-            :state="useridState"
-            aria-describedby="input-userid-help input-userid-feedback"
-            placeholder="아이디 입력 (최소 8글자, 영어만 사용가능)"
-            trim
-            >
-          </b-form-input>
-          <b-form-invalid-feedback id="userid-feedback" >
-            아이디가 올바르지 않습니다.(최소 8글자, 영어만 사용가능)
-          </b-form-invalid-feedback> -->
           {{ userEmail }}
         </b-col>
       </b-row>
@@ -29,7 +17,7 @@
           <label for="input-none">비밀번호<span style="color: red">*</span></label>
         </b-col>
         <b-col sm="9">
-          <b-form-input type="password" id="password" aria-describedby="password-feedback" v-model="signupData.password" :state="passwordValid" ></b-form-input>
+          <b-form-input type="password" id="password" aria-describedby="password-feedback" v-model="signupData.config.password" :state="passwordValid" ></b-form-input>
           <b-form-invalid-feedback id="password-feedback">
           영문과 숫자를 포함해 8글자 이상으로 입력하세요. </b-form-invalid-feedback>
         </b-col>
@@ -40,7 +28,7 @@
           <label for="input-none">비밀번호 재입력<span style="color: red">*</span></label>
         </b-col>
         <b-col sm="9">
-          <b-form-input type="password" id="password" aria-describedby="password-again-feedback" v-model="signupData.PasswordAgain" :state="passwordAgainValid" ></b-form-input>
+          <b-form-input type="password" id="password" aria-describedby="password-again-feedback" v-model="passwordAgain" :state="passwordAgainValid" ></b-form-input>
           <b-form-invalid-feedback id="password-again-feedback">
           비밀번호가 다릅니다.</b-form-invalid-feedback>
         </b-col>
@@ -54,7 +42,7 @@
         <b-col sm="8">
           <b-form-input 
             id="input-userid" 
-            v-model="signupData.nickname"
+            v-model="signupData.config.nickname"
             :state="NickNameinValid"
             aria-describedby="input-userid-help input-userid-feedback"
             toLowerCase
@@ -66,7 +54,7 @@
         </b-col>
         <b-col sm="1">
           <b-button v-if="!NickNameinValid" disabled variant="primary" block>중복확인</b-button>
-          <b-button v-else variant="primary" @click='nicknameCheck(signupData.nickname)'>중복확인</b-button>
+          <b-button v-else variant="primary" @click='nicknameCheck(signupData.config.nickname)'>중복확인</b-button>
         </b-col>
       </b-row>
 
@@ -76,16 +64,16 @@
           프로필사진
         </b-col>
         <b-col sm="9">
-          <b-form-file ref = "file-input" v-model="signupData.profile_image" class="mt-3" accept=".jpg, .png, .jpeg" plain></b-form-file>
+          <b-form-file ref = "file-input" v-model="signupData.config.profile_image" class="mt-3" accept=".jpg, .png, .jpeg" plain></b-form-file>
           
-          <div class="mt-3"><b-button variant="primary" @click="clearFiles" plain>파일 제거</b-button> 선택된사진: {{ signupData.profile_image ?signupData.profile_image.name : '' }}</div>
+          <div class="mt-3"><b-button variant="primary" @click="clearFiles" plain>파일 제거</b-button> 선택된사진: {{ signupData.config.profile_image ?signupData.config.profile_image.name : '' }}</div>
         </b-col>
       </b-row>
       <b-row align-v="center">
         <b-col sm="3">소개글</b-col>
         <b-col sm="9">
             <b-form-textarea
-            id="textarea" rows="3" max-rows="6" v-model="signupData.intro" :state="CommentLimit" aria-describedby="comment-len-feedback">
+            id="textarea" rows="3" max-rows="6" v-model="signupData.config.intro" :state="CommentLimit" aria-describedby="comment-len-feedback">
             
             </b-form-textarea>
             <b-form-invalid-feedback id="comment-len-feedback">
@@ -113,17 +101,25 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import SERVER from '../../api/url.js'
+import axios from 'axios'
 
   export default {
     name:'signup',
     data() {
       return {
         signupData: {
-          email: null,
-          password: null,
-          nickname: null,
-          profile_image: null,
-          intro: null,
+          valid: {
+            password: this.passwordAgainValid,
+            nickname: false,
+          },
+          config: {
+            email: null,
+            password: null,
+            nickname: null,
+            profile_image: null,
+            intro: null,
+          }
         },
         file:null,
         passwordAgain: null,
@@ -186,6 +182,19 @@ import { mapState, mapActions } from 'vuex'
     methods:{
       clearFiles() {
         this.$refs['file-input'].reset()
+      },
+      nicknameCheck(nickname) {
+        axios.get(SERVER.ROUTES.accounts.nicknameCheck + String(nickname))
+        .then((res) => {
+          console.log(res)
+          if (res.data.result == 'success') {
+            this.signupData.valid.nickname = true
+          }
+        })
+        .catch((err) => {
+          console.log(err.response)
+          alert('!!!')
+        })
       },
       ...mapActions('accounts', ['signup']),
     }
