@@ -1,27 +1,32 @@
 <template>
   <div>
-      <div id="app">
-  <v-app id="inspire">
-    <div>
-      <v-alert
+<!-- <v-card
+    class="mx-auto"
+    max-width="500"
+    shaped="true"
+  >
+    <v-card-text>
+      <p class=" text--primary font-weight-regular">
+        수정되었습니다.
+      </p>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn
         text
-        color="info"
+        color="deep-purple accent-4"
+        @click="RedirectAfterUserUpdate"
       >
-        <h3 class="headline">회원정보 수정</h3>
-        <div>수정되었습니다.</div>
-        <v-col class="shrink">
-            <v-btn
-              color="info"
-              outlined
-              @click="RedirectAfterUserUpdate"
-            >
-              확인
-            </v-btn>
-          </v-col>
-      </v-alert>
-    </div>
-  </v-app>
-</div>
+        확인
+      </v-btn>
+    </v-card-actions>
+  </v-card> -->
+
+  <b-card bg-variant="dark" text-variant="white" title="User Info Updated!">
+  <b-card-text>
+    수정되었습니다.
+  </b-card-text>
+  <b-button @click="RedirectAfterUserUpdate" variant="info">확인</b-button>
+  </b-card>
   </div>
 </template>
 

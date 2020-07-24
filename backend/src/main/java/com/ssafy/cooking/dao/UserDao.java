@@ -13,10 +13,10 @@ public interface UserDao {
 	public int isDupNickname(String nickname);
 	public int signup(User user);
 	
-	public User signin();
-	public User delete();
-	public User getUser();
-	public User reviseUser();
-	public List<User> getFollowers();
-	public List<Comment> getCommnets();
+	public User signin(String email, String password);
+	public int delete(String uid);
+	public User getUser(String uid);
+	public int reviseUser(User user);
+	public List<User> getFollowers(String uid);
+	public List<Comment> getCommnets(String uid);
 }
