@@ -5,7 +5,7 @@
         <b-col sm="2">
           <label for="login-email">Email:</label>
         </b-col>
-        <b-col sm="6">
+        <b-col sm="7">
           <b-form-input 
             id="login-email" 
             v-model="loginData.email"
@@ -24,7 +24,7 @@
         <b-col sm="2">
           <label for="login-password">Password:</label>
         </b-col>
-        <b-col sm="6">
+        <b-col sm="7">
           <b-form-input
             type="password" 
             id="login-passwod" 
@@ -48,6 +48,9 @@
           <b-col sm="2">
             <b-button variant="info" @click="GoSignup" block>회원가입</b-button>
           </b-col>
+          <b-col sm="3">
+            <b-button variant="info" @click="GoPasswordFind" block>비밀번호 찾기</b-button>
+          </b-col>
       </b-row>    
     </b-container>
   </div>
@@ -69,7 +72,7 @@ export default {
     computed: {
     },
     methods: {
-        ...mapActions('accounts', ['login', 'GoSignup'])
+        ...mapActions('accounts', ['login', 'GoSignup','GoPasswordFind'])
     }
   }
 
