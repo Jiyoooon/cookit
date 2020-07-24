@@ -13,7 +13,7 @@ const moduleAccounts = {
   namespaced: true,
   state: {
     authToken: cookies.get('auth-token'),
-    // authUser: cookies.get('auth-user')
+    authUser: cookies.get('auth-user'),
     userEmail: cookies.get('user-email'),
   },
   getters: {
@@ -27,7 +27,7 @@ const moduleAccounts = {
     config(state) {
       return {
         headers: {
-          Authoriaztion: `Token ${state.authToken}`
+          Authoriaztion: `Bearer ${state.authToken}`
         }
       }
     },
@@ -43,6 +43,10 @@ const moduleAccounts = {
        state.userEmail = email
        cookies.set('user-email', email)
      },
+     SET_USER(state, user) {
+       state.authUser = user
+       cookies.set('auth-user', user)
+     },
   },
 
   actions: {
@@ -51,18 +55,19 @@ const moduleAccounts = {
       axios.delete(SERVER.ROUTES.accounts.baseuser)
         .then((res) => {
           console.log(res.data)
-          console.log('성ㅇ공성공')
           commit('SET_TOKEN', null)
+          commit('SET_USER', null)
+          commit('SET_EMAIL', null)
           cookies.remove('auth-token')
+          cookies.remove('auth-user')
+          cookies.remove('user-email')
           router.push({ name: 'Home' })
         })
         .catch(err => console.log(err.response))
     },
 
-    GoHome({ getters, state }) {
-      router.push({ name: 'Home'})
-      console.log(getters.IsLoggedIn)
-      console.log(state.authToken)
+    GoHome() {
+      router.push({ name: 'MyBlogListView'})
     },
 
     GoSignup() {
@@ -86,7 +91,6 @@ const moduleAccounts = {
     },
 
     RedirectAfterUserUpdate() {
-      console.log('!!!')
       router.push({ name: 'UserInfoView' })
     },
 
@@ -94,12 +98,19 @@ const moduleAccounts = {
       router.push({ name: 'UserInfoView' })
     },
 
-    login({ commit }, loginData) {
+    login({ commit, dispatch }, loginData) {
       axios.post(SERVER.ROUTES.accounts.login, loginData)
         .then((res) => {
           console.log(res.data)
-          commit('SET_TOKEN', res.data.uid)
-          router.push({ name: 'Home'})
+          console.log(res.headers)
+          console.log(res)
+          if (res.data.result == 'success') {
+            commit('SET_TOKEN', res.data.uid)
+            dispatch('fetchUser')
+            router.push({ name: 'Home'})
+          } else {
+            alert('이메일과 비밀번호를 확인해주세요.')
+          }
         })
         .catch((err) => {
           console.log(err.response)
@@ -112,7 +123,11 @@ const moduleAccounts = {
         .then(res => {
           console.log(res.data)
           commit('SET_TOKEN', null)
+          commit('SET_USER', null)
+          commit('SET_EMAIL', null)
           cookies.remove('auth-token')
+          cookies.remove('auth-user')
+          cookies.remove('user-email')
           router.push({ name: 'Home'})
         })
         .catch(err => console.log(err.response))
@@ -135,32 +150,49 @@ const moduleAccounts = {
       .then(res => {
         console.log(`Code check: ${String(res.data.result)}`)
         if (res.data.result == 'success') router.push({name: 'SignUp'})
-        else if (res.data.result == 'fail') alert("코드가 맞지 않습니다.")
+        else if (res.data.result == 'fail') {
+          alert("코드가 맞지 않습니다.")
+          commit('SET_EMAIL', null)
+        }
       })
       .catch(err => {
         console.log(err.response)
-        commit('SET_EMAIL', null)
         alert('!!!!!!')
        })
     },
-    signup({ commit }, signupData) {
-      axios.post(SERVER.ROUTES.accounts.signup, signupData)
-        .then((res) => {
-          console.log(res.data)
-          commit('SET_TOKEN', res.data.uid)
-          router.push({ name: 'Home'})
-        })
-        .catch((err) => {
-          console.log(err.response)
-          alert('!!!!!!')
-        })
+    signup({ commit, dispatch }, signupData) {
+      if (!signupData.valid.password) {
+        alert('비밀번호가 일치하지 않습니다.')
+      } else if (!signupData.valid.nickname) {
+        alert('닉네임 중복체크를 해주세요.')
+      } else {
+        axios.post(SERVER.ROUTES.accounts.signup, signupData.config)
+          .then((res) => {
+            console.log(res.data)
+            commit('SET_TOKEN', res.data.uid)
+            dispatch('fetchUser')
+            router.push({ name: 'Home'})
+          })
+          .catch((err) => {
+            console.log(err.response)
+            alert('!!!!!!')
+          })
+        }
     },
-    nicknameCheck(context, nickname) {
-      axios.get(SERVER.ROUTES.accounts.nicknameCheck + String(nickname))
+    fetchUser({ getters, commit }) {
+      axios.get(SERVER.ROUTES.accounts.baseuser, null, getters.config)
         .then((res) => {
           console.log(res)
+          commit('SET_USER', res.data)
         })
-    }
+        .catch((err) => {
+          console.err(err.response)
+          alert('!!!!')
+        })
+    },
+    // updateUser(context, ) {
+    //   axios.put(SERVER.ROUTES.accounts.baseuser, )
+    // }
   },
 }
 
@@ -183,10 +215,12 @@ const moduleRecipes = {
   },
 }
 
-const moduleMyRecipes = {
+const moduleMyBlog = {
   namespaced: true,
   state: {
-
+    myrecipes: [{id: 1, title: '1111111111', content: 'fsdfsfsdfsdf'},
+                {id: 2, title: 'dfsfsfsdfsd', content: 'dfssdfadfad'},
+                {id: 3, title: 'fasdfsdf', content: 'dfsgasdgs'}],
   },
 
   getters: {
@@ -194,7 +228,9 @@ const moduleMyRecipes = {
   },
 
   mutations: {
-
+    SET_RECIPES(state, recipes) {
+      state.myrecipes = recipes
+    }
   },
 
   actions: {
@@ -212,6 +248,6 @@ export default new Vuex.Store({
   modules: {
     accounts: moduleAccounts,
     recipes: moduleRecipes,
-    myrecipes: moduleMyRecipes,
+    myblog: moduleMyBlog,
   }
 })
