@@ -10,6 +10,7 @@ import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 import PasswordFindView from '../views/accounts/PasswordFindView.vue'
 import EmailAuthView from '../views/accounts/EmailAuthView.vue'
 import Home from '../views/Home.vue'
+import LookAroundRecipeView from '../views/LookAroundRecipeView.vue'
 
 Vue.use(VueRouter)
 
@@ -63,6 +64,11 @@ Vue.use(VueRouter)
     path: '/emailAuth',
     name: 'EmailAuthView',
     component: EmailAuthView
+  },
+  {
+    path: '/lookAroundRecipe',
+    name: 'LookAroundRecipeView',
+    component: LookAroundRecipeView
   },
 ]
 
