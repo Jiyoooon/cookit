@@ -85,7 +85,9 @@ const moduleAccounts = {
     GoEmailAuth() {
       router.push({ name: 'EmailAuthView'})
     },
-
+    GoPasswordAuth(){
+      router.push({ name: 'PasswordAuthView'})
+    },
     GoPasswordFind(){
       router.push({ name: 'PasswordFindView'})
     },
@@ -167,15 +169,18 @@ const moduleAccounts = {
         })
     },
     //수정중
-    passwordCheck(){
-      axios.get(SERVER.ROUTES.accounts.requestkey + "ckqhfka2@naver.com")
+    passwordCheck({dispatch},password){
+      console.log(password)
+      axios.post(SERVER.ROUTES.accounts.checkpassword,password)
       .then((res) => {
-        alert("비밀번호가 일치합니다")
+        console.log(res)
         if(res){
-          router.push({name: 'UserInfoView'})
+          alert("일치합니다!")
+          dispatch('GoUserInfo')
         }
       })
       .catch((err) => {
+        console.log("에러!!!!")
         alert(err.response)
       })
     },
