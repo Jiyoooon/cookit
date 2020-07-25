@@ -1,7 +1,5 @@
 package com.ssafy.cooking.dto;
 
-import java.sql.Date;
-
 public class User {
 	private int user_id;//pk
 	private String id;

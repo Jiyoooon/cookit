@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.cooking.dto.Comment;
+import com.ssafy.cooking.dto.Login;
 import com.ssafy.cooking.dto.TempKey;
 import com.ssafy.cooking.dto.User;
 import com.ssafy.cooking.service.JwtService;
@@ -76,6 +77,13 @@ public class UserController {
 		HttpSession session = request.getSession();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String random = new TempKey().getKey(30, false);  // 인증키 생성
+
+		map.put("result", "fail");
+		//email이 중복됐는지 확인
+		if(userService.isDupEmail(email)) {
+			map.put("cause", "이미 가입한 계정");
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+		}
 		
 		String title = "요리조리 회원가입 인증 코드입니다.";
 		String content = "\n\n안녕하세요 회원님, 저희 홈페이지를 찾아주셔서 감사합니다.\n\n 인증코드 : " + random; // 내용
@@ -92,7 +100,7 @@ public class UserController {
             session.setAttribute("random", random);
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("result", "fail");
+            map.put("cause", "서버 오류");
             return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.SERVICE_UNAVAILABLE);
         }
 		
@@ -177,13 +185,15 @@ public class UserController {
     
     @ApiOperation(value = "로그인")
    	@PostMapping("/login")
-   	public ResponseEntity<HashMap<String, Object>> signinUser(@RequestBody User cuser
+   	public ResponseEntity<HashMap<String, Object>> signinUser(@RequestBody Login login
    								, HttpServletRequest request, HttpServletResponse response) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	HttpStatus status = null;
     	
-    	String email = cuser.getEmail();
-    	String password = cuser.getPassword();
+    	String email = login.getEmail();
+    	String password = login.getPassword();
+    	
+    	System.out.println("password : "+SHA256.testSHA256(password));
     	
     	try {
     		User user = userService.signin(email, SHA256.testSHA256(password));
@@ -232,7 +242,7 @@ public class UserController {
 			}
 		}else {
 			result = "fail";
-			map.put("cause", "토큰 먼저 받아오세요");
+			map.put("cause", "로그인 필요");
 		}
 		
 		map.put("result", result);
@@ -267,7 +277,7 @@ public class UserController {
 			}
 		}else {
 			result = "fail";
-			map.put("cause", "토큰 먼저 받아오세요");
+			map.put("cause", "로그인 필요");
 		}
 		
 		map.put("result", result);
@@ -302,7 +312,7 @@ public class UserController {
 			}
 		}else {
 			result = "fail";
-			map.put("cause", "토큰 먼저 받아오세요");
+			map.put("cause", "로그인 필요");
 		}
 		
 		map.put("result", result);
@@ -318,11 +328,16 @@ public class UserController {
     	String result = "success";
     	HttpStatus status = HttpStatus.ACCEPTED;
     	
+    	String password = user.getPassword();
+    	if(password != null && password != "") {//비밀번호 입력했을때만 수정
+    		user.setPassword(SHA256.testSHA256(password));
+    	}
+    	
     	String token = request.getHeader("jwt-auth-token");
 		if(token != null && token.length() > 0) {
 			if(jwtService.checkValid(token)) {//토큰 유효성 체크
 				Map<String, Object> claims = jwtService.get(token);
-				user.setUser_id((int)claims.get("uid"));
+				user.setUser_id(Integer.parseInt((String)claims.get("uid")));
 				
 				try {
 					userService.reviseUser(user);
@@ -338,7 +353,130 @@ public class UserController {
 			}
 		}else {
 			result = "fail";
-			map.put("cause", "토큰 먼저 받아오세요");
+			map.put("cause", "로그인 필요");
+		}
+		
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
+   	}
+    
+    @ApiOperation(value = "비밀번호 확인")///token
+   	@PostMapping("/password")
+   	public ResponseEntity<HashMap<String, Object>> checkPassword(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	String password = (String)param.get("password");
+    	String result = "success";
+    	HttpStatus status = HttpStatus.ACCEPTED;
+    	
+    	String token = request.getHeader("jwt-auth-token");
+		if(token != null && token.length() > 0) {
+			if(jwtService.checkValid(token)) {//토큰 유효성 체크
+				Map<String, Object> claims = jwtService.get(token);
+				
+				try {
+					if(userService.checkPassword((String)claims.get("uid"), SHA256.testSHA256(password))) {
+						result = "success";
+					}else {
+						result = "fail";
+						map.put("cause", "비밀번호 오류");
+					}
+					
+				}catch(Exception e){
+					result = "fail";
+					map.put("cause", "서버 오류");
+					status = HttpStatus.INTERNAL_SERVER_ERROR;
+				}
+			}else {
+				result = "fail";
+				map.put("cause", "토큰 유효하지 않음");
+			}
+		}else {
+			result = "fail";
+			map.put("cause", "로그인 필요");
+		}
+		
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
+   	}
+    
+    
+    @ApiOperation(value = "비밀번호 찾기")///token
+   	@GetMapping("/password/{email}")
+   	public ResponseEntity<HashMap<String, Object>> sendEmailForPw(@PathVariable("email") String email, HttpServletRequest request) throws Exception {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+//		System.out.println("email : "+email+", "+userService.isDupEmail(email));
+		if(!userService.isDupEmail(email)) {
+			map.put("result", "fail");
+			map.put("cause", "가입하지 않은 회원");
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+		}
+		
+		String result = "success";
+		String tmpPw = new TempKey().getKey(6, false);  // 임시비밀번호
+    	HttpStatus status = HttpStatus.ACCEPTED;
+    	
+    	String token = request.getHeader("jwt-auth-token");
+		if(token != null && token.length() > 0) {
+			if(jwtService.checkValid(token)) {//토큰 유효성 체크
+				Map<String, Object> claims = jwtService.get(token);
+				
+				try {
+					userService.modifyPassword((String) claims.get("uid"), tmpPw, email);
+					result = "success";
+				}catch(Exception e) {
+					e.printStackTrace();
+		            map.put("cause", "서버 오류");
+		            return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.SERVICE_UNAVAILABLE);
+				}
+			}else {
+				result = "fail";
+				map.put("cause", "토큰 유효하지 않음");
+			}
+		}else {
+			result = "fail";
+			map.put("cause", "로그인 필요");
+		}
+				
+        map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
+   	}
+    
+    @ApiOperation(value = "비밀번호 수정")///token
+   	@PutMapping("/password")
+   	public ResponseEntity<HashMap<String, Object>> modifyPassword(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	String password = (String)param.get("password");
+    	String result = "success";
+    	HttpStatus status = HttpStatus.ACCEPTED;
+    	
+    	String token = request.getHeader("jwt-auth-token");
+		if(token != null && token.length() > 0) {
+			if(jwtService.checkValid(token)) {//토큰 유효성 체크
+				Map<String, Object> claims = jwtService.get(token);
+				
+				try {
+					if(userService.updatePassword((String)claims.get("uid"), SHA256.testSHA256(password))) {
+						result = "success";
+					}else {
+						result = "fail";
+						map.put("cause", "db에서 정보를 못 찾음");
+					}
+					
+				}catch(Exception e){
+					result = "fail";
+					map.put("cause", "서버 오류");
+					status = HttpStatus.INTERNAL_SERVER_ERROR;
+				}
+			}else {
+				result = "fail";
+				map.put("cause", "토큰 유효하지 않음");
+			}
+		}else {
+			result = "fail";
+			map.put("cause", "로그인 필요");
 		}
 		
 		map.put("result", result);
