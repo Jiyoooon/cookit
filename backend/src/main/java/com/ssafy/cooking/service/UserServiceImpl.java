@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.cooking.dao.UserDao;
 import com.ssafy.cooking.dto.Comment;
+import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.User;
 import com.ssafy.cooking.util.SHA256;
 
@@ -95,7 +96,7 @@ public class UserServiceImpl implements UserService{
             messageHelper.setText(content); // 메일 내용
             
             mailSender.send(message);
-            System.out.println("메시지 보냄");
+//            System.out.println("메시지 보냄");
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw new Exception();
@@ -106,6 +107,27 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public boolean updatePassword(String uid, String password) {
 		return userDao.updatePassword(uid, password) > 0 ? true : false;
+	}
+
+	@Override
+	public boolean isConfirmedEmail(String email) {
+		return userDao.isConfirmedEmail(email) > 0 ? true : false;
+	}
+
+	@Override
+	public int addEmailConfirm(String email, String code) {
+		return userDao.insertEmailConfirm(email, code);
+		
+	}
+
+	@Override
+	public boolean checkConfirmCode(EmailConfirm emailConfirm) {
+		return userDao.checkConfirmCode(emailConfirm) > 0 ? true : false;
+	}
+
+	@Override
+	public void removeConfirmCode(String email) {
+		userDao.deleteConfirmCode(email);
 	}
 
 }

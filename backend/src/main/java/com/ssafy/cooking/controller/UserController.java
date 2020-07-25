@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.cooking.dto.Comment;
+import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.Login;
 import com.ssafy.cooking.dto.TempKey;
 import com.ssafy.cooking.dto.User;
@@ -73,8 +74,7 @@ public class UserController {
 	//이메일 인증
 	@ApiOperation(value = "인증키 발송 요청")
 	@GetMapping("/verification/send/{email}")
-	public ResponseEntity<HashMap<String, Object>> signupSendCheckEmail(@PathVariable("email") String email, HttpServletRequest request) throws Exception {
-		HttpSession session = request.getSession();
+	public ResponseEntity<HashMap<String, Object>> signupSendCheckEmail(@PathVariable("email") String email) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String random = new TempKey().getKey(30, false);  // 인증키 생성
 
@@ -84,6 +84,14 @@ public class UserController {
 			map.put("cause", "이미 가입한 계정");
 			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
 		}
+		
+		//인증코드 한번만 보낼 수 있게
+		if(userService.isConfirmedEmail(email)) {
+			map.put("cause", "인증코드 발송함");
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+		}
+		
+		userService.removeConfirmCode(email);
 		
 		String title = "요리조리 회원가입 인증 코드입니다.";
 		String content = "\n\n안녕하세요 회원님, 저희 홈페이지를 찾아주셔서 감사합니다.\n\n 인증코드 : " + random; // 내용
@@ -96,8 +104,8 @@ public class UserController {
             messageHelper.setText(content); // 메일 내용
             
             mailSender.send(message);
-
-            session.setAttribute("random", random);
+            userService.addEmailConfirm(email, random);//유효시간 3분
+            
         } catch (Exception e) {
             e.printStackTrace();
             map.put("cause", "서버 오류");
@@ -110,15 +118,15 @@ public class UserController {
 	
 	
 	@ApiOperation(value = "인증키 확인 요청")
-	@GetMapping("/verification/check/{random}")
-	public ResponseEntity<HashMap<String, Object>> signupVerification(@PathVariable("random") String random, HttpServletRequest request) throws Exception {
+	@PostMapping("/verification/check")
+	public ResponseEntity<HashMap<String, Object>> signupVerification(@RequestBody EmailConfirm emailConfirm) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		HttpSession session = request.getSession();
 		
-        if(random.equals(session.getAttribute("random"))){
-        	map.put("result", "success");
-    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
-        } else {
+		if(userService.checkConfirmCode(emailConfirm)) {
+			map.put("result", "success");
+			userService.removeConfirmCode(emailConfirm.getEmail());
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+		}else {
         	map.put("result", "fail");
             return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
         }
@@ -190,10 +198,12 @@ public class UserController {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	HttpStatus status = null;
     	
+//    	response.setHeader("Access-Control-Allow-Origin", "*");
+//        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+//        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "X-Custom-Header");//jwt-auth-token
     	String email = login.getEmail();
     	String password = login.getPassword();
-    	
-    	System.out.println("password : "+SHA256.testSHA256(password));
     	
     	try {
     		User user = userService.signin(email, SHA256.testSHA256(password));
