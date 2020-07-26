@@ -221,6 +221,7 @@ const moduleMyBlog = {
     myrecipes: [{id: 1, title: '1111111111', content: 'fsdfsfsdfsdf'},
                 {id: 2, title: 'dfsfsfsdfsd', content: 'dfssdfadfad'},
                 {id: 3, title: 'fasdfsdf', content: 'dfsgasdgs'}],
+    selectedrecipe: null,
   },
 
   getters: {
@@ -230,11 +231,39 @@ const moduleMyBlog = {
   mutations: {
     SET_RECIPES(state, recipes) {
       state.myrecipes = recipes
-    }
+    },
+    SET_SELETCERECIPE(state, recipe) {
+      state.selectedrecipe = recipe
+    },
   },
 
   actions: {
-
+    fetchMyRecipes({ commit }, user_id) {
+      axios.get(SERVER.ROUTES.myrecipes.myrecipes + String(user_id))
+        .then((res) => {
+          console.log(res)
+          commit('SET_RECIPES', res.data)
+        })
+        .catch((err) => {
+          console.err(err.response)
+          alert('!!!!!')
+        })
+    },
+    selectedRecipe({ commit }, recipe_id) {
+      axios.get(SERVER.ROUTES.myrecipe.selectedrecipe + String(recipe_id))
+        .then((res) => {
+          console.log(res.data)
+          commit('SET_SELECTEDRECIPE', res.data)
+          router.push({ name: 'SelectedRecipe'})
+        })
+        .catch((err) => {
+          console.err(err.response)
+          alert('!!!!!')
+        })
+    },
+    // fetchRecipesByTitle() {
+    //   axios.get(SERVER.ROUTES.myrecipe.fetchrecipesbytitle, )
+    // }
   },
 }
 

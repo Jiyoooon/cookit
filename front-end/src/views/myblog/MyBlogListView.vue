@@ -26,9 +26,12 @@ export default {
         width: 50vw;
         margin-left: auto;
         margin-right: auto;
+        margin-top: 10px;
     }
     #mypage {
         float:left;
         width: 20vw;
+        margin-left: 20px;
+        margin-right: 20px;
     }
 </style>

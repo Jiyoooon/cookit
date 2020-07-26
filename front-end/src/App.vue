@@ -33,6 +33,7 @@
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
+  <hr>
   <router-view></router-view>
   </div>
 </template>

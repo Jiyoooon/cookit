@@ -1,5 +1,5 @@
 <template>
-  <div class="col-lg-6">
+  <div class="col-lg-4">
       <b-card
     :title="recipe.title"
     img-src="https://picsum.photos/600/300/?image=25"
