@@ -16,6 +16,7 @@ const moduleAccounts = {
     authUser: cookies.get('auth-user'),
     userEmail: cookies.get('user-email'),
   },
+
   getters: {
     isLoggedIn(state) {
       if (state.authToken) {
@@ -89,6 +90,12 @@ const moduleAccounts = {
     GoEmailAuth() {
       router.push({ name: 'EmailAuthView'})
     },
+    GoPasswordAuth(){
+      router.push({ name: 'PasswordAuthView'})
+    },
+    GoPasswordFind(){
+      router.push({ name: 'PasswordFindView'})
+    },
 
     RedirectAfterUserUpdate() {
       router.push({ name: 'UserInfoView' })
@@ -134,7 +141,6 @@ const moduleAccounts = {
     },
 
     emailAuthCodeSend({ commit }, email) {
-      console.log(email)
       alert('인증코드가 발송되었습니다')
       axios.get(`/user/verification/send/${String(email)}`)
       .then(res => {
@@ -190,9 +196,44 @@ const moduleAccounts = {
           alert('!!!!')
         })
     },
-    // updateUser(context, ) {
-    //   axios.put(SERVER.ROUTES.accounts.baseuser, )
-    // }
+    nicknameCheck(context, nickname) {
+      axios.get(SERVER.ROUTES.accounts.nicknameCheck + String(nickname))
+        .then((res) => {
+          console.log(res)
+        })
+    },
+    passwordCheck({dispatch},password){
+      console.log('토큰 :' + this.authToken)
+      axios.post(SERVER.ROUTES.accounts.checkpassword,password,{
+        headers:{
+          'Authoriaztion': 'jwt-auth-token' + this.authToken
+        } 
+      })
+      .then((res) => {
+        console.log(res)
+        if(res){
+          alert("일치합니다!")
+          dispatch('GoUserInfo')
+        }
+      })
+      .catch((err) => {
+        console.log("에러!!!!")
+        alert(err.response)
+      })
+    },
+    sendNewPassword({dispatch},email){
+      axios.get(SERVER.ROUTES.accounts.sendnewpassword+String(email))
+      .then((res) => {
+        if(res){
+          alert(email+"로 새 비밀번호를 전송했습니다!")
+          dispatch('GoLogin')
+        }
+      })
+      .catch((err) => {
+        console.log("에러!!!!")
+        alert(err.response)
+      })
+    },
   },
 }
 

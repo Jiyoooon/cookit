@@ -7,8 +7,10 @@ import UserDeleteView from '../views/accounts/UserDeleteView.vue'
 import UserUpdateView from '../views/accounts/UserUpdateView.vue'
 import UserInfoView from '../views/accounts/UserInfoView.vue'
 import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
+import PasswordFindView from '../views/accounts/PasswordFindView.vue'
 import EmailAuthView from '../views/accounts/EmailAuthView.vue'
 import Home from '../views/Home.vue'
+import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView.vue'
 import MyBlogListView from '../views/myblog/MyBlogListView.vue'
 import RecipeDetailView from '../views/myblog/RecipeDetailView.vue'
 
@@ -56,11 +58,21 @@ Vue.use(VueRouter)
     component: PasswordAuthView
   },
   {
+    path: '/passwordFind',
+    name: 'PasswordFindView',
+    component: PasswordFindView,
+  },
+  {
     path: '/emailAuth',
     name: 'EmailAuthView',
     component: EmailAuthView
   },
+  {
+    path: '/lookAroundRecipe',
+    name: 'LookAroundRecipeView',
+    component: LookAroundRecipeView
   //////////////////////
+  },
   {
     path: '/myBlog',
     name: 'MyBlogListView',
