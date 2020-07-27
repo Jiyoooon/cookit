@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +25,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.Login;
 import com.ssafy.cooking.dto.TempKey;
 import com.ssafy.cooking.dto.User;
+import com.ssafy.cooking.dto.User2;
 import com.ssafy.cooking.service.JwtService;
 import com.ssafy.cooking.service.UserService;
 import com.ssafy.cooking.util.SHA256;
@@ -148,10 +150,58 @@ public class UserController {
 	}
 	
 	//회원가입 요청
-    @ApiOperation(value = "회원가입")
+//    @ApiOperation(value = "회원가입")
+//	@PostMapping("/join")
+//	public ResponseEntity<HashMap<String, Object>> signupUser(@RequestBody User user) throws Exception {
+//    	HashMap<String, Object> map = new HashMap<String, Object>();
+//    	
+//    	String namePt = "^[a-zA-Z0-9가-힣]{4,12}$";
+//    	String pwPt = "^[0-9a-zA-Z~`!@#$%\\\\^&*()-]{8,12}$";//특수,대소문자,숫자 포함 8자리 이상
+//    	String emailPt = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+//    	
+//    	map.put("result", "fail");
+//    	if(user.getNickname() == null || user.getNickname() == "") {
+//    		map.put("cause", "닉네임 입력 필수");
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//    	if(!user.getNickname().matches(namePt)) {
+//    		map.put("cause", "닉네임 형식 오류");
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//    	if(!user.getPassword().matches(pwPt)) {
+//    		map.put("cause", "비밀번호 형식 오류");
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//    	if(!user.getEmail().matches(emailPt)) {
+//    		map.put("cause", "이메일 형식 오류");
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//    	if(user.getIntro().length() > 100) {
+//    		map.put("cause", "소개글 글자 수 초과");
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//
+//    	
+//    	user.setPassword(SHA256.testSHA256(user.getPassword()));
+//    	
+//    	map.put("result", "success");
+//    	if(userService.signup(user) > 0) {
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}else {
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//	}
+	
+	@ApiOperation(value = "회원가입")
 	@PostMapping("/join")
-	public ResponseEntity<HashMap<String, Object>> signupUser(@RequestBody User user) throws Exception {
+	public ResponseEntity<HashMap<String, Object>> signupUser(@RequestParam("profile_image") MultipartFile profile
+															, @RequestBody User user) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
+//    	MultipartFile profile = user.getProfile_image();
+    	
+    	if(profile != null) {
+    		System.out.println(profile.getOriginalFilename());
+    	}
     	
     	String namePt = "^[a-zA-Z0-9가-힣]{4,12}$";
     	String pwPt = "^[0-9a-zA-Z~`!@#$%\\\\^&*()-]{8,12}$";//특수,대소문자,숫자 포함 8자리 이상
@@ -182,14 +232,14 @@ public class UserController {
     	
     	user.setPassword(SHA256.testSHA256(user.getPassword()));
     	
-    	map.put("result", "success");
+    	//먼저 사진 저장 & 디비에 유저 정보 저장 => transaction
     	if(userService.signup(user) > 0) {
+    		map.put("result", "success");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}else {
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
 	}
-    
     
     @ApiOperation(value = "로그인")
    	@PostMapping("/login")
