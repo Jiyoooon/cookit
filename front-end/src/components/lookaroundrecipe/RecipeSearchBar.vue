@@ -26,8 +26,8 @@
             </v-col>
             <v-col  xs="2" sm="3" md="3" lg="2" align-self="center" align="center" >
                 <v-autocomplete
-                :items="items"
-                v-model="chips"
+                :items="items1"
+                v-model="selected1"
                 chips
                 full-width
                 auto
@@ -36,20 +36,7 @@
                 single-line
                 multiple
                 search-input
-                >
-                    <template v-slot:selection="{ attrs, item, select, selected }">
-                        <v-chip
-                            v-bind="attrs"
-                            :input-value="selected"
-                            close
-                            @click="select"
-                            @click:close="remove(item)"
-                        >
-                            <strong>{{ item }}</strong>&nbsp;
-                            <span>(interest)</span>
-                        </v-chip>
-                    </template>
-                </v-autocomplete>
+                ></v-autocomplete>
             </v-col>
 
             <v-col  xs="2" sm="2" md="2" lg="2" align-self="center" align="center" >
@@ -92,7 +79,7 @@
 </template>
 
 <script>
-import SelectedSource from "@/components/SelectedSource.vue"
+import SelectedSource from "@/components/lookaroundrecipe/SelectedSource.vue"
   
   export default {
     name: 'RecipeSearchBar',
@@ -102,8 +89,6 @@ import SelectedSource from "@/components/SelectedSource.vue"
         selected2: [],
         items1: ['마늘','돼지고기','닭고기','양파','마수리'],
         items2: ['마늘','돼지고기','닭고기','양파','마수리'],
-        chips: ['Programming', 'Playing video games', 'Watching movies', 'Sleeping'],
-        items: ['Streaming', 'Eating'],
         selected3:{
             type:true,
             name:'',
@@ -117,12 +102,6 @@ import SelectedSource from "@/components/SelectedSource.vue"
     },
     components:{
         SelectedSource,
-    },
-    methods: {
-      remove (item) {
-        this.chips.splice(this.chips.indexOf(item), 1)
-        this.chips = [...this.chips]
-      },
     },
   }
 </script>
