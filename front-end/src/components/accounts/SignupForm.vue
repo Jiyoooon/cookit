@@ -93,7 +93,8 @@
     </b-container>
     <!--이미지 입력Form-->
     <!-- Plain mode -->
-    
+    {{ this.signupData.valid.password }}
+    {{ this.signupData.valid.nickname}}
   </div>
 
   
@@ -103,6 +104,7 @@
 import { mapState, mapActions } from 'vuex'
 import SERVER from '../../api/url.js'
 import axios from 'axios'
+import cookies from 'vue-cookies'
 
   export default {
     name:'signup',
@@ -110,11 +112,11 @@ import axios from 'axios'
       return {
         signupData: {
           valid: {
-            password: this.passwordAgainValid,
+            password: false,
             nickname: false,
           },
           config: {
-            email: null,
+            email: cookies.get('user-email'),
             password: null,
             nickname: null,
             profile_image: null,
@@ -134,26 +136,29 @@ import axios from 'axios'
         var numberpattern = /[0-9]/
         var alphapattern = /[a-zA-Z]/
         var IsAvailable = true
-        //console.log(this.signupData.Password)
-        if (!this.signupData.password) {
+      
+        if (!this.signupData.config.password) {
           return null
         }
         
-        if (!(alphapattern.test(this.signupData.password)&&numberpattern.test(this.signupData.password)&&availablepassword.test(this.signupData.password))) IsAvailable = false
+        if (!(alphapattern.test(this.signupData.config.password)&&numberpattern.test(this.signupData.config.password)&&availablepassword.test(this.signupData.config.password))) IsAvailable = false
         return IsAvailable
       },
       passwordAgainValid() {
+         console.log(this.signupData.valid.password)
         if(!this.passwordAgain) return null
-        if(this.passwordAgain.length > 0 && this.signupData.password == this.passwordAgain) return true;
+        
+        if(this.passwordAgain.length > 0 && this.signupData.config.password == this.passwordAgain) return true;
+    
         return false;
       },
       NickNameinValid(){
-        if(!this.signupData.nickname) return null
-        const len = this.signupData.nickname.length
+        if(!this.signupData.config.nickname) return null
+        const len = this.signupData.config.nickname.length
         var NickNamelen = 0
         var nameflag = true
         for (var i = 0; i < len; i++) {
-          const ch = this.signupData.nickname[i]
+          const ch = this.signupData.config.nickname[i]
           console.log("ch: " + ch)
           if(('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'z')||('A' <= ch && ch <= 'Z')){
             NickNamelen++
@@ -172,8 +177,8 @@ import axios from 'axios'
       },
       CommentLimit(){
         var commentState = null
-        if(!this.signupData.intro) return null
-        if(this.signupData.intro.length >100)
+        if(!this.signupData.config.intro) return null
+        if(this.signupData.config.intro.length >100)
           commentState = false
         return commentState
       },
@@ -184,11 +189,32 @@ import axios from 'axios'
         this.$refs['file-input'].reset()
       },
       nicknameCheck(nickname) {
-        axios.get(SERVER.ROUTES.accounts.nicknameCheck + String(nickname))
+        axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
           console.log(res)
           if (res.data.result == 'success') {
             this.signupData.valid.nickname = true
+            this.$bvModal.msgBoxOk('확인되었습니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'success',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true
+            })
+            this.signupData.valid.nickname = true
+          } else {
+            this.$bvModal.msgBoxOk('이미 존재하는 닉네임 입니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true
+            })
+            this.signupData.valid.nickname = false
           }
         })
         .catch((err) => {
@@ -197,6 +223,13 @@ import axios from 'axios'
         })
       },
       ...mapActions('accounts', ['signup']),
+    },
+    updated() {
+      if(this.passwordAgainValid) {
+        this.signupData.valid.password = true
+      } else {
+        this.signupData.valid.password = false
+      }
     }
   }
 </script>

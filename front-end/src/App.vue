@@ -5,7 +5,7 @@
         <img @click="GoHome" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQDLFnxu6sy4oQgCw4yuNZeNq1p604iMXTq-Q&usqp=CAU" style="height: 5em">
     </b-navbar-brand>
     <b-navbar-nav>
-      <b-nav-item @click="GoHome">내 블로그</b-nav-item>
+      <b-nav-item @click="GoMyBlog">내 블로그</b-nav-item>
       <b-nav-item href="#">둘러보기</b-nav-item>
     </b-navbar-nav>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -57,7 +57,7 @@ export default {
             this.isActive = !this.isActive
             console.log(this.isActive)
         },
-        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoUserInfo', 'GoLogout', 'GoEmailAuth'])
+        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoUserInfo', 'GoLogout', 'GoEmailAuth', 'GoMyBlog'])
         
     }
 }

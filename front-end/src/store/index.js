@@ -6,7 +6,6 @@ import cookies from 'vue-cookies'
 import SERVER from '../api/url.js'
 
 
-
 Vue.use(Vuex)
 axios.defaults.baseURL = SERVER.URL;
 const moduleAccounts = {
@@ -27,7 +26,7 @@ const moduleAccounts = {
     config(state) {
       return {
         headers: {
-          Authoriaztion: `Bearer ${state.authToken}`
+          Authorization: `token ${state.authToken}`
         }
       }
     },
@@ -41,6 +40,8 @@ const moduleAccounts = {
 
      SET_EMAIL(state, email) {
        state.userEmail = email
+       console.log(email)
+       console.log(state.userEmail)
        cookies.set('user-email', email)
      },
      SET_USER(state, user) {
@@ -50,23 +51,68 @@ const moduleAccounts = {
   },
 
   actions: {
-    DeleteUser({ commit }) {
-      console.log('aaaa')
-      axios.delete(SERVER.ROUTES.accounts.baseuser)
-        .then((res) => {
-          console.log(res.data)
-          commit('SET_TOKEN', null)
-          commit('SET_USER', null)
-          commit('SET_EMAIL', null)
-          cookies.remove('auth-token')
-          cookies.remove('auth-user')
-          cookies.remove('user-email')
-          router.push({ name: 'Home' })
+    DeleteUser({ commit, getters }) {
+      this._vm.$root.$bvModal.msgBoxConfirm('한번 삭제된 데이터는 복구되지 않습니다.', {
+        title: '정말로 탈퇴하시겠습니까?',
+        size: 'lg',
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: 'YES',
+        cancelTitle: 'NO',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      })
+        .then((ans) => {
+          if (ans) {
+            axios.delete(SERVER.ROUTES.accounts.baseuser, getters.config)
+              .then((res) => {
+                if(res.data.result == 'success') {
+                  this._vm.$root.$bvModal.msgBoxOk('회원탈퇴 되었습니다.', {
+                    title: 'Confirmation',
+                    size: 'sm',
+                    buttonSize: 'sm',
+                    okVariant: 'success',
+                    headerClass: 'p-2 border-bottom-0',
+                    footerClass: 'p-2 border-top-0',
+                    centered: true
+                  })
+                  commit('SET_TOKEN', null)
+                  commit('SET_USER', null)
+                  commit('SET_EMAIL', null)
+                  cookies.remove('auth-token')
+                  cookies.remove('auth-user')
+                  cookies.remove('user-email')
+                  router.push({ name: 'Home' })
+                } else {
+                  this._vm.$root.$bvModal.msgBoxOk('실패하였습니다.', {
+                    title: 'Confirmation',
+                    size: 'sm',
+                    buttonSize: 'sm',
+                    okVariant: 'danger',
+                    headerClass: 'p-2 border-bottom-0',
+                    footerClass: 'p-2 border-top-0',
+                    centered: true
+                  })
+                }
+              })
+              .catch((err) => {
+                console.log(err.response)
+                alert(err.response)
+              })
+          }
         })
-        .catch(err => console.log(err.response))
+        .catch(err => {
+          console.log(err.response)
+          alert(err.response)
+        })
     },
 
     GoHome() {
+      router.push({ name: 'Home'})
+    },
+
+    GoMyBlog() {
       router.push({ name: 'MyBlogListView'})
     },
 
@@ -101,27 +147,31 @@ const moduleAccounts = {
     login({ commit, dispatch }, loginData) {
       axios.post(SERVER.ROUTES.accounts.login, loginData)
         .then((res) => {
-          console.log(res.data)
-          console.log(res.headers)
-          console.log(res)
           if (res.data.result == 'success') {
-            commit('SET_TOKEN', res.data.uid)
+            commit('SET_TOKEN', res.data.token)
             dispatch('fetchUser')
-            router.push({ name: 'Home'})
+            dispatch('GoHome')
           } else {
-            alert('이메일과 비밀번호를 확인해주세요.')
+            this._vm.$root.$bvModal.msgBoxOk('이메일과 비밀번호를 확인하여 주십시오.', {
+              title: 'Confirmation',
+              size: 'sm',
+              buttonSize: 'sm',
+              okVariant: 'danger',
+              headerClass: 'p-2 border-bottom-0',
+              footerClass: 'p-2 border-top-0',
+              centered: true
+            })
           }
         })
         .catch((err) => {
           console.log(err.response)
-          alert(err.response.result)
+          alert(err.response)
         })
     },
 
-    logout({ commit }) {
-      axios.get(SERVER.ROUTES.accounts.logout)
-        .then(res => {
-          console.log(res.data)
+    logout({ commit, getters }) {
+      axios.get(SERVER.ROUTES.accounts.logout, getters.config)
+        .then(() => {
           commit('SET_TOKEN', null)
           commit('SET_USER', null)
           commit('SET_EMAIL', null)
@@ -130,26 +180,56 @@ const moduleAccounts = {
           cookies.remove('user-email')
           router.push({ name: 'Home'})
         })
-        .catch(err => console.log(err.response))
+        .catch(err => {
+          console.log(err.response)
+          alert(err.response)
+        })
     },
 
     emailAuthCodeSend({ commit }, email) {
-      console.log(email)
-      alert('인증코드가 발송되었습니다')
-      axios.get(`/user/verification/send/${String(email)}`)
+      axios.get(SERVER.ROUTES.accounts.requestkey + String(email))
       .then(res => {
         console.log(`Code send: ${String(res.data.result)}`)
-        commit('SET_EMAIL', email)
+        if(res.data.result == 'success') {
+          commit('SET_EMAIL', email)
+          this._vm.$root.$bvModal.msgBoxOk('인증 코드가 발송되었습니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'success',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true
+          })
+        } else {
+          this._vm.$root.$bvModal.msgBoxOk('인증 코드 발송에 실패하였습니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true
+          })
+        }
       })
-      .catch(err => console.log(err.response))
+      .catch(err => {
+        console.log(err.response)
+        alert(err.response)
+      })
     },
 
-    emailAuthCodeCheck({ commit }, code) {
+    emailAuthCodeCheck({ commit, state, dispatch }, code) {
       console.log(code)
-      axios.get(`/user/verification/check/${String(code)}`)
+      const emailConfirm = {
+        email: state.userEmail,
+        code: code,
+      }
+      console.log(emailConfirm)
+      axios.post(SERVER.ROUTES.accounts.checkkey, emailConfirm)
       .then(res => {
         console.log(`Code check: ${String(res.data.result)}`)
-        if (res.data.result == 'success') router.push({name: 'SignUp'})
+        if (res.data.result == 'success') dispatch('GoSignup')
         else if (res.data.result == 'fail') {
           alert("코드가 맞지 않습니다.")
           commit('SET_EMAIL', null)
@@ -162,37 +242,87 @@ const moduleAccounts = {
     },
     signup({ commit, dispatch }, signupData) {
       if (!signupData.valid.password) {
-        alert('비밀번호가 일치하지 않습니다.')
+        this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
       } else if (!signupData.valid.nickname) {
-        alert('닉네임 중복체크를 해주세요.')
+        this._vm.$root.$bvModal.msgBoxOk('닉네임 중복체를 해주세요.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
       } else {
         axios.post(SERVER.ROUTES.accounts.signup, signupData.config)
           .then((res) => {
-            console.log(res.data)
-            commit('SET_TOKEN', res.data.uid)
+            commit('SET_TOKEN', res.data.token)
             dispatch('fetchUser')
             router.push({ name: 'Home'})
           })
           .catch((err) => {
             console.log(err.response)
-            alert('!!!!!!')
+            alert(err.response)
           })
         }
     },
     fetchUser({ getters, commit }) {
-      axios.get(SERVER.ROUTES.accounts.baseuser, null, getters.config)
+      axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
-          console.log(res)
-          commit('SET_USER', res.data)
+          commit('SET_USER', res.data.data)
         })
         .catch((err) => {
           console.err(err.response)
-          alert('!!!!')
+          alert(err.response)
         })
     },
-    // updateUser(context, ) {
-    //   axios.put(SERVER.ROUTES.accounts.baseuser, )
-    // }
+    updateUser({ getters, dispatch }, updateData) {
+      if (!updateData.valid.password) {
+        this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
+      } else if (!updateData.valid.nickname) {
+        this._vm.$root.$bvModal.msgBoxOk('닉네임 중복체를 해주세요.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
+      } else {
+        axios.put(SERVER.ROUTES.accounts.baseuser, updateData.config, getters.config)
+          .then((res) => {
+            if (res.data.result == 'success') {
+              this._vm.$root.$bvModal.msgBoxOk('수정되었습니다.', {
+                title: 'Confirmation',
+                size: 'sm',
+                buttonSize: 'sm',
+                okVariant: 'success',
+                headerClass: 'p-2 border-bottom-0',
+                footerClass: 'p-2 border-top-0',
+                centered: true
+              })
+            dispatch('fetchUser')
+            }
+          })
+      }
+    },
   },
 }
 

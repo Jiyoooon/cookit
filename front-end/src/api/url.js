@@ -1,5 +1,5 @@
 export default {
-    URL: 'http://e7c0ebd8068d.ngrok.io',
+    URL: ' http://i3a201.p.ssafy.io:8080/cooking-0.0.1-SNAPSHOT',
     ROUTES: {
         accounts: {
             signup: '/user/join',
@@ -10,7 +10,7 @@ export default {
             checkemail: '/user/dup/email/',
             checknickname: '/user/dup/nickname/',
             getfollowers: '/user/followers/',
-            checkkey: '/user/verification/check/',
+            checkkey: '/user/verification/check',
             requestkey: '/user/verification/send/',
         },
         info: {
