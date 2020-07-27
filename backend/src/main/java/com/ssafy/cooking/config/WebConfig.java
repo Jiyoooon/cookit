@@ -1,9 +1,12 @@
 package com.ssafy.cooking.config;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -17,6 +20,7 @@ public class WebConfig implements WebMvcConfigurer{
 	            registry.addMapping("/**")
 	                    .allowedOrigins("*")
 	                    .allowedMethods("*")
+	                    //.allowedHeaders("Authorization, token")
 	                    .allowCredentials(false)
 	                    .maxAge(3600);
 	        }

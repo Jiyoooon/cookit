@@ -1,6 +1,9 @@
 package com.ssafy.cooking.service;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
@@ -19,10 +22,11 @@ public interface UserService {
 	public List<User> getFollowers(String uid);
 	public List<Comment> getCommnets(String uid);
 	public boolean checkPassword(String uid, String password);
-	public void modifyPassword(String uid, String password, String email) throws Exception;
+	public void sendTmpPasswordEmail(String password, String email) throws Exception;
 	public boolean updatePassword(String string, String password);
 	public boolean isConfirmedEmail(String email);
 	public int addEmailConfirm(String email, String code);
 	public boolean checkConfirmCode(EmailConfirm emailConfirm);
 	public void removeConfirmCode(String email);
+	public int signup2(MultipartFile profile, User user) throws IOException;
 }

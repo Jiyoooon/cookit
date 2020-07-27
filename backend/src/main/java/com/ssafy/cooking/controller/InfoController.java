@@ -3,6 +3,7 @@ package com.ssafy.cooking.controller;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.cooking.dto.Category;
 import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.service.InfoService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -22,17 +24,21 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/api")
 public class InfoController {
 
+	@Autowired
+	private InfoService infoService;
+	
     @ApiOperation(value = "카테고리 목록 조회")
    	@GetMapping("category")
    	public ResponseEntity<List<Category>> getCategories() throws Exception {
-   		return new ResponseEntity<List<Category>>(new LinkedList<Category>(), HttpStatus.OK);
+   		return new ResponseEntity<List<Category>>(infoService.searchCategories(), HttpStatus.OK);
    	}
     
     
     //식재료 자동완성
     @ApiOperation(value = "레시피 작성 중 식재료 자동 완성", notes = "유저가 입력한 재료명을 포함한 식재료 검색")
-   	@GetMapping("ingredient/{name}")
-   	public ResponseEntity<Filter> getIngredient(@PathVariable("name") String name) throws Exception {
-   		return new ResponseEntity<Filter>(new Filter(), HttpStatus.OK);
+   	@GetMapping("autocomplete/{name}")
+   	public ResponseEntity<Filter> getIngredients(@PathVariable("name") String name) throws Exception {
+   		return new ResponseEntity<Filter>(infoService.searchIngredients(name), HttpStatus.OK);
    	}
+    
 }
