@@ -1,11 +1,15 @@
 export default {
+<<<<<<< HEAD
     URL: 'http://d269e2b2d442.ngrok.io',
+=======
+    URL: 'http://e7c0ebd8068d.ngrok.io',
+>>>>>>> master
     ROUTES: {
         accounts: {
             signup: '/user/join',
             login: '/user/login',
             logout: '/user/logout',
-            baseuser: '/user/',
+            baseuser: '/user',
             getcomments: '/user/comments/',
             checkemail: '/user/dup/email/',
             checknickname: '/user/dup/nickname/',
@@ -18,8 +22,10 @@ export default {
         info: {
 
         },
-        recipe: {
-
+        myrecipe: {
+            myrecipes: '/recipe/all/',
+            selectedrecipe: '/recipe/',
+            fetchrecipesbytitle: 'recipe/title'
         },
     }
 }

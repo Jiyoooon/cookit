@@ -11,6 +11,8 @@ import PasswordFindView from '../views/accounts/PasswordFindView.vue'
 import EmailAuthView from '../views/accounts/EmailAuthView.vue'
 import Home from '../views/Home.vue'
 import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView.vue'
+import MyBlogListView from '../views/myblog/MyBlogListView.vue'
+import RecipeDetailView from '../views/myblog/RecipeDetailView.vue'
 
 Vue.use(VueRouter)
 
@@ -69,6 +71,17 @@ Vue.use(VueRouter)
     path: '/lookAroundRecipe',
     name: 'LookAroundRecipeView',
     component: LookAroundRecipeView
+  //////////////////////
+  },
+  {
+    path: '/myBlog',
+    name: 'MyBlogListView',
+    component: MyBlogListView
+  },
+  {
+    path: '/myBlog/:recipe_id',
+    name: 'SelectedRecipe',
+    component: RecipeDetailView
   },
 ]
 

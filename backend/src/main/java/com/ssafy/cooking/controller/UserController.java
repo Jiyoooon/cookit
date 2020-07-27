@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +25,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.cooking.dto.Comment;
+import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.Login;
 import com.ssafy.cooking.dto.TempKey;
 import com.ssafy.cooking.dto.User;
+import com.ssafy.cooking.dto.User2;
 import com.ssafy.cooking.service.JwtService;
 import com.ssafy.cooking.service.UserService;
 import com.ssafy.cooking.util.SHA256;
@@ -73,8 +76,7 @@ public class UserController {
 	//이메일 인증
 	@ApiOperation(value = "인증키 발송 요청")
 	@GetMapping("/verification/send/{email}")
-	public ResponseEntity<HashMap<String, Object>> signupSendCheckEmail(@PathVariable("email") String email, HttpServletRequest request) throws Exception {
-		HttpSession session = request.getSession();
+	public ResponseEntity<HashMap<String, Object>> signupSendCheckEmail(@PathVariable("email") String email) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String random = new TempKey().getKey(30, false);  // 인증키 생성
 
@@ -84,6 +86,14 @@ public class UserController {
 			map.put("cause", "이미 가입한 계정");
 			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
 		}
+		
+		//인증코드 한번만 보낼 수 있게
+		if(userService.isConfirmedEmail(email)) {
+			map.put("cause", "인증코드 발송함");
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+		}
+		
+		userService.removeConfirmCode(email);
 		
 		String title = "요리조리 회원가입 인증 코드입니다.";
 		String content = "\n\n안녕하세요 회원님, 저희 홈페이지를 찾아주셔서 감사합니다.\n\n 인증코드 : " + random; // 내용
@@ -96,8 +106,8 @@ public class UserController {
             messageHelper.setText(content); // 메일 내용
             
             mailSender.send(message);
-
-            session.setAttribute("random", random);
+            userService.addEmailConfirm(email, random);//유효시간 3분
+            
         } catch (Exception e) {
             e.printStackTrace();
             map.put("cause", "서버 오류");
@@ -110,15 +120,15 @@ public class UserController {
 	
 	
 	@ApiOperation(value = "인증키 확인 요청")
-	@GetMapping("/verification/check/{random}")
-	public ResponseEntity<HashMap<String, Object>> signupVerification(@PathVariable("random") String random, HttpServletRequest request) throws Exception {
+	@PostMapping("/verification/check")
+	public ResponseEntity<HashMap<String, Object>> signupVerification(@RequestBody EmailConfirm emailConfirm) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		HttpSession session = request.getSession();
 		
-        if(random.equals(session.getAttribute("random"))){
-        	map.put("result", "success");
-    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
-        } else {
+		if(userService.checkConfirmCode(emailConfirm)) {
+			map.put("result", "success");
+			userService.removeConfirmCode(emailConfirm.getEmail());
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+		}else {
         	map.put("result", "fail");
             return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
         }
@@ -140,10 +150,58 @@ public class UserController {
 	}
 	
 	//회원가입 요청
-    @ApiOperation(value = "회원가입")
+//    @ApiOperation(value = "회원가입")
+//	@PostMapping("/join")
+//	public ResponseEntity<HashMap<String, Object>> signupUser(@RequestBody User user) throws Exception {
+//    	HashMap<String, Object> map = new HashMap<String, Object>();
+//    	
+//    	String namePt = "^[a-zA-Z0-9가-힣]{4,12}$";
+//    	String pwPt = "^[0-9a-zA-Z~`!@#$%\\\\^&*()-]{8,12}$";//특수,대소문자,숫자 포함 8자리 이상
+//    	String emailPt = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+//    	
+//    	map.put("result", "fail");
+//    	if(user.getNickname() == null || user.getNickname() == "") {
+//    		map.put("cause", "닉네임 입력 필수");
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//    	if(!user.getNickname().matches(namePt)) {
+//    		map.put("cause", "닉네임 형식 오류");
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//    	if(!user.getPassword().matches(pwPt)) {
+//    		map.put("cause", "비밀번호 형식 오류");
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//    	if(!user.getEmail().matches(emailPt)) {
+//    		map.put("cause", "이메일 형식 오류");
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//    	if(user.getIntro().length() > 100) {
+//    		map.put("cause", "소개글 글자 수 초과");
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//
+//    	
+//    	user.setPassword(SHA256.testSHA256(user.getPassword()));
+//    	
+//    	map.put("result", "success");
+//    	if(userService.signup(user) > 0) {
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}else {
+//    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//    	}
+//	}
+	
+	@ApiOperation(value = "회원가입")
 	@PostMapping("/join")
-	public ResponseEntity<HashMap<String, Object>> signupUser(@RequestBody User user) throws Exception {
+	public ResponseEntity<HashMap<String, Object>> signupUser(@RequestParam("profile_image") MultipartFile profile
+															, @RequestBody User user) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
+//    	MultipartFile profile = user.getProfile_image();
+    	
+    	if(profile != null) {
+    		System.out.println(profile.getOriginalFilename());
+    	}
     	
     	String namePt = "^[a-zA-Z0-9가-힣]{4,12}$";
     	String pwPt = "^[0-9a-zA-Z~`!@#$%\\\\^&*()-]{8,12}$";//특수,대소문자,숫자 포함 8자리 이상
@@ -174,14 +232,14 @@ public class UserController {
     	
     	user.setPassword(SHA256.testSHA256(user.getPassword()));
     	
-    	map.put("result", "success");
+    	//먼저 사진 저장 & 디비에 유저 정보 저장 => transaction
     	if(userService.signup(user) > 0) {
+    		map.put("result", "success");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}else {
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
 	}
-    
     
     @ApiOperation(value = "로그인")
    	@PostMapping("/login")
@@ -190,10 +248,12 @@ public class UserController {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	HttpStatus status = null;
     	
+//    	response.setHeader("Access-Control-Allow-Origin", "*");
+//        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+//        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "X-Custom-Header");//jwt-auth-token
     	String email = login.getEmail();
     	String password = login.getPassword();
-    	
-    	System.out.println("password : "+SHA256.testSHA256(password));
     	
     	try {
     		User user = userService.signin(email, SHA256.testSHA256(password));

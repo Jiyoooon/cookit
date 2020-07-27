@@ -3,6 +3,7 @@ package com.ssafy.cooking.service;
 import java.util.List;
 
 import com.ssafy.cooking.dto.Comment;
+import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.User;
 
 public interface UserService {
@@ -20,4 +21,8 @@ public interface UserService {
 	public boolean checkPassword(String uid, String password);
 	public void modifyPassword(String uid, String password, String email) throws Exception;
 	public boolean updatePassword(String string, String password);
+	public boolean isConfirmedEmail(String email);
+	public int addEmailConfirm(String email, String code);
+	public boolean checkConfirmCode(EmailConfirm emailConfirm);
+	public void removeConfirmCode(String email);
 }
