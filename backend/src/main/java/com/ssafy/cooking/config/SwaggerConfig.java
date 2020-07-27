@@ -21,7 +21,7 @@ public class SwaggerConfig {
 	@Bean
 	public Docket postsApi() {
 		ParameterBuilder aParameterBuilder = new ParameterBuilder();
-        aParameterBuilder.name("jwt-auth-token") //헤더 이름
+        aParameterBuilder.name("Authorization") //헤더 이름
                 .description("Access Tocken") //설명
                 .modelRef(new ModelRef("string"))
                 .parameterType("header") 

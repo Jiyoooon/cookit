@@ -94,4 +94,43 @@
 		SET password = #{password}
 		WHERE user_id = #{uid}	
 	</update>
+	
+	
+	<update id="updatePasswordByEmail" parameterType="string">
+		UPDATE User
+		SET password = #{password}
+		WHERE email = #{email}	
+	</update>
+	
+	
+	<select id="isConfirmedEmail" parameterType="string" resultType="int">
+		SELECT count(email)
+		FROM Email_confirm
+		WHERE email = #{email} AND now() &lt; expire_date
+	</select>
+	
+	<insert id="insertEmailConfirm" parameterType="string">
+		INSERT into Email_confirm
+			VALUES(#{email}, #{code}, now(), date_add(now(), interval 3 minute))
+	</insert>
+	
+	<select id="checkConfirmCode" parameterType="EmailConfirm" resultType="int">
+		SELECT count(email)
+		FROM Email_confirm
+		WHERE email = #{email} 
+			AND code = #{code} 
+			AND now() &lt; expire_date
+	</select>
+	
+	<delete id="deleteConfirmCode" parameterType="string">
+		DELETE from Email_confirm
+		WHERE email = #{email}
+	</delete>
+	
+	<select id="selectNextUserId" resultType="int">
+		SELECT AUTO_INCREMENT
+		FROM information_schema.tables
+		WHERE table_name = 'User'
+		AND table_schema = DATABASE()
+	</select>
 </mapper>

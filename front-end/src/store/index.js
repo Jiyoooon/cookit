@@ -15,6 +15,7 @@ const moduleAccounts = {
     authUser: cookies.get('auth-user'),
     userEmail: cookies.get('user-email'),
   },
+
   getters: {
     isLoggedIn(state) {
       if (state.authToken) {
@@ -134,6 +135,12 @@ const moduleAccounts = {
 
     GoEmailAuth() {
       router.push({ name: 'EmailAuthView'})
+    },
+    GoPasswordAuth(){
+      router.push({ name: 'PasswordAuthView'})
+    },
+    GoPasswordFind(){
+      router.push({ name: 'PasswordFindView'})
     },
 
     RedirectAfterUserUpdate() {
@@ -322,6 +329,81 @@ const moduleAccounts = {
             }
           })
       }
+    },
+    // nicknameCheck(context, nickname) {
+    //   axios.get(SERVER.ROUTES.accounts.nicknameCheck + String(nickname))
+    //     .then((res) => {
+    //       console.log(res)
+    //     })
+    // },
+    passwordCheck({ dispatch, getters } ,password) {
+      console.log('토큰 :' + this.authToken)
+      axios.post(SERVER.ROUTES.accounts.checkpassword, password, getters.config)
+      .then((res) => {
+        console.log(res)
+        if(res.data.result == 'success') {
+          this._vm.$root.$bvModal.msgBoxOk('확인되었습니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'success',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true
+          })
+          .then((ans) => {
+            if (ans) {
+              dispatch('GoUserInfo')
+            }
+          })
+        } else {
+          this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true
+          })
+        }
+      })
+      .catch((err) => {
+        console.log(err.response)
+        alert(err.response)
+      })
+    },
+    sendNewPassword({ dispatch }, email) {
+      axios.get(SERVER.ROUTES.accounts.sendnewpassword + String(email))
+      .then((res) => {
+        console.log(res)
+        if(res.data.result == 'success'){
+          this._vm.$root.$bvModal.msgBoxOk('새 비밀번호가 전송되었습니다', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'success',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true
+          }) 
+          dispatch('GoLogin')
+        } else {
+          this._vm.$root.$bvModal.msgBoxOk('존재하지 않는 이메일입니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true
+          }) 
+        }
+      })
+      .catch((err) => {
+        console.log(err.response)
+        alert(err.response)
+      })
     },
   },
 }

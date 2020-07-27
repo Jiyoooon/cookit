@@ -1,5 +1,5 @@
 export default {
-    URL: ' http://i3a201.p.ssafy.io:8080/cooking-0.0.1-SNAPSHOT',
+    URL: 'http://i3a201.p.ssafy.io:8080/cooking-0.0.1-SNAPSHOT',
     ROUTES: {
         accounts: {
             signup: '/user/join',
@@ -9,9 +9,11 @@ export default {
             getcomments: '/user/comments/',
             checkemail: '/user/dup/email/',
             checknickname: '/user/dup/nickname/',
+            checkpassword: '/user/password',
             getfollowers: '/user/followers/',
             checkkey: '/user/verification/check',
             requestkey: '/user/verification/send/',
+            sendnewpassword: '/user/password/',
         },
         info: {
 
