@@ -38,7 +38,7 @@ export default {
   name: 'PasswordFind',
   data(){
       return{
-        userEmail:null,
+        userEmail:'',
       }
   },
   methods:{

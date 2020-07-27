@@ -106,6 +106,7 @@ const moduleAccounts = {
         .then((res) => {
           console.log(res.data)
           commit('SET_TOKEN', res.data.uid)
+          console.log(this.authToken)
           router.push({ name: 'Home'})
         })
         .catch((err) => {
@@ -126,7 +127,6 @@ const moduleAccounts = {
     },
 
     emailAuthCodeSend({ commit }, email) {
-      console.log(email)
       alert('인증코드가 발송되었습니다')
       axios.get(`/user/verification/send/${String(email)}`)
       .then(res => {
@@ -170,8 +170,12 @@ const moduleAccounts = {
     },
     //수정중
     passwordCheck({dispatch},password){
-      console.log(password)
-      axios.post(SERVER.ROUTES.accounts.checkpassword,password)
+      console.log('토큰 :' + this.authToken)
+      axios.post(SERVER.ROUTES.accounts.checkpassword,password,{
+        headers:{
+          'Authoriaztion': 'jwt-auth-token' + this.authToken
+        } 
+      })
       .then((res) => {
         console.log(res)
         if(res){
@@ -184,9 +188,19 @@ const moduleAccounts = {
         alert(err.response)
       })
     },
-    sendNewPassword({state},email){
-      alert('새 비밀번호 전송!'+state.authToken+email)
-    }
+    sendNewPassword({dispatch},email){
+      axios.get(SERVER.ROUTES.accounts.sendnewpassword+String(email))
+      .then((res) => {
+        if(res){
+          alert(email+"로 새 비밀번호를 전송했습니다!")
+          dispatch('GoLogin')
+        }
+      })
+      .catch((err) => {
+        console.log("에러!!!!")
+        alert(err.response)
+      })
+    },
   },
 }
 
