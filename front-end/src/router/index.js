@@ -10,7 +10,7 @@ import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 import PasswordFindView from '../views/accounts/PasswordFindView.vue'
 import EmailAuthView from '../views/accounts/EmailAuthView.vue'
 import Home from '../views/Home.vue'
-import LookAroundRecipeView from '../views/LookAroundRecipeView.vue'
+import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView.vue'
 
 Vue.use(VueRouter)
 
