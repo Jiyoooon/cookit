@@ -1,11 +1,11 @@
 export default {
-    URL: 'http://8ef703d9f822.ngrok.io',
+    URL: 'http://e7c0ebd8068d.ngrok.io',
     ROUTES: {
         accounts: {
             signup: '/user/join',
             login: '/user/login',
             logout: '/user/logout',
-            baseuser: '/user/',
+            baseuser: '/user',
             getcomments: '/user/comments/',
             checkemail: '/user/dup/email/',
             checknickname: '/user/dup/nickname/',
@@ -16,8 +16,10 @@ export default {
         info: {
 
         },
-        recipe: {
-
+        myrecipe: {
+            myrecipes: '/recipe/all/',
+            selectedrecipe: '/recipe/',
+            fetchrecipesbytitle: 'recipe/title'
         },
     }
 }

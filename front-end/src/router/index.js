@@ -9,6 +9,8 @@ import UserInfoView from '../views/accounts/UserInfoView.vue'
 import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 import EmailAuthView from '../views/accounts/EmailAuthView.vue'
 import Home from '../views/Home.vue'
+import MyBlogListView from '../views/myblog/MyBlogListView.vue'
+import RecipeDetailView from '../views/myblog/RecipeDetailView.vue'
 
 Vue.use(VueRouter)
 
@@ -57,6 +59,17 @@ Vue.use(VueRouter)
     path: '/emailAuth',
     name: 'EmailAuthView',
     component: EmailAuthView
+  },
+  //////////////////////
+  {
+    path: '/myBlog',
+    name: 'MyBlogListView',
+    component: MyBlogListView
+  },
+  {
+    path: '/myBlog/:recipe_id',
+    name: 'SelectedRecipe',
+    component: RecipeDetailView
   },
 ]
 
