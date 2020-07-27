@@ -95,6 +95,14 @@
 		WHERE user_id = #{uid}	
 	</update>
 	
+	
+	<update id="updatePasswordByEmail" parameterType="string">
+		UPDATE User
+		SET password = #{password}
+		WHERE email = #{email}	
+	</update>
+	
+	
 	<select id="isConfirmedEmail" parameterType="string" resultType="int">
 		SELECT count(email)
 		FROM Email_confirm
@@ -118,4 +126,11 @@
 		DELETE from Email_confirm
 		WHERE email = #{email}
 	</delete>
+	
+	<select id="selectNextUserId" resultType="int">
+		SELECT AUTO_INCREMENT
+		FROM information_schema.tables
+		WHERE table_name = 'User'
+		AND table_schema = DATABASE()
+	</select>
 </mapper>

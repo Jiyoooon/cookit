@@ -26,4 +26,6 @@ public interface UserDao {
 	public int insertEmailConfirm(String email, String code);
 	public int checkConfirmCode(EmailConfirm emailConfirm);
 	public void deleteConfirmCode(String email);
+	public int selectNextUserId();
+	public void updatePasswordByEmail(String email, String password);
 }
