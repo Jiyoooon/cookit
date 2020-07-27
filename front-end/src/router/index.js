@@ -8,6 +8,7 @@ import UserUpdateView from '../views/accounts/UserUpdateView.vue'
 import UserInfoView from '../views/accounts/UserInfoView.vue'
 import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 import EmailAuthView from '../views/accounts/EmailAuthView.vue'
+import RecipeCreateView from '@/views/myrecipes/RecipeCreateView.vue'
 import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
@@ -57,6 +58,11 @@ Vue.use(VueRouter)
     path: '/emailAuth',
     name: 'EmailAuthView',
     component: EmailAuthView
+  },
+  {
+    path: '/recipeCreate',
+    name: 'RecipeCreateView',
+    component: RecipeCreateView
   },
 ]
 
