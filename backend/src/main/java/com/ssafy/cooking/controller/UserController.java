@@ -1,7 +1,6 @@
 package com.ssafy.cooking.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -12,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +28,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.Login;
 import com.ssafy.cooking.dto.TempKey;
@@ -66,17 +65,23 @@ public class UserController {
 	@GetMapping("/dup/email/{email}")
 	public ResponseEntity<HashMap<String, Object>> signupEmailCheck(@PathVariable("email") String email) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-
-		if(userService.isDupEmail(email)) {//이미 존재하는 계정
-			map.put("result", "fail");
-			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
-		}else {
-			map.put("result", "success");
-			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+		
+		try {
+			if(userService.isDupEmail(email)) {//이미 존재하는 계정
+				map.put("result", "fail");
+			}else {
+				map.put("result", "success");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			map.put("reult", "fail");
+			map.put("cause", "서버 오류");
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
 	}
 	
-	//이메일 인증
+	//이메일 인증키 발송
 	@ApiOperation(value = "인증키 발송 요청")
 	@GetMapping("/verification/send/{email}")
 	public ResponseEntity<HashMap<String, Object>> signupSendCheckEmail(@PathVariable("email") String email) throws Exception {
@@ -121,7 +126,7 @@ public class UserController {
 		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
 	}
 	
-	
+	//인증키 확인
 	@ApiOperation(value = "인증키 확인 요청")
 	@PostMapping("/verification/check")
 	public ResponseEntity<HashMap<String, Object>> signupVerification(@RequestBody EmailConfirm emailConfirm) throws Exception {
@@ -201,7 +206,7 @@ public class UserController {
 	@ApiOperation(value = "회원가입테스트")//, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, headers = "Content-Type= multipart/form-data"
 	@PostMapping(value = "/join2")//, consumes = "multipart/form-data"
 	public ResponseEntity<HashMap<String, Object>> signupUser2(@RequestPart(required = false, name = "profile") MultipartFile profile
-															, @ModelAttribute User user)throws Exception {
+															, @ModelAttribute("user") User user)throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
     	String namePt = "^[a-zA-Z0-9가-힣]{4,12}$";
@@ -251,6 +256,7 @@ public class UserController {
     	}
 	}
     
+	//로그인
     @ApiOperation(value = "로그인")
    	@PostMapping("/login")
    	public ResponseEntity<HashMap<String, Object>> signinUser(@RequestBody Login login
@@ -285,7 +291,6 @@ public class UserController {
     	}
 		return new ResponseEntity<HashMap<String, Object>>(map, status);
    	}
-    
     
     //로그아웃
     @ApiOperation(value = "로그아웃")///token
@@ -368,6 +373,7 @@ public class UserController {
    	public ResponseEntity<HashMap<String, Object>> getUser(HttpServletRequest request) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
+//    	Resource rs = null;
     	String result = "success";
     	HttpStatus status = HttpStatus.ACCEPTED;
     	
@@ -380,7 +386,11 @@ public class UserController {
 				String uid = (String)claims.get("uid");
 				try {
 					result = "success";
-					map.put("data", userService.getUser(uid));
+					return userService.getUser(uid);
+//					map.put("data", userService.getUser(uid));
+//					rs = userService.getUser(uid);
+					
+					
 				}catch(Exception e){
 					result = "fail";
 					map.put("cause", "서버 오류");
@@ -402,7 +412,9 @@ public class UserController {
     //회원정보 수정
     @ApiOperation(value = "회원정보 수정하기")///token
    	@PutMapping()
-   	public ResponseEntity<HashMap<String, Object>> reviseUser(@RequestBody User user, HttpServletRequest request) throws Exception {
+   	public ResponseEntity<HashMap<String, Object>> reviseUser(@RequestPart(required = false, name = "profile") MultipartFile profile
+   															, @ModelAttribute("user") User user
+   															, HttpServletRequest request) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
     	String result = "success";
@@ -422,9 +434,10 @@ public class UserController {
 				user.setUser_id(Integer.parseInt((String)claims.get("uid")));
 				
 				try {
-					userService.reviseUser(user);
+					userService.reviseUser(profile, user);
 					result = "success";
 				}catch(Exception e){
+					e.printStackTrace();
 					result = "fail";
 					map.put("cause", "서버 오류");
 					status = HttpStatus.INTERNAL_SERVER_ERROR;
