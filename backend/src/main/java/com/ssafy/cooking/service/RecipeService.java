@@ -18,5 +18,5 @@ public interface RecipeService {
 
 	public int addCommnet(int recipe_id, Comment comment);
 
-	public void addRecipe(RecipeDetail recipeDetail);
+	public int addRecipe(RecipeDetail recipeDetail);
 }
