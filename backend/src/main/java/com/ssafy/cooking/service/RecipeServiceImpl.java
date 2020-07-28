@@ -10,6 +10,7 @@ import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.CookingStep;
 import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
+import com.ssafy.cooking.dto.RecipeDetail;
 
 @Service
 public class RecipeServiceImpl implements RecipeService{
@@ -43,5 +44,11 @@ public class RecipeServiceImpl implements RecipeService{
 	@Override
 	public int addCommnet(int recipe_id, Comment comment) {
 		return recipeDao.addCommnet(recipe_id, comment);
+	}
+
+	@Override
+	public void addRecipe(RecipeDetail recipeDetail) {
+		// TODO Auto-generated method stub
+		
 	}
 }

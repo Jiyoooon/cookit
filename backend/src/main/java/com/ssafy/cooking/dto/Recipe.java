@@ -1,5 +1,7 @@
 package com.ssafy.cooking.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Recipe {
 
 	private int recipe_id; //레시피id
@@ -16,6 +18,7 @@ public class Recipe {
 	private String create_date; //작성시간
 	private String update_date;
 	private String delete_date;
+	private MultipartFile main_image_file;
 	
 	public int getRecipe_id() {
 		return recipe_id;
@@ -100,6 +103,12 @@ public class Recipe {
 	}
 	public void setDelete_date(String delete_date) {
 		this.delete_date = delete_date;
+	}
+	public MultipartFile getMain_image_file() {
+		return main_image_file;
+	}
+	public void setMain_image_file(MultipartFile main_image_file) {
+		this.main_image_file = main_image_file;
 	}
 	
 	@Override
