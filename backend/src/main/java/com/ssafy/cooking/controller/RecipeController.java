@@ -67,6 +67,7 @@ public class RecipeController {
    	@PostMapping("/recipes/save")
    	public ResponseEntity<HashMap<String, Object>> addRecipe(@RequestBody RecipeDetail recipeDetail) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
+    	recipeservice.addRecipe(recipeDetail);
    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
    	}
     
