@@ -1,10 +1,9 @@
 package com.ssafy.cooking.dto;
 
-import java.sql.Date;
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable{
 	private int user_id;//pk
-	private String id;
 	private String email;
 	private String password;
 	private String name;
@@ -17,7 +16,6 @@ public class User {
 
 	private String create_date;
 	private String update_date;
-	private String delete_date;
 
 	private String sns_type;
 	private String sns_token_id;
@@ -29,12 +27,6 @@ public class User {
 	}
 	public void setUser_id(int user_id) {
 		this.user_id = user_id;
-	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
 	}
 	public String getEmail() {
 		return email;
@@ -97,12 +89,6 @@ public class User {
 	public void setUpdate_date(String update_date) {
 		this.update_date = update_date;
 	}
-	public String getDelete_date() {
-		return delete_date;
-	}
-	public void setDelete_date(String delete_date) {
-		this.delete_date = delete_date;
-	}
 	public String getSns_type() {
 		return sns_type;
 	}
@@ -123,10 +109,10 @@ public class User {
 	}
 	@Override
 	public String toString() {
-		return "User [user_id=" + user_id + ", id=" + id + ", email=" + email + ", password=" + password + ", name="
+		return "User [user_id=" + user_id + ", email=" + email + ", password=" + password + ", name="
 				+ name + ", nickname=" + nickname + ", intro=" + intro + ", start_page=" + start_page
 				+ ", profile_image=" + profile_image + ", hits=" + hits + ", create_date=" + create_date
-				+ ", update_date=" + update_date + ", delete_date=" + delete_date + ", sns_type=" + sns_type
+				+ ", update_date=" + update_date + ", sns_type=" + sns_type
 				+ ", sns_token_id=" + sns_token_id + ", sns_connect_date=" + sns_connect_date + "]";
 	}
 	

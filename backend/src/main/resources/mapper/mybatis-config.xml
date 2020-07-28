@@ -9,6 +9,7 @@
    
    <mappers>
 	  <mapper resource="mapper/user.xml"/>
+	  <mapper resource="mapper/info.xml"/>
 	  <mapper resource="mapper/recipe.xml"/>
    </mappers>
 </configuration>
