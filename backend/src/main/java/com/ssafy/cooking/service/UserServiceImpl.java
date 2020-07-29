@@ -76,25 +76,33 @@ public class UserServiceImpl implements UserService{
 //		return null;
 //	}
 	
+	
+	@Override
+	public User getUser(String uid) {
+		return userDao.getUser(uid);
+	}
+	
+	
 	@Override
 	@Transactional
-	public ResponseEntity<HashMap<String, Object>> getUser(String uid) throws IOException {
-		HashMap<String, Object> map = new HashMap<>();
+	public HashMap<String, Object> getUserResource(String uid) throws IOException {
 		String separator = File.separator;
 		String filePath = "C:\\SSAFY\\commonpjt\\profile";
 //		String filePath = "/app/images/profile";
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		
 		Resource rs = null;
-		
-		
+		HttpHeaders header = new HttpHeaders();
 		User user = userDao.getUser(uid);
 		String oriName = user.getProfile_image();
-		System.out.println(user);
-		System.out.println(oriName);
-		map.put("result", "success");
 		map.put("user", user);
 		
-		if(oriName == null || oriName.equals("")) {//프로필 사진 없으면 user정보만 return
-			return new ResponseEntity<HashMap<String,Object>>(map, HttpStatus.OK);
+		
+		//프로필 사진 없으면 user정보만 return
+		if(oriName == null || oriName.equals("")) {
+			map.put("resource", null);
+			return map;
 		}
 		
 		String fileName = filePath + separator + user.getProfile_image();
@@ -102,28 +110,29 @@ public class UserServiceImpl implements UserService{
 		
 		if(target.exists()) {
 			try {
-				HttpHeaders header = new HttpHeaders();
 				String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));
 				if(mimeType == null) mimeType = "octet-stream";
 				
 				rs = new UrlResource(target.toURI());
 				
-				
 				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\""+rs.getFilename()+"\"");
 				header.setContentType(MediaType.parseMediaType(mimeType));
-				System.out.println(rs);
-				System.out.println(header.getAccessControlAllowOrigin());
-				
-				
 				
 				map.put("resource", rs);
-				return new ResponseEntity<HashMap<String,Object>>(map, header, HttpStatus.OK);
+				map.put("header", header);
+				
+				return map;
 			}catch(IOException e) {
 				e.printStackTrace();
-				throw new IOException();
+				logger.warn("서버 폴더에서 이미지 호출 실패");
+				map.put("resource", null);
+				return map;
 			}
+		}else {
+			logger.warn("profile_image값은 있는데 서버 폴더에서 이미지 찾지 못함");
+			map.put("resource", null);
+			return map;
 		}
-		return new ResponseEntity<HashMap<String,Object>>(map, HttpStatus.OK);
 		
 	}
 
@@ -225,8 +234,8 @@ public class UserServiceImpl implements UserService{
 
 	public boolean removeProfile(String uid) throws IOException{
 		String separator = File.separator;
-//		String filePath = "C:\\SSAFY\\commonpjt\\profile";
-		String filePath = "/app/images/profile";
+		String filePath = "C:\\SSAFY\\commonpjt\\profile";
+//		String filePath = "/app/images/profile";
 		
 		User user = userDao.getUser(uid);
 		String fileName = user.getProfile_image();
@@ -249,8 +258,8 @@ public class UserServiceImpl implements UserService{
 	}
 	public boolean writeProfile(MultipartFile profile, int userId, User user) {
 		String separator = File.separator;
-//		String filePath = "C:\\SSAFY\\commonpjt\\profile";
-    	String filePath = "/app/images/profile";
+		String filePath = "C:\\SSAFY\\commonpjt\\profile";
+//    	String filePath = "/app/images/profile";
 		String oriName = profile.getOriginalFilename();
 		String extension = oriName.substring(oriName.lastIndexOf("."));//확장자
 		
@@ -306,5 +315,7 @@ public class UserServiceImpl implements UserService{
     	return userDao.signup(user) > 0 ? nextId : -1;
 		
 	}
+
+	
 
 }

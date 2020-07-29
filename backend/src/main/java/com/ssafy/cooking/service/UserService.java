@@ -20,7 +20,6 @@ public interface UserService {
 	public User signin(String email, String password);
 	public int signup(User user);
 	public int delete(String uid) throws IOException;
-	public ResponseEntity<HashMap<String, Object>> getUser(String uid) throws IOException;
 	public int reviseUser(MultipartFile profile, User user) throws IOException;
 	public List<User> getFollowers(String uid);
 	public List<Comment> getCommnets(String uid);
@@ -32,4 +31,6 @@ public interface UserService {
 	public boolean checkConfirmCode(EmailConfirm emailConfirm);
 	public void removeConfirmCode(String email);
 	public int signup2(MultipartFile profile, User user) throws IOException;
+	public HashMap<String, Object> getUserResource(String uid) throws IOException;
+	public User getUser(String uid);
 }
