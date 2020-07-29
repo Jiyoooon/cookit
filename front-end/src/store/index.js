@@ -688,7 +688,10 @@ const moduleLookAround = {
       .catch((err) => {
         alert(err)
       })
-    }
+    },
+    GoLookAroundRecipesView() {
+      router.push({ name: 'LookAroundRecipeView',})
+    },
   },
 }
 
