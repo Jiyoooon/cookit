@@ -34,6 +34,7 @@
     </b-collapse>
   </b-navbar>
   <hr>
+  <!-- <router-link to='recipeCreate'>글쓰기</router-link> -->
   <router-view></router-view>
   </div>
 </template>
