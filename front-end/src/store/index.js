@@ -238,7 +238,15 @@ const moduleAccounts = {
         console.log(`Code check: ${String(res.data.result)}`)
         if (res.data.result == 'success') dispatch('GoSignup')
         else if (res.data.result == 'fail') {
-          alert("코드가 맞지 않습니다.")
+          this._vm.$root.$bvModal.msgBoxOk('코드가 맞지 않습니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true
+          })
           commit('SET_EMAIL', null)
         }
       })
@@ -259,7 +267,7 @@ const moduleAccounts = {
           centered: true
         })
       } else if (!signupData.valid.nickname) {
-        this._vm.$root.$bvModal.msgBoxOk('닉네임 중복체를 해주세요.', {
+        this._vm.$root.$bvModal.msgBoxOk('닉네임 중복체크를 해주세요.', {
           title: 'Confirmation',
           size: 'sm',
           buttonSize: 'sm',
@@ -269,11 +277,26 @@ const moduleAccounts = {
           centered: true
         })
       } else {
+        console.log(signupData.config)
         axios.post(SERVER.ROUTES.accounts.signup, signupData.config)
           .then((res) => {
-            commit('SET_TOKEN', res.data.token)
-            dispatch('fetchUser')
-            router.push({ name: 'Home'})
+            if (res.data.result == 'success') {
+              commit('SET_TOKEN', res.data.token)
+              dispatch('fetchUser')
+              router.push({ name: 'Home'})
+            } else {
+              console.log(res)
+              console.log(res.data)
+              this._vm.$root.$bvModal.msgBoxOk('이미지 파일이 올바르지 않습니다.', {
+                title: 'Confirmation',
+                size: 'sm',
+                buttonSize: 'sm',
+                okVariant: 'danger',
+                headerClass: 'p-2 border-bottom-0',
+                footerClass: 'p-2 border-top-0',
+                centered: true
+              })
+            }
           })
           .catch((err) => {
             console.log(err.response)
@@ -285,6 +308,8 @@ const moduleAccounts = {
       axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
           commit('SET_USER', res.data.data)
+          console.log(res.data.data)
+          console.log('!!!!')
         })
         .catch((err) => {
           console.err(err.response)
@@ -313,7 +338,25 @@ const moduleAccounts = {
           centered: true
         })
       } else {
-        axios.put(SERVER.ROUTES.accounts.baseuser, updateData.config, getters.config)
+        console.log(updateData.config)
+
+        const formData = new FormData()
+        formData.append('email', updateData.config.email)
+        formData.append('password', updateData.config.password)
+        formData.append('nickname', updateData.config.nickname)
+        formData.append('profile', updateData.config.profile)
+        formData.append('intro', updateData.config.intro)
+
+        for (let key of formData.entries()) {
+          console.log(`${key}`)
+        }
+
+        const headerconfig = { headers: {
+          Authorization: getters.config.Authorization,
+          'Content-Type': 'multipart/form-data'
+        }}
+
+        axios.put(SERVER.ROUTES.accounts.baseuser, formData, headerconfig)
           .then((res) => {
             if (res.data.result == 'success') {
               this._vm.$root.$bvModal.msgBoxOk('수정되었습니다.', {
@@ -327,6 +370,10 @@ const moduleAccounts = {
               })
             dispatch('fetchUser')
             }
+          })
+          .catch((err) => {
+            console.log(err.response)
+            alert(err.response.data.error)
           })
       }
     },
@@ -405,6 +452,79 @@ const moduleAccounts = {
         alert(err.response)
       })
     },
+    signup2({ commit, dispatch }, signupData) {
+      if (!signupData.valid.password) {
+        this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
+      } else if (!signupData.valid.nickname) {
+        this._vm.$root.$bvModal.msgBoxOk('닉네임 중복체크를 해주세요.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
+      } else {
+        
+        const formData = new FormData()
+        formData.append('email', signupData.config.email)
+        formData.append('password', signupData.config.password)
+        formData.append('nickname', signupData.config.nickname)
+        formData.append('profile', signupData.config.profile)
+        formData.append('intro', signupData.config.intro)
+
+        for (let key of formData.entries()) {
+          console.log(`${key}`)
+        }
+       
+        console.log(signupData.config.profile)
+        
+        axios.post(SERVER.ROUTES.accounts.signup, formData, { headers: { 'Content-Type': 'multipart/form-data' }})
+          .then((res) => {
+            if (res.data.result == 'success') {
+              commit('SET_TOKEN', res.data.token)
+              dispatch('fetchUser')
+              this._vm.$root.$bvModal.msgBoxOk('가입되었습니다.', {
+                title: 'Confirmation',
+                size: 'sm',
+                buttonSize: 'sm',
+                okVariant: 'success',
+                headerClass: 'p-2 border-bottom-0',
+                footerClass: 'p-2 border-top-0',
+                centered: true
+              })
+                .then(() => {
+                  router.push({ name: 'Home'})
+                })
+            } else {
+              console.log(res)
+              console.log(res.data)
+              this._vm.$root.$bvModal.msgBoxOk('이미지 파일이 올바르지 않습니다.', {
+                title: 'Confirmation',
+                size: 'sm',
+                buttonSize: 'sm',
+                okVariant: 'danger',
+                headerClass: 'p-2 border-bottom-0',
+                footerClass: 'p-2 border-top-0',
+                centered: true
+              })
+            }
+          })
+          .catch((err) => {
+            console.log(err.response)
+            alert(err.response)
+          })
+        }
+    },
   },
 }
 
@@ -431,8 +551,29 @@ const moduleMyBlog = {
   namespaced: true,
   state: {
     myrecipes: [{id: 1, title: '1111111111', content: 'fsdfsfsdfsdf'},
-                {id: 2, title: 'dfsfsfsdfsd', content: 'dfssdfadfad'},
-                {id: 3, title: 'fasdfsdf', content: 'dfsgasdgs'}],
+                {id: 2, title: '2fsfsfsdfsd', content: 'dfssdfadfad'},
+                {id: 3, title: '3asdfsdf', content: 'dfsgasdgs'},
+                {id: 4, title: '4111111111', content: 'fsdfsfsdfsdf'},
+                {id: 5, title: '5fsfsfsdfsd', content: 'dfssdfadfad'},
+                {id: 6, title: '6asdfsdf', content: 'dfsgasdgs'},
+                {id: 7, title: '7111111111', content: 'fsdfsfsdfsdf'},
+                {id: 8, title: '8fsfsfsdfsd', content: 'dfssdfadfad'},
+                {id: 9, title: '9asdfsdf', content: 'dfsgasdgs'},
+                {id: 10, title: '10111111111', content: 'fsdfsfsdfsdf'},
+                {id: 11, title: '11fsfsfsdfsd', content: 'dfssdfadfad'},
+                {id: 12, title: '12asdfsdf', content: 'dfsgasdgs'},
+                {id: 13, title: '1311111111', content: 'fsdfsfsdfsdf'},
+                {id: 14, title: '14fsfsfsdfsd', content: 'dfssdfadfad'},
+                {id: 15, title: '15sdfsdf', content: 'dfsgasdgs'},
+                {id: 16, title: '1611111111', content: 'fsdfsfsdfsdf'},
+                {id: 17, title: '17sfsfsdfsd', content: 'dfssdfadfad'},
+                {id: 18, title: '18sdfsdf', content: 'dfsgasdgs'},
+                {id: 19, title: '1911111111', content: 'fsdfsfsdfsdf'},
+                {id: 20, title: '20sfsfsdfsd', content: 'dfssdfadfad'},
+                {id: 21, title: '21sdfsdf', content: 'dfsgasdgs'},
+                {id: 22, title: '2211111111', content: 'fsdfsfsdfsdf'},
+                {id: 23, title: '23sfsfsdfsd', content: 'dfssdfadfad'},
+                {id: 24, title: '2sdfsdf', content: 'dfsgasdgs'}],
     selectedrecipe: null,
   },
 
@@ -473,9 +614,6 @@ const moduleMyBlog = {
           alert('!!!!!')
         })
     },
-    // fetchRecipesByTitle() {
-    //   axios.get(SERVER.ROUTES.myrecipe.fetchrecipesbytitle, )
-    // }
   },
 }
 

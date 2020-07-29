@@ -39,7 +39,7 @@
         <b-col sm="3">
           <label for="input-userid">닉네임<span style="color: red">*</span></label>
         </b-col>
-        <b-col sm="8">
+        <b-col sm="7">
           <b-form-input 
             id="input-userid" 
             v-model="signupData.config.nickname"
@@ -52,7 +52,7 @@
             닉네임이 올바르지 않습니다.(4~12글자 한글은 최대 6글자)
           </b-form-invalid-feedback>
         </b-col>
-        <b-col sm="1">
+        <b-col sm="2">
           <b-button v-if="!NickNameinValid" disabled variant="primary" block>중복확인</b-button>
           <b-button v-else variant="primary" @click='nicknameCheck(signupData.config.nickname)'>중복확인</b-button>
         </b-col>
@@ -60,13 +60,14 @@
 
 
       <b-row align-v="center">
-        <b-col>
+        <b-col sm="3">
           프로필사진
         </b-col>
-        <b-col sm="9">
-          <b-form-file ref = "file-input" v-model="signupData.config.profile_image" class="mt-3" accept=".jpg, .png, .jpeg" plain></b-form-file>
-          
-          <div class="mt-3"><b-button variant="primary" @click="clearFiles" plain>파일 제거</b-button> 선택된사진: {{ signupData.config.profile_image ?signupData.config.profile_image.name : '' }}</div>
+        <div v-if="signupData.config.profile"><img id="imagepreview" :src="imageURL"></div>
+        <b-col sm="3" v-if="signupData.config.profile"></b-col>
+        <b-col sm="6">
+          <b-form-file @change="imageUpload" ref="file-input" v-model="signupData.config.profile" class="mt-3" accept=".jpg, .png, .jpeg" plain></b-form-file> 
+          <div class="mt-3"><b-button variant="primary" @click="clearFiles" plain>파일 제거</b-button> 선택된사진: {{ signupData.config.profile?signupData.config.profile.name : '' }}</div>
         </b-col>
       </b-row>
       <b-row align-v="center">
@@ -83,7 +84,7 @@
         <b-row align-v="center" align-h="center">
             <b-col sm="2"></b-col>
             <b-col sm="4">
-                <b-button type="submit" variant="primary" id="signButton" @click="signup(signupData)" block>확인</b-button>
+                <b-button type="submit" variant="primary" id="signButton" @click="signup2(signupData)" block>가입하기</b-button>
             </b-col>
             <b-col sm="4">
                 <b-button variant="danger" id="cancelButton" to="/SignupView" block>취소</b-button>
@@ -119,12 +120,13 @@ import cookies from 'vue-cookies'
             email: cookies.get('user-email'),
             password: null,
             nickname: null,
-            profile_image: null,
+            profile: null,
             intro: null,
           }
         },
         file:null,
         passwordAgain: null,
+        imageURL: null,
       }
     },
     computed: {
@@ -222,18 +224,34 @@ import cookies from 'vue-cookies'
           alert('!!!')
         })
       },
-      ...mapActions('accounts', ['signup']),
+      ...mapActions('accounts', ['signup', 'signup2']),
+      checkPasswordValidValue() {
+        if(this.passwordAgainValid) {
+          this.signupData.valid.password = true
+        } else {
+          this.signupData.valid.password = false
+        }
+      },
+      imageUpload(event) {
+        const image = event.target.files[0];
+        this.imageURL = URL.createObjectURL(image)
+        // const reader = new FileReader();
+        // reader.readAsDataURL(image);
+        // reader.onload(event => {
+        //   this.imageURL = event.target.result
+        //   console.log(this.imageURL)
+        // })
+      },
     },
     updated() {
-      if(this.passwordAgainValid) {
-        this.signupData.valid.password = true
-      } else {
-        this.signupData.valid.password = false
-      }
+      this.checkPasswordValidValue()
     }
   }
 </script>
 
 <style>
-
+  #imagepreview {
+    width: 30vw;
+    height: 30vh;
+  }
 </style>

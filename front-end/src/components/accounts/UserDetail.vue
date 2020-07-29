@@ -31,7 +31,7 @@
     </b-row>
     <b-row align-v="center">
       <b-col sm="3">닉네임</b-col>
-      <b-col sm="8">
+      <b-col sm="7">
         <b-form-input 
             id="input-userid" 
             v-model="updateData.config.nickname"
@@ -44,16 +44,18 @@
             닉네임이 올바르지 않습니다.(4~12글자 한글은 최대 6글자)
           </b-form-invalid-feedback>
       </b-col>
-      <b-col sm="1">
-          <b-button v-if="!NickNameinValid" disabled variant="primary" block>중복확인</b-button>
+      <b-col sm="2">
+          <b-button v-if="!NickNameinValid || !IsNicknameChanged" disabled variant="primary" block>중복확인</b-button>
           <b-button v-else variant="primary" @click='nicknameCheck(updateData.config.nickname)'>중복확인</b-button>
         </b-col>
     </b-row>
     <b-row align-v="center">
       <b-col sm="3">프로필 사진</b-col>
-      <b-col sm="9">
-        <b-form-file v-model="updateData.config.profile_image" class="mt-3" accept="image/*" plain></b-form-file>
-        <div class="mt-3">Selected file: {{ updateData.config.profile_image ? updateData.config.profile_image : '' }}</div>
+      <div v-if="updateData.config.profile"><img id="imagepreview" :src="imageURL"></div>
+      <b-col sm="3" v-if="updateData.config.profile"></b-col>
+      <b-col sm="6">
+        <b-form-file v-model="updateData.config.profile" class="mt-3" accept="image/*" @change="imageUpload" plain></b-form-file>
+        <div class="mt-3">Selected file: {{ updateData.config.profile ? updateData.config.profile : '' }}</div>
       </b-col>
     </b-row>
     <b-row align-v="center">
@@ -65,9 +67,9 @@
     <b-row align-v="center">
       <b-col sm="3">메인화면 선택</b-col>
       <b-col sm="9">
-        <b-form-radio-group v-model="updateData.config.start_page" name="radio-options-slots">
-          <b-form-radio value="true">내 블로그</b-form-radio>
-          <b-form-radio value="false">둘러보기</b-form-radio>
+        <b-form-radio-group v-model="updateData.config.start_page" :options="options" name="radio-options-slots">
+          <!-- <b-form-radio value="true">내 블로그</b-form-radio>
+          <b-form-radio value="false">둘러보기</b-form-radio> -->
         </b-form-radio-group>
       </b-col>
     </b-row>
@@ -82,6 +84,9 @@
       <b-col sm="2"></b-col>
     </b-row>
   </b-container>
+  {{ updateData.valid.password }}
+  {{ updateData.valid.nickname }}
+  {{ passwordAgainValid }}
   </div>
 </template>
 
@@ -103,13 +108,18 @@ export default {
             email: null,
             password: null,
             nickname: null,
-            profile_image: null,
+            profile: null,
             intro: null,
             start_page: false,
           }
         },
         file:null,
         passwordAgain: null,
+        options: [
+          { text: '내 블로그', value: 'true' },
+          { text: '둘러보기', value: 'false' },
+        ],
+        imageURL: null,
       }
     },
     computed: {
@@ -163,6 +173,13 @@ export default {
           commentState = false
         return commentState
       },
+      IsNicknameChanged() {
+        if (this.updateData.config.nickname == this.authUser.nickname) {
+          return false
+        } else {
+          return true
+        }
+      },
     },
     methods: {
       ...mapActions('accounts', ['DeleteUser', 'updateUser']),
@@ -199,22 +216,53 @@ export default {
           alert('!!!')
         })
       },
-    },
-    update() {
-      if(this.passwordAgainValid) {
-        this.updateData.valid.password = true
-      } else {
-        this.updateData.valid.password = false
+      checkPasswordValidValue() {
+        if (!this.updateData.config.password && !this.passwordAgain) {
+          this.updateData.valid.password = true
+        } else if(this.passwordAgainValid) {
+          this.updateData.valid.password = true
+        } else {
+          this.updateData.valid.password = false
+        }
+      },
+      insertInitialValue() {
+        this.updateData.config.nickname = this.authUser.nickname
+        this.updateData.config.intro = this.authUser.intro
+        this.updateData.config.start_page = this.authUser.start_page
+        this.updateData.config.profile = this.authUser.profile
+        this.updateData.config.email = this.authUser.email
+      },
+      checkInitialNickname() {
+        if (this.authUser.nickname == this.updateData.config.nickname) {
+          this.updateData.valid.nickname = true
+        }
+      },
+      imageUpload(event) {
+        const image = event.target.files[0];
+        // this.imageURL = URL.createObjectURL(image)
+        console.log(image)
+        // console.log(this.updateData.config.profile.files)
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = (event) => {
+          this.imageURL = event.target.result
+          console.log(this.imageURL)
+        }
       }
     },
+    updated() {
+      this.checkPasswordValidValue()
+      this.checkInitialNickname()
+    },
     created() {
-      this.updateData.config.nickname = this.authUser.nickname
-      this.updateData.config.intro = this.authUser.intro
-      this.updateData.config.start_page = this.authUser.start_page
-      this.updateData.config.profile_image = this.authUser.profile_image
+      this.insertInitialValue()
     }
 }
 </script>
 
 <style>
+  #imagepreview {
+    width: 30vw;
+    height: 30vh;
+  }
 </style>
