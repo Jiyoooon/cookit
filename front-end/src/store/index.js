@@ -8,7 +8,8 @@ import SERVER from '../api/url.js'
 
 
 Vue.use(Vuex)
-axios.defaults.baseURL = SERVER.URL;
+axios.defaults.baseURL = 'http://i3a201.p.ssafy.io:8080/cooking-0.0.2-SNAPSHOT';
+
 const moduleAccounts = {
   namespaced: true,
   state: {
@@ -317,6 +318,148 @@ const moduleMyBlog = {
   },
 }
 
+const moduleEditor = {
+  namespaced: true,
+  state: {
+    recipeData: {
+    },
+    recipe: {
+      title: null,
+      description: null,
+      category_id: 0,
+      servings: 0,
+      cooking_time: 0,
+      level: 0,
+      main_image: null,
+      tag: [ ]
+    },
+    cookingSteps: [
+      {
+        steps: 1,
+        description: null,
+        tip: null,
+        step_image: null },
+      {
+        steps: 2,
+        description: null,
+        tip: null,
+        step_image: null },
+    ],
+    mainIngr: [
+      { name: null, quantity: null, is_essential: 1 },
+      { name: null, quantity: null, is_essential: 1 },
+    ],
+    subIngr: [
+      { name: null, quantity: null, is_essential: 0 },
+      { name: null, quantity: null, is_essential: 0 },
+    ]
+  },
+  getters: {
+
+  },
+  mutations: {
+    SET_RECIPEDATA(state) {
+      state.recipeData = {
+        recipe: state.recipeinfo,
+        ingredients: [...state.mainIngr, ...state.subIngr],
+        cookingSteps: state.cookingSteps
+      }
+    },
+    SET_RECIPEINFO(state, data) {
+      state.recipeinfo = data
+    },
+    SET_COOKINGSTEPS(state, data) {
+      state.cookingSteps = data
+    },
+    SET_MAININGR(state, data) {
+      state.mainIngr = data
+    },
+    SET_SUBINGR(state, data) {
+      state.subIngr = data
+    },
+    addIngredient(state, essential) {
+      const ref = essential ? state.mainIngr : state.subIngr;
+      ref.push({
+        name: null,
+        quantity: null,
+        is_essential: essential
+      })
+    },
+    deleteIngredient(state, data) {
+      const ref = data.essential ? state.mainIngr : state.subIngr;
+      ref.splice(data.index, 1);
+    },
+    addCookingStep(state) {
+      state.cookingSteps.push({
+        steps: state.cookingSteps.length + 1,
+        description: null,
+        tip: null,
+        step_image: null },)
+    },
+    deleteCookingStep(state, id) {
+      state.cookingSteps.splice(id, 1);
+      for (var i = id; i < state.cookingSteps.length; i++) {
+				state.cookingSteps[i].steps -= 1;
+			}
+    },
+  }, 
+  actions: {
+    getRecipeInfo({commit}, data) {
+      commit('SET_RECIPEINFO', data);
+    },
+    getMainIngr({commit}, data) {
+      commit('SET_MAININGR', data);
+    },
+    getSubIngr({commit}, data) {
+      commit('SET_SUBINGR', data);
+    },
+    getCookingSteps({commit}, data) {
+      commit('SET_COOKINGSTEPS', data);
+    },
+    onSubmitButton({state, commit}) {//, rootState) {
+      commit('SET_RECIPEDATA')
+      const recipe = new FormData(), ingredients = new FormData(), cookingSteps = new FormData();
+      for (let [key, value] of Object.entries(state.recipe)) {
+        recipe.append(key, value);
+      }
+      for (let [key, value] of Object.entries([...state.mainIngr, ...state.subIngr])) {
+        ingredients.append(key, value);
+      }
+      for (let [key, value] of Object.entries(state.cookingSteps)) {
+        cookingSteps.append(key, value);
+      }
+      const recipeData = {
+        recipe: recipe,
+        ingredients: ingredients,
+        cookingSteps: cookingSteps
+      }
+      // const headerconfig = { headers: {
+      //   'Authorization': `token ${rootState['accounts/authToken']}`,
+      //   'Content-Type': 'multipart/form-data'
+      // }}
+      for (let [key, value] of recipe.entries()) {
+        console.log(`${key}: ${value}`)
+      }
+      for (let [key, value] of ingredients.entries()) {
+        console.log(key)
+        console.log(value)
+      }
+      for (let [key, value] of cookingSteps.entries()) {
+        console.log(key)
+        console.log(value)
+      }
+      axios.post('/recipe/save2', recipeData)
+      .then((res) => {
+        console.log(res)
+        // 레시피 화면으로 redirect 필요
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    }
+  }
+}
+
 export default new Vuex.Store({
   state: {
   },
@@ -328,5 +471,6 @@ export default new Vuex.Store({
     accounts: moduleAccounts,
     recipes: moduleRecipes,
     myblog: moduleMyBlog,
+    editor: moduleEditor,
   }
 })
