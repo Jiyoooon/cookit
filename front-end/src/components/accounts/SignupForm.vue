@@ -39,7 +39,7 @@
         <b-col sm="3">
           <label for="input-userid">닉네임<span style="color: red">*</span></label>
         </b-col>
-        <b-col sm="8">
+        <b-col sm="7">
           <b-form-input 
             id="input-userid" 
             v-model="signupData.config.nickname"
@@ -52,7 +52,7 @@
             닉네임이 올바르지 않습니다.(4~12글자 한글은 최대 6글자)
           </b-form-invalid-feedback>
         </b-col>
-        <b-col sm="1">
+        <b-col sm="2">
           <b-button v-if="!NickNameinValid" disabled variant="primary" block>중복확인</b-button>
           <b-button v-else variant="primary" @click='nicknameCheck(signupData.config.nickname)'>중복확인</b-button>
         </b-col>
@@ -60,13 +60,14 @@
 
 
       <b-row align-v="center">
-        <b-col>
+        <b-col sm="3">
           프로필사진
         </b-col>
-        <b-col sm="9">
-          <b-form-file ref = "file-input" v-model="signupData.config.profile_image" class="mt-3" accept=".jpg, .png, .jpeg" plain></b-form-file>
-          
-          <div class="mt-3"><b-button variant="primary" @click="clearFiles" plain>파일 제거</b-button> 선택된사진: {{ signupData.config.profile_image ?signupData.config.profile_image.name : '' }}</div>
+        <div v-if="signupData.config.profile"><img id="imagepreview" :src="imageURL"></div>
+        <b-col sm="3" v-if="signupData.config.profile"></b-col>
+        <b-col sm="6">
+          <b-form-file @change="imageUpload" ref="file-input" v-model="signupData.config.profile" class="mt-3" accept=".jpg, .png, .jpeg" plain></b-form-file> 
+          <div class="mt-3"><b-button variant="primary" @click="clearFiles" plain>파일 제거</b-button> 선택된사진: {{ signupData.config.profile?signupData.config.profile.name : '' }}</div>
         </b-col>
       </b-row>
       <b-row align-v="center">
@@ -83,7 +84,7 @@
         <b-row align-v="center" align-h="center">
             <b-col sm="2"></b-col>
             <b-col sm="4">
-                <b-button type="submit" variant="primary" id="signButton" @click="signup(signupData)" block>확인</b-button>
+                <b-button type="submit" variant="primary" id="signButton" @click="signup2(signupData)" block>가입하기</b-button>
             </b-col>
             <b-col sm="4">
                 <b-button variant="danger" id="cancelButton" to="/SignupView" block>취소</b-button>
@@ -93,7 +94,8 @@
     </b-container>
     <!--이미지 입력Form-->
     <!-- Plain mode -->
-    
+    {{ this.signupData.valid.password }}
+    {{ this.signupData.valid.nickname}}
   </div>
 
   
@@ -103,6 +105,7 @@
 import { mapState, mapActions } from 'vuex'
 import SERVER from '../../api/url.js'
 import axios from 'axios'
+import cookies from 'vue-cookies'
 
   export default {
     name:'signup',
@@ -110,19 +113,20 @@ import axios from 'axios'
       return {
         signupData: {
           valid: {
-            password: this.passwordAgainValid,
+            password: false,
             nickname: false,
           },
           config: {
-            email: null,
+            email: cookies.get('user-email'),
             password: null,
             nickname: null,
-            profile_image: null,
+            profile: null,
             intro: null,
           }
         },
         file:null,
         passwordAgain: null,
+        imageURL: null,
       }
     },
     computed: {
@@ -134,26 +138,29 @@ import axios from 'axios'
         var numberpattern = /[0-9]/
         var alphapattern = /[a-zA-Z]/
         var IsAvailable = true
-        //console.log(this.signupData.Password)
-        if (!this.signupData.password) {
+      
+        if (!this.signupData.config.password) {
           return null
         }
         
-        if (!(alphapattern.test(this.signupData.password)&&numberpattern.test(this.signupData.password)&&availablepassword.test(this.signupData.password))) IsAvailable = false
+        if (!(alphapattern.test(this.signupData.config.password)&&numberpattern.test(this.signupData.config.password)&&availablepassword.test(this.signupData.config.password))) IsAvailable = false
         return IsAvailable
       },
       passwordAgainValid() {
+         console.log(this.signupData.valid.password)
         if(!this.passwordAgain) return null
-        if(this.passwordAgain.length > 0 && this.signupData.password == this.passwordAgain) return true;
+        
+        if(this.passwordAgain.length > 0 && this.signupData.config.password == this.passwordAgain) return true;
+    
         return false;
       },
       NickNameinValid(){
-        if(!this.signupData.nickname) return null
-        const len = this.signupData.nickname.length
+        if(!this.signupData.config.nickname) return null
+        const len = this.signupData.config.nickname.length
         var NickNamelen = 0
         var nameflag = true
         for (var i = 0; i < len; i++) {
-          const ch = this.signupData.nickname[i]
+          const ch = this.signupData.config.nickname[i]
           console.log("ch: " + ch)
           if(('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'z')||('A' <= ch && ch <= 'Z')){
             NickNamelen++
@@ -172,8 +179,8 @@ import axios from 'axios'
       },
       CommentLimit(){
         var commentState = null
-        if(!this.signupData.intro) return null
-        if(this.signupData.intro.length >100)
+        if(!this.signupData.config.intro) return null
+        if(this.signupData.config.intro.length >100)
           commentState = false
         return commentState
       },
@@ -184,11 +191,32 @@ import axios from 'axios'
         this.$refs['file-input'].reset()
       },
       nicknameCheck(nickname) {
-        axios.get(SERVER.ROUTES.accounts.nicknameCheck + String(nickname))
+        axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
           console.log(res)
           if (res.data.result == 'success') {
             this.signupData.valid.nickname = true
+            this.$bvModal.msgBoxOk('확인되었습니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'success',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true
+            })
+            this.signupData.valid.nickname = true
+          } else {
+            this.$bvModal.msgBoxOk('이미 존재하는 닉네임 입니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true
+            })
+            this.signupData.valid.nickname = false
           }
         })
         .catch((err) => {
@@ -196,11 +224,34 @@ import axios from 'axios'
           alert('!!!')
         })
       },
-      ...mapActions('accounts', ['signup']),
+      ...mapActions('accounts', ['signup', 'signup2']),
+      checkPasswordValidValue() {
+        if(this.passwordAgainValid) {
+          this.signupData.valid.password = true
+        } else {
+          this.signupData.valid.password = false
+        }
+      },
+      imageUpload(event) {
+        const image = event.target.files[0];
+        this.imageURL = URL.createObjectURL(image)
+        // const reader = new FileReader();
+        // reader.readAsDataURL(image);
+        // reader.onload(event => {
+        //   this.imageURL = event.target.result
+        //   console.log(this.imageURL)
+        // })
+      },
+    },
+    updated() {
+      this.checkPasswordValidValue()
     }
   }
 </script>
 
 <style>
-
+  #imagepreview {
+    width: 30vw;
+    height: 30vh;
+  }
 </style>

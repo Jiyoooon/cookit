@@ -15,6 +15,7 @@ import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView
 import MyBlogListView from '../views/myblog/MyBlogListView.vue'
 import RecipeDetailView from '../views/myblog/RecipeDetailView.vue'
 
+
 Vue.use(VueRouter)
 
   const routes = [
