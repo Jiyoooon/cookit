@@ -87,7 +87,6 @@ Vue.use(VueRouter)
     path: '/myBlog/:recipe_id',
     name: 'SelectedRecipe',
     component: RecipeDetailView
->>>>>>> front-end/src/router/index.js
   },
 ]
 
