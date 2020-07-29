@@ -66,6 +66,7 @@
 				, password = #{password}
 			</if>
 			, update_date = now()
+			, start_page = #{start_page}
 		WHERE user_id= #{user_id}
 	</update>
 	

@@ -23,5 +23,8 @@ export default {
             selectedrecipe: '/recipe/',
             fetchrecipesbytitle: 'recipe/title'
         },
+        lookaroundrecipe:{
+            getfilteredrecipes: '/recipe/recipes',
+        },
     }
 }
