@@ -3,18 +3,6 @@
       <h1>Welcome to Home</h1>
       {{ isLoggedIn }}
       {{ authUser }}
-      <!-- <div class="overflow-auto">
-    <div>
-      <h6>Goto first button number</h6>
-      <b-pagination
-        v-model="currentPage"
-        :total-rows="rows"
-        :per-page="perPage"
-        first-number
-        last-number
-      ></b-pagination>
-    </div>
-    </div> -->
   </div>
 </template>
 
@@ -25,8 +13,19 @@ export default {
     name: 'Home',
     computed: {
         ...mapGetters('accounts', ['isLoggedIn']),
-        ...mapState('accounts', ['authUser'])
-    }
+        ...mapState('accounts', ['authUser']),
+    },
+    methods: {
+    },
+    // mounted() {
+    //     const image = this.authUser.profile_image
+    //     const reader = new FileReader();
+    //     reader.onload = (event) => {
+    //         this.imageURL = event.target.result
+    //       console.log(this.imageURL)
+    //     }
+    //     reader.readAsDataURL(image);
+    // }
 }
 </script>
 
