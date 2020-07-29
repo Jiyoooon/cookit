@@ -43,9 +43,9 @@
 				</b-col>
       </b-row>
 			<b-row>
-				<b-col sm="3"></b-col>
+				<b-col sm="4"></b-col>
 				<b-col sm="4"><b-button variant="primary" id="addBtn" @click="addStep" block>추가</b-button></b-col>
-				<b-col sm="5"></b-col>
+				<b-col sm="4"></b-col>
 			</b-row>
     </b-container>
   </div>
