@@ -1,23 +1,27 @@
 export default {
-    URL: 'http://8ef703d9f822.ngrok.io',
+    URL: 'http://d269e2b2d442.ngrok.io',
     ROUTES: {
         accounts: {
             signup: '/user/join',
             login: '/user/login',
             logout: '/user/logout',
-            baseuser: '/user/',
+            baseuser: '/user',
             getcomments: '/user/comments/',
             checkemail: '/user/dup/email/',
             checknickname: '/user/dup/nickname/',
+            checkpassword: '/user/check/password',
             getfollowers: '/user/followers/',
             checkkey: '/user/verification/check/',
             requestkey: '/user/verification/send/',
+            sendnewpassword: '/user/password/',
         },
         info: {
 
         },
-        recipe: {
-
+        myrecipe: {
+            myrecipes: '/recipe/all/',
+            selectedrecipe: '/recipe/',
+            fetchrecipesbytitle: 'recipe/title'
         },
     }
 }

@@ -27,12 +27,13 @@
           <b-dropdown-item @click="GoUserInfo">회원정보</b-dropdown-item>
           <b-dropdown-item @click="toggle">로그아웃</b-dropdown-item>
         </b-nav-item-dropdown> -->
-          <b-nav-item @click="GoUserInfo">회원정보</b-nav-item>
+          <b-nav-item @click="GoPasswordAuth">회원정보</b-nav-item>
           <b-nav-item @click="GoLogout">로그아웃</b-nav-item>
         </i>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
+  <hr>
   <router-view></router-view>
   </div>
 </template>
@@ -56,7 +57,7 @@ export default {
             this.isActive = !this.isActive
             console.log(this.isActive)
         },
-        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoUserInfo', 'GoLogout', 'GoEmailAuth'])
+        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth'])
         
     }
 }

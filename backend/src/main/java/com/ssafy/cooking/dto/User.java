@@ -1,10 +1,24 @@
 package com.ssafy.cooking.dto;
 
-import java.sql.Date;
+import java.io.Serializable;
+import java.util.Arrays;
 
-public class User {
+import org.springframework.core.io.Resource;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public class User implements Serializable{
+	@JsonIgnore
 	private int user_id;//pk
-	private String id;
 	private String email;
 	private String password;
 	private String name;
@@ -12,29 +26,23 @@ public class User {
 	private String intro;
 
 	private boolean start_page;	//내블로그(true), 커뮤니티(false)
+	@JsonIgnore
 	private String profile_image;
 	private int hits;
 
 	private String create_date;
 	private String update_date;
-	private String delete_date;
 
 	private String sns_type;
 	private String sns_token_id;
 	private String sns_connect_date;
 	
-	
+	private byte[] image;
 	public int getUser_id() {
 		return user_id;
 	}
 	public void setUser_id(int user_id) {
 		this.user_id = user_id;
-	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
 	}
 	public String getEmail() {
 		return email;
@@ -84,7 +92,6 @@ public class User {
 	public void setHits(int hits) {
 		this.hits = hits;
 	}
-	
 	public String getCreate_date() {
 		return create_date;
 	}
@@ -96,12 +103,6 @@ public class User {
 	}
 	public void setUpdate_date(String update_date) {
 		this.update_date = update_date;
-	}
-	public String getDelete_date() {
-		return delete_date;
-	}
-	public void setDelete_date(String delete_date) {
-		this.delete_date = delete_date;
 	}
 	public String getSns_type() {
 		return sns_type;
@@ -121,14 +122,23 @@ public class User {
 	public void setSns_connect_date(String sns_connect_date) {
 		this.sns_connect_date = sns_connect_date;
 	}
+	
+	public byte[] getImage() {
+		return image;
+	}
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
 	@Override
 	public String toString() {
-		return "User [user_id=" + user_id + ", id=" + id + ", email=" + email + ", password=" + password + ", name="
-				+ name + ", nickname=" + nickname + ", intro=" + intro + ", start_page=" + start_page
-				+ ", profile_image=" + profile_image + ", hits=" + hits + ", create_date=" + create_date
-				+ ", update_date=" + update_date + ", delete_date=" + delete_date + ", sns_type=" + sns_type
-				+ ", sns_token_id=" + sns_token_id + ", sns_connect_date=" + sns_connect_date + "]";
+		return "User [user_id=" + user_id + ", email=" + email + ", password=" + password + ", name=" + name
+				+ ", nickname=" + nickname + ", intro=" + intro + ", start_page=" + start_page + ", profile_image="
+				+ profile_image + ", hits=" + hits + ", create_date=" + create_date + ", update_date=" + update_date
+				+ ", sns_type=" + sns_type + ", sns_token_id=" + sns_token_id + ", sns_connect_date=" + sns_connect_date
+				+ ", image=" + Arrays.toString(image) + "]";
 	}
+	
+	
 	
 	
 	
