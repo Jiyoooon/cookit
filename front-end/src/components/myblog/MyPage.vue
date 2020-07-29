@@ -10,7 +10,7 @@
       src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
     ></v-img>
 
-    <v-card-title>Cafe Badilico</v-card-title>
+    <v-card-title>이름이름</v-card-title>
 
     <v-card-text>
       <v-row
@@ -38,7 +38,7 @@
 
     <v-divider class="mx-4"></v-divider>
 
-    <v-card-title>Tonight's availability</v-card-title>
+    <v-card-title>SNS</v-card-title>
 
     <v-card-text>
       <v-chip-group
@@ -46,13 +46,12 @@
         active-class="deep-purple accent-4 white--text"
         column
       >
-        <v-chip>5:30PM</v-chip>
+        <v-chip>페이스북</v-chip>
 
-        <v-chip>7:30PM</v-chip>
+        <v-chip>인스타</v-chip>
 
-        <v-chip>8:00PM</v-chip>
+        <v-chip>트위터</v-chip>
 
-        <v-chip>9:00PM</v-chip>
       </v-chip-group>
     </v-card-text>
 

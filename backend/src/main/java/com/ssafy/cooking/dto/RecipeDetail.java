@@ -1,8 +1,9 @@
 package com.ssafy.cooking.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class RecipeDetail {
+public class RecipeDetail implements Serializable {
 	private Recipe recipe;
 	private List<Ingredient> ingredients;
 	private List<CookingStep> cookingStep;
