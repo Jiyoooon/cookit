@@ -2,11 +2,7 @@
   <div>
       <h1>Welcome to Home</h1>
       {{ isLoggedIn }}
-<<<<<<< HEAD
       {{ authUser }}
-=======
-      <b-icon icon="chevron-up" shift-v="16" class="bg-info"></b-icon>
->>>>>>> develop
   </div>
 </template>
 

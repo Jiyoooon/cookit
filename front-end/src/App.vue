@@ -6,7 +6,7 @@
     </b-navbar-brand>
     <b-navbar-nav>
       <b-nav-item @click="GoMyBlog">내 블로그</b-nav-item>
-      <b-nav-item href="#">둘러보기</b-nav-item>
+      <b-nav-item @click="GoLookAroundRecipesView">둘러보기</b-nav-item>
     </b-navbar-nav>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
@@ -57,7 +57,8 @@ export default {
             this.isActive = !this.isActive
             console.log(this.isActive)
         },
-        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'GoMyBlog'])
+        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'GoMyBlog']),
+        ...mapActions('lookaround', ['GoLookAroundRecipesView'])
         
     }
 }
