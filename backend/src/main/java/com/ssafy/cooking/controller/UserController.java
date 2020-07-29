@@ -1,7 +1,10 @@
 package com.ssafy.cooking.controller;
 
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -9,10 +12,13 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +33,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.Login;
 import com.ssafy.cooking.dto.TempKey;
@@ -42,7 +47,6 @@ import com.ssafy.cooking.service.UserService;
 import com.ssafy.cooking.util.SHA256;
 
 import io.swagger.annotations.ApiOperation;
-
 
 //http://localhost:8080/swagger-ui.html
 //, allowedHeaders = {"Authorization"}, exposedHeaders = {"Authorization", "token"}
@@ -66,17 +70,23 @@ public class UserController {
 	@GetMapping("/dup/email/{email}")
 	public ResponseEntity<HashMap<String, Object>> signupEmailCheck(@PathVariable("email") String email) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-
-		if(userService.isDupEmail(email)) {//이미 존재하는 계정
-			map.put("result", "fail");
-			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
-		}else {
-			map.put("result", "success");
-			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+		
+		try {
+			if(userService.isDupEmail(email)) {//이미 존재하는 계정
+				map.put("result", "fail");
+			}else {
+				map.put("result", "success");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			map.put("reult", "fail");
+			map.put("cause", "서버 오류");
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
 	}
 	
-	//이메일 인증
+	//이메일 인증키 발송
 	@ApiOperation(value = "인증키 발송 요청")
 	@GetMapping("/verification/send/{email}")
 	public ResponseEntity<HashMap<String, Object>> signupSendCheckEmail(@PathVariable("email") String email) throws Exception {
@@ -121,7 +131,7 @@ public class UserController {
 		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
 	}
 	
-	
+	//인증키 확인
 	@ApiOperation(value = "인증키 확인 요청")
 	@PostMapping("/verification/check")
 	public ResponseEntity<HashMap<String, Object>> signupVerification(@RequestBody EmailConfirm emailConfirm) throws Exception {
@@ -201,7 +211,7 @@ public class UserController {
 	@ApiOperation(value = "회원가입테스트")//, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, headers = "Content-Type= multipart/form-data"
 	@PostMapping(value = "/join2")//, consumes = "multipart/form-data"
 	public ResponseEntity<HashMap<String, Object>> signupUser2(@RequestPart(required = false, name = "profile") MultipartFile profile
-															, @ModelAttribute User user)throws Exception {
+															, @ModelAttribute("user") User user)throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
     	String namePt = "^[a-zA-Z0-9가-힣]{4,12}$";
@@ -251,6 +261,7 @@ public class UserController {
     	}
 	}
     
+	//로그인
     @ApiOperation(value = "로그인")
    	@PostMapping("/login")
    	public ResponseEntity<HashMap<String, Object>> signinUser(@RequestBody Login login
@@ -258,6 +269,7 @@ public class UserController {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	HttpStatus status = null;
     	
+    	System.out.println("login!!");
 //    	response.setHeader("Access-Control-Allow-Origin", "*");
 //        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
 //        response.setHeader("Access-Control-Max-Age", "3600");
@@ -285,7 +297,6 @@ public class UserController {
     	}
 		return new ResponseEntity<HashMap<String, Object>>(map, status);
    	}
-    
     
     //로그아웃
     @ApiOperation(value = "로그아웃")///token
@@ -363,13 +374,14 @@ public class UserController {
    	}
     
     //회원정보 조회
-    @ApiOperation(value = "회원정보 가져오기")///token
+    @ApiOperation(value = "회원 정보 가져오기")///token
    	@GetMapping()
-   	public ResponseEntity<HashMap<String, Object>> getUser(HttpServletRequest request) throws Exception {
+   	public ResponseEntity<HashMap<String, Object>> getUserInfo(HttpServletRequest request) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
     	String result = "success";
     	HttpStatus status = HttpStatus.ACCEPTED;
+    	map.put("result", result);
     	
     	String token = request.getHeader("Authorization");
 
@@ -379,8 +391,9 @@ public class UserController {
 				Map<String, Object> claims = jwtService.get(token);
 				String uid = (String)claims.get("uid");
 				try {
-					result = "success";
 					map.put("data", userService.getUser(uid));
+					return new ResponseEntity<HashMap<String, Object>>(map, status);
+					
 				}catch(Exception e){
 					result = "fail";
 					map.put("cause", "서버 오류");
@@ -399,10 +412,120 @@ public class UserController {
 		return new ResponseEntity<HashMap<String, Object>>(map, status);
    	}
     
+    //회원정보 조회
+    @ApiOperation(value = "회원 프로필 이미지 가져오기")///token
+   	@GetMapping("/image")
+   	public ResponseEntity<Resource> getUserImage(HttpServletRequest request) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	String result = "success";
+    	Resource rs = null;
+    	HttpHeaders header = null;
+    	HttpStatus status = HttpStatus.ACCEPTED;
+    	
+    	
+    	String token = request.getHeader("Authorization");
+
+    	if(token != null && token.length() > 0) {
+			token = token.split(" ")[1];
+			if(jwtService.checkValid(token)) {//토큰 유효성 체크
+				Map<String, Object> claims = jwtService.get(token);
+				String uid = (String)claims.get("uid");
+				try {
+					result = "success";
+					map = userService.getUserResource(uid);
+					
+					rs = (Resource) map.get("resource");
+					header = (HttpHeaders) map.get("header");
+					
+//					header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\""+rs.getFilename()+"\"");
+//					header.setContentType(MediaType.parseMediaType("octet-stream"));
+//					System.out.println(rs);
+//					System.out.println(header.getAccessControlAllowOrigin());
+					return new ResponseEntity<Resource>(rs, header, status);
+					
+				}catch(Exception e){
+					result = "fail";
+					map.put("cause", "서버 오류");
+					status = HttpStatus.INTERNAL_SERVER_ERROR;
+				}
+			}else {
+				result = "fail";
+				map.put("cause", "토큰 유효하지 않음");
+			}
+		}else {
+			result = "fail";
+			map.put("cause", "로그인 필요");
+		}
+		
+		map.put("result", result);
+		return new ResponseEntity<Resource>(rs, header, status);
+   	}
+    
+  //회원정보 조회
+    @ApiOperation(value = "회원정보 가져오기(이미지 바이트로..)")///token MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.APPLICATION_XML_VALUE,
+   	@GetMapping(value = "/test")
+   	public @ResponseBody User getUser2(HttpServletRequest request) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	String separator = File.separator;
+    	String filePath = "C:\\SSAFY\\commonpjt\\profile";
+    	User user = null;
+    	String result = "success";
+    	HttpStatus status = HttpStatus.ACCEPTED;
+    	
+    	System.out.println("ddd");
+    	String token = request.getHeader("Authorization");
+
+    	if(token != null && token.length() > 0) {
+			token = token.split(" ")[1];
+			if(jwtService.checkValid(token)) {//토큰 유효성 체크
+				Map<String, Object> claims = jwtService.get(token);
+				String uid = (String)claims.get("uid");
+				try {
+					user = userService.getUser(uid);
+					
+					System.out.println(user);
+					String fileName = user.getProfile_image();
+					if(fileName != null && !fileName.equals("")) {
+						File file = new File(filePath+separator+fileName);
+						byte[] array = Files.readAllBytes(file.toPath());
+//						InputStream in = getClass().getResourceAsStream(filePath+separator+fileName);
+						
+						System.out.println(array); 
+						user.setImage(array);
+//						user.setImage(IOUtils.toByteArray(in));
+//						return array;
+					}
+//					result = "success";
+//					map.put("result", result);
+					
+					return user;
+//					return new ResponseEntity<HashMap<String, Object>>(map, status);
+					
+				}catch(Exception e){
+					result = "fail";
+					map.put("cause", "서버 오류");
+					status = HttpStatus.INTERNAL_SERVER_ERROR;
+				}
+			}else {
+				result = "fail";
+				map.put("cause", "토큰 유효하지 않음");
+			}
+		}else {
+			result = "fail";
+			map.put("cause", "로그인 필요");
+		}
+		
+		map.put("result", result);
+//		return new ResponseEntity<HashMap<String, Object>>(map, status);
+		return user;
+   	}
     //회원정보 수정
     @ApiOperation(value = "회원정보 수정하기")///token
    	@PutMapping()
-   	public ResponseEntity<HashMap<String, Object>> reviseUser(@RequestBody User user, HttpServletRequest request) throws Exception {
+   	public ResponseEntity<HashMap<String, Object>> reviseUser(@RequestPart(required = false, name = "profile") MultipartFile profile
+   															, @ModelAttribute("user") User user
+   															, HttpServletRequest request) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
     	String result = "success";
@@ -422,9 +545,10 @@ public class UserController {
 				user.setUser_id(Integer.parseInt((String)claims.get("uid")));
 				
 				try {
-					userService.reviseUser(user);
+					userService.reviseUser(profile, user);
 					result = "success";
 				}catch(Exception e){
+					e.printStackTrace();
 					result = "fail";
 					map.put("cause", "서버 오류");
 					status = HttpStatus.INTERNAL_SERVER_ERROR;

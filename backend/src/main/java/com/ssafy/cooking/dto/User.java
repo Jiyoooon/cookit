@@ -1,8 +1,23 @@
 package com.ssafy.cooking.dto;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
+import org.springframework.core.io.Resource;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class User implements Serializable{
+	@JsonIgnore
 	private int user_id;//pk
 	private String email;
 	private String password;
@@ -11,6 +26,7 @@ public class User implements Serializable{
 	private String intro;
 
 	private boolean start_page;	//내블로그(true), 커뮤니티(false)
+	@JsonIgnore
 	private String profile_image;
 	private int hits;
 
@@ -21,7 +37,7 @@ public class User implements Serializable{
 	private String sns_token_id;
 	private String sns_connect_date;
 	
-	
+	private byte[] image;
 	public int getUser_id() {
 		return user_id;
 	}
@@ -76,7 +92,6 @@ public class User implements Serializable{
 	public void setHits(int hits) {
 		this.hits = hits;
 	}
-	
 	public String getCreate_date() {
 		return create_date;
 	}
@@ -107,14 +122,23 @@ public class User implements Serializable{
 	public void setSns_connect_date(String sns_connect_date) {
 		this.sns_connect_date = sns_connect_date;
 	}
+	
+	public byte[] getImage() {
+		return image;
+	}
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
 	@Override
 	public String toString() {
-		return "User [user_id=" + user_id + ", email=" + email + ", password=" + password + ", name="
-				+ name + ", nickname=" + nickname + ", intro=" + intro + ", start_page=" + start_page
-				+ ", profile_image=" + profile_image + ", hits=" + hits + ", create_date=" + create_date
-				+ ", update_date=" + update_date + ", sns_type=" + sns_type
-				+ ", sns_token_id=" + sns_token_id + ", sns_connect_date=" + sns_connect_date + "]";
+		return "User [user_id=" + user_id + ", email=" + email + ", password=" + password + ", name=" + name
+				+ ", nickname=" + nickname + ", intro=" + intro + ", start_page=" + start_page + ", profile_image="
+				+ profile_image + ", hits=" + hits + ", create_date=" + create_date + ", update_date=" + update_date
+				+ ", sns_type=" + sns_type + ", sns_token_id=" + sns_token_id + ", sns_connect_date=" + sns_connect_date
+				+ ", image=" + Arrays.toString(image) + "]";
 	}
+	
+	
 	
 	
 	
