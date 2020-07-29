@@ -42,7 +42,7 @@ public class RecipeController {
 	@Autowired
 	private JwtService jwtService;
 
-	@ApiOperation(value = "해당 레시피 목록 가져오기", notes = "레시피 목록을 가져온다.(각 항목은 필요시만 입력)" + "p  : 시작 번호\n" + "id : 레시피 아이디\n"
+	@ApiOperation(value = "해당 레시피 목록 가져오기", notes = "레시피 목록을 가져온다.(각 항목은 필요시만 입력)\n" + "p  : 시작 번호\n" + "id : 레시피 아이디\n"
 			+ "user : 유저 아이디\n" + "query : 검색어(요리명)\n" + "category : 해당 카테고리 id\n"
 			+ "filter : 검색 시 추가한 재료 필터링 정보(대분류, 중분류, 소분류 각각 0개 이상씩 설정 가능하며 띄어쓰기로 구분한 String 형태로 입력)")
 	@GetMapping("/recipes")

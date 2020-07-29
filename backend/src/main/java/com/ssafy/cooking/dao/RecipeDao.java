@@ -20,6 +20,7 @@ public interface RecipeDao {
 	List<Ingredient> getIngredients(int recipe_id);
 	List<CookingStep> getCookingSteps(int recipe_id);
 
+	void upHits(int recipe_id);
 	int deleteRecipe(int recipe_id, int uid);
 	
 	List<Comment> getCommnets(int recipe_id);

@@ -30,6 +30,10 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
+	public void upHits(int recipe_id) {
+		recipeDao.upHits(recipe_id);
+	}
+	@Override
 	public List<Ingredient> getIngredients(int recipe_id) {
 		return recipeDao.getIngredients(recipe_id);
 	}
@@ -91,7 +95,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 	private boolean writeFile(MultipartFile multipartFile, String saveFileName) throws IOException {
 		boolean result = false;
-		String saveDir = "/app/images/recipe/";
+		String saveDir = "/image/recipe/";
 		
 		byte[] data = multipartFile.getBytes();
 		FileOutputStream fos = new FileOutputStream(saveDir + saveFileName);

@@ -10,8 +10,9 @@ public class Recipe  {
 	private String title; //제목
 	private String description; //설명 
 	private String main_image; //대표 이미지 경로
-	private int serving; //인원
+	private int servings; //인원
 	private int cooking_time; //시간
+	private int level; //시간
 	private int hits; //조회
 	private String tag; //태그
 	private String create_date; //작성시간
@@ -61,12 +62,6 @@ public class Recipe  {
 	public void setMain_image(String main_image) {
 		this.main_image = main_image;
 	}
-	public int getServing() {
-		return serving;
-	}
-	public void setServing(int serving) {
-		this.serving = serving;
-	}
 	public int getCooking_time() {
 		return cooking_time;
 	}
@@ -109,14 +104,24 @@ public class Recipe  {
 	public void setMain_image_file(MultipartFile main_image_file) {
 		this.main_image_file = main_image_file;
 	}
+	public int getServings() {
+		return servings;
+	}
+	public void setServings(int servings) {
+		this.servings = servings;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
+	}
 	@Override
 	public String toString() {
 		return "Recipe [recipe_id=" + recipe_id + ", recipe_user=" + recipe_user + ", recipe_user_name="
 				+ recipe_user_name + ", category_id=" + category_id + ", title=" + title + ", description="
-				+ description + ", main_image=" + main_image + ", serving=" + serving + ", cooking_time=" + cooking_time
+				+ description + ", main_image=" + main_image + ", servings=" + servings + ", cooking_time=" + cooking_time
 				+ ", hits=" + hits + ", tag=" + tag + ", create_date=" + create_date + ", update_date=" + update_date
 				+ ", delete_date=" + delete_date + ", main_image_file=" + main_image_file + "]";
 	}
-	
-	
 }

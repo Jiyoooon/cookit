@@ -7,10 +7,10 @@
 	<insert id = "addRecipe" useGeneratedKeys="true" keyProperty="recipe_id">
 		insert into Recipe(
 						recipe_user, category_id, title, description, 
-						main_image, servings, cooking_time, tag
+						main_image, servings, cooking_time, level, tag
 					) values(
 						#{recipe_user}, #{category_id}, #{title}, #{description},
-						#{main_image}, #{servings}, #{cooking_time}, #{tag}
+						#{main_image}, #{servings}, #{cooking_time}, #{level}, #{tag}
 					)
 	</insert>
 	<insert id = "addIngredients">
@@ -35,7 +35,7 @@
 
 	<select id="getRecipes" resultType="Recipe">
 		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name,
-		category_id, title, description, main_image, servings, cooking_time,
+		category_id, title, description, main_image, servings, cooking_time, level,
 		tag, r.hits as hits, r.create_date as create_date, r.update_date as
 		update_date, r.delete_date as delete_date
 		FROM Recipe r
@@ -53,9 +53,15 @@
 		<if test="category != null and category != ''">
 			AND category = #{category}
 		</if>
+		ORDER BY create_date DESC
 		Limit #{start}, #{end}
-		;
 	</select>
+	
+	<update id="upHits">
+		UPDATE Recipe
+		SET hits = hits + 1
+		WHERE recipe_id = #{recipe_id}
+	</update>
 	
 	<select id="getIngredients" resultType="Ingredient">
 		SELECT recipe_ingredient_id, recipe_id, 
