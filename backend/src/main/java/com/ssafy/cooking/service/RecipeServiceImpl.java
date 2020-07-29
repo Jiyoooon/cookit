@@ -53,14 +53,11 @@ public class RecipeServiceImpl implements RecipeService {
 	public int addRecipe(RecipeDetail recipeDetail) {
 		String imageName;
 		if (recipeDetail.getRecipe().getRecipe_user_name() != null)
-			imageName = recipeDetail.getRecipe().getRecipe_user_name() + Long.toString(System.currentTimeMillis());
+			imageName = recipeDetail.getRecipe().getRecipe_user() + Long.toString(System.currentTimeMillis());
 		else
 			imageName = Long.toString(System.currentTimeMillis());
 
-		System.out.println("000000000000");
-		System.out.println(recipeDetail.getRecipe().getMain_image_file());
 		if (!recipeDetail.getRecipe().getMain_image_file().isEmpty()) {
-			System.out.println("cccc");
 			try {
 				writeFile(recipeDetail.getRecipe().getMain_image_file(), imageName);
 			} catch (IOException e) {
@@ -70,17 +67,12 @@ public class RecipeServiceImpl implements RecipeService {
 		
 		int recipe_id = recipeDao.addRecipe(recipeDetail.getRecipe());
 
-		System.out.println(imageName);
-
 		if (recipeDetail.getCookingStep() != null) {
-			System.out.println("fifi");
 			for (int i = 0; i < recipeDetail.getCookingStep().size(); i++) {
 				CookingStep step = recipeDetail.getCookingStep().get(i);
 
-				System.out.println(i);
 				if (step.getStep_image_file() != null) {
 					try {
-						System.out.println("fff");
 						String stepImageName = imageName + Integer.toString(i);
 						writeFile(step.getStep_image_file(), stepImageName);
 						recipeDetail.getCookingStep().get(i).setStep_image(stepImageName);
@@ -91,8 +83,6 @@ public class RecipeServiceImpl implements RecipeService {
 			}
 		} 
 		
-		
-		
 		recipeDao.addCookingsteps(recipe_id, recipeDetail.getCookingStep());
 		recipeDao.addIngredients(recipe_id, recipeDetail.getIngredients());
 
@@ -101,14 +91,28 @@ public class RecipeServiceImpl implements RecipeService {
 
 	private boolean writeFile(MultipartFile multipartFile, String saveFileName) throws IOException {
 		boolean result = false;
-		String saveDir = "C:/SSAFY/image";
-		System.out.println(saveFileName);
-
+		String saveDir = "/app/images/recipe/";
+		
 		byte[] data = multipartFile.getBytes();
 		FileOutputStream fos = new FileOutputStream(saveDir + saveFileName);
 		fos.write(data);
 		fos.close();
 
 		return result;
+	}
+
+	@Override
+	public int deleteRecipe(int recipe_id, int uid) {
+		return recipeDao.deleteRecipe(recipe_id, uid);
+	}
+
+	@Override
+	public int deleteComment(int comment_id, int uid) {
+		return recipeDao.deleteComment(comment_id, uid);
+	}
+
+	@Override
+	public int modifyComment(Comment comment, int uid) {
+		return recipeDao.modifyComment(comment, uid);
 	}
 }

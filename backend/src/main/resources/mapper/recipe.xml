@@ -74,6 +74,11 @@
 		WHERE recipe_id = #{recipe_id}
 	</select>
 	
+	<delete id="deleteRecipe">
+		DELETE from Recipe
+		WHERE recipe_id = #{recipe_id} and recipe_user = #{uid}
+	</delete>
+	
 	<select id="getCommnets" resultType="Comment">
 		SELECT comment_id, comment_user as comment_user_id, u.nickname as comment_user_name,
 		recipe_id, c.description, 
@@ -94,4 +99,16 @@
 						, #{comment.description}
 					)
 	</insert>
+	
+	<update id="modifyComment">
+		UPDATE Comments
+		SET description = #{comment.description}
+			, update_date = now()
+		WHERE comment_id = #{comment.comment_id} and comment_user = #{uid}
+	</update>
+	
+	<delete id="deleteComment">
+		DELETE from Comments
+		WHERE comment_id = #{comment_id} and comment_user = #{uid}
+	</delete>
 </mapper>
