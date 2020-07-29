@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-container fluid="lg">
+    <b-container fluid="sm">
       <b-row v-for="(item, index) in items" :key="index">
         <b-col sm="5">
           <b-form-input type="text" v-model="item.name" required></b-form-input>
