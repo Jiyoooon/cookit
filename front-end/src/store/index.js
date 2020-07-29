@@ -140,6 +140,15 @@ const moduleAccounts = {
         .catch(err => console.log(err.response))
     },
 
+    emailDupCheck(context, email) {
+      console.log("email dup check")
+      axios.get(`/user/dup/email/${String(email)}`)
+      .then(res => {
+        if (res.data.result == 'success') return true
+        else if (res.data.result == 'fail') return false
+      })
+    },
+
     emailAuthCodeSend({ commit }, email) {
       alert('인증코드가 발송되었습니다')
       axios.get(`/user/verification/send/${String(email)}`)

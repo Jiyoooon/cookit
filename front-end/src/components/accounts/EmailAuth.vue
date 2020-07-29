@@ -17,7 +17,7 @@
             >
           </b-form-input>
           <b-form-invalid-feedback id="email-feedback">
-            이메일을 확인해주세요.
+            중복된 이메일이거나, 이메일 형식이 잘못되었습니다.
           </b-form-invalid-feedback>
         </b-col>
         <b-col sm="3">
@@ -63,19 +63,17 @@ import { mapActions } from 'vuex'
         sendBtnActive: false
       }
     },
+    methods: {
+      ...mapActions('accounts', ['emailDupCheck', 'emailAuthCodeSend', 'emailAuthCodeCheck'])
+    },
     computed: {
       userEmailValid() {
         if (this.userEmail == null || this.userEmail.length == 0) return null
-        // 중복 여부 확인
-
         // 정규식으로 이메일 양식 확인
         var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i
         if (this.userEmail.match(regExp) != null) return true
         else return false
       },
-    },
-    methods: {
-      ...mapActions('accounts', ['emailAuthCodeSend', 'emailAuthCodeCheck'])
     }
   }
 </script>

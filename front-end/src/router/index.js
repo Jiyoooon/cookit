@@ -9,6 +9,7 @@ import UserInfoView from '../views/accounts/UserInfoView.vue'
 import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 import PasswordFindView from '../views/accounts/PasswordFindView.vue'
 import EmailAuthView from '../views/accounts/EmailAuthView.vue'
+import RecipeCreateView from '@/views/myrecipes/RecipeCreateView.vue'
 import Home from '../views/Home.vue'
 import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView.vue'
 import MyBlogListView from '../views/myblog/MyBlogListView.vue'
@@ -68,10 +69,14 @@ Vue.use(VueRouter)
     component: EmailAuthView
   },
   {
+    path: '/recipeCreate',
+    name: 'RecipeCreateView',
+    component: RecipeCreateView
+  },
+  {
     path: '/lookAroundRecipe',
     name: 'LookAroundRecipeView',
     component: LookAroundRecipeView
-  //////////////////////
   },
   {
     path: '/myBlog',
@@ -82,6 +87,7 @@ Vue.use(VueRouter)
     path: '/myBlog/:recipe_id',
     name: 'SelectedRecipe',
     component: RecipeDetailView
+>>>>>>> front-end/src/router/index.js
   },
 ]
 
