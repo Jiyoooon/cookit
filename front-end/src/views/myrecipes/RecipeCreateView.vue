@@ -22,6 +22,16 @@
       <hr>
       <cooking-step></cooking-step>
     </div>
+    <div>
+      <b-container>
+        <b-row>
+          <b-col sm="3"></b-col>
+          <b-col sm="3"><b-button variant="primary" block>완료</b-button></b-col>
+          <b-col sm="3"><b-button variant="danger" block>취소</b-button></b-col>
+          <b-col sm="3"></b-col>
+        </b-row>
+      </b-container>
+    </div>
   </div>
 </template>
 
@@ -35,19 +45,6 @@ export default {
     components: {
       RecipeInfo, Ingredient, CookingStep
     },
-    data() {
-      return {
-        items: [],
-      }
-    },
-    methods: {
-      addItem() {
-
-      },
-      deleteItem() {
-
-      }
-    }
 }
 </script>
 
