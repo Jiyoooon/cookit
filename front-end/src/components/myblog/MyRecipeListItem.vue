@@ -10,7 +10,7 @@
     class="mb-2"
   >
     <b-card-text>
-      {{ recipe.content }}
+      {{ recipe.description }}
     </b-card-text>
 
   </b-card>
