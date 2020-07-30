@@ -59,8 +59,10 @@ export default {
             console.log(this.isActive)
         },
         ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'GoMyBlog']),
-        ...mapActions('lookaround', ['GoLookAroundRecipesView'])
-        
+        ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients'])
+    },
+    created(){
+      this.getIngredients()
     }
 }
 </script>
