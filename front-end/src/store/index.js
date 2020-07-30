@@ -731,9 +731,7 @@ const moduleLookAround = {
       user:'',// 해당
     },
     recipes:[],
-    sources:[
-      '마늘','양파','사과','감자','양고기','닭고기','닭가슴살'
-    ],
+    ingredients:[],
   },
   getters: {
   },
@@ -754,7 +752,10 @@ const moduleLookAround = {
     setNumberOfGetRecipes(state,payload){
       state.numberofgetrecipes = payload
       //alert("가져온 레시피 갯수 : " + payload)
-    }
+    },
+    setIngredients(state,payload){
+      state.ingredients = payload
+    },
   },
 
   actions: {
@@ -776,6 +777,22 @@ const moduleLookAround = {
         alert(err)
       })
     },
+    getIngredients({state,commit}){
+      console.log("__불러오기전__")
+      console.log(state.ingredients)
+      if(state.ingredients.length == 0){
+        axios.get(SERVER.ROUTES.lookaroundrecipe.getingredients)
+        .then((res) => {
+          alert("모든 재료 로드 완료!")
+          commit('setIngredients',res.data)
+          console.log(res)
+          console.log(state.ingredients)
+        })
+        .catch((err) => {
+          alert(err)
+        })
+      }
+    },
     GoLookAroundRecipesView() {
       router.push({ name: 'LookAroundRecipeView',})
     },
@@ -785,7 +802,7 @@ const moduleLookAround = {
 
 export default new Vuex.Store({
   plugins: [createPersistedState(
-    { path: ['accounts'] }
+    { path: ['accounts','lookaround'] }
   )],
   state: {
   },

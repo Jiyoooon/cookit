@@ -25,6 +25,7 @@ export default {
         },
         lookaroundrecipe:{
             getfilteredrecipes: '/recipe/recipes',
+            getingredients: '/recipe/ingredients',
         },
     }
 }
