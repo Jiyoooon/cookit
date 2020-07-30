@@ -18,11 +18,5 @@ public interface RecipeService {
 
 	public int addCommnet(int recipe_id, Comment comment);
 
-	public int addRecipe(RecipeDetail recipeDetail);
-
-	public int deleteRecipe(int recipe_id, int uid);
-
-	public int deleteComment(int comment_id, int uid);
-
-	public int modifyComment(Comment comment, int uid);
+	public void addRecipe(RecipeDetail recipeDetail);
 }

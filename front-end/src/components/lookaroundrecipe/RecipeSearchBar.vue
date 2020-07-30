@@ -7,13 +7,12 @@
                 </v-col>
                 <v-col xs="8" sm="8" md="8" lg="6" align-self="center" align="center" >
         
-                    <v-text-field v-model="searchtext1"
+                    <v-text-field
                     single-line
-                    @keydown.enter="searchRecipe" searchtext1=''
                     ></v-text-field>
                 </v-col>
                 <v-col xs="2" sm="2" md="2" lg="2">
-                    <v-btn style="background-color:#CEF279" text large @click="searchRecipe" searchtext1=''><b-icon icon="Search" font-scale="1.5" style="color: #7952b3;"></b-icon></v-btn>
+                    <v-btn style="background-color:#CEF279" text large><b-icon icon="Search" font-scale="1.5" style="color: #7952b3;"></b-icon></v-btn>
                 </v-col>
                 <v-col >
             </v-col>
@@ -26,31 +25,54 @@
                 <label style="font-size:1rem">넣고싶은재료</label>
             </v-col>
             <v-col  xs="2" sm="3" md="3" lg="2" align-self="center" align="center" >
-                <v-text-field
-                    @keydown.enter="selectSource"
-                    v-model="searchtext2"
-                >    
-                </v-text-field>
+                <v-autocomplete
+                :items="items1"
+                v-model="selected1"
+                chips
+                full-width
+                auto
+                hide-no-data
+                hide-selected
+                single-line
+                multiple
+                search-input
+                ></v-autocomplete>
             </v-col>
 
             <v-col  xs="2" sm="2" md="2" lg="2" align-self="center" align="center" >
-                    <label style="font-size:1rem">빼고싶은재료</label>
+                    빼고싶은재료
             </v-col>
             <v-col  xs="2" sm="3" md="3" lg="2" align-self="center" align="center">
-                <v-text-field
-                    @keydown.enter="exceptSource"
-                    v-model="searchtext3"
-                >
-                    
-                </v-text-field>
+                <v-autocomplete
+                :items="items2"
+                v-model="selected2"
+                full-width
+                auto
+                hide-no-data
+                hide-selected
+                single-line
+                multiple
+                
+                ></v-autocomplete>
             </v-col>
              <v-col >
             </v-col>
         </v-row>
-        <v-row>
-            <SelectedSource v-for="select in selected" :key="select.name" :Sourceinfo="select" style="display:inline" @delete-source="deleteSource"></SelectedSource>
-        </v-row>
+        <div v-for="source in selected1" :key="source" class="contain rounded-pill d-inline-flex align-center justify-center">
+            <SelectedSource :sourcename="source" style="display:inline"></SelectedSource>
+        </div>
+        <div v-for="source1 in selected2" :key="source1" class="except rounded-pill d-inline-flex align-center justify-center">
+            <SelectedSource :sourcename="source1" style="display:inline"></SelectedSource>
+        </div>
         <v-divider></v-divider>
+
+
+
+
+
+
+
+        
             </b-container>
     </div>
     
@@ -58,63 +80,28 @@
 
 <script>
 import SelectedSource from "@/components/lookaroundrecipe/SelectedSource.vue"
-import { mapActions } from 'vuex'
+  
   export default {
     name: 'RecipeSearchBar',
     data () {
       return {
-        selected: [],
-        searchtext1:'',
-        searchtext2:'',
-        searchtext3:'',
+        selected1: [],
+        selected2: [],
+        items1: ['마늘','돼지고기','닭고기','양파','마수리'],
+        items2: ['마늘','돼지고기','닭고기','양파','마수리'],
+        selected3:{
+            type:true,
+            name:'',
+        }
       }
+    },
+    watch:{
+        selected1(newval,oldval){
+            console.log(newval + 'VS' + oldval)
+        }
     },
     components:{
         SelectedSource,
-    },
-    methods: {
-        searchRecipe(){
-            alert(String(this.searchtext1) + "을 검색합니다.")
-            this.setRecipequery(this.searchtext1)
-            this.searchtext1=''
-            //검색할 레시피 키워드를 넘겨줌
-        },
-        selectSource(event){
-            this.searchtext2=''
-            if(!this.isOverlap(event.target.value)){
-                this.selected.push({name:event.target.value, state:true})
-            }
-            else
-                alert("중복된값입니다!!")
-        },
-        exceptSource(event){
-            this.searchtext3=''
-            if(!this.isOverlap(event.target.value)){
-                this.selected.push({name:event.target.value, state:false})
-            }
-            else
-                alert("중복된값입니다!!")
-        },
-        deleteSource (item) {
-            //컴포넌트를 지우면서 배열에서도 삭제
-            alert(this.selected.map(x => x.name).indexOf(item))
-            this.selected.splice(this.selected.map(x => x.name).indexOf(item), 1)
-            this.selected = [...this.selected]
-        },
-        isOverlap(sourcename){
-            //중복여부 테스트
-            alert("출력값 : " + this.selected.map(x => x.name).indexOf(sourcename))
-            if(this.selected.length)
-                if(this.selected.map(x => x.name).indexOf(sourcename) !== -1)
-                    return true
-                else
-                    return false
-            else
-                return false
-        },
-        ...mapActions('lookaround',['setRecipequery']),
-    },
-    computed:{
     },
   }
 </script>
@@ -122,6 +109,7 @@ import { mapActions } from 'vuex'
 <style>
 .contain{
     display: inline;
+    background-color: #464CFF;
     margin: 0.5%;
     padding: 0.5%;
     text-align: center;

@@ -1,5 +1,5 @@
 <template>
-  <b-col lg="4">
+  <div class="col-lg-4">
       <b-card
     :title="recipe.title"
     img-src="https://picsum.photos/600/300/?image=25"
@@ -10,11 +10,11 @@
     class="mb-2"
   >
     <b-card-text>
-      {{ recipe.description }}
+      {{ recipe.content }}
     </b-card-text>
 
   </b-card>
-  </b-col>
+  </div>
 </template>
 
 <script>

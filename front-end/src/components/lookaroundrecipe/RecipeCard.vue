@@ -1,31 +1,25 @@
 <template>
   <v-card
     max-width="344"
-    min-height="344"
     class="mx-auto"
   >
+    
+    <v-list-item-title class="headline"><h5>레시피 제목이 들어가는 자리입니다 테스트테스트</h5></v-list-item-title>
 
-    <v-list-item-title 
-      class="headline"
-      @click="readRecipe"
-      style="cursor:pointer; padding: 3%"
-    ><h5><strong>{{ recipe.title }}</strong></h5></v-list-item-title>
     <v-img
-        :src='recipe.main_image'
+        src="https://cdn.vuetifyjs.com/images/cards/mountain.jpg"
         height="194"
         @click.native="readRecipe"
         style="cursor:pointer"
     ></v-img>
-    
 
     <v-card-text class="maintext">
-        <span>{{ recipe.description }}</span>
+        <span>레시피의 본문 내용이 간단하게 들어가는 자리입니다.레시피의 본문 내용이 간단하게 들어가는 자리입니다.레시피의 본문 내용이 간단하게 들어가는 자리입니다.레시피의 본문 내용이 간단하게 들어가는 자리입니다.레시피의 본문 내용이 간단하게 들어가는 자리입니다.</span>
     </v-card-text>
     <v-list-item>
-      <v-list-item-avatar> <img 
-        :src='recipe.main_image'></v-list-item-avatar>
+      <v-list-item-avatar> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTYXlYOj_-LSUnhNxvbn5qSyvYcXWXSqVnefQ&usqp=CAU"></v-list-item-avatar>
       <v-list-item-content>
-        <v-list-item-subtitle ><span style="cursor:pointer">by {{ recipe.recipe_user_name}}</span></v-list-item-subtitle>
+        <v-list-item-subtitle>by 유저 아이디</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
     <v-card-actions>
@@ -55,14 +49,11 @@
 <script>
 export default {
     name:'RecipeCard',
-    props:{
-      recipe:Object,
-    },
     methods:{
         readRecipe(){
             alert("레시피읽는화면으로 들어갑니다.")
         }
-    },
+    }
 }
 </script>
 
@@ -73,7 +64,7 @@ export default {
         text-overflow: ellipsis;
     }
     .maintext > span{
-        height: 64px;
+        height: 5%;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 3;
