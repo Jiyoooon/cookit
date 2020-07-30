@@ -1,9 +1,17 @@
 <template>
-  <div>
-      <SearchBar id="searchbar" />
-      <MyPage id="mypage" />
-      <MyRecipeList />
-  </div>
+  <b-contanier>
+      <b-row>
+        <SearchBar id="searchbar" />
+      </b-row>
+      <b-row>
+        <b-col lg="3">
+            <MyPage id="mypage" />
+        </b-col>
+        <b-col lg="9">
+            <MyRecipeList />
+        </b-col>
+      </b-row>
+  </b-contanier>
 </template>
 
 <script>

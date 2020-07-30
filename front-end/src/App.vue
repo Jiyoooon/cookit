@@ -5,8 +5,8 @@
         <img @click="GoHome" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQDLFnxu6sy4oQgCw4yuNZeNq1p604iMXTq-Q&usqp=CAU" style="height: 5em">
     </b-navbar-brand>
     <b-navbar-nav>
-      <b-nav-item @click="GoHome">내 블로그</b-nav-item>
-      <b-nav-item href="#">둘러보기</b-nav-item>
+      <b-nav-item @click="GoMyBlog">내 블로그</b-nav-item>
+      <b-nav-item @click="GoLookAroundRecipesView">둘러보기</b-nav-item>
     </b-navbar-nav>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
@@ -34,6 +34,7 @@
     </b-collapse>
   </b-navbar>
   <hr>
+  <!-- <router-link to='recipeCreate'>글쓰기</router-link> -->
   <router-view></router-view>
   </div>
 </template>
@@ -57,8 +58,11 @@ export default {
             this.isActive = !this.isActive
             console.log(this.isActive)
         },
-        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth'])
-        
+        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'GoMyBlog']),
+        ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients'])
+    },
+    created(){
+      this.getIngredients()
     }
 }
 </script>
