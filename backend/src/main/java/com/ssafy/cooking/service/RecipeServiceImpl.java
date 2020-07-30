@@ -26,7 +26,7 @@ public class RecipeServiceImpl implements RecipeService {
 		if (p == null) {
 			p = 0;
 		}
-		return recipeDao.getRecipes(p, p + 20, id, user, query, category, filter);
+		return recipeDao.getRecipes(p, 20, id, user, query, category, filter);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class RecipeServiceImpl implements RecipeService {
 	@Override
 	public int addRecipe(RecipeDetail recipeDetail) {
 		String imageName;
-		if (recipeDetail.getRecipe().getRecipe_user_name() != null)
+		if (recipeDetail.getRecipe() != null && recipeDetail.getRecipe().getRecipe_user() > 0)
 			imageName = recipeDetail.getRecipe().getRecipe_user() + Long.toString(System.currentTimeMillis());
 		else
 			imageName = Long.toString(System.currentTimeMillis());
@@ -67,9 +67,13 @@ public class RecipeServiceImpl implements RecipeService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			recipeDetail.getRecipe().setMain_image(imageName);
+		} else {
+			recipeDetail.getRecipe().setMain_image("default");
 		}
 		
-		int recipe_id = recipeDao.addRecipe(recipeDetail.getRecipe());
+		recipeDao.addRecipe(recipeDetail.getRecipe());
+		int recipe_id = recipeDetail.getRecipe().getRecipe_id();
 
 		if (recipeDetail.getCookingStep() != null) {
 			for (int i = 0; i < recipeDetail.getCookingStep().size(); i++) {
@@ -86,23 +90,20 @@ public class RecipeServiceImpl implements RecipeService {
 				}
 			}
 		} 
-		
-		recipeDao.addCookingsteps(recipe_id, recipeDetail.getCookingStep());
-		recipeDao.addIngredients(recipe_id, recipeDetail.getIngredients());
 
-		return 0;
+		if(recipeDetail.getCookingStep() != null)
+			recipeDao.addCookingsteps(recipe_id, recipeDetail.getCookingStep());
+		if(recipeDetail.getIngredients() != null)
+			recipeDao.addIngredients(recipe_id, recipeDetail.getIngredients());
+		
+		return recipe_id;
 	}
 
-	private boolean writeFile(MultipartFile multipartFile, String saveFileName) throws IOException {
-		boolean result = false;
-		String saveDir = "/image/recipe/";
-		
-		byte[] data = multipartFile.getBytes();
-		FileOutputStream fos = new FileOutputStream(saveDir + saveFileName);
-		fos.write(data);
+	private void writeFile(MultipartFile multipartFile, String saveFileName) throws IOException {
+		String saveDir = "/var/lib/tomcat8/webapps/images/recipe/";
+		FileOutputStream fos = new FileOutputStream(saveDir + saveFileName + ".jpg");
+		fos.write(multipartFile.getBytes());
 		fos.close();
-
-		return result;
 	}
 
 	@Override

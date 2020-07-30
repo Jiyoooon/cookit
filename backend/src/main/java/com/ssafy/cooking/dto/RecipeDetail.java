@@ -2,7 +2,7 @@ package com.ssafy.cooking.dto;
 
 import java.util.List;
 
-public class RecipeDetail {
+public class RecipeDetail{
 	private Recipe recipe;
 	private List<Ingredient> ingredients;
 	private List<CookingStep> cookingStep;

@@ -78,6 +78,9 @@ public class RecipeController {
 						map.put("cause", "레시피 정보 없음");
 					} else {
 						recipeDetail.getRecipe().setRecipe_user(uid);
+						if (recipeDetail.getRecipe().getCategory_id() == null) {
+							recipeDetail.getRecipe().setCategory_id(8);
+						}
 						recipeservice.addRecipe(recipeDetail);
 					}
 					result = "success";
@@ -95,8 +98,48 @@ public class RecipeController {
 			map.put("cause", "로그인 필요");
 		}
 
-		recipeservice.addRecipe(recipeDetail);
-		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
+	}
+
+	@ApiOperation(value = "레시피 생성하기(로그인 필요없는 테스트버전)", notes = "레시피 추가한다.")
+	@PostMapping("/save2")
+	public ResponseEntity<HashMap<String, Object>> addRecipe2(RecipeDetail recipeData) throws Exception {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		String result = "success";
+		HttpStatus status = HttpStatus.ACCEPTED;	
+
+//		System.out.println(recipeData.toString());
+		recipeData.getRecipe().setRecipe_user(3);
+		if (recipeData.getRecipe().getCategory_id() == null) {
+			recipeData.getRecipe().setCategory_id(8);
+		}
+		recipeservice.addRecipe(recipeData);
+
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
+	}
+	
+	@ApiOperation(value = "레시피 생성하기(로그인 필요없는 테스트버전)", notes = "레시피 추가한다.")
+	@PostMapping("/save3")
+	public ResponseEntity<HashMap<String, Object>> addRecipe3(RecipeDetail recipeData) throws Exception {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		String result = "success";
+		HttpStatus status = HttpStatus.ACCEPTED;
+		
+		System.out.println(recipeData.getRecipe());
+
+//		System.out.println(recipeData.toString());
+		recipeData.getRecipe().setRecipe_user(3);
+		if (recipeData.getRecipe().getCategory_id() == null) {
+			recipeData.getRecipe().setCategory_id(8);
+		}
+		recipeservice.addRecipe(recipeData);
+
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
 	}
 
 	// 레시피 상세 정보
@@ -107,6 +150,7 @@ public class RecipeController {
 		recipeDetail.setRecipe(recipeservice.getRecipes(null, recipe_id, null, null, null, null).get(0));
 		recipeDetail.setIngredients(recipeservice.getIngredients(recipe_id));
 		recipeDetail.setCookingStep(recipeservice.getCookingSteps(recipe_id));
+		recipeservice.upHits(recipe_id);
 		return new ResponseEntity<RecipeDetail>(recipeDetail, HttpStatus.OK);
 	}
 
@@ -145,7 +189,9 @@ public class RecipeController {
 			result = "fail";
 			map.put("cause", "로그인 필요");
 		}
-		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
 	}
 
 	// 레시피별 댓글 정보
@@ -157,7 +203,8 @@ public class RecipeController {
 
 	@ApiOperation(value = "레시피 댓글 수정하기", notes = "댓글 id값으로 댓글 정보를 수정한다.")
 	@PutMapping("{recipe_id}/comments/{comment_id}")
-	public ResponseEntity<HashMap<String, Object>> modifyComment(@RequestBody Comment comment, HttpServletRequest request) throws Exception {
+	public ResponseEntity<HashMap<String, Object>> modifyComment(@RequestBody Comment comment,
+			HttpServletRequest request) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String result = "success";
 		HttpStatus status = HttpStatus.ACCEPTED;
@@ -183,7 +230,9 @@ public class RecipeController {
 			result = "fail";
 			map.put("cause", "로그인 필요");
 		}
-		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
 	}
 
 	@ApiOperation(value = "레시피 댓글 삭제하기", notes = "댓글 id값으로 댓글 정보를 삭제한다.")
@@ -215,7 +264,9 @@ public class RecipeController {
 			result = "fail";
 			map.put("cause", "로그인 필요");
 		}
-		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
 	}
 
 	@ApiOperation(value = "레시피 댓글 생성하기", notes = "새로운 댓글을 생성한다.")
@@ -249,6 +300,7 @@ public class RecipeController {
 			map.put("cause", "로그인 필요");
 		}
 
-		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
 	}
 }
