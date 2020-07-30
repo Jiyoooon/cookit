@@ -94,19 +94,38 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const RequiredLoggedInPages = ['Logout', 'PasswordAuthView', 'UserInfoView', 'UserDelete', 'MyBlogListView']
   const RequiredLoggedOutPages = ['Login', 'Signup', 'EmailAuthView', 'PasswordFindView']
+  const RequiredAuthorized = ['Signup']
+  const RequiredPasswordAuth = ['UserInfoView']
 
   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
+  const IsAuthorized = Vue.$cookies.isKey('user-email')
+  const IsPasswordAuth = Vue.$cookies.isKey('password-check')
+
   const LoggedInRequired = RequiredLoggedInPages.includes(to.name)
   const LoggedOutRequired = RequiredLoggedOutPages.includes(to.name)
+  const AuthorizedRequired = RequiredAuthorized.includes(to.name)
+  const AuthPasswordRequired = RequiredPasswordAuth.includes(to.name)
 
   if (!IsLoggedIn && LoggedInRequired) {
-    next({ name: 'Login'})
+    next({ name: 'Login' })
   } else {
     next()
   }
 
   if (IsLoggedIn && LoggedOutRequired) {
-    next({ name: 'Home'})
+    next({ name: 'Home' })
+  } else {
+    next()
+  }
+
+  if (!IsAuthorized && AuthorizedRequired) {
+    next({ name: 'EmailAuthView' })
+  } else {
+    next()
+  }
+
+  if (!IsPasswordAuth && AuthPasswordRequired) {
+    next({ name: 'PasswordAuthView' })
   } else {
     next()
   }

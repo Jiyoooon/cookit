@@ -4,6 +4,7 @@ import router from '../router'
 import axios from 'axios'
 import cookies from 'vue-cookies'
 import SERVER from '../api/url.js'
+import createPersistedState from 'vuex-persistedstate'
 
 
 Vue.use(Vuex)
@@ -82,6 +83,7 @@ const moduleAccounts = {
                   commit('SET_TOKEN', null)
                   commit('SET_USER', null)
                   commit('SET_EMAIL', null)
+                  commit('myblog/SET_RECIPES', null, { root: true })
                   cookies.remove('auth-token')
                   cookies.remove('auth-user')
                   cookies.remove('user-email')
@@ -158,8 +160,10 @@ const moduleAccounts = {
           if (res.data.result == 'success') {
             commit('SET_TOKEN', res.data.token)
             dispatch('fetchUser')
+            dispatch('myblog/fetchMyRecipes', null, { root: true })
             dispatch('GoHome')
           } else {
+            console.log(res.data)
             this._vm.$root.$bvModal.msgBoxOk('이메일과 비밀번호를 확인하여 주십시오.', {
               title: 'Confirmation',
               size: 'sm',
@@ -183,6 +187,7 @@ const moduleAccounts = {
           commit('SET_TOKEN', null)
           commit('SET_USER', null)
           commit('SET_EMAIL', null)
+          commit('myblog/SET_RECIPES', null, { root: true })
           cookies.remove('auth-token')
           cookies.remove('auth-user')
           cookies.remove('user-email')
@@ -265,55 +270,6 @@ const moduleAccounts = {
         alert('!!!!!!')
        })
     },
-    signup({ commit, dispatch }, signupData) {
-      if (!signupData.valid.password) {
-        this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
-          title: 'Confirmation',
-          size: 'sm',
-          buttonSize: 'sm',
-          okVariant: 'danger',
-          headerClass: 'p-2 border-bottom-0',
-          footerClass: 'p-2 border-top-0',
-          centered: true
-        })
-      } else if (!signupData.valid.nickname) {
-        this._vm.$root.$bvModal.msgBoxOk('닉네임 중복체크를 해주세요.', {
-          title: 'Confirmation',
-          size: 'sm',
-          buttonSize: 'sm',
-          okVariant: 'danger',
-          headerClass: 'p-2 border-bottom-0',
-          footerClass: 'p-2 border-top-0',
-          centered: true
-        })
-      } else {
-        console.log(signupData.config)
-        axios.post(SERVER.ROUTES.accounts.signup, signupData.config)
-          .then((res) => {
-            if (res.data.result == 'success') {
-              commit('SET_TOKEN', res.data.token)
-              dispatch('fetchUser')
-              router.push({ name: 'Home'})
-            } else {
-              console.log(res)
-              console.log(res.data)
-              this._vm.$root.$bvModal.msgBoxOk('이미지 파일이 올바르지 않습니다.', {
-                title: 'Confirmation',
-                size: 'sm',
-                buttonSize: 'sm',
-                okVariant: 'danger',
-                headerClass: 'p-2 border-bottom-0',
-                footerClass: 'p-2 border-top-0',
-                centered: true
-              })
-            }
-          })
-          .catch((err) => {
-            console.log(err.response)
-            alert(err.response)
-          })
-        }
-    },
     fetchUser({ getters, commit }) {
       axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
@@ -326,7 +282,7 @@ const moduleAccounts = {
           alert(err.response)
         })
     },
-    updateUser({ getters, dispatch }, updateData) {
+    updateUser({ dispatch, state }, updateData) {
       if (!updateData.valid.password) {
         this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
           title: 'Confirmation',
@@ -338,7 +294,7 @@ const moduleAccounts = {
           centered: true
         })
       } else if (!updateData.valid.nickname) {
-        this._vm.$root.$bvModal.msgBoxOk('닉네임 중복체를 해주세요.', {
+        this._vm.$root.$bvModal.msgBoxOk('닉네임 중복체크를 해주세요.', {
           title: 'Confirmation',
           size: 'sm',
           buttonSize: 'sm',
@@ -355,14 +311,16 @@ const moduleAccounts = {
         formData.append('password', updateData.config.password)
         formData.append('nickname', updateData.config.nickname)
         formData.append('profile', updateData.config.profile)
+        formData.append('image_name', updateData.config.image_name)
         formData.append('intro', updateData.config.intro)
+        formData.append('start_page', updateData.config.start_page)
 
         for (let key of formData.entries()) {
           console.log(`${key}`)
         }
 
         const headerconfig = { headers: {
-          Authorization: getters.config.Authorization,
+          'Authorization': `token ${state.authToken}`,
           'Content-Type': 'multipart/form-data'
         }}
 
@@ -383,6 +341,7 @@ const moduleAccounts = {
           })
           .catch((err) => {
             console.log(err.response)
+            console.log(err)
             alert(err.response.data.error)
           })
       }
@@ -393,12 +352,13 @@ const moduleAccounts = {
     //       console.log(res)
     //     })
     // },
-    passwordCheck({ dispatch, getters } ,password) {
-      console.log('토큰 :' + this.authToken)
+    passwordCheck({ dispatch, getters, state } ,password) {
+      console.log('토큰 :' + state.authToken)
       axios.post(SERVER.ROUTES.accounts.checkpassword, password, getters.config)
       .then((res) => {
         console.log(res)
         if(res.data.result == 'success') {
+          cookies.set('password-check', 1)
           this._vm.$root.$bvModal.msgBoxOk('확인되었습니다.', {
             title: 'Confirmation',
             size: 'sm',
@@ -412,6 +372,8 @@ const moduleAccounts = {
             if (ans) {
               dispatch('GoUserInfo')
             }
+            console.log(111111)
+            cookies.remove('password-check')
           })
         } else {
           this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
@@ -462,7 +424,7 @@ const moduleAccounts = {
         alert(err.response)
       })
     },
-    signup2({ commit, dispatch }, signupData) {
+    signup({ commit, dispatch }, signupData) {
       if (!signupData.valid.password) {
         this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
           title: 'Confirmation',
@@ -491,6 +453,7 @@ const moduleAccounts = {
         formData.append('nickname', signupData.config.nickname)
         formData.append('profile', signupData.config.profile)
         formData.append('intro', signupData.config.intro)
+        formData.append('image_name', signupData.config.image_name)
 
         for (let key of formData.entries()) {
           console.log(`${key}`)
@@ -503,6 +466,7 @@ const moduleAccounts = {
             if (res.data.result == 'success') {
               commit('SET_TOKEN', res.data.token)
               dispatch('fetchUser')
+              dispatch('myblog/fetchMyRecipes', null, { root: true })
               this._vm.$root.$bvModal.msgBoxOk('가입되었습니다.', {
                 title: 'Confirmation',
                 size: 'sm',
@@ -560,30 +524,7 @@ const moduleRecipes = {
 const moduleMyBlog = {
   namespaced: true,
   state: {
-    myrecipes: [{id: 1, title: '1111111111', content: 'fsdfsfsdfsdf'},
-                {id: 2, title: '2fsfsfsdfsd', content: 'dfssdfadfad'},
-                {id: 3, title: '3asdfsdf', content: 'dfsgasdgs'},
-                {id: 4, title: '4111111111', content: 'fsdfsfsdfsdf'},
-                {id: 5, title: '5fsfsfsdfsd', content: 'dfssdfadfad'},
-                {id: 6, title: '6asdfsdf', content: 'dfsgasdgs'},
-                {id: 7, title: '7111111111', content: 'fsdfsfsdfsdf'},
-                {id: 8, title: '8fsfsfsdfsd', content: 'dfssdfadfad'},
-                {id: 9, title: '9asdfsdf', content: 'dfsgasdgs'},
-                {id: 10, title: '10111111111', content: 'fsdfsfsdfsdf'},
-                {id: 11, title: '11fsfsfsdfsd', content: 'dfssdfadfad'},
-                {id: 12, title: '12asdfsdf', content: 'dfsgasdgs'},
-                {id: 13, title: '1311111111', content: 'fsdfsfsdfsdf'},
-                {id: 14, title: '14fsfsfsdfsd', content: 'dfssdfadfad'},
-                {id: 15, title: '15sdfsdf', content: 'dfsgasdgs'},
-                {id: 16, title: '1611111111', content: 'fsdfsfsdfsdf'},
-                {id: 17, title: '17sfsfsdfsd', content: 'dfssdfadfad'},
-                {id: 18, title: '18sdfsdf', content: 'dfsgasdgs'},
-                {id: 19, title: '1911111111', content: 'fsdfsfsdfsdf'},
-                {id: 20, title: '20sfsfsdfsd', content: 'dfssdfadfad'},
-                {id: 21, title: '21sdfsdf', content: 'dfsgasdgs'},
-                {id: 22, title: '2211111111', content: 'fsdfsfsdfsdf'},
-                {id: 23, title: '23sfsfsdfsd', content: 'dfssdfadfad'},
-                {id: 24, title: '2sdfsdf', content: 'dfsgasdgs'}],
+    myrecipes: null,
     selectedrecipe: null,
   },
 
@@ -601,8 +542,13 @@ const moduleMyBlog = {
   },
 
   actions: {
-    fetchMyRecipes({ commit }, user_id) {
-      axios.get(SERVER.ROUTES.myrecipes.myrecipes + String(user_id))
+    fetchMyRecipes({ rootState, commit }) {
+      let recipequery = rootState['lookaround/recipequery']
+      // recipequery.user = user_id
+      const filter = {
+        params: recipequery
+      }
+      axios.get('http://i3a201.p.ssafy.io:8080/cooking-0.0.2-SNAPSHOT/recipe/recipes', filter)
         .then((res) => {
           console.log(res)
           commit('SET_RECIPES', res.data)
@@ -840,6 +786,9 @@ const moduleLookAround = {
 
 
 export default new Vuex.Store({
+  plugins: [createPersistedState(
+    { path: ['accounts'] }
+  )],
   state: {
   },
   mutations: {
