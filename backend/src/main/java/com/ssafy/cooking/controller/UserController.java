@@ -187,10 +187,7 @@ public class UserController {
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
     	if(profile != null) {
-    		String[] filename = profile.getOriginalFilename().split("\\.");
-    		String extension = filename[filename.length-1];
-    		
-    		if(!(extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png"))) {
+    		if(profile.getContentType().indexOf("image") == -1) {
     			map.put("cause", "이미지 파일  형식 오류");
     			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     		}
@@ -217,8 +214,8 @@ public class UserController {
     	HttpStatus status = null;
     	
 //    	response.setHeader("Access-Control-Allow-Origin", "*");
-//        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-//        response.setHeader("Access-Control-Max-Age", "3600");
+//      response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+//      response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers", "X-Custom-Header");//token
     	String email = login.getEmail();
     	String password = login.getPassword();
@@ -376,6 +373,15 @@ public class UserController {
     	
     	String result = "success";
     	HttpStatus status = HttpStatus.ACCEPTED;
+    	
+    	if(profile != null) {
+    		System.out.println(profile.getContentType());
+    		System.out.println(profile.getSize());//용량 초과하면 요청 자체가 안들어옴 => 에러 페이지 따로 필요,,?
+    		if(profile.getContentType().indexOf("image") == -1) {
+    			map.put("cause", "이미지 파일  형식 오류");
+    			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    		}
+    	}
     	
     	String password = user.getPassword();
 
