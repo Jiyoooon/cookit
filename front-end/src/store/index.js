@@ -632,50 +632,47 @@ const moduleLookAround = {
   namespaced: true,
   state: {
     //레시피를 불러올때 전달할 쿼리
+    numberofgetrecipes:0,
     recipequery:{
       category:'',//어디서설정?
       filter:'',//어디서설정?
       id:'',//어디서설정?
-      p:21,//무한 스크롤에서 설정
+      p:0,//무한 스크롤에서 설정
       query:'',// 서치바에서 설정
-      user:'',//
+      user:'',// 해당
     },
-    recipes:[
-      {
-        recipe_id: 9999,
-        recipe_user: 3,
-        recipe_user_name: null,
-        category_id: 1,
-        title: "일본식 꽁치통조림 간장조림",
-        description: "집밥백선생에 나온 꽁치통조림 요리중에 밥반찬으로 최고인 일식 꽁치간장조림이에요",
-        main_image: "user11595982936459",
-        serving: 0,
-        cooking_time: 15,
-        hits: 0,
-        tag: null,
-        create_date: "2020-07-29 00:35:36",
-        update_date: null,
-        delete_date: null
-      },
+    recipes:[],
+    sources:[
+      '마늘','양파','사과','감자','양고기','닭고기','닭가슴살'
     ],
   },
   getters: {
   },
 
   mutations: {
-    setRecipequery(state,filter){
-      state.recipequery=filter
+    setRecipequery(state,querydata){
+      state.recipequery.query=querydata
+      state.recipes = []
+      state.recipequery.p = 0;
     },
     setRecipes(state,recipes){
       state.recipes = [...state.recipes, ...recipes]
       console.log(state.recipes)
     },
-    setRecipequeryPage(state){
-      state.recipequery.p+=20
+    setRecipequeryPage(state,payload){
+      state.recipequery.p+=payload
+    },
+    setNumberOfGetRecipes(state,payload){
+      state.numberofgetrecipes = payload
+      //alert("가져온 레시피 갯수 : " + payload)
     }
   },
 
   actions: {
+    setRecipequery({commit,dispatch},payload){
+      commit('setRecipequery',payload)
+      dispatch('getFilteredRecipes')
+    },
     getFilteredRecipes({commit,state}){
       const filter = {
         params:state.recipequery
@@ -683,7 +680,8 @@ const moduleLookAround = {
       axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes,filter)
       .then((res) => {
         commit('setRecipes',res.data)
-        commit('setRecipequeryPage')
+        commit('setNumberOfGetRecipes',res.data.length)
+        commit('setRecipequeryPage',res.data.length)
       })
       .catch((err) => {
         alert(err)

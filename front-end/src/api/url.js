@@ -1,5 +1,5 @@
 export default {
-    URL: 'http://i3a201.p.ssafy.io:8080/cooking-0.0.1-SNAPSHOT/',
+    URL: 'http://i3a201.p.ssafy.io:8080/cooking-0.0.2-SNAPSHOT/',
     ROUTES: {
         accounts: {
             signup: '/user/join2',

@@ -9,11 +9,11 @@
         
                     <v-text-field v-model="searchtext1"
                     single-line
-                    @keydown.enter="getFilteredRecipes(searchtext1), searchtext1=''"
+                    @keydown.enter="searchRecipe" searchtext1=''
                     ></v-text-field>
                 </v-col>
                 <v-col xs="2" sm="2" md="2" lg="2">
-                    <v-btn style="background-color:#CEF279" text large @click="getFilteredRecipes(searchtext1), searchtext1=''"><b-icon icon="Search" font-scale="1.5" style="color: #7952b3;"></b-icon></v-btn>
+                    <v-btn style="background-color:#CEF279" text large @click="searchRecipe" searchtext1=''><b-icon icon="Search" font-scale="1.5" style="color: #7952b3;"></b-icon></v-btn>
                 </v-col>
                 <v-col >
             </v-col>
@@ -73,9 +73,9 @@ import { mapActions } from 'vuex'
         SelectedSource,
     },
     methods: {
-        ...mapActions('lookaround',['getFilteredRecipes']),
         searchRecipe(){
             alert(String(this.searchtext1) + "을 검색합니다.")
+            this.setRecipequery(this.searchtext1)
             this.searchtext1=''
             //검색할 레시피 키워드를 넘겨줌
         },
@@ -112,9 +112,9 @@ import { mapActions } from 'vuex'
             else
                 return false
         },
+        ...mapActions('lookaround',['setRecipequery']),
     },
     computed:{
-        
     },
   }
 </script>
