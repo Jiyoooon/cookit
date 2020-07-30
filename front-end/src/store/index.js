@@ -737,6 +737,18 @@ const moduleLookAround = {
   },
 
   mutations: {
+    initializing(state){
+      //alert("이니셜라이징!")
+      state.recipequery={
+        category:'',
+        filter:'',
+        id:'',
+        p:0,
+        query:'',
+        user:'',
+      }
+      state.recipes = []
+    },
     setRecipequery(state,querydata){
       state.recipequery.query=querydata
       state.recipes = []
@@ -783,7 +795,7 @@ const moduleLookAround = {
       if(state.ingredients.length == 0){
         axios.get(SERVER.ROUTES.lookaroundrecipe.getingredients)
         .then((res) => {
-          alert("모든 재료 로드 완료!")
+          //alert("모든 재료 로드 완료!")
           commit('setIngredients',res.data)
           console.log(res)
           console.log(state.ingredients)

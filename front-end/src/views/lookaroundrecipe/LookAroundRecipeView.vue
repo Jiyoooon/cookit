@@ -12,10 +12,6 @@
         <div @click="scrollToTop" id= "button-bottom">
             <b-icon icon="arrow-up-circle" scale="1"></b-icon>
         </div>
-        <!-- <v-btn @click="scrollToTop" id="button-bottom">
-            <b-icon icon="chevron-up" shift-v="16"></b-icon>
-        </v-btn> -->
-
         
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="0" style="text-align:center">
             <b-spinner v-if="numberofgetrecipes != 0" label="Spinning" ></b-spinner>
@@ -33,7 +29,7 @@
 import InfiniteLoading from 'vue-infinite-loading';
 import RecipeSearchBar from "@/components/lookaroundrecipe/RecipeSearchBar.vue"
 import RecipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
     data(){
         return{
@@ -61,6 +57,7 @@ export default {
             window.scroll(0,0)//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
         ...mapActions('lookaround',['getFilteredRecipes','alertfortest']),
+        ...mapMutations('lookaround',['initializing']),
     },
     computed:{
         ...mapState('lookaround',['recipes','numberofgetrecipes']),
@@ -69,6 +66,9 @@ export default {
         if(this.numberofgetrecipes != 0){//가져온 데이터수가 0이 아니면 동작
             this.setBusy()
         }
+    },
+    created(){
+        this.initializing()
     }
 }
 </script>

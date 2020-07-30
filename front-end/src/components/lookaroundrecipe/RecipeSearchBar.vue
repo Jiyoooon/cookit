@@ -74,7 +74,7 @@ import { mapActions } from 'vuex'
     },
     methods: {
         searchRecipe(){
-            alert(String(this.searchtext1) + "을 검색합니다.")
+            //alert(String(this.searchtext1) + "을 검색합니다.")
             this.setRecipequery(this.searchtext1)
             this.searchtext1=''
             //검색할 레시피 키워드를 넘겨줌
@@ -103,7 +103,7 @@ import { mapActions } from 'vuex'
         },
         isOverlap(sourcename){
             //중복여부 테스트
-            alert("출력값 : " + this.selected.map(x => x.name).indexOf(sourcename))
+            //alert("출력값 : " + this.selected.map(x => x.name).indexOf(sourcename))
             if(this.selected.length)
                 if(this.selected.map(x => x.name).indexOf(sourcename) !== -1)
                     return true
