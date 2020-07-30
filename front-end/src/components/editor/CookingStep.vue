@@ -1,19 +1,19 @@
 <template>
   <div>
     <b-container fluid="lg">
-      <b-row v-for="(step, index) in cookingSteps" :key="index">
+      <b-row v-for="(step, index) in steps" :key="index">
 				<b-col sm="1" class="mt-3"><h5>Step {{index + 1}}.</h5></b-col>
         <b-col sm="7">
           <b-container fluid="lg" id="step-container">
             <b-row align-v="center">
               <b-col>
-								<b-form-textarea type="textarea" id="description" rows="3" max-rows="3" v-model="step.description" required no-resize></b-form-textarea>
+								<b-form-textarea type="textarea" id="description" rows="3" maxrows="3" v-model="step.description" required no-resize></b-form-textarea>
 							</b-col>
             </b-row>
 						<b-row align-v="center">
 							<b-col sm="1">💡 Tip</b-col>
 							<b-col>
-								<b-form-textarea type="textarea" id="tip" rows="1" max-rows="2" v-model="step.tip" placeholder="팁이 있다면 알려주세요!" required no-resize></b-form-textarea>
+								<b-form-textarea type="textarea" id="tip" rows="1" maxrows="2" v-model="step.tip" placeholder="팁이 있다면 알려주세요!" required no-resize></b-form-textarea>
 							</b-col>
 						</b-row>
           </b-container>
@@ -37,43 +37,45 @@
 				<b-col sm="1">
 					<b-container fluid="lg">
 						<b-row>
-							<b-col><b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer" @click="deleteCookingStep(index)"></b-icon></b-col>
+							<b-col><b-button id="deleteBtn" @click="deleteStep(index)">X</b-button></b-col>
 						</b-row>
 					</b-container>
 				</b-col>
       </b-row>
 			<b-row>
-				<b-col sm="4"></b-col>
-				<b-col sm="4">
-          <div @click="addCookingStep" style="width: 6em; display: block; margin: 0px auto; align-text: center; cursor: pointer">
-            <b-icon class="mr-1" icon="plus-square-fill" variant="warning"></b-icon>추가</div>
-				</b-col>
-				<b-col sm="4"></b-col>
+				<b-col sm="3"></b-col>
+				<b-col sm="4"><b-button variant="primary" id="addBtn" @click="addStep" block>추가</b-button></b-col>
+				<b-col sm="5"></b-col>
 			</b-row>
     </b-container>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
-
 export default {
 	name: 'CookingStep',
 	data() {
 		return {
+			steps: [
+				{ description: "",
+				tip: "",
+				imageFile: null },
+			],
 			imageUrl: null
 		}
 	},
-	computed: {
-		...mapState('editor', ['cookingSteps'])
-	},
 	methods: {
-		...mapMutations('editor', ['addCookingStep', 'deleteCookingStep']),
+		addStep() {
+			this.steps.push({ name: "", quantity: "" });
+		},
+		deleteStep(index) {
+      this.steps.splice(index, 1)
+		},
 		setThumbnail(e) {
 			const file = e.target.files[0];
 			this.imageUrl = URL.createObjectURL(file);
 		},
-	},
+	}
 }
 </script>
 

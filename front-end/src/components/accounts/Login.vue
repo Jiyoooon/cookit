@@ -46,7 +46,7 @@
             <b-button variant="info" @click="login(loginData)" block>로그인</b-button>
           </b-col>
           <b-col sm="2">
-            <b-button variant="info" @click="GoEmailAuth" block>회원가입</b-button>
+            <b-button variant="info" @click="GoSignup" block>회원가입</b-button>
           </b-col>
           <b-col sm="3">
             <b-button variant="info" @click="GoPasswordFind" block>비밀번호 찾기</b-button>
@@ -72,7 +72,7 @@ export default {
     computed: {
     },
     methods: {
-        ...mapActions('accounts', ['login', 'GoEmailAuth','GoPasswordFind'])
+        ...mapActions('accounts', ['login', 'GoSignup','GoPasswordFind'])
     }
   }
 

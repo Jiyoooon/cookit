@@ -4,6 +4,7 @@ import SignupView from '../views/accounts/SignupView.vue'
 import LoginView from '../views/accounts/LoginView.vue'
 import LogoutView from '../views/accounts/LogoutView.vue'
 import UserDeleteView from '../views/accounts/UserDeleteView.vue'
+import UserUpdateView from '../views/accounts/UserUpdateView.vue'
 import UserInfoView from '../views/accounts/UserInfoView.vue'
 import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 import PasswordFindView from '../views/accounts/PasswordFindView.vue'
@@ -13,7 +14,6 @@ import Home from '../views/Home.vue'
 import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView.vue'
 import MyBlogListView from '../views/myblog/MyBlogListView.vue'
 import RecipeDetailView from '../views/myblog/RecipeDetailView.vue'
-
 
 Vue.use(VueRouter)
 
@@ -42,6 +42,11 @@ Vue.use(VueRouter)
     path: '/userDelete',
     name: 'UserDelete',
     component: UserDeleteView
+  },
+  {
+    path: '/userUpdate',
+    name: 'UserUpdate',
+    component: UserUpdateView
   },
   {
     path: '/userInfo',
@@ -91,44 +96,25 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const RequiredLoggedInPages = ['Logout', 'PasswordAuthView', 'UserInfoView', 'UserDelete', 'MyBlogListView']
-  const RequiredLoggedOutPages = ['Login', 'Signup', 'EmailAuthView', 'PasswordFindView']
-  const RequiredAuthorized = ['Signup']
-  const RequiredPasswordAuth = ['UserInfoView']
+// router.beforeEach((to, from, next) => {
+//   const RequiredLoggedInPages = ['Logout', 'PasswordAuthView'] //'UserInfoView', 'UserUpdate', 'UserDelete' 추가
+//   const RequiredLoggedOutPages = ['Login', 'Signup']
 
-  const IsLoggedIn = Vue.$cookies.isKey('auth-token')
-  const IsAuthorized = Vue.$cookies.isKey('user-email')
-  const IsPasswordAuth = Vue.$cookies.isKey('password-check')
+//   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
+//   const LoggedInRequired = RequiredLoggedInPages.includes(to.name)
+//   const LoggedOutRequired = RequiredLoggedOutPages.includes(to.name)
 
-  const LoggedInRequired = RequiredLoggedInPages.includes(to.name)
-  const LoggedOutRequired = RequiredLoggedOutPages.includes(to.name)
-  const AuthorizedRequired = RequiredAuthorized.includes(to.name)
-  const AuthPasswordRequired = RequiredPasswordAuth.includes(to.name)
+//   if (!IsLoggedIn && LoggedInRequired) {
+//     next({ name: 'Login'})
+//   } else {
+//     next()
+//   }
 
-  if (!IsLoggedIn && LoggedInRequired) {
-    next({ name: 'Login' })
-  } else {
-    next()
-  }
-
-  if (IsLoggedIn && LoggedOutRequired) {
-    next({ name: 'Home' })
-  } else {
-    next()
-  }
-
-  if (!IsAuthorized && AuthorizedRequired) {
-    next({ name: 'EmailAuthView' })
-  } else {
-    next()
-  }
-
-  if (!IsPasswordAuth && AuthPasswordRequired) {
-    next({ name: 'PasswordAuthView' })
-  } else {
-    next()
-  }
-})
+//   if (IsLoggedIn && LoggedOutRequired) {
+//     next({ name: 'Home'})
+//   } else {
+//     next()
+//   }
+// })
 
 export default router

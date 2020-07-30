@@ -2,7 +2,8 @@ package com.ssafy.cooking.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class Recipe  {
+public class Recipe {
+
 	private int recipe_id; //레시피id
 	private int recipe_user;//작성자id
 	private String recipe_user_name;//작성자 이름
@@ -109,14 +110,13 @@ public class Recipe  {
 	public void setMain_image_file(MultipartFile main_image_file) {
 		this.main_image_file = main_image_file;
 	}
+	
 	@Override
 	public String toString() {
 		return "Recipe [recipe_id=" + recipe_id + ", recipe_user=" + recipe_user + ", recipe_user_name="
 				+ recipe_user_name + ", category_id=" + category_id + ", title=" + title + ", description="
 				+ description + ", main_image=" + main_image + ", serving=" + serving + ", cooking_time=" + cooking_time
 				+ ", hits=" + hits + ", tag=" + tag + ", create_date=" + create_date + ", update_date=" + update_date
-				+ ", delete_date=" + delete_date + ", main_image_file=" + main_image_file + "]";
+				+ ", delete_date=" + delete_date + "]";
 	}
-	
-	
 }
