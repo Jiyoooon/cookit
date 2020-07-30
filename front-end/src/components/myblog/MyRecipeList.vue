@@ -43,7 +43,7 @@ export default {
         }
     },
     methods: {
-       ...mapActions('myblog', ['fetchMyRecipes', 'selectedRecipe']),
+       ...mapActions('myblog', ['selectedRecipe']),
       changePaginateditems(index, value) {
         this.paginated_items[index] = value
       },
@@ -51,9 +51,10 @@ export default {
         this.nbPages++
       },
     },
-    created() {
-        this.fetchMyRecipes()
-    }
+    // created() {
+    //   console.log(11111111)
+    //   this.fetchMyRecipes()
+    // }
 }
 </script>
 

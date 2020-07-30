@@ -3,18 +3,22 @@
         <RecipeSearchBar />
         <div class="RecipeArray">
         <v-container fluid grid-list-md>
-            <button @click="getFilteredRecipes"> 누르지마시오 </button>
             <v-layout row wrap>
                 <v-flex xs12 sm6 md4 lg3 xl2 v-for="recipeinfo in recipes" :key="recipeinfo.recipe_id" style="margin:1%" >
                     <RecipeCard :recipe="recipeinfo">
                     </RecipeCard>
                 </v-flex>
             </v-layout>
-        <v-btn @click="scrollToTop" id="button-bottom"  rounded="circle">
-            <b-icon icon="chevron-up" shift-v="16"></b-icon>
-        </v-btn>
-
-        <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+        <div @click="scrollToTop" id= "button-bottom">
+            <b-icon icon="arrow-up-circle" scale="1"></b-icon>
+        </div>
+        
+        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="0" style="text-align:center">
+            <b-spinner v-if="numberofgetrecipes != 0" label="Spinning" ></b-spinner>
+            <span v-if="numberofgetrecipes == 0">더 이상 불러올 레시피가 없어요...</span>
+        </div>
+        
+        <!-- <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
         </v-container>
         </div>
     </div>
@@ -25,11 +29,12 @@
 import InfiniteLoading from 'vue-infinite-loading';
 import RecipeSearchBar from "@/components/lookaroundrecipe/RecipeSearchBar.vue"
 import RecipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
     data(){
         return{
             list: ['감자','고구마','딸기'],
+            busy: false
         }
     },
     components:{
@@ -38,42 +43,44 @@ export default {
         InfiniteLoading,
     },
     methods:{
-        getRecipes (){
-            console.log(this.recipes[0].cooking_time)
+        setBusy(){
+            this.busy = false
         },
-        ...mapActions('lookaround',['getFilteredRecipes']),
-        
+        loadMore (){
+
+            this.busy = true;
+            setTimeout(() => {
+                this.getFilteredRecipes()
+            },1000);
+        },
         scrollToTop(){
             window.scroll(0,0)//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
-        infiniteHandler($state) {
-            setTimeout(() => {//1초마다 갱신
-                this.getFilteredRecipes()
-                // getrecipe받아오기 => input을 뭘로 줄지 생각(이전에 받아왔던 레시피 이후로 받아와야함)
-
-                // 레시피를 받아오면 Vuex에 저장 => v-for="객체이름 $store.state.객체이름s" 으로 넘겨준다 :props이름= 객체이름 
-                // 으로 넘겨준다.
-                // selected안에서는 받은 객체 이용 카드만듬
-                setTimeout(1000)
-                $state.loaded();
-            }, 2000);
-        },
+        ...mapActions('lookaround',['getFilteredRecipes','alertfortest']),
+        ...mapMutations('lookaround',['initializing']),
     },
     computed:{
-        ...mapState('lookaround',['recipes']),
+        ...mapState('lookaround',['recipes','numberofgetrecipes']),
+    },
+    updated(){
+        if(this.numberofgetrecipes != 0){//가져온 데이터수가 0이 아니면 동작
+            this.setBusy()
+        }
     },
     created(){
-        this.getFilteredRecipes()
+        this.initializing()
     }
 }
 </script>
 
 <style>
     #button-bottom{
+        font-size: 4rem;
+        box-sizing: content-box;
         position: fixed;
         right: 5vw;
         bottom: 10vh;
-        border: 0.1vh solid rgb(226, 151, 64);
+        cursor: pointer;
     }
 
     .RecipeArray{

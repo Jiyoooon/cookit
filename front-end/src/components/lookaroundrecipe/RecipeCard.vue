@@ -4,23 +4,28 @@
     min-height="344"
     class="mx-auto"
   >
-    
-    <v-list-item-title class="headline"><h5>{{ recipe.title }}</h5></v-list-item-title>
 
+    <v-list-item-title 
+      class="headline"
+      @click="readRecipe"
+      style="cursor:pointer; padding: 3%"
+    ><h5><strong>{{ recipe.title }}</strong></h5></v-list-item-title>
     <v-img
-        src="https://cdn.vuetifyjs.com/images/cards/mountain.jpg"
+        :src='recipe.main_image'
         height="194"
         @click.native="readRecipe"
         style="cursor:pointer"
     ></v-img>
+    
 
     <v-card-text class="maintext">
         <span>{{ recipe.description }}</span>
     </v-card-text>
     <v-list-item>
-      <v-list-item-avatar> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTYXlYOj_-LSUnhNxvbn5qSyvYcXWXSqVnefQ&usqp=CAU"></v-list-item-avatar>
+      <v-list-item-avatar> <img 
+        :src='recipe.main_image'></v-list-item-avatar>
       <v-list-item-content>
-        <v-list-item-subtitle>by {{ recipe.recipe_user}}</v-list-item-subtitle>
+        <v-list-item-subtitle ><span style="cursor:pointer">by {{ recipe.recipe_user_name}}</span></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
     <v-card-actions>
@@ -57,7 +62,7 @@ export default {
         readRecipe(){
             alert("레시피읽는화면으로 들어갑니다.")
         }
-    }
+    },
 }
 </script>
 

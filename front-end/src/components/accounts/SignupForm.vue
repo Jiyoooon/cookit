@@ -66,8 +66,8 @@
         <div v-if="signupData.config.profile"><img id="imagepreview" :src="imageURL"></div>
         <b-col sm="3" v-if="signupData.config.profile"></b-col>
         <b-col sm="6">
-          <b-form-file @change="imageUpload" ref="file-input" v-model="signupData.config.profile" class="mt-3" accept=".jpg, .png, .jpeg" plain></b-form-file> 
-          <div class="mt-3"><b-button variant="primary" @click="clearFiles" plain>파일 제거</b-button> 선택된사진: {{ signupData.config.profile?signupData.config.profile.name : '' }}</div>
+          <b-form-file @change="imageUpload" ref="file-input" v-model="signupData.config.profile" class="mt-3" accept=".jpg, .png, .jpeg"></b-form-file> 
+          <div class="mt-3"><b-button @click="clearFiles">기본이미지로 설정</b-button> Selected file: {{ signupData.config.profile?signupData.config.profile.name : '' }}</div>
         </b-col>
       </b-row>
       <b-row align-v="center">
@@ -84,7 +84,7 @@
         <b-row align-v="center" align-h="center">
             <b-col sm="2"></b-col>
             <b-col sm="4">
-                <b-button type="submit" variant="primary" id="signButton" @click="signup2(signupData)" block>가입하기</b-button>
+                <b-button type="submit" variant="primary" id="signButton" @click="signup(signupData)" block>가입하기</b-button>
             </b-col>
             <b-col sm="4">
                 <b-button variant="danger" id="cancelButton" to="/SignupView" block>취소</b-button>
@@ -120,8 +120,9 @@ import cookies from 'vue-cookies'
             email: cookies.get('user-email'),
             password: null,
             nickname: null,
-            profile: null,
-            intro: null,
+            profile: '',
+            image_name: '',
+            intro: '',
           }
         },
         file:null,
@@ -234,6 +235,8 @@ import cookies from 'vue-cookies'
       },
       imageUpload(event) {
         const image = event.target.files[0];
+        this.signupData.config.image_name = image.name
+        console.log(this.signupData)
         this.imageURL = URL.createObjectURL(image)
         // const reader = new FileReader();
         // reader.readAsDataURL(image);
