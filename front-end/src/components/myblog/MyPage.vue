@@ -7,10 +7,10 @@
   >
     <v-img
       height="250"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+      :src="authUser.image_url"
     ></v-img>
 
-    <v-card-title>이름이름</v-card-title>
+    <v-card-title>{{ authUser.nickname }}</v-card-title>
 
     <v-card-text>
       <v-row
@@ -33,7 +33,7 @@
         $ • Italian, Cafe
       </div>
 
-      <div>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio seating.</div>
+      <div>{{ authUser.intro }}</div>
     </v-card-text>
 
     <v-divider class="mx-4"></v-divider>
@@ -69,8 +69,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     name: 'MyPage',
+    computed: {
+      ...mapState('accounts', ['authUser'])
+    },
 }
 </script>
 

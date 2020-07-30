@@ -38,6 +38,7 @@
             :state="NickNameinValid"
             aria-describedby="input-userid-help input-userid-feedback"
             toLowerCase
+            @change="checkInitialNickname"
             >
           </b-form-input>
           <b-form-invalid-feedback>
@@ -51,11 +52,13 @@
     </b-row>
     <b-row align-v="center">
       <b-col sm="3">프로필 사진</b-col>
-      <div v-if="updateData.config.profile"><img id="imagepreview" :src="imageURL"></div>
-      <b-col sm="3" v-if="updateData.config.profile"></b-col>
+      <div v-if="imageURL"><img id="imagepreview" :src="imageURL"></div>
+      <b-col sm="3" v-if="imageURL"></b-col>
       <b-col sm="6">
-        <b-form-file v-model="updateData.config.profile" class="mt-3" accept="image/*" @change="imageUpload" plain></b-form-file>
-        <div class="mt-3">Selected file: {{ updateData.config.profile ? updateData.config.profile : '' }}</div>
+        <b-form-file ref="file-input" :placeholder="updateData.config.image_name" v-model="updateData.config.profile" class="mt-3" accept="image/*" @change="imageUpload"></b-form-file>
+        <b-button @click="selectBasicImage">기본이미지로 설정</b-button>
+        <div v-if="updateData.config.profile" class="mt-3">Selected file: {{ updateData.config.profile ? updateData.config.profile.name : '' }}</div>
+        <div v-else class="mt-3">Selected file: {{ updateData.config.image_name }}</div>
       </b-col>
     </b-row>
     <b-row align-v="center">
@@ -87,6 +90,8 @@
   {{ updateData.valid.password }}
   {{ updateData.valid.nickname }}
   {{ passwordAgainValid }}
+  {{ updateData.config.image_name }}
+  {{ updateData.filesize }}
   </div>
 </template>
 
@@ -102,24 +107,26 @@ export default {
         updateData: {
           valid: {
             password: true,
-            nickname: true,
+            nickname: false,
           },
           config: {
             email: null,
-            password: null,
+            password: '',
             nickname: null,
-            profile: null,
-            intro: null,
+            profile: '',
+            image_name: '',
+            intro: '',
             start_page: false,
-          }
+          },
         },
         file:null,
         passwordAgain: null,
         options: [
-          { text: '내 블로그', value: 'true' },
-          { text: '둘러보기', value: 'false' },
+          { text: '내 블로그', value: true },
+          { text: '둘러보기', value: false },
         ],
         imageURL: null,
+        filesize: null,
       }
     },
     computed: {
@@ -229,33 +236,47 @@ export default {
         this.updateData.config.nickname = this.authUser.nickname
         this.updateData.config.intro = this.authUser.intro
         this.updateData.config.start_page = this.authUser.start_page
-        this.updateData.config.profile = this.authUser.profile
+        // this.updateData.config.profile = this.authUser.profile
+        this.updateData.config.image_name = this.authUser.image_name
         this.updateData.config.email = this.authUser.email
+        this.imageURL = this.authUser.image_url
       },
       checkInitialNickname() {
         if (this.authUser.nickname == this.updateData.config.nickname) {
           this.updateData.valid.nickname = true
+        } else if (!this.NickNameinValid) {
+          this.updateData.valid.nickname = false
+        } else {
+          this.updateData.valid.nickname = false
         }
       },
       imageUpload(event) {
         const image = event.target.files[0];
         // this.imageURL = URL.createObjectURL(image)
+        this.updateData.config.image_name = image.name
         console.log(image)
         // console.log(this.updateData.config.profile.files)
         const reader = new FileReader();
         reader.readAsDataURL(image);
         reader.onload = (event) => {
           this.imageURL = event.target.result
-          console.log(this.imageURL)
+          // console.log(this.imageURL)
         }
-      }
+      },
+      selectBasicImage() {
+        this.updateData.config.image_name = ''
+        this.imageURL = ''
+        if (this.updateData.config.profile) {
+          this.$ref['file-input'].reset() }
+      },
     },
     updated() {
       this.checkPasswordValidValue()
-      this.checkInitialNickname()
+      // this.checkInitialNickname()
     },
     created() {
       this.insertInitialValue()
+      this.checkInitialNickname()
     }
 }
 </script>
@@ -265,4 +286,8 @@ export default {
     width: 30vw;
     height: 30vh;
   }
+  .custom-file-input:lang(en) ~ .custom-file-label::after {
+  content: '파일찾기';
+  }
+
 </style>
