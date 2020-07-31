@@ -20,17 +20,20 @@ public class WebConfig implements WebMvcConfigurer{
 	            registry.addMapping("/**")
 	                    .allowedOrigins("*")
 	                    .allowedMethods("*")
-	                    //.allowedHeaders("Authorization, token")
 	                    .allowCredentials(false)
+	                    .exposedHeaders("token")
 	                    .maxAge(3600);
+	            
+	            registry.addMapping("/token/**")
+	            		.allowedHeaders("Authorization");
 	        }
 	    };
 	}
-	
-	@Override
-	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**")
-				.allowedOrigins("*")
-				.exposedHeaders("jwt-auth-token");
-	}
+//	
+//	@Override
+//	public void addCorsMappings(CorsRegistry registry) {
+//		registry.addMapping("/**")
+//				.allowedOrigins("*")
+//				.exposedHeaders("token");
+//	}
 }
