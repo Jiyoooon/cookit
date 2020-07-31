@@ -1,5 +1,5 @@
 export default {
-    URL: 'http://d269e2b2d442.ngrok.io',
+    URL: 'http://i3a201.p.ssafy.io:8080/cooking-0.0.2-SNAPSHOT/',
     ROUTES: {
         accounts: {
             signup: '/user/join',
@@ -9,9 +9,9 @@ export default {
             getcomments: '/user/comments/',
             checkemail: '/user/dup/email/',
             checknickname: '/user/dup/nickname/',
-            checkpassword: '/user/check/password',
+            checkpassword: '/user/password',
             getfollowers: '/user/followers/',
-            checkkey: '/user/verification/check/',
+            checkkey: '/user/verification/check',
             requestkey: '/user/verification/send/',
             sendnewpassword: '/user/password/',
         },
@@ -22,6 +22,10 @@ export default {
             myrecipes: '/recipe/all/',
             selectedrecipe: '/recipe/',
             fetchrecipesbytitle: 'recipe/title'
+        },
+        lookaroundrecipe:{
+            getfilteredrecipes: '/recipe/recipes',
+            getingredients: '/recipe/ingredients',
         },
     }
 }

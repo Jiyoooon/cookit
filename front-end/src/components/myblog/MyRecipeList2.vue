@@ -1,13 +1,15 @@
 <template>
-<b-container>
-    <b-row>   
+  <b-container>
+      <b-row>   
         <MyRecipeListItem @click="selectedRecipe(recipe.id)" :recipe="recipe" 
         :key="index" v-for="(recipe, index) in currentPageItems" id="my-recipes" /> 
-    </b-row>
-    <b-row>
-        <b-pagination id="pagination" :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
-    </b-row>
-</b-container>
+      </b-row>
+      <b-row>
+          <!-- <b-col lg="12"> -->
+              <b-pagination id="pagination" :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
+          <!-- </b-col> -->
+      </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -15,7 +17,7 @@ import { mapState, mapActions } from 'vuex'
 import MyRecipeListItem from './MyRecipeListItem.vue'
 
 export default {
-    name: 'MyRecipeList',
+    name: 'MyRecipeList2',
     data() {
         return {
           currentPage: 1,
@@ -43,7 +45,7 @@ export default {
         }
     },
     methods: {
-       ...mapActions('myblog', ['selectedRecipe']),
+       ...mapActions('myblog', ['fetchMyRecipes', 'selectedRecipe']),
       changePaginateditems(index, value) {
         this.paginated_items[index] = value
       },
@@ -51,10 +53,9 @@ export default {
         this.nbPages++
       },
     },
-    // created() {
-    //   console.log(11111111)
-    //   this.fetchMyRecipes()
-    // }
+    created() {
+        this.fetchMyRecipes()
+    }
 }
 </script>
 
@@ -63,7 +64,7 @@ export default {
         cursor: pointer;
         color: orange;
     }
-     #pagination {
+    #pagination {
       margin-left: auto;
       margin-right: auto;
     }

@@ -1,8 +1,11 @@
 package com.ssafy.cooking.service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.cooking.dto.Comment;
@@ -15,18 +18,16 @@ public interface UserService {
 	public boolean isDupNickname(String nickname);
 	
 	public User signin(String email, String password);
-	public int signup(User user);
-	public int delete(String uid);
-	public User getUser(String uid);
-	public int reviseUser(User user);
+	public int delete(String uid) throws IOException;
+	public int reviseUser(MultipartFile profile, User user) throws IOException;
 	public List<User> getFollowers(String uid);
 	public List<Comment> getCommnets(String uid);
 	public boolean checkPassword(String uid, String password);
 	public void sendTmpPasswordEmail(String password, String email) throws Exception;
-	public boolean updatePassword(String string, String password);
 	public boolean isConfirmedEmail(String email);
 	public int addEmailConfirm(String email, String code);
 	public boolean checkConfirmCode(EmailConfirm emailConfirm);
 	public void removeConfirmCode(String email);
-	public int signup2(MultipartFile profile, User user) throws IOException;
+	public int signup(MultipartFile profile, User user) throws IOException;
+	public User getUser(String uid);
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.mail.internet.MimeMessage;
 
-import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,23 +38,57 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-	public int signup(User user) {
-		int userId = userDao.selectNextUserId();
-		return userDao.signup(user) > 0 ? userId : -1;
-	}
-
-	@Override
-	public int delete(String uid) {
+	public int delete(String uid) throws IOException {
+		//이미지 폴더에서 삭제
+		try{
+			removeProfile(uid);
+		}catch(IOException e) {
+			throw new IOException();
+		}
 		return userDao.delete(uid);
 	}
-
+	
+	
 	@Override
 	public User getUser(String uid) {
 		return userDao.getUser(uid);
 	}
+	
 
 	@Override
-	public int reviseUser(User user) {
+	@Transactional
+	public int reviseUser(MultipartFile profile, User user) throws IOException {
+		String imageName = user.getImage_name();
+		User oriUser = userDao.getUser(Integer.toString(user.getUser_id()));
+		
+		if(profile == null) System.out.println("프로필 null!!");
+		if(imageName != null) {
+			System.out.println("이미지 이름 : "+imageName+", "+imageName.equals("null")+", "+imageName.length()+", "+imageName.trim().equals(""));
+		}
+		
+		
+		try {
+			//profile != null => 프로필 수정
+			if(profile != null) {
+				System.out.println("프로필 수정!");
+				writeProfile(profile, user.getUser_id(), user);
+			}
+			//user.getImage_name() == null => 프로필 내림
+			else if(imageName == null || imageName.trim().equals("")) {
+				System.out.println("프로필 내림!");
+				removeProfile(Integer.toString(user.getUser_id()));
+				user.setProfile_image("");
+				user.setImage_name("");
+			}
+			//수정 X
+			else{
+				System.out.println("프로필 수정하지 X");
+				user.setProfile_image(oriUser.getProfile_image());
+				user.setImage_name(oriUser.getImage_name());
+			}
+		}catch(IOException e) {
+			throw new IOException();
+		}
 		return userDao.reviseUser(user);
 	}
 
@@ -90,7 +123,8 @@ public class UserServiceImpl implements UserService{
 	@Transactional
 	public void sendTmpPasswordEmail(String password, String email) throws Exception {
 		String title = "요리조리 임시 비밀번호 발급";
-		String content = "\n\n안녕하세요 회원님, 임시 비밀번호로 로그인 후 반드시 수정해주세욥!!.\n\n 인증코드 : " + password; // 내용
+		String content = "\n\n안녕하세요 회원님, 임시 비밀번호로 로그인 후 반드시 수정해주세요!!"
+						+ "\n\n새 비밀번호 : " + password; // 내용
             
 		try{
 			userDao.updatePasswordByEmail(email, SHA256.testSHA256(password));
@@ -102,7 +136,6 @@ public class UserServiceImpl implements UserService{
             messageHelper.setText(content); // 메일 내용
             
             mailSender.send(message);
-//            System.out.println("메시지 보냄");
 		}catch(Exception e) {
 			e.printStackTrace();
 			throw new Exception();
@@ -110,10 +143,6 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
-	@Override
-	public boolean updatePassword(String uid, String password) {
-		return userDao.updatePassword(uid, password) > 0 ? true : false;
-	}
 
 	@Override
 	public boolean isConfirmedEmail(String email) {
@@ -136,29 +165,69 @@ public class UserServiceImpl implements UserService{
 		userDao.deleteConfirmCode(email);
 	}
 
+	public boolean removeProfile(String uid) throws IOException{
+		String separator = File.separator;
+//		String filePath = "C:\\SSAFY\\commonpjt\\profile";
+		String filePath = "/var/lib/tomcat8/webapps/images/profile";
+		
+		User user = userDao.getUser(uid);
+		String fileName = user.getProfile_image();
+		
+		if(fileName == null || fileName.equals("")) {//프로필 이미지 원래 없었음
+			return true;
+		}
+		
+		String fileFullPath = filePath + separator + fileName;
+		try {
+			File file = new File(fileFullPath);
+			if(file.exists()) file.delete();
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+		
+	}
+	public boolean writeProfile(MultipartFile profile, int userId, User user) {
+		String separator = File.separator;
+//		String filePath = "C:\\SSAFY\\commonpjt\\profile";
+    	String filePath = "/var/lib/tomcat8/webapps/images/profile";
+		String oriName = profile.getOriginalFilename();
+		user.setImage_name(oriName);
+		
+		String extension = oriName.substring(oriName.lastIndexOf("."));//확장자
+		
+		String fileName = "profile_image_"+userId+extension;//파일명
+		String fileFullPath = filePath+separator+fileName;
+		try {
+//    			파일 저장
+			profile.transferTo(new File(fileFullPath));//window
+			user.setProfile_image(fileName);
+			
+			return true;
+		}catch(IOException e) {
+			logger.info("Error save profile file, filepath : "+fileFullPath);
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	@Override
-	@Transactional
-	public int signup2(MultipartFile profile, User user) throws IOException {
-    	String filePath = "C:\\SSAFY\\commonpjt\\profile";
-    	int nextId = -1;
-//    	File dir = new File(filePath); //파일 저장 경로 확인, 없으면 만든다.
-//        if (!dir.exists()) {
-//            dir.mkdirs();
-//        }
+	@Transactional(rollbackFor = Exception.class)
+	public int signup(MultipartFile profile, User user) throws IOException {
+    	
+        if(userDao.isDupEmail(user.getEmail()) > 0) {//중복된 이메일
+        	return -1;
+        }
         
+		int nextId = userDao.selectNextUserId();
     	if(profile != null) {
-    		String[] filename = profile.getOriginalFilename().split("\\.");
-    		String extension = filename[filename.length-1];
-    		
-    		nextId = userDao.selectNextUserId();
-    		String fileName = "profile_image_"+nextId+"."+extension;//파일명
-    		String fileFullPath = filePath+"\\"+fileName;
-    		try {
-    			//파일 저장
-    			profile.transferTo(new File(fileName));
-    			user.setProfile_image(fileName);
-    		}catch(Exception e) {
-    			logger.info("Error save profile file, filepath : "+fileFullPath);
+    		try{
+    			if(!writeProfile(profile, nextId, user)) {
+    				throw new IOException();
+    			}
+    		}catch(IOException e) {
     			e.printStackTrace();
     		}
     	}
@@ -167,5 +236,7 @@ public class UserServiceImpl implements UserService{
     	return userDao.signup(user) > 0 ? nextId : -1;
 		
 	}
+
+	
 
 }

@@ -7,10 +7,10 @@
   >
     <v-img
       height="250"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+      :src="authUser.image_url"
     ></v-img>
 
-    <v-card-title>Cafe Badilico</v-card-title>
+    <v-card-title>{{ authUser.nickname }}</v-card-title>
 
     <v-card-text>
       <v-row
@@ -33,12 +33,12 @@
         $ • Italian, Cafe
       </div>
 
-      <div>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio seating.</div>
+      <div>{{ authUser.intro }}</div>
     </v-card-text>
 
     <v-divider class="mx-4"></v-divider>
 
-    <v-card-title>Tonight's availability</v-card-title>
+    <v-card-title>SNS</v-card-title>
 
     <v-card-text>
       <v-chip-group
@@ -46,13 +46,12 @@
         active-class="deep-purple accent-4 white--text"
         column
       >
-        <v-chip>5:30PM</v-chip>
+        <v-chip>페이스북</v-chip>
 
-        <v-chip>7:30PM</v-chip>
+        <v-chip>인스타</v-chip>
 
-        <v-chip>8:00PM</v-chip>
+        <v-chip>트위터</v-chip>
 
-        <v-chip>9:00PM</v-chip>
       </v-chip-group>
     </v-card-text>
 
@@ -70,8 +69,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     name: 'MyPage',
+    computed: {
+      ...mapState('accounts', ['authUser'])
+    },
 }
 </script>
 
