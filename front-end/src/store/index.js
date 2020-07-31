@@ -7,7 +7,7 @@ import SERVER from '../api/url.js'
 
 
 Vue.use(Vuex)
-axios.defaults.baseURL = 'http://i3a201.p.ssafy.io:8080/cooking-0.0.2-SNAPSHOT';
+axios.defaults.baseURL = 'http://19e9edda316f.ngrok.io';
 
 const moduleAccounts = {
   namespaced: true,
@@ -630,8 +630,6 @@ const moduleMyBlog = {
 const moduleEditor = {
   namespaced: true,
   state: {
-    recipeData: {
-    },
     recipe: {
       title: null,
       description: null,
@@ -639,20 +637,20 @@ const moduleEditor = {
       servings: 0,
       cooking_time: 0,
       level: 0,
-      main_image: null,
+      main_image_file: null,
       tag: [ ]
     },
-    cookingSteps: [
+    cookingStep: [
       {
         steps: 1,
         description: null,
         tip: null,
-        step_image: null },
+        step_image_file: null },
       {
         steps: 2,
         description: null,
         tip: null,
-        step_image: null },
+        step_image_file: null },
     ],
     mainIngr: [
       { name: null, quantity: null, is_essential: 1 },
@@ -667,18 +665,11 @@ const moduleEditor = {
 
   },
   mutations: {
-    SET_RECIPEDATA(state) {
-      state.recipeData = {
-        recipe: state.recipeinfo,
-        ingredients: [...state.mainIngr, ...state.subIngr],
-        cookingSteps: state.cookingSteps
-      }
+    SET_RECIPE(state, data) {
+      state.recipe = data
     },
-    SET_RECIPEINFO(state, data) {
-      state.recipeinfo = data
-    },
-    SET_COOKINGSTEPS(state, data) {
-      state.cookingSteps = data
+    SET_COOKINGSTEP(state, data) {
+      state.cookingStep = data
     },
     SET_MAININGR(state, data) {
       state.mainIngr = data
@@ -699,22 +690,22 @@ const moduleEditor = {
       ref.splice(data.index, 1);
     },
     addCookingStep(state) {
-      state.cookingSteps.push({
-        steps: state.cookingSteps.length + 1,
+      state.cookingStep.push({
+        steps: state.cookingStep.length + 1,
         description: null,
         tip: null,
         step_image: null },)
     },
     deleteCookingStep(state, id) {
-      state.cookingSteps.splice(id, 1);
-      for (var i = id; i < state.cookingSteps.length; i++) {
-				state.cookingSteps[i].steps -= 1;
+      state.cookingStep.splice(id, 1);
+      for (var i = id; i < state.cookingStep.length; i++) {
+				state.cookingStep[i].steps -= 1;
 			}
     },
   }, 
   actions: {
-    getRecipeInfo({commit}, data) {
-      commit('SET_RECIPEINFO', data);
+    getRecipe({commit}, data) {
+      commit('SET_RECIPE', data);
     },
     getMainIngr({commit}, data) {
       commit('SET_MAININGR', data);
@@ -725,39 +716,95 @@ const moduleEditor = {
     getCookingSteps({commit}, data) {
       commit('SET_COOKINGSTEPS', data);
     },
-    onSubmitButton({state, commit}) {//, rootState) {
-      commit('SET_RECIPEDATA')
-      const recipe = new FormData(), ingredients = new FormData(), cookingSteps = new FormData();
+    onSubmitButton({state}) {
+      const recipeData = new FormData();
       for (let [key, value] of Object.entries(state.recipe)) {
-        recipe.append(key, value);
+        console.log(`recipe.${key}: ${value}`)
+        recipeData.append(key, value);
       }
-      for (let [key, value] of Object.entries([...state.mainIngr, ...state.subIngr])) {
-        ingredients.append(key, value);
+      // recipe.append('title', state.recipe.title)
+      // recipe.append('description', state.recipe.description)
+      // recipe.append('category_id', state.recipe.category_id)
+      // recipe.append('servings', state.recipe.servings)
+      // recipe.append('level', state.recipe.level)
+      // recipe.append('tag', state.recipe.tag)
+      // recipe.append('main_image', state.recipe.main_image)
+
+      // const ingredients = new Array();
+      // for (let i = 0; i < ingrArr.length; i++) {
+      //   console.log(ingrArr[i]);
+      //   const tmp = new FormData();
+      //   for (let [key, value] of Object.entries(ingrArr[i])) {
+      //     console.log(`${key}: ${value}`)
+      //     tmp.append(key, value)
+      //   }
+      //   ingredients.push(tmp);
+      // }
+      // console.log(ingredients)
+
+      // for (let item of Object.entries([...state.mainIngr, ...state.subIngr])) {
+      //   const tmp = new FormData();
+      //   console.log(item)
+      //   for (let [key, value] of Object.entries(item)) {
+      //     console.log(`${key}: ${value}`)
+      //     tmp.append(key, value)
+      //   }
+      //   ingredients.push(tmp);
+      // }
+
+      const ingredients = [...state.mainIngr, ...state.subIngr];
+      for (let i = 0; i < ingredients.length; i++) {
+        for (let [key, value] of Object.entries(ingredients[i])) {
+          console.log(`ingredients[${i}].${key}: ${value}`)
+          recipeData.append(`ingredients[${i}].${key}`, value)
+        }
       }
-      for (let [key, value] of Object.entries(state.cookingSteps)) {
-        cookingSteps.append(key, value);
+
+      for (let i = 0; i < state.cookingStep.length; i++) {
+        for (let [key, value] of Object.entries(state.cookingStep[i])) {
+          console.log(`cookingStep[${i}].${key}: ${value}`)
+          recipeData.append(`cookingStep[${i}].${key}`, value)
+        }
       }
-      const recipeData = {
-        recipe: recipe,
-        ingredients: ingredients,
-        cookingSteps: cookingSteps
-      }
-      // const headerconfig = { headers: {
-      //   'Authorization': `token ${rootState['accounts/authToken']}`,
-      //   'Content-Type': 'multipart/form-data'
-      // }}
-      for (let [key, value] of recipe.entries()) {
-        console.log(`${key}: ${value}`)
-      }
-      for (let [key, value] of ingredients.entries()) {
-        console.log(key)
-        console.log(value)
-      }
-      for (let [key, value] of cookingSteps.entries()) {
-        console.log(key)
-        console.log(value)
-      }
-      axios.post('/recipe/save2', recipeData)
+
+      // const cookingStep = new Array();
+      // for (let item of Object.entries(state.cookingStep)) {
+      //   const tmp = new FormData();
+      //   console.log(item)
+      //   for (let [key, value] of Object.entries(item.value)) {
+      //     console.log(`${key}: ${value}`)
+      //     tmp.append(key, value)
+      //   }
+      //   cookingStep.push(tmp);
+      // }
+
+      // for (let [key, value] of Object.entries([...state.mainIngr, ...state.subIngr])) {
+      //   // if (value.name == null || value.quantity == null) continue;
+      //   console.log(`${key}: ${value}`)
+      //   ingredients.append(key, value);
+      // }
+      // for (let [key, value] of Object.entries(state.cookingStep)) {
+      //   // if (value.description == null) continue;
+      //   console.log(`${key}: ${value}`)
+      //   cookingStep.append(key, value);
+      // }
+
+      // const recipeData = {
+      //   recipe: recipe,
+      //   ingredients: ingredients,
+      //   cookingStep: cookingStep
+      // }
+
+      // const recipeData = new FormData();
+      // recipeData.append('recipe', recipe);
+      // recipeData.append('ingredients', ingredients)
+      // recipeData.append('cookingStep', cookingStep)
+
+      const headerConfig = { headers: {
+        // 'Authorization': `token ${rootState['accounts/authToken']}`,
+        'Content-Type': 'multipart/form-data'
+      }}
+      axios.post('/recipe/save2', recipeData, headerConfig)
       .then((res) => {
         console.log(res)
         // 레시피 화면으로 redirect 필요
