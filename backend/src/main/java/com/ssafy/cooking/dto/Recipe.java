@@ -1,34 +1,36 @@
 package com.ssafy.cooking.dto;
 
+import java.io.Serializable;
+
 import org.springframework.web.multipart.MultipartFile;
 
-public class Recipe  {
-	private int recipe_id; //레시피id
-	private int recipe_user;//작성자id
+public class Recipe  implements Serializable{
+	private Integer recipe_id; //레시피id
+	private Integer recipe_user;//작성자id
 	private String recipe_user_name;//작성자 이름
-	private int category_id;//카테고리id
+	private Integer category_id;//카테고리id
 	private String title; //제목
 	private String description; //설명 
 	private String main_image; //대표 이미지 경로
-	private int serving; //인원
-	private int cooking_time; //시간
-	private int hits; //조회
+	private Integer servings; //인원
+	private Integer cooking_time; //시간
+	private Integer level; //시간
+	private Integer hits; //조회
 	private String tag; //태그
 	private String create_date; //작성시간
 	private String update_date;
 	private String delete_date;
 	private MultipartFile main_image_file;
-	
-	public int getRecipe_id() {
+	public Integer getRecipe_id() {
 		return recipe_id;
 	}
-	public void setRecipe_id(int recipe_id) {
+	public void setRecipe_id(Integer recipe_id) {
 		this.recipe_id = recipe_id;
 	}
-	public int getRecipe_user() {
+	public Integer getRecipe_user() {
 		return recipe_user;
 	}
-	public void setRecipe_user(int recipe_user) {
+	public void setRecipe_user(Integer recipe_user) {
 		this.recipe_user = recipe_user;
 	}
 	public String getRecipe_user_name() {
@@ -37,10 +39,10 @@ public class Recipe  {
 	public void setRecipe_user_name(String recipe_user_name) {
 		this.recipe_user_name = recipe_user_name;
 	}
-	public int getCategory_id() {
+	public Integer getCategory_id() {
 		return category_id;
 	}
-	public void setCategory_id(int category_id) {
+	public void setCategory_id(Integer category_id) {
 		this.category_id = category_id;
 	}
 	public String getTitle() {
@@ -61,22 +63,28 @@ public class Recipe  {
 	public void setMain_image(String main_image) {
 		this.main_image = main_image;
 	}
-	public int getServing() {
-		return serving;
+	public Integer getServings() {
+		return servings;
 	}
-	public void setServing(int serving) {
-		this.serving = serving;
+	public void setServings(Integer servings) {
+		this.servings = servings;
 	}
-	public int getCooking_time() {
+	public Integer getCooking_time() {
 		return cooking_time;
 	}
-	public void setCooking_time(int cooking_time) {
+	public void setCooking_time(Integer cooking_time) {
 		this.cooking_time = cooking_time;
 	}
-	public int getHits() {
+	public Integer getLevel() {
+		return level;
+	}
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
+	public Integer getHits() {
 		return hits;
 	}
-	public void setHits(int hits) {
+	public void setHits(Integer hits) {
 		this.hits = hits;
 	}
 	public String getTag() {
@@ -109,14 +117,5 @@ public class Recipe  {
 	public void setMain_image_file(MultipartFile main_image_file) {
 		this.main_image_file = main_image_file;
 	}
-	@Override
-	public String toString() {
-		return "Recipe [recipe_id=" + recipe_id + ", recipe_user=" + recipe_user + ", recipe_user_name="
-				+ recipe_user_name + ", category_id=" + category_id + ", title=" + title + ", description="
-				+ description + ", main_image=" + main_image + ", serving=" + serving + ", cooking_time=" + cooking_time
-				+ ", hits=" + hits + ", tag=" + tag + ", create_date=" + create_date + ", update_date=" + update_date
-				+ ", delete_date=" + delete_date + ", main_image_file=" + main_image_file + "]";
-	}
-	
 	
 }
