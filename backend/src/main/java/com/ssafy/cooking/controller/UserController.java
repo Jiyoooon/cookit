@@ -99,8 +99,8 @@ public class UserController {
 		
 		userService.removeConfirmCode(email);
 		
-		String title = "요리조리 회원가입 인증 코드입니다.";
-		String content = "\n\n안녕하세요 회원님, 저희 홈페이지를 찾아주셔서 감사합니다.\n\n 인증코드 : " + random; // 내용
+		String title = "쿠킷 회원가입 인증 코드입니다.";
+		String content = "\n\n안녕하세요 회원님, 쿠킷(Cookit)을 찾아주셔서 감사합니다.\n\n 인증코드 : " + random; // 내용
             
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -158,7 +158,8 @@ public class UserController {
 	@ApiOperation(value = "회원가입")
 	@PostMapping(value = "/join")
 	public ResponseEntity<HashMap<String, Object>> signupUser2(@RequestPart(required = false, name = "profile") MultipartFile profile
-															, @ModelAttribute("user") User user)throws Exception {
+															, @ModelAttribute("user") User user
+															, HttpServletResponse response)throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
     	String namePt = "^[a-zA-Z0-9가-힣]{4,12}$";
@@ -193,12 +194,16 @@ public class UserController {
     		}
     	}
     	
+    	response.setHeader("Access-Control-Allow-Headers", "token");//token
+    	
     	int uid = userService.signup(profile, user);
 		
     	if(uid > 0) {
     		String token = jwtService.create(Integer.toString(uid));
-    		map.put("token", token);
+    		map.put("token", token);////
     		map.put("result", "success");
+    		response.addHeader("token", token);
+    		
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}else {
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
@@ -213,7 +218,7 @@ public class UserController {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	HttpStatus status = null;
     	
-    	System.out.println("login");
+//    	System.out.println("login");
 //    	response.setHeader("Access-Control-Allow-Origin", "*");
 //      response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
 //      response.setHeader("Access-Control-Max-Age", "3600");
@@ -228,11 +233,10 @@ public class UserController {
 	    		map.put("cause", "db에서 데이터 찾을 수 없음");
 			} else {//로그인 성공
 				String token = jwtService.create(Integer.toString(user.getUser_id()));
-				System.out.println("생성한 토큰 : "+token);
+//				System.out.println("생성한 토큰 : "+token);
 				map.put("result", "success");
 				map.put("token", token);
 				response.addHeader("token", token);
-				System.out.println(response.getHeader("token")+", "+response.getHeader("Access-Control-Allow-Headers"));
 				
 			}
     		status = HttpStatus.ACCEPTED;
@@ -253,7 +257,7 @@ public class UserController {
     	HttpStatus status = HttpStatus.ACCEPTED;
     	
     	String token = request.getHeader("Authorization");
-    	System.out.println("logout : "+token);
+//    	System.out.println("logout : "+token);
 
     	if(token != null && token.length() > 0 && token.split(" ").length == 2) {
 			token = token.split(" ")[1];
@@ -336,7 +340,7 @@ public class UserController {
     	if(token != null && token.length() > 0 && token.split(" ").length == 2) {
 			token = token.split(" ")[1];
 			if(jwtService.checkValid(token)) {//토큰 유효성 체크
-//				System.out.println("토큰은 유효함..");
+
 				Map<String, Object> claims = jwtService.get(token);
 				String uid = (String)claims.get("uid");
 				System.out.println(uid);
@@ -382,10 +386,9 @@ public class UserController {
     	
     	String result = "success";
     	HttpStatus status = HttpStatus.ACCEPTED;
-    	System.out.println("수정 : "+user);
+//    	System.out.println("수정 : "+user);
     	if(profile != null) {
 //    		System.out.println(profile.getContentType());
-//    		System.out.println(profile.getSize());//용량 초과하면 요청 자체가 안들어옴 => 에러 페이지 따로 필요,,?
     		if(profile.getContentType().indexOf("image") == -1) {
     			map.put("cause", "이미지 파일  형식 오류");
     			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
@@ -393,12 +396,12 @@ public class UserController {
     	}
     	
     	String password = user.getPassword();
-System.out.println("들어온 비번 : "+password+", "+user.isStart_page());
+//System.out.println("들어온 비번 : "+password+", "+user.isStart_page());
     	if(password != null && !password.trim().equals("")) {//비밀번호 입력했을때만 수정
     		user.setPassword(SHA256.testSHA256(password));
     	}else user.setPassword(null);
     	
-    	System.out.println("디비에 들어갈 비번 : "+user.getPassword());
+//    	System.out.println("디비에 들어갈 비번 : "+user.getPassword());
     	String token = request.getHeader("Authorization");
 
     	if(token != null && token.length() > 0 && token.split(" ").length == 2) {
