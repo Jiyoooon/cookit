@@ -1,8 +1,10 @@
 package com.ssafy.cooking.dto;
 
+import java.io.Serializable;
+
 import org.springframework.web.multipart.MultipartFile;
 
-public class Recipe  {
+public class Recipe  implements Serializable{
 	private Integer recipe_id; //레시피id
 	private Integer recipe_user;//작성자id
 	private String recipe_user_name;//작성자 이름

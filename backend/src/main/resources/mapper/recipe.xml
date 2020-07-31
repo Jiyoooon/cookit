@@ -52,11 +52,11 @@
 		<if test="query != null and query != ''">
 			AND title LIKE CONCAT('%', #{query}, '%')
 		</if>
-		<if test="id != null and id != ''">
+		<if test="id != null and id != '' and id != 0">
 			AND recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
-			AND recipe_user = #{user}
+			AND u.nickname = #{user}
 		</if>
 		<if test="category != null and category != ''">
 			AND category = #{category}
@@ -125,4 +125,8 @@
 		DELETE from Comments
 		WHERE comment_id = #{comment_id} and comment_user = #{uid}
 	</delete>
+	
+	<select id="getAllIngredients" resultType="Food_Ingredient">
+		SELECT * FROM cooking.Food_ingredient_small
+	</select>
 </mapper>

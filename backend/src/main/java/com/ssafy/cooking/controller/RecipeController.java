@@ -1,5 +1,6 @@
 package com.ssafy.cooking.controller;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,20 +10,27 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.ssafy.cooking.dto.Comment;
+import com.ssafy.cooking.dto.CookingStep;
+import com.ssafy.cooking.dto.Food_Ingredient;
+import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
 import com.ssafy.cooking.service.JwtService;
@@ -48,12 +56,18 @@ public class RecipeController {
 	@GetMapping("/recipes")
 	public ResponseEntity<List<Recipe>> getUserRecipes(@RequestParam(value = "p", required = false) Integer p,
 			@RequestParam(value = "id", required = false) Integer id,
-			@RequestParam(value = "user", required = false) Integer user,
+			@RequestParam(value = "user", required = false) String user,
 			@RequestParam(value = "query", required = false) String query,
 			@RequestParam(value = "category", required = false) Integer category,
 			@RequestParam(value = "filter", required = false) String filter) throws Exception {
 		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes(p, id, user, query, category, filter),
 				HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "모든 재료 목록 가져오기", notes = "재료 목록을 불러온다")
+	@GetMapping("/ingredients")
+	public ResponseEntity<List<Food_Ingredient>> getIngreidents() throws Exception {
+		return new ResponseEntity<List<Food_Ingredient>>(recipeservice.getAllIngredients(), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "레시피 생성하기", notes = "레시피 추가한다.")
@@ -104,52 +118,127 @@ public class RecipeController {
 
 	@ApiOperation(value = "레시피 생성하기(로그인 필요없는 테스트버전)", notes = "레시피 추가한다.")
 	@PostMapping("/save2")
-	public ResponseEntity<HashMap<String, Object>> addRecipe2(RecipeDetail recipeData) throws Exception {
+//	public ResponseEntity<HashMap<String, Object>> addRecipe2(MultipartHttpServletRequest request) throws Exception {
+		public ResponseEntity<HashMap<String, Object>> addRecipe2(RecipeDetail recipeDetail) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
+		
 		String result = "success";
-		HttpStatus status = HttpStatus.ACCEPTED;	
+		HttpStatus status = HttpStatus.ACCEPTED;
+		
+		System.out.println(recipeDetail.getCookingSteps().size());
+		System.out.println(recipeDetail.getRecipe().getTitle());
+//		System.out.println(recipe.getTitle());
+		
+//		System.out.println(ingredients.getIngredients().size());
+		
+//		System.out.println(request.getParameterValues("recipe"));
+//		System.out.println(request.getParameterMap().get("recipe").length);
+		
+//		Enumeration<String> enumd = request.getParameterNames();
+//		while(enumd.hasMoreElements()){
+//            System.out.println("e의 요소 : "+enumd.nextElement());
+//        }
 
-//		System.out.println(recipeData.toString());
-		recipeData.getRecipe().setRecipe_user(3);
-		if (recipeData.getRecipe().getCategory_id() == null) {
-			recipeData.getRecipe().setCategory_id(8);
-		}
-		recipeservice.addRecipe(recipeData);
+//		System.out.println(request.getParameterValues("recipe").length);
+//		
+//		System.out.println(request.getParameterValues("recipe")[0]);
+		
 
+//		System.out.println(recipeDetail2.getRecipe().getTitle());
+//		
+//		recipeDetail2.getRecipe().setRecipe_user(3);
+//		System.out.println(recipeDetail2.getRecipe().getTitle());
+//		if (recipeData.getRecipe().getCategory_id() == null) {
+//			recipeData.getRecipe().setCategory_id(8);
+//		}
+//		System.out.println(recipeDetail.getRecipe().getTitle());
+		recipeservice.addRecipe(recipeDetail);
+		
 		map.put("result", result);
 		return new ResponseEntity<HashMap<String, Object>>(map, status);
 	}
 	
 	@ApiOperation(value = "레시피 생성하기(로그인 필요없는 테스트버전)", notes = "레시피 추가한다.")
 	@PostMapping("/save3")
-	public ResponseEntity<HashMap<String, Object>> addRecipe3(RecipeDetail recipeData) throws Exception {
+	public ResponseEntity<HashMap<String, Object>> addRecipe3(@ModelAttribute Recipe recipe) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		String result = "success";
 		HttpStatus status = HttpStatus.ACCEPTED;
 		
-		System.out.println(recipeData.getRecipe());
-
-//		System.out.println(recipeData.toString());
-		recipeData.getRecipe().setRecipe_user(3);
-		if (recipeData.getRecipe().getCategory_id() == null) {
-			recipeData.getRecipe().setCategory_id(8);
+		System.out.println(recipe.getTitle());
+		RecipeDetail recipeDetail = new RecipeDetail();
+		recipeDetail.getRecipe().setRecipe_user(3);
+		if (recipeDetail.getRecipe().getCategory_id() == null) {
+			recipeDetail.getRecipe().setCategory_id(8);
 		}
-		recipeservice.addRecipe(recipeData);
+		recipeservice.addRecipe(recipeDetail);
 
 		map.put("result", result);
 		return new ResponseEntity<HashMap<String, Object>>(map, status);
 	}
+	
+	@ApiOperation(value = "레시피 생성하기(로그인 필요없는 테스트버전)", notes = "레시피 추가한다.")
+	@PostMapping("/save4")
+	public ResponseEntity<HashMap<String, Object>> addRecipe3(@ModelAttribute Recipe recipe, HttpServletRequest request) throws Exception {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		String result = "success";
+		HttpStatus status = HttpStatus.ACCEPTED;
+
+		String token = request.getHeader("Authorization");
+		
+		RecipeDetail recipeDetail = new RecipeDetail();
+		recipeDetail.setRecipe(recipe);
+		
+		System.out.println(recipe.getTitle());
+		System.out.println(recipeDetail.getRecipe().getTitle());
+
+		if (token != null && token.length() > 0) {
+			token = token.split(" ")[1];
+			if (jwtService.checkValid(token)) {// 토큰 유효성 체크
+				Map<String, Object> claims = jwtService.get(token);
+				int uid = (int) claims.get("uid");
+				try {
+					if (recipeDetail.getRecipe() == null) {
+						result = "fail";
+						map.put("cause", "레시피 정보 없음");
+					} else {
+						recipeDetail.getRecipe().setRecipe_user(uid);
+						if (recipeDetail.getRecipe().getCategory_id() == null) {
+							recipeDetail.getRecipe().setCategory_id(8);
+						}
+						recipeservice.addRecipe(recipeDetail);
+					}
+					result = "success";
+				} catch (Exception e) {
+					result = "fail";
+					map.put("cause", "서버 오류");
+					status = HttpStatus.INTERNAL_SERVER_ERROR;
+				}
+			} else {
+				result = "fail";
+				map.put("cause", "토큰 유효하지 않음");
+			}
+		} else {
+			result = "fail";
+			map.put("cause", "로그인 필요");
+		}
+
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
+	}
+
 
 	// 레시피 상세 정보
 	@ApiOperation(value = "id로 레시피 상세정보 가져오기", notes = "레시피 카드를 눌렀을 때 해당 레시피의 상세 정보를 가져온다.(레시피 정보, 재료 정보, 조리 순서 정보)")
 	@GetMapping("{id}")
 	public ResponseEntity<RecipeDetail> getRecipeById(@PathVariable("id") int recipe_id) throws Exception {
 		RecipeDetail recipeDetail = new RecipeDetail();
-		recipeDetail.setRecipe(recipeservice.getRecipes(null, recipe_id, null, null, null, null).get(0));
+//		recipeDetail.setRecipe(recipeservice.getRecipes(null, recipe_id, null, null, null, null).get(0));
 		recipeDetail.setIngredients(recipeservice.getIngredients(recipe_id));
-		recipeDetail.setCookingStep(recipeservice.getCookingSteps(recipe_id));
+		recipeDetail.setCookingSteps(recipeservice.getCookingSteps(recipe_id));
 		recipeservice.upHits(recipe_id);
 		return new ResponseEntity<RecipeDetail>(recipeDetail, HttpStatus.OK);
 	}

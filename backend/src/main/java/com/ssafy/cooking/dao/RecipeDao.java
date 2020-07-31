@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.CookingStep;
+import com.ssafy.cooking.dto.Food_Ingredient;
 import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
 
@@ -15,7 +16,7 @@ public interface RecipeDao {
 	int addRecipe(Recipe recipe);
 	int addIngredients(int recipe_id, List<Ingredient> ingredients);
 	int addCookingsteps(int recipe_id, List<CookingStep> cookingSteps);
-	List<Recipe> getRecipes(int start, int end, Integer id, Integer user, String query, Integer category, String filter);
+	List<Recipe> getRecipes(int start, int end, Integer id, String user, String query, Integer category, String filter);
 
 	List<Ingredient> getIngredients(int recipe_id);
 	List<CookingStep> getCookingSteps(int recipe_id);
@@ -27,4 +28,5 @@ public interface RecipeDao {
 	int addCommnet(int recipe_id, Comment comment);
 	int modifyComment(Comment comment, int uid);
 	int deleteComment(int comment_id, int uid);
+	List<Food_Ingredient> getAllIngredients();
 }
