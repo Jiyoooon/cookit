@@ -722,36 +722,7 @@ const moduleEditor = {
         console.log(`recipe.${key}: ${value}`)
         recipeData.append(key, value);
       }
-      // recipe.append('title', state.recipe.title)
-      // recipe.append('description', state.recipe.description)
-      // recipe.append('category_id', state.recipe.category_id)
-      // recipe.append('servings', state.recipe.servings)
-      // recipe.append('level', state.recipe.level)
-      // recipe.append('tag', state.recipe.tag)
-      // recipe.append('main_image', state.recipe.main_image)
-
-      // const ingredients = new Array();
-      // for (let i = 0; i < ingrArr.length; i++) {
-      //   console.log(ingrArr[i]);
-      //   const tmp = new FormData();
-      //   for (let [key, value] of Object.entries(ingrArr[i])) {
-      //     console.log(`${key}: ${value}`)
-      //     tmp.append(key, value)
-      //   }
-      //   ingredients.push(tmp);
-      // }
-      // console.log(ingredients)
-
-      // for (let item of Object.entries([...state.mainIngr, ...state.subIngr])) {
-      //   const tmp = new FormData();
-      //   console.log(item)
-      //   for (let [key, value] of Object.entries(item)) {
-      //     console.log(`${key}: ${value}`)
-      //     tmp.append(key, value)
-      //   }
-      //   ingredients.push(tmp);
-      // }
-
+      
       const ingredients = [...state.mainIngr, ...state.subIngr];
       for (let i = 0; i < ingredients.length; i++) {
         for (let [key, value] of Object.entries(ingredients[i])) {
@@ -766,39 +737,6 @@ const moduleEditor = {
           recipeData.append(`cookingStep[${i}].${key}`, value)
         }
       }
-
-      // const cookingStep = new Array();
-      // for (let item of Object.entries(state.cookingStep)) {
-      //   const tmp = new FormData();
-      //   console.log(item)
-      //   for (let [key, value] of Object.entries(item.value)) {
-      //     console.log(`${key}: ${value}`)
-      //     tmp.append(key, value)
-      //   }
-      //   cookingStep.push(tmp);
-      // }
-
-      // for (let [key, value] of Object.entries([...state.mainIngr, ...state.subIngr])) {
-      //   // if (value.name == null || value.quantity == null) continue;
-      //   console.log(`${key}: ${value}`)
-      //   ingredients.append(key, value);
-      // }
-      // for (let [key, value] of Object.entries(state.cookingStep)) {
-      //   // if (value.description == null) continue;
-      //   console.log(`${key}: ${value}`)
-      //   cookingStep.append(key, value);
-      // }
-
-      // const recipeData = {
-      //   recipe: recipe,
-      //   ingredients: ingredients,
-      //   cookingStep: cookingStep
-      // }
-
-      // const recipeData = new FormData();
-      // recipeData.append('recipe', recipe);
-      // recipeData.append('ingredients', ingredients)
-      // recipeData.append('cookingStep', cookingStep)
 
       const headerConfig = { headers: {
         // 'Authorization': `token ${rootState['accounts/authToken']}`,
