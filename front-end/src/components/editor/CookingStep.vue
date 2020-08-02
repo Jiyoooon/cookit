@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-container fluid="lg">
-      <b-row v-for="(step, index) in cookingSteps" :key="index">
+      <b-row v-for="(step, index) in cookingStep" :key="index">
 				<b-col sm="1" class="mt-3"><h5>Step {{index + 1}}.</h5></b-col>
         <b-col sm="7">
           <b-container fluid="lg" id="step-container">
@@ -22,13 +22,13 @@
 					<b-container fluid="lg">
             <b-row>
               <b-col>
-                <b-form-file v-model="step.imageFile" accept="image/*" placeholder="사진 추가"
+                <b-form-file enctype="multipart/form-data" v-model="step.step_image_file" accept="image/*" placeholder="사진 추가"
                   @change="setThumbnail"></b-form-file>
               </b-col>
             </b-row>
             <b-row>
               <b-col>
-                <img v-if="step.imageFile" :src="imageUrl" height="180px">
+                <img v-if="step.step_image_file!=null" :src="imageUrl" height="180px">
                 <span v-else></span>
               </b-col>
             </b-row>
@@ -65,7 +65,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapState('editor', ['cookingSteps'])
+		...mapState('editor', ['cookingStep'])
 	},
 	methods: {
 		...mapMutations('editor', ['addCookingStep', 'deleteCookingStep']),
