@@ -1,6 +1,6 @@
 package com.ssafy.cooking.dto;
 
-public class Food_Ingredient {
+public class FoodIngredientSmall {
 	private Integer food_ingredient_small_id;
 	private Integer food_ingredient_medium_id;
 	private String small;
@@ -23,4 +23,11 @@ public class Food_Ingredient {
 	public void setSmall(String small) {
 		this.small = small;
 	}
+	@Override
+	public String toString() {
+		return "FoodIngredientSmall [food_ingredient_small_id=" + food_ingredient_small_id
+				+ ", food_ingredient_medium_id=" + food_ingredient_medium_id + ", small=" + small + "]";
+	}
+	
+	
 }

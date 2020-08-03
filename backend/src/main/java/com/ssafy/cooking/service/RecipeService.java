@@ -1,10 +1,12 @@
 package com.ssafy.cooking.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.CookingStep;
-import com.ssafy.cooking.dto.Food_Ingredient;
+import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.FoodIngredientSmall;
 import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
@@ -27,5 +29,7 @@ public interface RecipeService {
 
 	public int modifyComment(Comment comment, int uid);
 
-	public List<Food_Ingredient> getAllIngredients();
+	public HashMap<String, Object> getAllIngredients();
+
+	public List<Recipe> getRecipes2(Integer p, Integer id, String user, String query, Integer category, Filter filter);
 }

@@ -6,7 +6,10 @@ import org.mapstruct.Mapper;
 
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.CookingStep;
-import com.ssafy.cooking.dto.Food_Ingredient;
+import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.FoodIngredientLarge;
+import com.ssafy.cooking.dto.FoodIngredientMedium;
+import com.ssafy.cooking.dto.FoodIngredientSmall;
 import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
 
@@ -28,5 +31,11 @@ public interface RecipeDao {
 	int addCommnet(int recipe_id, Comment comment);
 	int modifyComment(Comment comment, int uid);
 	int deleteComment(int comment_id, int uid);
-	List<Food_Ingredient> getAllIngredients();
+	List<FoodIngredientSmall> getSmallIngredients();
+	List<FoodIngredientMedium> getMediumIngredients();
+	List<FoodIngredientLarge> getLargeIngredients();
+	List<Recipe> getRecipes2(int start, int end, Integer id, String user, String query, Integer category
+							, List<String> hate_large, List<String> hate_medium, List<String> hate_small
+							, List<String> like_large, List<String> like_medium, List<String> like_small);
+	
 }

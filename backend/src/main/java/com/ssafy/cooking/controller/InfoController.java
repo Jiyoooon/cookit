@@ -30,6 +30,7 @@ public class InfoController {
     @ApiOperation(value = "카테고리 목록 조회")
    	@GetMapping("category")
    	public ResponseEntity<List<Category>> getCategories() throws Exception {
+    	System.out.println("카테고리목록조회");
    		return new ResponseEntity<List<Category>>(infoService.searchCategories(), HttpStatus.OK);
    	}
     

@@ -1,6 +1,5 @@
 package com.ssafy.cooking.controller;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,16 +19,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.ssafy.cooking.dto.Comment;
-import com.ssafy.cooking.dto.CookingStep;
-import com.ssafy.cooking.dto.Food_Ingredient;
-import com.ssafy.cooking.dto.Ingredient;
+import com.ssafy.cooking.dto.Filter;
 import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
 import com.ssafy.cooking.service.JwtService;
@@ -64,10 +58,25 @@ public class RecipeController {
 				HttpStatus.OK);
 	}
 	
+	@ApiOperation(value = "해당 레시피 목록 가져오기2", notes = "레시피 목록을 가져온다.(각 항목은 필요시만 입력)\n" + "p  : 시작 번호\n" + "id : 레시피 아이디\n"
+			+ "user : 유저 아이디\n" + "query : 검색어(요리명)\n" + "category : 해당 카테고리 id\n"
+			+ "filter : 검색 시 추가한 재료 필터링 정보(대분류, 중분류, 소분류 각각 0개 이상씩 설정 가능하며 띄어쓰기로 구분한 String 형태로 입력)")
+	@GetMapping("/recipes2")
+	public ResponseEntity<List<Recipe>> getUserRecipes2(@RequestParam(value = "p", required = false) Integer p,
+			@RequestParam(value = "id", required = false) Integer id,
+			@RequestParam(value = "user", required = false) String user,
+			@RequestParam(value = "query", required = false) String query,
+			@RequestParam(value = "category", required = false) Integer category,
+			@ModelAttribute(value = "filter") Filter filter) throws Exception {
+		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes2(p, id, user, query, category, filter),
+				HttpStatus.OK);
+	}
+	
 	@ApiOperation(value = "모든 재료 목록 가져오기", notes = "재료 목록을 불러온다")
 	@GetMapping("/ingredients")
-	public ResponseEntity<List<Food_Ingredient>> getIngreidents() throws Exception {
-		return new ResponseEntity<List<Food_Ingredient>>(recipeservice.getAllIngredients(), HttpStatus.OK);
+	public ResponseEntity<HashMap<String, Object>> getIngreidents() throws Exception {
+		
+		return new ResponseEntity<HashMap<String, Object>>(recipeservice.getAllIngredients(), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "레시피 생성하기", notes = "레시피 추가한다.")
