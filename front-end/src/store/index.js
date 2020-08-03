@@ -8,7 +8,7 @@ import createPersistedState from 'vuex-persistedstate'
 
 
 Vue.use(Vuex)
-axios.defaults.baseURL = 'http://19e9edda316f.ngrok.io';
+axios.defaults.baseURL = 'http://i3a201.p.ssafy.io:8080/cooking-0.0.1-SNAPSHOT';
 
 const moduleAccounts = {
   namespaced: true,
@@ -665,12 +665,14 @@ const moduleEditor = {
     onSubmitButton({state}) {
       const recipeData = new FormData();
       for (let [key, value] of Object.entries(state.recipe)) {
+        if (key == "main_image_file" && value == null) continue;
         console.log(`recipe.${key}: ${value}`)
         recipeData.append(key, value);
       }
       
       const ingredients = [...state.mainIngr, ...state.subIngr];
       for (let i = 0; i < ingredients.length; i++) {
+        if (ingredients[i].name == null && ingredients[i].quantity == null) continue;
         for (let [key, value] of Object.entries(ingredients[i])) {
           console.log(`ingredients[${i}].${key}: ${value}`)
           recipeData.append(`ingredients[${i}].${key}`, value)
@@ -678,7 +680,10 @@ const moduleEditor = {
       }
 
       for (let i = 0; i < state.cookingStep.length; i++) {
+        if (state.cookingStep[i].description == null && state.cookingStep[i].tip == null
+          && state.cookingStep[i].step_image_file == null) continue;
         for (let [key, value] of Object.entries(state.cookingStep[i])) {
+          if (key == "step_image_file" && value == null) continue;
           console.log(`cookingStep[${i}].${key}: ${value}`)
           recipeData.append(`cookingStep[${i}].${key}`, value)
         }
