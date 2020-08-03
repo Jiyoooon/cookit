@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.FoodIngredient;
 import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
 import com.ssafy.cooking.service.JwtService;
@@ -74,9 +75,15 @@ public class RecipeController {
 	
 	@ApiOperation(value = "모든 재료 목록 가져오기", notes = "재료 목록을 불러온다")
 	@GetMapping("/ingredients")
-	public ResponseEntity<HashMap<String, Object>> getIngreidents() throws Exception {
-		
-		return new ResponseEntity<HashMap<String, Object>>(recipeservice.getAllIngredients(), HttpStatus.OK);
+	public ResponseEntity<List<FoodIngredient>> getIngreidents() throws Exception {
+		 
+		return new ResponseEntity<List<FoodIngredient>>(recipeservice.getAllIngredients(), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "모든 소분류 재료 배열 가져오기")
+	@GetMapping("/ingredients/small")
+	public ResponseEntity<String[]> getSmallIngredients() throws Exception{
+		return new ResponseEntity<String[]>(recipeservice.getSmallIngredients(), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "레시피 생성하기", notes = "레시피 추가한다.")

@@ -4,7 +4,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import com.ssafy.cooking.dao.RecipeDao;
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.CookingStep;
 import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.FoodIngredient;
 import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
@@ -133,12 +133,18 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public HashMap<String, Object> getAllIngredients() {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("large", recipeDao.getLargeIngredients());
-		map.put("medium", recipeDao.getMediumIngredients());
-		map.put("small", recipeDao.getSmallIngredients());
-		return map;
+	public List<FoodIngredient> getAllIngredients() {
+		List<FoodIngredient> ingredientList = new ArrayList<FoodIngredient>();
+		ingredientList.addAll(recipeDao.getSmallIngredients());
+		ingredientList.addAll(recipeDao.getMediumIngredients());
+		ingredientList.addAll(recipeDao.getLargeIngredients());
+
+		return ingredientList;
+	}
+	
+	@Override
+	public String[] getSmallIngredients() {
+		return recipeDao.getSmallIngredientsArray();
 	}
 	
 	@Override
@@ -170,5 +176,7 @@ public class RecipeServiceImpl implements RecipeService {
 		return recipeDao.getRecipes2(p, 20, id, user, query, category, 
 									hate_large, hate_medium, hate_small, like_large, like_medium, like_small);
 	}
+
+	
 	
 }

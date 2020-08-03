@@ -329,13 +329,11 @@ public class UserController {
    	public ResponseEntity<HashMap<String, Object>> getUserInfo(HttpServletRequest request) throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
-    	System.out.println(SHA256.testSHA256("null")+"\n"+SHA256.testSHA256("test1234"));
     	String result = "success";
     	HttpStatus status = HttpStatus.ACCEPTED;
     	map.put("result", result);
     	
     	String token = request.getHeader("Authorization");
-    	System.out.println(token);
 
     	if(token != null && token.length() > 0 && token.split(" ").length == 2) {
 			token = token.split(" ")[1];
@@ -376,6 +374,43 @@ public class UserController {
 		return new ResponseEntity<HashMap<String, Object>>(map, status);
    	}
    
+    //id로 회원정보 조회
+    @ApiOperation(value = "id로 회원 정보 가져오기")
+   	@GetMapping("/{id}")
+   	public ResponseEntity<HashMap<String, Object>> getUserInfoById(HttpServletRequest request, @PathVariable("id") String id) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	String result = "fail";
+    	HttpStatus status = HttpStatus.ACCEPTED;
+    	
+		try {
+			User user = userService.getUser(id);
+			if(user == null) {
+				map.put("cause", "회원정보 없음");
+			}else {
+				user.setPassword("");
+				String imageName = user.getProfile_image();
+				if(imageName != null && !imageName.equals("")) {
+					String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
+					user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
+				}
+				result = "success";
+				map.put("data", user);
+			}
+			map.put("result", result);
+			return new ResponseEntity<HashMap<String, Object>>(map, status);
+			
+		}catch(Exception e){
+			result = "fail";
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			map.put("cause", "서버 오류");
+			map.put("result", result);
+			return new ResponseEntity<HashMap<String, Object>>(map, status);
+		}
+			
+		
+   	}
+    
     //회원정보 수정
     @ApiOperation(value = "회원정보 수정하기")///token
    	@PutMapping("/token")

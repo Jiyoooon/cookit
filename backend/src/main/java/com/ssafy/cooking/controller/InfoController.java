@@ -35,11 +35,11 @@ public class InfoController {
    	}
     
     
-    //식재료 자동완성
-    @ApiOperation(value = "레시피 작성 중 식재료 자동 완성", notes = "유저가 입력한 재료명을 포함한 식재료 검색")
-   	@GetMapping("autocomplete/{name}")
-   	public ResponseEntity<Filter> getIngredients(@PathVariable("name") String name) throws Exception {
-   		return new ResponseEntity<Filter>(infoService.searchIngredients(name), HttpStatus.OK);
-   	}
+//    //식재료 자동완성
+//    @ApiOperation(value = "레시피 작성 중 식재료 자동 완성", notes = "유저가 입력한 재료명을 포함한 식재료 검색")
+//   	@GetMapping("autocomplete/{name}")
+//   	public ResponseEntity<Filter> getIngredients(@PathVariable("name") String name) throws Exception {
+//   		return new ResponseEntity<Filter>(infoService.searchIngredients(name), HttpStatus.OK);
+//   	}
     
 }

@@ -126,16 +126,20 @@
 		WHERE comment_id = #{comment_id} and comment_user = #{uid}
 	</delete>
 	
-	<select id="getSmallIngredients" resultType="FoodIngredientSmall">
-		SELECT * FROM cooking.Food_ingredient_small
+	<select id="getSmallIngredients" resultType="FoodIngredient">
+		SELECT small as 'name', 'small' as 'kind', food_ingredient_small_id as 'id' FROM cooking.Food_ingredient_small
 	</select>
 	
-	<select id="getMediumIngredients" resultType="FoodIngredientMedium">
-		SELECT * FROM cooking.Food_ingredient_medium
+	<select id="getMediumIngredients" resultType="FoodIngredient">
+		SELECT medium as 'name', 'medium' as 'kind', food_ingredient_medium_id as 'id' FROM cooking.Food_ingredient_medium
 	</select>
 	
-	<select id="getLargeIngredients" resultType="FoodIngredientLarge">
-		SELECT * FROM cooking.Food_ingredient_large
+	<select id="getLargeIngredients" resultType="FoodIngredient">
+		SELECT large as 'name', 'large' as 'kind', food_ingredient_large_id as 'id' FROM cooking.Food_ingredient_large
+	</select>
+	
+	<select id="getSmallIngredientsArray" resultType="string">
+		SELECT small FROM cooking.Food_ingredient_small
 	</select>
 	
 	<select id="getRecipes2" resultType="Recipe">
