@@ -719,6 +719,7 @@ const moduleEditor = {
     onSubmitButton({state}) {
       const recipeData = new FormData();
       for (let [key, value] of Object.entries(state.recipe)) {
+        if (key == "main_image_file" && value == null) continue;
         console.log(`recipe.${key}: ${value}`)
         recipeData.append(key, value);
       }
@@ -733,6 +734,7 @@ const moduleEditor = {
 
       for (let i = 0; i < state.cookingStep.length; i++) {
         for (let [key, value] of Object.entries(state.cookingStep[i])) {
+          if (key == "step_image_file" && value == null) continue;
           console.log(`cookingStep[${i}].${key}: ${value}`)
           recipeData.append(`cookingStep[${i}].${key}`, value)
         }
