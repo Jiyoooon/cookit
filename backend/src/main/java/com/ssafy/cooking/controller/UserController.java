@@ -256,32 +256,19 @@ public class UserController {
     	String result = "success";
     	HttpStatus status = HttpStatus.ACCEPTED;
     	
-    	String token = request.getHeader("Authorization");
-//    	System.out.println("logout : "+token);
-
-    	if(token != null && token.length() > 0 && token.split(" ").length == 2) {
-			token = token.split(" ")[1];
-			if(jwtService.checkValid(token)) {//토큰 유효성 체크
-				try {
-					//access token을 blacklist로
-					redisTemplate.opsForValue().set(token, true);
-					redisTemplate.expire(token, 365, TimeUnit.DAYS);//1년..
-					
-					result = "success";
-				}catch(Exception e){
-					result = "fail";
-					map.put("cause", "서버 오류");
-					status = HttpStatus.INTERNAL_SERVER_ERROR;
-				}
-			}else {
-				result = "fail";
-				map.put("cause", "토큰 유효하지 않음");
-			}
-		}else {
+    	String token = request.getHeader("Authorization").split(" ")[1];
+		try {
+			//access token을 blacklist로
+			redisTemplate.opsForValue().set(token, true);
+			redisTemplate.expire(token, 365, TimeUnit.DAYS);//1년..
+			
+			result = "success";
+		}catch(Exception e){
 			result = "fail";
-			map.put("cause", "로그인 필요");
+			map.put("cause", "서버 오류");
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		
+
 		map.put("result", result);
 		return new ResponseEntity<HashMap<String, Object>>(map, status);
    	}
@@ -295,28 +282,17 @@ public class UserController {
     	String result = "success";
     	HttpStatus status = HttpStatus.ACCEPTED;
     	
-    	String token = request.getHeader("Authorization");
+    	String token = request.getHeader("Authorization").split(" ")[1];
 
-    	if(token != null && token.length() > 0 && token.split(" ").length == 2) {
-			token = token.split(" ")[1];
-			if(jwtService.checkValid(token)) {//토큰 유효성 체크
-				Map<String, Object> claims = jwtService.get(token);
-				String uid = (String)claims.get("uid");
-				try {
-					userService.delete(uid);
-					result = "success";
-				}catch(Exception e){
-					result = "fail";
-					map.put("cause", "서버 오류");
-					status = HttpStatus.INTERNAL_SERVER_ERROR;
-				}
-			}else {
-				result = "fail";
-				map.put("cause", "토큰 유효하지 않음");
-			}
-		}else {
+		Map<String, Object> claims = jwtService.get(token);
+		String uid = (String)claims.get("uid");
+		try {
+			userService.delete(uid);
+			result = "success";
+		}catch(Exception e){
 			result = "fail";
-			map.put("cause", "로그인 필요");
+			map.put("cause", "서버 오류");
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		
 		map.put("result", result);
@@ -333,41 +309,27 @@ public class UserController {
     	HttpStatus status = HttpStatus.ACCEPTED;
     	map.put("result", result);
     	
-    	String token = request.getHeader("Authorization");
+    	String token = request.getHeader("Authorization").split(" ")[1];
 
-    	if(token != null && token.length() > 0 && token.split(" ").length == 2) {
-			token = token.split(" ")[1];
-			if(jwtService.checkValid(token)) {//토큰 유효성 체크
-
-				Map<String, Object> claims = jwtService.get(token);
-				String uid = (String)claims.get("uid");
-				System.out.println(uid);
-				try {
-					User user = userService.getUser(uid);
-					System.out.println(user);
-					
-					user.setPassword("");
-					String imageName = user.getProfile_image();
-					if(imageName != null && !imageName.equals("")) {
-						String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
-						user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
-					}
-					map.put("data", user);
-					
-					return new ResponseEntity<HashMap<String, Object>>(map, status);
-					
-				}catch(Exception e){
-					result = "fail";
-					map.put("cause", "서버 오류");
-					status = HttpStatus.INTERNAL_SERVER_ERROR;
-				}
-			}else {
-				result = "fail";
-				map.put("cause", "토큰 유효하지 않음");
+		Map<String, Object> claims = jwtService.get(token);
+		String uid = (String)claims.get("uid");
+		try {
+			User user = userService.getUser(uid);
+			
+			user.setPassword("");
+			String imageName = user.getProfile_image();
+			if(imageName != null && !imageName.equals("")) {
+				String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
+				user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
 			}
-		}else {
+			map.put("data", user);
+			
+			return new ResponseEntity<HashMap<String, Object>>(map, status);
+			
+		}catch(Exception e){
 			result = "fail";
-			map.put("cause", "로그인 필요");
+			map.put("cause", "서버 오류");
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		
 		map.put("result", result);
@@ -421,46 +383,31 @@ public class UserController {
     	
     	String result = "success";
     	HttpStatus status = HttpStatus.ACCEPTED;
-//    	System.out.println("수정 : "+user);
     	if(profile != null) {
-//    		System.out.println(profile.getContentType());
     		if(profile.getContentType().indexOf("image") == -1) {
     			map.put("cause", "이미지 파일  형식 오류");
-    			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     		}
     	}
     	
     	String password = user.getPassword();
-//System.out.println("들어온 비번 : "+password+", "+user.isStart_page());
     	if(password != null && !password.trim().equals("")) {//비밀번호 입력했을때만 수정
     		user.setPassword(SHA256.testSHA256(password));
     	}else user.setPassword(null);
     	
-//    	System.out.println("디비에 들어갈 비번 : "+user.getPassword());
-    	String token = request.getHeader("Authorization");
+    	String token = request.getHeader("Authorization").split(" ")[1];
 
-    	if(token != null && token.length() > 0 && token.split(" ").length == 2) {
-			token = token.split(" ")[1];
-			if(jwtService.checkValid(token)) {//토큰 유효성 체크
-				Map<String, Object> claims = jwtService.get(token);
-				user.setUser_id(Integer.parseInt((String)claims.get("uid")));
-				
-				try {
-					userService.reviseUser(profile, user);
-					result = "success";
-				}catch(Exception e){
-					e.printStackTrace();
-					result = "fail";
-					map.put("cause", "서버 오류");
-					status = HttpStatus.INTERNAL_SERVER_ERROR;
-				}
-			}else {
-				result = "fail";
-				map.put("cause", "토큰 유효하지 않음");
-			}
-		}else {
+		Map<String, Object> claims = jwtService.get(token);
+		user.setUser_id(Integer.parseInt((String)claims.get("uid")));
+		
+		try {
+			userService.reviseUser(profile, user);
+			result = "success";
+		}catch(Exception e){
+			e.printStackTrace();
 			result = "fail";
-			map.put("cause", "로그인 필요");
+			map.put("cause", "서버 오류");
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		
 		map.put("result", result);
@@ -477,33 +424,22 @@ public class UserController {
     	String result = "success";
     	HttpStatus status = HttpStatus.ACCEPTED;
     	
-    	String token = request.getHeader("Authorization");
+    	String token = request.getHeader("Authorization").split(" ")[1];
 
-    	if(token != null && token.length() > 0 && token.split(" ").length == 2) {
-			token = token.split(" ")[1];
-			if(jwtService.checkValid(token)) {//토큰 유효성 체크
-				Map<String, Object> claims = jwtService.get(token);
-				
-				try {
-					if(userService.checkPassword((String)claims.get("uid"), SHA256.testSHA256(password))) {
-						result = "success";
-					}else {
-						result = "fail";
-						map.put("cause", "비밀번호 오류");
-					}
-					
-				}catch(Exception e){
-					result = "fail";
-					map.put("cause", "서버 오류");
-					status = HttpStatus.INTERNAL_SERVER_ERROR;
-				}
+		Map<String, Object> claims = jwtService.get(token);
+		
+		try {
+			if(userService.checkPassword((String)claims.get("uid"), SHA256.testSHA256(password))) {
+				result = "success";
 			}else {
 				result = "fail";
-				map.put("cause", "토큰 유효하지 않음");
+				map.put("cause", "비밀번호 오류");
 			}
-		}else {
+			
+		}catch(Exception e){
 			result = "fail";
-			map.put("cause", "로그인 필요");
+			map.put("cause", "서버 오류");
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		
 		map.put("result", result);
