@@ -1,10 +1,10 @@
 <template>
     <div class="chipG">
-        <div class="chip rounded-pill selected" v-if="!isdelete && Sourceinfo.state">
-            <div style="display:inline; margin:10px;">{{ Sourceinfo.name }}<b-icon style="display:inline" class="delete" @click="clickX" icon="x-circle-fill"></b-icon></div>
+        <div class="chip rounded-pill selected" v-if="!isdelete && Sourceinfo.state" @click="fortest">
+            <div style="display:inline; margin:10px;">{{ Sourceinfo.ingredientdata.name }}<b-icon style="display:inline" class="delete" @click="clickX" icon="x-circle-fill"></b-icon></div>
         </div>
         <div class="chip rounded-pill excepted" v-if="!isdelete && !Sourceinfo.state">
-            <span>{{ Sourceinfo.name }}<b-icon  class="delete" @click="clickX" icon="x-circle-fill"></b-icon></span>
+             <div style="display:inline; margin:10px;">{{ Sourceinfo.ingredientdata.name }}<b-icon  class="delete" @click="clickX" icon="x-circle-fill"></b-icon></div>
         </div>
     </div>
 </template>
@@ -23,7 +23,10 @@ export default {
     methods:{
         clickX(){
             this.isdelete=true
-            this.$emit('delete-source',this.Sourceinfo.name)
+            this.$emit('delete-source',this.Sourceinfo.ingredientdata.name)
+        },
+        fortest(){//테스트용, 정보가 잘 넘어왔는지 테스트
+            console.log(this.Sourceinfo)
         },
     }
 }

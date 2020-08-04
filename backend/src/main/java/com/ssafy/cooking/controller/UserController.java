@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
+import com.ssafy.cooking.dto.Filter;
 import com.ssafy.cooking.dto.Login;
 import com.ssafy.cooking.dto.TempKey;
 import com.ssafy.cooking.dto.User;
@@ -164,12 +165,12 @@ public class UserController {
 															, HttpServletResponse response)throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
-    	String namePt = "^[a-zA-Z0-9가-힣]{4,12}$";
+    	String namePt = "^[a-zA-Z0-9가-힣]{2,12}$";
     	String pwPt = "^[0-9a-zA-Z~`!@#$%\\\\^&*()-]{8,12}$";//특수,대소문자,숫자 포함 8자리 이상
     	String emailPt = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     	
     	map.put("result", "fail");
-    	if(user.getNickname() == null || user.getNickname() == "") {
+    	if(user.getNickname() == null || user.getNickname().equals("")) {
     		map.put("cause", "닉네임 입력 필수");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
@@ -177,14 +178,25 @@ public class UserController {
     		map.put("cause", "닉네임 형식 오류");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
+    	
+    	if(user.getPassword() == null || user.getPassword().equals("")) {
+    		map.put("cause", "비밀번호 입력 필수");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    	}
     	if(!user.getPassword().matches(pwPt)) {
     		map.put("cause", "비밀번호 형식 오류");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    	}
+    	
+    	if(user.getEmail() == null || user.getEmail().equals("")) {
+    		map.put("cause", "이메일 입력 필수");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
     	if(!user.getEmail().matches(emailPt)) {
     		map.put("cause", "이메일 형식 오류");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
+    	
     	if(user.getIntro() != null && user.getIntro().length() > 100) {
     		map.put("cause", "소개글 글자 수 초과");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
@@ -478,12 +490,6 @@ public class UserController {
    	}
     
     
-//    @ApiOperation(value = "팔로워 가져오기")
-//   	@GetMapping("/follwers/{id}")
-//   	public ResponseEntity<List<User>> getFollowers(@PathVariable("id") String uid) throws Exception {
-//   		return new ResponseEntity<List<User>>(userService.getFollowers(uid), HttpStatus.OK);
-//   	}
-//    
     @ApiOperation(value = "user id로 댓글 가져오기")
    	@GetMapping("/comments/{id}")
    	public ResponseEntity<List<Comment>> getCommnets(@PathVariable("id") String uid) throws Exception {
@@ -492,6 +498,109 @@ public class UserController {
     
     
     //내 필터링 정보 가져오기, 추가하기, 삭제하기
+    @ApiOperation(value = "필터링 조회", notes = "내 필터링 정보를 가져온다.")
+   	@GetMapping("/token/filtering")
+   	public ResponseEntity<List<Filter>> getFilterings(HttpServletRequest request) throws Exception {
+    	
+    	String token = request.getHeader("Authorization").split(" ")[1];
+    	Map<String, Object> claims = jwtService.get(token);
+    	
+    	
+   		return new ResponseEntity<List<Filter>>(userService.getFilterings((String)claims.get("uid")), HttpStatus.OK);
+   	}
+    
+    @ApiOperation(value = "필터링 생성", notes = "새로운 필터링 정보를 저장한다.")
+   	@PostMapping("/token/filtering")
+   	public ResponseEntity<HashMap<String, Object>> saveFiltering(HttpServletRequest request, Filter filter) throws Exception {
+    	String token = request.getHeader("Authorization").split(" ")[1];
+    	Map<String, Object> claims = jwtService.get(token);
+    	filter.setFiltering_user_id(Integer.parseInt((String)claims.get("uid")));
+    	
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	if(userService.addFiltering(filter) > 0) {
+    		map.put("result", "success");
+    	}else map.put("result", "fail");
+    	
+   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   	}
+    
+    @ApiOperation(value = "필터링 삭제", notes = "필터링 id로 필터링 정보를 삭제한다.")
+   	@DeleteMapping("/token/filtering/{filter_id}")
+   	public ResponseEntity<HashMap<String, Object>> deleteFiltering(HttpServletRequest request, @PathVariable("filter_id") String id) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	if(userService.removeFiltering(id) > 0) {
+    		map.put("result", "success");
+    	}else map.put("result", "fail");
+    	
+   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   	}
+    
     //블로그 전체 조회수 + 1
+    @ApiOperation(value = "블로그 조회수 ++", notes = "id번 유저의 전체 블로그 조회수를 1 더한다.")
+    @PutMapping("/hits/{id}")
+    public ResponseEntity<HashMap<String, Object>> plusBlogHits(HttpServletRequest request, @PathVariable("id") String uid) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	if(userService.plusBlogHits(uid) > 0) {
+    		map.put("result", "success");
+    	}else map.put("result", "fail");
+    	
+   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   	}
+    
+    //내 팔로워 가져오기
+    @ApiOperation(value = "팔로워 유저들 조회", notes = "id번 유저를 팔로우하는 유저들 정보")
+ 	@GetMapping("/followers/{id}")
+ 	public ResponseEntity<List<User>> getFollowers(@PathVariable("id") String uid, HttpServletRequest request) throws Exception {
+    	String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
+ 		return new ResponseEntity<List<User>>(userService.getFollowers(uid, baseUrl), HttpStatus.OK);
+ 	}
+
+    //내 팔로잉 가져오기
+    @ApiOperation(value = "팔로잉 유저들 조회", notes = "id번 유저가 팔로잉하는 유저들 정보")
+    @GetMapping("/following/{id}")
+    public ResponseEntity<List<User>> getFollowings(@PathVariable("id") String uid, HttpServletRequest request) throws Exception {
+    	String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
+    	return new ResponseEntity<List<User>>(userService.getFollowings(uid, baseUrl), HttpStatus.OK);
+    }
+    
+    //팔로우 하기
+    @ApiOperation(value = "팔로우 하기", notes = "내가 id번 유저를 팔로우")
+    @PostMapping("/token/follow/{id}")
+    public ResponseEntity<HashMap<String, Object>> follow(HttpServletRequest request, @PathVariable("id") String to_user) throws Exception {
+    	String token = request.getHeader("Authorization").split(" ")[1];
+    	Map<String, Object> claims = jwtService.get(token);
+    	
+    	String from_user = (String) claims.get("uid");
+    	
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	if(userService.follow(from_user, to_user) > 0) {
+    		map.put("result", "success");
+    	}else map.put("result", "fail");
+    	
+   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   	}
+    
+    
+    //팔로우 끊기
+    @ApiOperation(value = "언팔로우 하기", notes = "내가 id번 유저를 언팔로우")
+    @DeleteMapping("/token/unfollow/{id}")
+    public ResponseEntity<HashMap<String, Object>> unfollow(HttpServletRequest request, @PathVariable("id") String to_user) throws Exception {
+    	String token = request.getHeader("Authorization").split(" ")[1];
+    	Map<String, Object> claims = jwtService.get(token);
+    	
+    	String from_user = (String) claims.get("uid");
+    	
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	if(userService.unfollow(from_user, to_user) > 0) {
+    		map.put("result", "success");
+    	}else map.put("result", "fail");
+    	
+   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   	}
     //sns연동 정보 저장, 조회, 삭제, 수정
 }

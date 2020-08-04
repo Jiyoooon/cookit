@@ -158,7 +158,7 @@ const moduleAccounts = {
       axios.post(SERVER.ROUTES.accounts.login, loginData)
         .then((res) => {
           if (res.data.result == 'success') {
-            commit('SET_TOKEN', res.data.token)
+            commit('SET_TOKEN', res.headers.token)
             dispatch('fetchUser')
             dispatch('myblog/fetchMyRecipes', null, { root: true })
             dispatch('GoHome')
@@ -212,6 +212,7 @@ const moduleAccounts = {
       axios.get(SERVER.ROUTES.accounts.requestkey + String(email))
       .then(res => {
         console.log(`Code send: ${String(res.data.result)}`)
+        console.log(res.data)
         if(res.data.result == 'success') {
           commit('SET_EMAIL', email)
           this._vm.$root.$bvModal.msgBoxOk('인증 코드가 발송되었습니다.', {
@@ -464,7 +465,7 @@ const moduleAccounts = {
         axios.post(SERVER.ROUTES.accounts.signup, formData, { headers: { 'Content-Type': 'multipart/form-data' }})
           .then((res) => {
             if (res.data.result == 'success') {
-              commit('SET_TOKEN', res.data.token)
+              commit('SET_TOKEN', res.headers.token)
               dispatch('fetchUser')
               dispatch('myblog/fetchMyRecipes', null, { root: true })
               this._vm.$root.$bvModal.msgBoxOk('가입되었습니다.', {
@@ -505,7 +506,8 @@ const moduleAccounts = {
 const moduleRecipes = {
   namespaced: true,
   state: {
-
+    selectedRecipe: null,
+    recipeUser: null,
   },
 
   getters: {
@@ -513,11 +515,30 @@ const moduleRecipes = {
   },
 
   mutations: {
-
+    SET_RECIPE(state, recipe) {
+      state.selectedRecipe = recipe
+    },
+    SET_USER(state, userinfo) {
+      state.recipeUser = userinfo
+    },
   },
 
   actions: {
-
+    fetchRecipe({ commit, state }, recipe_id) {
+      axios.get(SERVER.ROUTES.recipeview.fetchrecipe + String(recipe_id))
+        .then(res => {
+          console.log(res.data)
+          commit('SET_RECIPE', res.data)
+          console.log(state.selectedRecipe)
+          router.push({ name: 'SelectedRecipe'})
+        })
+    },
+    fetchRecipeUser({ commit, state }) {
+      axios.get(SERVER.ROUTES.accounts.fetchuserinfo + String(state.selectedRecipe.recipe_user))
+        .then(res => {
+          commit('SET_USER', res.data.data)
+        })
+    }
   },
 }
 
@@ -548,7 +569,7 @@ const moduleMyBlog = {
       const filter = {
         params: recipequery
       }
-      axios.get('http://i3a201.p.ssafy.io:8080/cooking-0.0.2-SNAPSHOT/recipe/recipes', filter)
+      axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes, filter)
         .then((res) => {
           console.log(res)
           commit('SET_RECIPES', res.data)
@@ -559,6 +580,8 @@ const moduleMyBlog = {
         })
     },
     selectedRecipe({ commit }, recipe_id) {
+      console.log('3333333')
+      console.log(recipe_id)
       axios.get(SERVER.ROUTES.myrecipe.selectedrecipe + String(recipe_id))
         .then((res) => {
           console.log(res.data)
@@ -662,7 +685,7 @@ const moduleEditor = {
     getCookingSteps({commit}, data) {
       commit('SET_COOKINGSTEPS', data);
     },
-    onSubmitButton({state}) {
+    onSubmitButton({state, rootState}) {
       const recipeData = new FormData();
       for (let [key, value] of Object.entries(state.recipe)) {
         if (key == "main_image_file" && value == null) continue;
@@ -690,10 +713,10 @@ const moduleEditor = {
       }
 
       const headerConfig = { headers: {
-        // 'Authorization': `token ${rootState['accounts/authToken']}`,
+        'Authorization': `token ${rootState['accounts/authToken']}`,
         'Content-Type': 'multipart/form-data'
       }}
-      axios.post('/recipe/save2', recipeData, headerConfig)
+      axios.post('/recipe/save', recipeData, headerConfig)
       .then((res) => {
         console.log(res)
         // 레시피 화면으로 redirect 필요
@@ -713,36 +736,100 @@ const moduleLookAround = {
     //레시피를 불러올때 전달할 쿼리
     numberofgetrecipes:0,
     recipequery:{
-      category:'',//어디서설정?
-      filter:'',//어디서설정?
-      id:'',//어디서설정?
+      category:null,//어디서설정?
+      create_date:null,
+      filtering_id:null,
+      filtering_name:null,
+      filtering_user_id:null,
+      hate_large:null,
+      hate_medium:null,
+      hate_small:null,
+      id:null,//어디서설정?
+      like_large:null,
+      like_medium:null,
+      like_small:null,
       p:0,//무한 스크롤에서 설정
-      query:'',// 서치바에서 설정
-      user:'',// 해당
+      query:null,// 서치바에서 설정
+      user:null,// 해당
     },
     recipes:[],
-    ingredients:[],
+    ingredients:null,//모든재료를 저장
   },
   getters: {
   },
 
   mutations: {
     initializing(state){
-      //alert("이니셜라이징!")
       state.recipequery={
-        category:'',
-        filter:'',
-        id:'',
+        category:null,//어디서설정?
+        create_date:null,
+        filtering_id:null,
+        filtering_name:null,
+        filtering_user_id:null,
+        hate_large:null,
+        hate_medium:null,
+        hate_small:null,
+        id:null,
+        like_large:null,
+        like_medium:null,
+        like_small:null,
         p:0,
-        query:'',
-        user:'',
+        query:null,
+        user:null,
       }
       state.recipes = []
     },
-    setRecipequery(state,querydata){
-      state.recipequery.query=querydata
-      state.recipes = []
-      state.recipequery.p = 0;
+    setRecipequery(state,payload){
+
+      console.log(payload.selectedarray.length)
+      state.recipequery.query=payload.querydata
+      for (var i in payload.selectedarray){
+        if(payload.selectedarray[i].state == true){
+          switch(payload.selectedarray[i].ingredientdata.kind){
+            case 'small':
+              if(state.recipequery.like_small == null)
+                state.recipequery.like_small = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.like_small += payload.selectedarray[i].ingredientdata.name+','
+            break;
+            case 'medium':
+              if(state.recipequery.like_medium == null)
+                state.recipequery.like_medium = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.like_medium += payload.selectedarray[i].ingredientdata.name+','
+            break;
+            case 'large':
+              if(state.recipequery.like_large == null)
+                state.recipequery.like_large = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.like_large += payload.selectedarray[i].ingredientdata.name+','
+            break;
+          }
+        }
+        else{
+          switch(payload.selectedarray[i].ingredientdata.kind){
+            case 'small':
+              if(state.recipequery.hate_small == null)
+                state.recipequery.hate_small = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.hate_small += payload.selectedarray[i].ingredientdata.name+','
+            break;
+            case 'medium':
+              if(state.recipequery.hate_medium == null)
+                state.recipequery.hate_medium = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.hate_medium += payload.selectedarray[i].ingredientdata.name+','
+            break;
+            case 'large':
+              if(state.recipequery.hate_large == null)
+                state.recipequery.hate_large = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.hate_large += payload.selectedarray[i].ingredientdata.name+','
+            break;
+          }
+        }
+      }
+      console.log(state.recipequery.like_small)
     },
     setRecipes(state,recipes){
       state.recipes = [...state.recipes, ...recipes]
@@ -758,10 +845,12 @@ const moduleLookAround = {
     setIngredients(state,payload){
       state.ingredients = payload
     },
+
   },
 
   actions: {
     setRecipequery({commit,dispatch},payload){
+      commit('initializing')
       commit('setRecipequery',payload)
       dispatch('getFilteredRecipes')
     },
@@ -782,18 +871,19 @@ const moduleLookAround = {
     getIngredients({state,commit}){
       console.log("__불러오기전__")
       console.log(state.ingredients)
-      if(state.ingredients.length == 0){
+      //if(state.ingredients.length == 0){
         axios.get(SERVER.ROUTES.lookaroundrecipe.getingredients)
         .then((res) => {
-          //alert("모든 재료 로드 완료!")
-          commit('setIngredients',res.data)
+          console.log("res : " )
           console.log(res)
+          commit('setIngredients',res.data)
           console.log(state.ingredients)
+          console.log("state.ingredients")
         })
         .catch((err) => {
           alert(err)
         })
-      }
+      //}
     },
     GoLookAroundRecipesView() {
       router.push({ name: 'LookAroundRecipeView',})
