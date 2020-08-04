@@ -713,36 +713,100 @@ const moduleLookAround = {
     //레시피를 불러올때 전달할 쿼리
     numberofgetrecipes:0,
     recipequery:{
-      category:'',//어디서설정?
-      filter:'',//어디서설정?
-      id:'',//어디서설정?
+      category:null,//어디서설정?
+      create_date:null,
+      filtering_id:null,
+      filtering_name:null,
+      filtering_user_id:null,
+      hate_large:null,
+      hate_medium:null,
+      hate_small:null,
+      id:null,//어디서설정?
+      like_large:null,
+      like_medium:null,
+      like_small:null,
       p:0,//무한 스크롤에서 설정
-      query:'',// 서치바에서 설정
-      user:'',// 해당
+      query:null,// 서치바에서 설정
+      user:null,// 해당
     },
     recipes:[],
-    ingredients:[],
+    ingredients:null,//모든재료를 저장
   },
   getters: {
   },
 
   mutations: {
     initializing(state){
-      //alert("이니셜라이징!")
       state.recipequery={
-        category:'',
-        filter:'',
-        id:'',
+        category:null,//어디서설정?
+        create_date:null,
+        filtering_id:null,
+        filtering_name:null,
+        filtering_user_id:null,
+        hate_large:null,
+        hate_medium:null,
+        hate_small:null,
+        id:null,
+        like_large:null,
+        like_medium:null,
+        like_small:null,
         p:0,
-        query:'',
-        user:'',
+        query:null,
+        user:null,
       }
       state.recipes = []
     },
-    setRecipequery(state,querydata){
-      state.recipequery.query=querydata
-      state.recipes = []
-      state.recipequery.p = 0;
+    setRecipequery(state,payload){
+
+      console.log(payload.selectedarray.length)
+      state.recipequery.query=payload.querydata
+      for (var i in payload.selectedarray){
+        if(payload.selectedarray[i].state == true){
+          switch(payload.selectedarray[i].ingredientdata.kind){
+            case 'small':
+              if(state.recipequery.like_small == null)
+                state.recipequery.like_small = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.like_small += payload.selectedarray[i].ingredientdata.name+','
+            break;
+            case 'medium':
+              if(state.recipequery.like_medium == null)
+                state.recipequery.like_medium = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.like_medium += payload.selectedarray[i].ingredientdata.name+','
+            break;
+            case 'large':
+              if(state.recipequery.like_large == null)
+                state.recipequery.like_large = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.like_large += payload.selectedarray[i].ingredientdata.name+','
+            break;
+          }
+        }
+        else{
+          switch(payload.selectedarray[i].ingredientdata.kind){
+            case 'small':
+              if(state.recipequery.hate_small == null)
+                state.recipequery.hate_small = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.hate_small += payload.selectedarray[i].ingredientdata.name+','
+            break;
+            case 'medium':
+              if(state.recipequery.hate_medium == null)
+                state.recipequery.hate_medium = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.hate_medium += payload.selectedarray[i].ingredientdata.name+','
+            break;
+            case 'large':
+              if(state.recipequery.hate_large == null)
+                state.recipequery.hate_large = payload.selectedarray[i].ingredientdata.name+','
+              else
+                state.recipequery.hate_large += payload.selectedarray[i].ingredientdata.name+','
+            break;
+          }
+        }
+      }
+      console.log(state.recipequery.like_small)
     },
     setRecipes(state,recipes){
       state.recipes = [...state.recipes, ...recipes]
@@ -758,10 +822,12 @@ const moduleLookAround = {
     setIngredients(state,payload){
       state.ingredients = payload
     },
+
   },
 
   actions: {
     setRecipequery({commit,dispatch},payload){
+      commit('initializing')
       commit('setRecipequery',payload)
       dispatch('getFilteredRecipes')
     },
@@ -782,18 +848,19 @@ const moduleLookAround = {
     getIngredients({state,commit}){
       console.log("__불러오기전__")
       console.log(state.ingredients)
-      if(state.ingredients.length == 0){
+      //if(state.ingredients.length == 0){
         axios.get(SERVER.ROUTES.lookaroundrecipe.getingredients)
         .then((res) => {
-          //alert("모든 재료 로드 완료!")
-          commit('setIngredients',res.data)
+          console.log("res : " )
           console.log(res)
+          commit('setIngredients',res.data)
           console.log(state.ingredients)
+          console.log("state.ingredients")
         })
         .catch((err) => {
           alert(err)
         })
-      }
+      //}
     },
     GoLookAroundRecipesView() {
       router.push({ name: 'LookAroundRecipeView',})
