@@ -15,6 +15,7 @@ import com.ssafy.cooking.dto.Food_Ingredient;
 import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
+import com.ssafy.cooking.util.Timer;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -24,10 +25,13 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, String filter) {
-		if (p == null) {
-			p = 0;
+		int start = 0;
+		int end = Integer.MAX_VALUE;
+		if (p != null) {
+			start = p;
+			end = 20;
 		}
-		return recipeDao.getRecipes(p, 20, id, user, query, category, filter);
+		return recipeDao.getRecipes(start, end, id, user, query, category, filter);
 	}
 
 	@Override
@@ -58,38 +62,34 @@ public class RecipeServiceImpl implements RecipeService {
 	@Override
 	public int addRecipe(RecipeDetail recipeDetail) {
 		String imageName;
-		if (recipeDetail.getRecipe() != null && recipeDetail.getRecipe().getRecipe_user() > 0)
-			imageName = recipeDetail.getRecipe().getRecipe_user() + Long.toString(System.currentTimeMillis());
+		if (recipeDetail.getRecipe_user() != null && recipeDetail.getRecipe_user() > 0)
+			imageName = recipeDetail.getRecipe_user() + Long.toString(System.currentTimeMillis());
 		else
 			imageName = Long.toString(System.currentTimeMillis());
-
 		
-		System.out.println(recipeDetail.getRecipe());
-		System.out.println(imageName);
-		
-		if (!recipeDetail.getRecipe().getMain_image_file().isEmpty()) {
+		if (recipeDetail.getMain_image_file() != null && !recipeDetail.getMain_image_file().isEmpty()) {
 			try {
-				writeFile(recipeDetail.getRecipe().getMain_image_file(), imageName);
+				writeFile(recipeDetail.getMain_image_file(), imageName);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			recipeDetail.getRecipe().setMain_image("http://i3a201.p.ssafy.io:8080/images/recipe/" + imageName + "jpg");
+			recipeDetail.setMain_image("http://i3a201.p.ssafy.io:8080/images/recipe/" + imageName + "jpg");
 		} else {
-			recipeDetail.getRecipe().setMain_image("default");
+			recipeDetail.setMain_image("http://i3a201.p.ssafy.io:8080/images/recipe/default.jpg");
 		}
 
-		recipeDao.addRecipe(recipeDetail.getRecipe());
-		int recipe_id = recipeDetail.getRecipe().getRecipe_id();
+		recipeDao.addRecipe(recipeDetail);
+		int recipe_id = recipeDetail.getRecipe_id();
 
-		if (recipeDetail.getCookingSteps() != null) {
-			for (int i = 0; i < recipeDetail.getCookingSteps().size(); i++) {
-				CookingStep step = recipeDetail.getCookingSteps().get(i);
-
+		if (recipeDetail.getCookingStep() != null) {
+			for (int i = 0; i < recipeDetail.getCookingStep().size(); i++) {
+				CookingStep step = recipeDetail.getCookingStep().get(i);
+				step.setTime(Timer.getTimer(step.getDescription()));
 				if (step.getStep_image_file() != null) {
 					try {
 						String stepImageName = imageName + Integer.toString(i);
 						writeFile(step.getStep_image_file(), stepImageName);
-						recipeDetail.getCookingSteps().get(i)
+						recipeDetail.getCookingStep().get(i)
 								.setStep_image("http://i3a201.p.ssafy.io:8080/images/recipe/" + stepImageName + "jpg");
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -98,8 +98,8 @@ public class RecipeServiceImpl implements RecipeService {
 			}
 		}
 
-		if (recipeDetail.getCookingSteps() != null)
-			recipeDao.addCookingsteps(recipe_id, recipeDetail.getCookingSteps());
+		if (recipeDetail.getCookingStep() != null)
+			recipeDao.addCookingsteps(recipe_id, recipeDetail.getCookingStep());
 		if (recipeDetail.getIngredients() != null)
 			recipeDao.addIngredients(recipe_id, recipeDetail.getIngredients());
 

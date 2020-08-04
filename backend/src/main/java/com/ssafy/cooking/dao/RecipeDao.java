@@ -29,4 +29,5 @@ public interface RecipeDao {
 	int modifyComment(Comment comment, int uid);
 	int deleteComment(int comment_id, int uid);
 	List<Food_Ingredient> getAllIngredients();
+	void updateTime(Integer cooking_steps_id, String time);
 }
