@@ -60,7 +60,7 @@ export default {
     },
     methods:{
         readRecipe(){
-            alert("레시피읽는화면으로 들어갑니다.")
+            alert("레시피읽는화면으로 들어갑니다.( 레시피아이디 : " +this.recipe.recipe_id +" )" )
         }
     },
 }
