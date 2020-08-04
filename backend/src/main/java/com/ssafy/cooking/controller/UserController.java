@@ -164,12 +164,12 @@ public class UserController {
 															, HttpServletResponse response)throws Exception {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
-    	String namePt = "^[a-zA-Z0-9가-힣]{4,12}$";
+    	String namePt = "^[a-zA-Z0-9가-힣]{2,12}$";
     	String pwPt = "^[0-9a-zA-Z~`!@#$%\\\\^&*()-]{8,12}$";//특수,대소문자,숫자 포함 8자리 이상
     	String emailPt = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     	
     	map.put("result", "fail");
-    	if(user.getNickname() == null || user.getNickname() == "") {
+    	if(user.getNickname() == null || user.getNickname().equals("")) {
     		map.put("cause", "닉네임 입력 필수");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
@@ -177,14 +177,25 @@ public class UserController {
     		map.put("cause", "닉네임 형식 오류");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
+    	
+    	if(user.getPassword() == null || user.getPassword().equals("")) {
+    		map.put("cause", "비밀번호 입력 필수");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    	}
     	if(!user.getPassword().matches(pwPt)) {
     		map.put("cause", "비밀번호 형식 오류");
+    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    	}
+    	
+    	if(user.getEmail() == null || user.getEmail().equals("")) {
+    		map.put("cause", "이메일 입력 필수");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
     	if(!user.getEmail().matches(emailPt)) {
     		map.put("cause", "이메일 형식 오류");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
     	}
+    	
     	if(user.getIntro() != null && user.getIntro().length() > 100) {
     		map.put("cause", "소개글 글자 수 초과");
     		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
@@ -490,7 +501,7 @@ public class UserController {
    		return new ResponseEntity<List<Comment>>(userService.getCommnets(uid), HttpStatus.OK);
    	}
     
-    
+    //내 댓글 가져오기
     //내 필터링 정보 가져오기, 추가하기, 삭제하기
     //블로그 전체 조회수 + 1
     //sns연동 정보 저장, 조회, 삭제, 수정
