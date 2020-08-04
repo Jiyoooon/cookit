@@ -235,4 +235,10 @@
 		ORDER BY create_date DESC
 		Limit #{start}, #{end}
 	</select>
+	
+	<update id="updateTime">
+		UPDATE Cooking_steps
+		SET Time = #{time}
+		WHERE cooking_steps_id = #{cooking_steps_id}
+	</update>
 </mapper>

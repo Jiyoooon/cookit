@@ -58,13 +58,13 @@
           <b-container fluid="lg">
             <b-row>
               <b-col>
-                <b-form-file v-model="recipe.main_image" accept="image/*" placeholder="음식 대표사진"
+                <b-form-file enctype="multipart/form-data" v-model="recipe.main_image_file" accept="image/*" placeholder="음식 대표사진"
                   @change="setThumbnail"></b-form-file>
               </b-col>
             </b-row>
             <b-row>
               <b-col>
-                <img v-if="recipe.main_image!=null" :src="imageUrl" height="200px">
+                <img v-if="recipe.main_image_file!=null" :src="imageUrl" height="200px">
                 <span v-else></span>
               </b-col>
             </b-row>
@@ -123,8 +123,6 @@ export default {
     },
     methods: {
         setThumbnail(e) {
-					console.log(e.target.files)
-					console.log(this.recipe)
 					const file = e.target.files;
 					if (file.length == 0) return;
           this.imageUrl = URL.createObjectURL(file[0]);

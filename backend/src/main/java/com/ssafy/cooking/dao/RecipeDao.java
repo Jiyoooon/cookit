@@ -35,5 +35,5 @@ public interface RecipeDao {
 							, List<String> hate_large, List<String> hate_medium, List<String> hate_small
 							, List<String> like_large, List<String> like_medium, List<String> like_small);
 	String[] getSmallIngredientsArray();
-	
+	void updateTime(Integer cooking_steps_id, String time);
 }
