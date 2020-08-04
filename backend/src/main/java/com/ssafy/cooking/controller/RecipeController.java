@@ -166,8 +166,7 @@ public class RecipeController {
 	@ApiOperation(value = "id로 레시피 상세정보 가져오기", notes = "레시피 카드를 눌렀을 때 해당 레시피의 상세 정보를 가져온다.(레시피 정보, 재료 정보, 조리 순서 정보)")
 	@GetMapping("{id}")
 	public ResponseEntity<RecipeDetail> getRecipeById(@PathVariable("id") int recipe_id) throws Exception {
-		RecipeDetail recipeDetail = (RecipeDetail) recipeservice.getRecipes(null, recipe_id, null, null, null, null)
-				.get(0);
+		RecipeDetail recipeDetail = new RecipeDetail(recipeservice.getRecipes(null, recipe_id, null, null, null, null).get(0));
 		recipeDetail.setIngredients(recipeservice.getIngredients(recipe_id));
 		recipeDetail.setCookingStep(recipeservice.getCookingSteps(recipe_id));
 		recipeservice.upHits(recipe_id);
