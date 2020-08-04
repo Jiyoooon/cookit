@@ -2,6 +2,8 @@ package com.ssafy.cooking.service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ssafy.cooking.dao.RecipeDao;
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.CookingStep;
-import com.ssafy.cooking.dto.Food_Ingredient;
+import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.FoodIngredient;
 import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
@@ -130,7 +133,50 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public List<Food_Ingredient> getAllIngredients() {
-		return recipeDao.getAllIngredients();
+	public List<FoodIngredient> getAllIngredients() {
+		List<FoodIngredient> ingredientList = new ArrayList<FoodIngredient>();
+		ingredientList.addAll(recipeDao.getSmallIngredients());
+		ingredientList.addAll(recipeDao.getMediumIngredients());
+		ingredientList.addAll(recipeDao.getLargeIngredients());
+
+		return ingredientList;
 	}
+	
+	@Override
+	public String[] getSmallIngredients() {
+		return recipeDao.getSmallIngredientsArray();
+	}
+	
+	@Override
+	public List<Recipe> getRecipes2(Integer p, Integer id, String user, String query, Integer category, Filter filter) {
+		if (p == null) {
+			p = 0;
+		}
+		
+		List<String> hate_large = null;
+		List<String> hate_medium = null;
+		List<String> hate_small = null;
+		List<String> like_large = null;
+		List<String> like_medium = null;
+		List<String> like_small = null;
+
+		if(filter.getHate_large() 	!= null) hate_large = Arrays.asList(filter.getHate_large().trim().split(","));
+		if(filter.getHate_medium() 	!= null) hate_medium = Arrays.asList(filter.getHate_medium().trim().split(","));
+		if(filter.getHate_small() 	!= null) hate_small = Arrays.asList(filter.getHate_small().trim().split(","));
+		if(filter.getLike_large() 	!= null) like_large = Arrays.asList(filter.getLike_large().trim().split(","));
+		if(filter.getLike_medium()	!= null) like_medium = Arrays.asList(filter.getLike_medium().trim().split(","));
+		if(filter.getLike_small() 	!= null) like_small = Arrays.asList(filter.getLike_small().trim().split(","));
+		
+//		if(filter.getHate_large() 	!= null) System.out.println(hate_large+", "+hate_large.size());
+//		if(filter.getHate_medium() != null) System.out.println(hate_medium+", "+hate_medium.size());
+//		if(filter.getHate_small() != null) System.out.println(hate_small+", "+hate_small.size());
+//		if(filter.getLike_large() != null) System.out.println(like_large+", "+like_large.size());
+//		if(filter.getLike_medium() != null) System.out.println(like_medium+", "+like_medium.size());
+//		if(filter.getLike_small() != null) System.out.println(like_small+", "+like_small.size());
+		return recipeDao.getRecipes2(p, 20, id, user, query, category, 
+									hate_large, hate_medium, hate_small, like_large, like_medium, like_small);
+	}
+
+	
+	
 }
