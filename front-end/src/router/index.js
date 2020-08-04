@@ -12,7 +12,8 @@ import RecipeCreateView from '@/views/myrecipes/RecipeCreateView.vue'
 import Home from '../views/Home.vue'
 import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView.vue'
 import MyBlogListView from '../views/myblog/MyBlogListView.vue'
-import RecipeDetailView from '../views/myblog/RecipeDetailView.vue'
+import RecipeDetailView from '../views/recipeview/RecipeDetailView.vue'
+
 
 
 Vue.use(VueRouter)
@@ -79,7 +80,7 @@ Vue.use(VueRouter)
     component: MyBlogListView
   },
   {
-    path: '/myBlog/:recipe_id',
+    path: '/recipe/:recipe_id',
     name: 'SelectedRecipe',
     component: RecipeDetailView
   },

@@ -77,8 +77,8 @@ public class UserServiceImpl implements UserService{
 			else if(imageName == null || imageName.trim().equals("")) {
 				System.out.println("프로필 내림!");
 				removeProfile(Integer.toString(user.getUser_id()));
-				user.setProfile_image("");
-				user.setImage_name("");
+				user.setProfile_image("default_image.png");
+				user.setImage_name("default_image.png");
 			}
 			//수정 X
 			else{
@@ -230,6 +230,9 @@ public class UserServiceImpl implements UserService{
     		}catch(IOException e) {
     			e.printStackTrace();
     		}
+    	}else {
+    		user.setProfile_image("default_image.png");
+    		user.setImage_name("default_image.png");
     	}
     	
     	user.setPassword(SHA256.testSHA256(user.getPassword()));

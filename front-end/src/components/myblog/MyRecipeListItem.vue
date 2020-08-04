@@ -2,7 +2,7 @@
   <b-col lg="4">
       <b-card
     :title="recipe.title"
-    img-src="https://picsum.photos/600/300/?image=25"
+    :img-src="recipe.main_image"
     img-alt="Image"
     img-top
     tag="article"
@@ -23,6 +23,9 @@ export default {
     props: {
         recipe: Object,
     },
+    created() {
+      console.log(this.recipe)
+    }
 }
 </script>
 

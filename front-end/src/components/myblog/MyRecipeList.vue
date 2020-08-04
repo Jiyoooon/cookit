@@ -1,13 +1,15 @@
 <template>
 <b-container>
+  <!-- <b-col lg-9> -->
     <b-row>   
-        <MyRecipeListItem @click="selectedRecipe(recipe.id)" :recipe="recipe" 
+        <MyRecipeListItem @click.native="fetchRecipe(recipe.recipe_id)" :recipe="recipe" 
         :key="index" v-for="(recipe, index) in currentPageItems" id="my-recipes" /> 
     </b-row>
     <b-row>
         <b-pagination id="pagination" :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
     </b-row>
 </b-container>
+<!-- </b-col> -->
 </template>
 
 <script>
@@ -44,6 +46,7 @@ export default {
     },
     methods: {
        ...mapActions('myblog', ['selectedRecipe']),
+       ...mapActions('recipes', ['fetchRecipe']),
       changePaginateditems(index, value) {
         this.paginated_items[index] = value
       },

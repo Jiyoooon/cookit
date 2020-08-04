@@ -87,50 +87,39 @@ public class RecipeController {
 	}
 
 	@ApiOperation(value = "레시피 생성하기", notes = "레시피 추가한다.")
-	@PostMapping("/save")
+	@PostMapping("token/save")////token
 	public ResponseEntity<HashMap<String, Object>> addRecipe(@ModelAttribute("recipeData") RecipeDetail recipeData,
 			HttpServletRequest request) throws Exception {
+
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		String result = "success";
 		HttpStatus status = HttpStatus.ACCEPTED;
 
 		String token = request.getHeader("Authorization");
-
-		if (token != null && token.length() > 0) {
-			token = token.split(" ")[1];
-			if (jwtService.checkValid(token)) {// 토큰 유효성 체크
-				Map<String, Object> claims = jwtService.get(token);
-				int uid = (int) claims.get("uid");
-				try {
-					if (recipeData == null) {
-						result = "fail";
-						map.put("cause", "레시피 정보 없음");
-					} else if (recipeData.getTitle() == null) {
-						map.put("cause", "레시피 title 없음");
-						System.out.println("레시피 title 없음");
-						result = "fail";
-					} else {
-						recipeData.setRecipe_user(uid);
-						if (recipeData.getCategory_id() == null) {
-							recipeData.setCategory_id(8);
-						}
-						recipeservice.addRecipe(recipeData);
-					}
-
-					result = "success";
-				} catch (Exception e) {
-					result = "fail";
-					map.put("cause", "서버 오류");
-					status = HttpStatus.INTERNAL_SERVER_ERROR;
-				}
-			} else {
+		Map<String, Object> claims = jwtService.get(token);
+		int uid = (int) claims.get("uid");
+		try {
+			if (recipeData == null) {
 				result = "fail";
-				map.put("cause", "토큰 유효하지 않음");
+				map.put("cause", "레시피 정보 없음");
+			} else if (recipeData.getTitle() == null) {
+				map.put("cause", "레시피 title 없음");
+				System.out.println("레시피 title 없음");
+				result = "fail";
+			} else {
+				recipeData.setRecipe_user(uid);
+				if (recipeData.getCategory_id() == null) {
+					recipeData.setCategory_id(8);
+				}
+				recipeservice.addRecipe(recipeData);
 			}
-		} else {
+
+			result = "success";
+		} catch (Exception e) {
 			result = "fail";
-			map.put("cause", "로그인 필요");
+			map.put("cause", "서버 오류");
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
 		map.put("result", result);
@@ -166,8 +155,7 @@ public class RecipeController {
 	@ApiOperation(value = "id로 레시피 상세정보 가져오기", notes = "레시피 카드를 눌렀을 때 해당 레시피의 상세 정보를 가져온다.(레시피 정보, 재료 정보, 조리 순서 정보)")
 	@GetMapping("{id}")
 	public ResponseEntity<RecipeDetail> getRecipeById(@PathVariable("id") int recipe_id) throws Exception {
-		RecipeDetail recipeDetail = (RecipeDetail) recipeservice.getRecipes(null, recipe_id, null, null, null, null)
-				.get(0);
+		RecipeDetail recipeDetail = new RecipeDetail(recipeservice.getRecipes(null, recipe_id, null, null, null, null).get(0));
 		recipeDetail.setIngredients(recipeservice.getIngredients(recipe_id));
 		recipeDetail.setCookingStep(recipeservice.getCookingSteps(recipe_id));
 		recipeservice.upHits(recipe_id);
@@ -181,7 +169,7 @@ public class RecipeController {
 //   	}
 //    
 	@ApiOperation(value = "레시피 삭제하기", notes = "레시피 id값으로 레시피를 삭제한다.(레시피 정보, 재료 정보, 조리 순서 정보)")
-	@DeleteMapping("{id}")
+	@DeleteMapping("token/{id}")////token
 	public ResponseEntity<HashMap<String, Object>> removeRecipe(@PathVariable("id") int recipe_id,
 			HttpServletRequest request) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -190,24 +178,13 @@ public class RecipeController {
 
 		String token = request.getHeader("Authorization");
 
-		if (token != null && token.length() > 0) {
-			token = token.split(" ")[1];
-			if (jwtService.checkValid(token)) {// 토큰 유효성 체크
-				Map<String, Object> claims = jwtService.get(token);
-				int uid = (int) claims.get("uid");
-				if (recipeservice.deleteRecipe(recipe_id, uid) > 0) {
-					result = "success";
-				} else {
-					result = "fail";
-					map.put("cause", "삭제 실패");
-				}
-			} else {
-				result = "fail";
-				map.put("cause", "토큰 유효하지 않음");
-			}
+		Map<String, Object> claims = jwtService.get(token);
+		int uid = (int) claims.get("uid");
+		if (recipeservice.deleteRecipe(recipe_id, uid) > 0) {
+			result = "success";
 		} else {
 			result = "fail";
-			map.put("cause", "로그인 필요");
+			map.put("cause", "삭제 실패");
 		}
 
 		map.put("result", result);
@@ -222,7 +199,7 @@ public class RecipeController {
 	}
 
 	@ApiOperation(value = "레시피 댓글 수정하기", notes = "댓글 id값으로 댓글 정보를 수정한다.")
-	@PutMapping("{recipe_id}/comments/{comment_id}")
+	@PutMapping("token/{recipe_id}/comments/{comment_id}")////token
 	public ResponseEntity<HashMap<String, Object>> modifyComment(@RequestBody Comment comment,
 			HttpServletRequest request) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -231,24 +208,13 @@ public class RecipeController {
 
 		String token = request.getHeader("Authorization");
 
-		if (token != null && token.length() > 0) {
-			token = token.split(" ")[1];
-			if (jwtService.checkValid(token)) {// 토큰 유효성 체크
-				Map<String, Object> claims = jwtService.get(token);
-				int uid = (int) claims.get("uid");
-				if (recipeservice.modifyComment(comment, uid) > 0) {
-					result = "success";
-				} else {
-					result = "fail";
-					map.put("cause", "수정 실패");
-				}
-			} else {
-				result = "fail";
-				map.put("cause", "토큰 유효하지 않음");
-			}
+		Map<String, Object> claims = jwtService.get(token);
+		int uid = (int) claims.get("uid");
+		if (recipeservice.modifyComment(comment, uid) > 0) {
+			result = "success";
 		} else {
 			result = "fail";
-			map.put("cause", "로그인 필요");
+			map.put("cause", "수정 실패");
 		}
 
 		map.put("result", result);
@@ -256,7 +222,7 @@ public class RecipeController {
 	}
 
 	@ApiOperation(value = "레시피 댓글 삭제하기", notes = "댓글 id값으로 댓글 정보를 삭제한다.")
-	@DeleteMapping("{recipe_id}/comments/{comment_id}")
+	@DeleteMapping("token/{recipe_id}/comments/{comment_id}")////token
 	public ResponseEntity<HashMap<String, Object>> removeComment(@PathVariable("recipe_id") int recipe_id,
 			@PathVariable("comment_id") int comment_id, HttpServletRequest request) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -265,24 +231,13 @@ public class RecipeController {
 
 		String token = request.getHeader("Authorization");
 
-		if (token != null && token.length() > 0) {
-			token = token.split(" ")[1];
-			if (jwtService.checkValid(token)) {// 토큰 유효성 체크
-				Map<String, Object> claims = jwtService.get(token);
-				int uid = (int) claims.get("uid");
-				if (recipeservice.deleteComment(comment_id, uid) > 0) {
-					result = "success";
-				} else {
-					result = "fail";
-					map.put("cause", "삭제 실패");
-				}
-			} else {
-				result = "fail";
-				map.put("cause", "토큰 유효하지 않음");
-			}
+		Map<String, Object> claims = jwtService.get(token);
+		int uid = (int) claims.get("uid");
+		if (recipeservice.deleteComment(comment_id, uid) > 0) {
+			result = "success";
 		} else {
 			result = "fail";
-			map.put("cause", "로그인 필요");
+			map.put("cause", "삭제 실패");
 		}
 
 		map.put("result", result);
@@ -290,7 +245,7 @@ public class RecipeController {
 	}
 
 	@ApiOperation(value = "레시피 댓글 생성하기", notes = "새로운 댓글을 생성한다.")
-	@PostMapping("{recipe_id}/comments")
+	@PostMapping("token/{recipe_id}/comments")////token
 	public ResponseEntity<HashMap<String, Object>> addComment(@PathVariable("recipe_id") int recipe_id,
 			@RequestBody Comment comment, HttpServletRequest request) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -299,25 +254,14 @@ public class RecipeController {
 
 		String token = request.getHeader("Authorization");
 
-		if (token != null && token.length() > 0) {
-			token = token.split(" ")[1];
-			if (jwtService.checkValid(token)) {// 토큰 유효성 체크
-				Map<String, Object> claims = jwtService.get(token);
-				int uid = (int) claims.get("uid");
-				comment.setComment_user_id(uid);
-				if (recipeservice.addCommnet(recipe_id, comment) > 0) {
-					result = "success";
-				} else {
-					result = "fail";
-					map.put("cause", "로그인 필요1");
-				}
-			} else {
-				result = "fail";
-				map.put("cause", "토큰 유효하지 않음");
-			}
+		Map<String, Object> claims = jwtService.get(token);
+		int uid = (int) claims.get("uid");
+		comment.setComment_user_id(uid);
+		if (recipeservice.addCommnet(recipe_id, comment) > 0) {
+			result = "success";
 		} else {
 			result = "fail";
-			map.put("cause", "로그인 필요");
+			map.put("cause", "로그인 필요1");
 		}
 
 		map.put("result", result);
