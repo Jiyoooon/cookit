@@ -662,7 +662,7 @@ const moduleEditor = {
     getCookingSteps({commit}, data) {
       commit('SET_COOKINGSTEPS', data);
     },
-    onSubmitButton({state}) {
+    onSubmitButton({state, rootState}) {
       const recipeData = new FormData();
       for (let [key, value] of Object.entries(state.recipe)) {
         if (key == "main_image_file" && value == null) continue;
@@ -690,10 +690,10 @@ const moduleEditor = {
       }
 
       const headerConfig = { headers: {
-        // 'Authorization': `token ${rootState['accounts/authToken']}`,
+        'Authorization': `token ${rootState['accounts/authToken']}`,
         'Content-Type': 'multipart/form-data'
       }}
-      axios.post('/recipe/save2', recipeData, headerConfig)
+      axios.post('/recipe/save', recipeData, headerConfig)
       .then((res) => {
         console.log(res)
         // 레시피 화면으로 redirect 필요

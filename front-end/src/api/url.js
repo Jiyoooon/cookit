@@ -1,5 +1,5 @@
 export default {
-    URL: 'http://i3a201.p.ssafy.io:8080/cooking-0.0.2-SNAPSHOT/',
+    URL: 'http://i3a201.p.ssafy.io:8080/cooking-0.0.1-SNAPSHOT/',
     ROUTES: {
         accounts: {
             signup: '/user/join',
@@ -21,7 +21,8 @@ export default {
         myrecipe: {
             myrecipes: '/recipe/all/',
             selectedrecipe: '/recipe/',
-            fetchrecipesbytitle: 'recipe/title'
+            fetchrecipesbytitle: '/recipe/title',
+            recipesave: '/recipe/save'
         },
         lookaroundrecipe:{
             getfilteredrecipes: '/recipe/recipes',
