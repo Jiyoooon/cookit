@@ -1,4 +1,5 @@
 <template>
+<!-- <b-col lg-3> -->
   <div>
       <v-card
     :loading="loading"
@@ -13,29 +14,28 @@
     <v-card-title>{{ authUser.nickname }}</v-card-title>
 
     <v-card-text>
-      <v-row
+      <!-- <v-row
         align="center"
         class="mx-0"
-      >
-        <v-rating
-          :value="4.5"
-          color="amber"
-          dense
-          half-increments
-          readonly
-          size="14"
-        ></v-rating>
-
-        <div class="grey--text ml-4">4.5 (413)</div>
-      </v-row>
+      > -->
+        <div class="grey--text">조회수 : 413</div>
+      <!-- </v-row> -->
 
       <div class="my-4 subtitle-1">
-        $ • Italian, Cafe
+        {{ authUser.intro }}
       </div>
 
-      <div>{{ authUser.intro }}</div>
     </v-card-text>
 
+    <v-card-actions>
+      <v-btn
+        color="deep-purple lighten-2"
+        text
+        @click="reserve"
+      >
+        이웃추가
+      </v-btn>
+    </v-card-actions>
     <v-divider class="mx-4"></v-divider>
 
     <v-card-title>SNS</v-card-title>
@@ -55,17 +55,9 @@
       </v-chip-group>
     </v-card-text>
 
-    <v-card-actions>
-      <v-btn
-        color="deep-purple lighten-2"
-        text
-        @click="reserve"
-      >
-        Reserve
-      </v-btn>
-    </v-card-actions>
   </v-card>
   </div>
+  <!-- </b-col> -->
 </template>
 
 <script>

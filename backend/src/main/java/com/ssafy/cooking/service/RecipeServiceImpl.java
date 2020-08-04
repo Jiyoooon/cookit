@@ -2,6 +2,8 @@ package com.ssafy.cooking.service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ssafy.cooking.dao.RecipeDao;
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.CookingStep;
+import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.FoodIngredient;
 import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
+import com.ssafy.cooking.util.Timer;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -22,11 +27,19 @@ public class RecipeServiceImpl implements RecipeService {
 	private RecipeDao recipeDao;
 
 	@Override
-	public List<Recipe> getRecipes(Integer p, Integer id, Integer user, String query, Integer category, String filter) {
-		if (p == null) {
-			p = 0;
+	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, String filter) {
+		int start = 0;
+		int end = Integer.MAX_VALUE;
+		if (p != null) {
+			start = p;
+			end = 20;
 		}
-		return recipeDao.getRecipes(p, p + 20, id, user, query, category, filter);
+		return recipeDao.getRecipes(start, end, id, user, query, category, filter);
+	}
+
+	@Override
+	public void upHits(int recipe_id) {
+		recipeDao.upHits(recipe_id);
 	}
 
 	@Override
@@ -52,53 +65,56 @@ public class RecipeServiceImpl implements RecipeService {
 	@Override
 	public int addRecipe(RecipeDetail recipeDetail) {
 		String imageName;
-		if (recipeDetail.getRecipe().getRecipe_user_name() != null)
-			imageName = recipeDetail.getRecipe().getRecipe_user() + Long.toString(System.currentTimeMillis());
+		if (recipeDetail.getRecipe_user() != null && recipeDetail.getRecipe_user() > 0)
+			imageName = recipeDetail.getRecipe_user() + Long.toString(System.currentTimeMillis());
 		else
 			imageName = Long.toString(System.currentTimeMillis());
-
-		if (!recipeDetail.getRecipe().getMain_image_file().isEmpty()) {
+		
+		if (recipeDetail.getMain_image_file() != null && !recipeDetail.getMain_image_file().isEmpty()) {
 			try {
-				writeFile(recipeDetail.getRecipe().getMain_image_file(), imageName);
+				writeFile(recipeDetail.getMain_image_file(), imageName);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			recipeDetail.setMain_image("http://i3a201.p.ssafy.io:8080/images/recipe/" + imageName + "jpg");
+		} else {
+			recipeDetail.setMain_image("http://i3a201.p.ssafy.io:8080/images/recipe/default.jpg");
 		}
-		
-		int recipe_id = recipeDao.addRecipe(recipeDetail.getRecipe());
+
+		recipeDao.addRecipe(recipeDetail);
+		int recipe_id = recipeDetail.getRecipe_id();
 
 		if (recipeDetail.getCookingStep() != null) {
 			for (int i = 0; i < recipeDetail.getCookingStep().size(); i++) {
 				CookingStep step = recipeDetail.getCookingStep().get(i);
-
+				step.setTime(Timer.getTimer(step.getDescription()));
 				if (step.getStep_image_file() != null) {
 					try {
 						String stepImageName = imageName + Integer.toString(i);
 						writeFile(step.getStep_image_file(), stepImageName);
-						recipeDetail.getCookingStep().get(i).setStep_image(stepImageName);
+						recipeDetail.getCookingStep().get(i)
+								.setStep_image("http://i3a201.p.ssafy.io:8080/images/recipe/" + stepImageName + "jpg");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 			}
-		} 
-		
-		recipeDao.addCookingsteps(recipe_id, recipeDetail.getCookingStep());
-		recipeDao.addIngredients(recipe_id, recipeDetail.getIngredients());
+		}
 
-		return 0;
+		if (recipeDetail.getCookingStep() != null)
+			recipeDao.addCookingsteps(recipe_id, recipeDetail.getCookingStep());
+		if (recipeDetail.getIngredients() != null)
+			recipeDao.addIngredients(recipe_id, recipeDetail.getIngredients());
+
+		return recipe_id;
 	}
 
-	private boolean writeFile(MultipartFile multipartFile, String saveFileName) throws IOException {
-		boolean result = false;
-		String saveDir = "/app/images/recipe/";
-		
-		byte[] data = multipartFile.getBytes();
-		FileOutputStream fos = new FileOutputStream(saveDir + saveFileName);
-		fos.write(data);
+	private void writeFile(MultipartFile multipartFile, String saveFileName) throws IOException {
+//		String saveDir = "/var/lib/tomcat8/webapps/images/recipe/";
+		String saveDir = "C:/SSAFY/image/";
+		FileOutputStream fos = new FileOutputStream(saveDir + saveFileName + ".jpg");
+		fos.write(multipartFile.getBytes());
 		fos.close();
-
-		return result;
 	}
 
 	@Override
@@ -115,4 +131,52 @@ public class RecipeServiceImpl implements RecipeService {
 	public int modifyComment(Comment comment, int uid) {
 		return recipeDao.modifyComment(comment, uid);
 	}
+
+	@Override
+	public List<FoodIngredient> getAllIngredients() {
+		List<FoodIngredient> ingredientList = new ArrayList<FoodIngredient>();
+		ingredientList.addAll(recipeDao.getSmallIngredients());
+		ingredientList.addAll(recipeDao.getMediumIngredients());
+		ingredientList.addAll(recipeDao.getLargeIngredients());
+
+		return ingredientList;
+	}
+	
+	@Override
+	public String[] getSmallIngredients() {
+		return recipeDao.getSmallIngredientsArray();
+	}
+	
+	@Override
+	public List<Recipe> getRecipes2(Integer p, Integer id, String user, String query, Integer category, Filter filter) {
+		if (p == null) {
+			p = 0;
+		}
+		
+		List<String> hate_large = null;
+		List<String> hate_medium = null;
+		List<String> hate_small = null;
+		List<String> like_large = null;
+		List<String> like_medium = null;
+		List<String> like_small = null;
+
+		if(filter.getHate_large() 	!= null) hate_large = Arrays.asList(filter.getHate_large().trim().split(","));
+		if(filter.getHate_medium() 	!= null) hate_medium = Arrays.asList(filter.getHate_medium().trim().split(","));
+		if(filter.getHate_small() 	!= null) hate_small = Arrays.asList(filter.getHate_small().trim().split(","));
+		if(filter.getLike_large() 	!= null) like_large = Arrays.asList(filter.getLike_large().trim().split(","));
+		if(filter.getLike_medium()	!= null) like_medium = Arrays.asList(filter.getLike_medium().trim().split(","));
+		if(filter.getLike_small() 	!= null) like_small = Arrays.asList(filter.getLike_small().trim().split(","));
+		
+//		if(filter.getHate_large() 	!= null) System.out.println(hate_large+", "+hate_large.size());
+//		if(filter.getHate_medium() != null) System.out.println(hate_medium+", "+hate_medium.size());
+//		if(filter.getHate_small() != null) System.out.println(hate_small+", "+hate_small.size());
+//		if(filter.getLike_large() != null) System.out.println(like_large+", "+like_large.size());
+//		if(filter.getLike_medium() != null) System.out.println(like_medium+", "+like_medium.size());
+//		if(filter.getLike_small() != null) System.out.println(like_small+", "+like_small.size());
+		return recipeDao.getRecipes2(p, 20, id, user, query, category, 
+									hate_large, hate_medium, hate_small, like_large, like_medium, like_small);
+	}
+
+	
+	
 }

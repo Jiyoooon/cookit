@@ -158,7 +158,7 @@ const moduleAccounts = {
       axios.post(SERVER.ROUTES.accounts.login, loginData)
         .then((res) => {
           if (res.data.result == 'success') {
-            commit('SET_TOKEN', res.data.token)
+            commit('SET_TOKEN', res.headers.token)
             dispatch('fetchUser')
             dispatch('myblog/fetchMyRecipes', null, { root: true })
             dispatch('GoHome')
@@ -212,6 +212,7 @@ const moduleAccounts = {
       axios.get(SERVER.ROUTES.accounts.requestkey + String(email))
       .then(res => {
         console.log(`Code send: ${String(res.data.result)}`)
+        console.log(res.data)
         if(res.data.result == 'success') {
           commit('SET_EMAIL', email)
           this._vm.$root.$bvModal.msgBoxOk('인증 코드가 발송되었습니다.', {
@@ -464,7 +465,7 @@ const moduleAccounts = {
         axios.post(SERVER.ROUTES.accounts.signup, formData, { headers: { 'Content-Type': 'multipart/form-data' }})
           .then((res) => {
             if (res.data.result == 'success') {
-              commit('SET_TOKEN', res.data.token)
+              commit('SET_TOKEN', res.headers.token)
               dispatch('fetchUser')
               dispatch('myblog/fetchMyRecipes', null, { root: true })
               this._vm.$root.$bvModal.msgBoxOk('가입되었습니다.', {
@@ -505,7 +506,8 @@ const moduleAccounts = {
 const moduleRecipes = {
   namespaced: true,
   state: {
-
+    selectedRecipe: null,
+    recipeUser: null,
   },
 
   getters: {
@@ -513,11 +515,30 @@ const moduleRecipes = {
   },
 
   mutations: {
-
+    SET_RECIPE(state, recipe) {
+      state.selectedRecipe = recipe
+    },
+    SET_USER(state, userinfo) {
+      state.recipeUser = userinfo
+    },
   },
 
   actions: {
-
+    fetchRecipe({ commit, state }, recipe_id) {
+      axios.get(SERVER.ROUTES.recipeview.fetchrecipe + String(recipe_id))
+        .then(res => {
+          console.log(res.data)
+          commit('SET_RECIPE', res.data)
+          console.log(state.selectedRecipe)
+          router.push({ name: 'SelectedRecipe'})
+        })
+    },
+    fetchRecipeUser({ commit, state }) {
+      axios.get(SERVER.ROUTES.accounts.fetchuserinfo + String(state.selectedRecipe.recipe_user))
+        .then(res => {
+          commit('SET_USER', res.data.data)
+        })
+    }
   },
 }
 
@@ -548,7 +569,7 @@ const moduleMyBlog = {
       const filter = {
         params: recipequery
       }
-      axios.get('http://i3a201.p.ssafy.io:8080/cooking-0.0.2-SNAPSHOT/recipe/recipes', filter)
+      axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes, filter)
         .then((res) => {
           console.log(res)
           commit('SET_RECIPES', res.data)
@@ -559,6 +580,8 @@ const moduleMyBlog = {
         })
     },
     selectedRecipe({ commit }, recipe_id) {
+      console.log('3333333')
+      console.log(recipe_id)
       axios.get(SERVER.ROUTES.myrecipe.selectedrecipe + String(recipe_id))
         .then((res) => {
           console.log(res.data)
@@ -576,8 +599,6 @@ const moduleMyBlog = {
 const moduleEditor = {
   namespaced: true,
   state: {
-    recipeData: {
-    },
     recipe: {
       title: null,
       description: null,
@@ -585,20 +606,20 @@ const moduleEditor = {
       servings: 0,
       cooking_time: 0,
       level: 0,
-      main_image: null,
+      main_image_file: null,
       tag: [ ]
     },
-    cookingSteps: [
+    cookingStep: [
       {
         steps: 1,
         description: null,
         tip: null,
-        step_image: null },
+        step_image_file: null },
       {
         steps: 2,
         description: null,
         tip: null,
-        step_image: null },
+        step_image_file: null },
     ],
     mainIngr: [
       { name: null, quantity: null, is_essential: 1 },
@@ -613,18 +634,11 @@ const moduleEditor = {
 
   },
   mutations: {
-    SET_RECIPEDATA(state) {
-      state.recipeData = {
-        recipe: state.recipeinfo,
-        ingredients: [...state.mainIngr, ...state.subIngr],
-        cookingSteps: state.cookingSteps
-      }
+    SET_RECIPE(state, data) {
+      state.recipe = data
     },
-    SET_RECIPEINFO(state, data) {
-      state.recipeinfo = data
-    },
-    SET_COOKINGSTEPS(state, data) {
-      state.cookingSteps = data
+    SET_COOKINGSTEP(state, data) {
+      state.cookingStep = data
     },
     SET_MAININGR(state, data) {
       state.mainIngr = data
@@ -645,22 +659,22 @@ const moduleEditor = {
       ref.splice(data.index, 1);
     },
     addCookingStep(state) {
-      state.cookingSteps.push({
-        steps: state.cookingSteps.length + 1,
+      state.cookingStep.push({
+        steps: state.cookingStep.length + 1,
         description: null,
         tip: null,
         step_image: null },)
     },
     deleteCookingStep(state, id) {
-      state.cookingSteps.splice(id, 1);
-      for (var i = id; i < state.cookingSteps.length; i++) {
-				state.cookingSteps[i].steps -= 1;
+      state.cookingStep.splice(id, 1);
+      for (var i = id; i < state.cookingStep.length; i++) {
+				state.cookingStep[i].steps -= 1;
 			}
     },
   }, 
   actions: {
-    getRecipeInfo({commit}, data) {
-      commit('SET_RECIPEINFO', data);
+    getRecipe({commit}, data) {
+      commit('SET_RECIPE', data);
     },
     getMainIngr({commit}, data) {
       commit('SET_MAININGR', data);
@@ -671,39 +685,38 @@ const moduleEditor = {
     getCookingSteps({commit}, data) {
       commit('SET_COOKINGSTEPS', data);
     },
-    onSubmitButton({state, commit}) {//, rootState) {
-      commit('SET_RECIPEDATA')
-      const recipe = new FormData(), ingredients = new FormData(), cookingSteps = new FormData();
+    onSubmitButton({state, rootState}) {
+      const recipeData = new FormData();
       for (let [key, value] of Object.entries(state.recipe)) {
-        recipe.append(key, value);
+        if (key == "main_image_file" && value == null) continue;
+        console.log(`recipe.${key}: ${value}`)
+        recipeData.append(key, value);
       }
-      for (let [key, value] of Object.entries([...state.mainIngr, ...state.subIngr])) {
-        ingredients.append(key, value);
+      
+      const ingredients = [...state.mainIngr, ...state.subIngr];
+      for (let i = 0; i < ingredients.length; i++) {
+        if (ingredients[i].name == null && ingredients[i].quantity == null) continue;
+        for (let [key, value] of Object.entries(ingredients[i])) {
+          console.log(`ingredients[${i}].${key}: ${value}`)
+          recipeData.append(`ingredients[${i}].${key}`, value)
+        }
       }
-      for (let [key, value] of Object.entries(state.cookingSteps)) {
-        cookingSteps.append(key, value);
+
+      for (let i = 0; i < state.cookingStep.length; i++) {
+        if (state.cookingStep[i].description == null && state.cookingStep[i].tip == null
+          && state.cookingStep[i].step_image_file == null) continue;
+        for (let [key, value] of Object.entries(state.cookingStep[i])) {
+          if (key == "step_image_file" && value == null) continue;
+          console.log(`cookingStep[${i}].${key}: ${value}`)
+          recipeData.append(`cookingStep[${i}].${key}`, value)
+        }
       }
-      const recipeData = {
-        recipe: recipe,
-        ingredients: ingredients,
-        cookingSteps: cookingSteps
-      }
-      // const headerconfig = { headers: {
-      //   'Authorization': `token ${rootState['accounts/authToken']}`,
-      //   'Content-Type': 'multipart/form-data'
-      // }}
-      for (let [key, value] of recipe.entries()) {
-        console.log(`${key}: ${value}`)
-      }
-      for (let [key, value] of ingredients.entries()) {
-        console.log(key)
-        console.log(value)
-      }
-      for (let [key, value] of cookingSteps.entries()) {
-        console.log(key)
-        console.log(value)
-      }
-      axios.post('/recipe/save2', recipeData)
+
+      const headerConfig = { headers: {
+        'Authorization': `token ${rootState['accounts/authToken']}`,
+        'Content-Type': 'multipart/form-data'
+      }}
+      axios.post('/recipe/save', recipeData, headerConfig)
       .then((res) => {
         console.log(res)
         // 레시피 화면으로 redirect 필요
