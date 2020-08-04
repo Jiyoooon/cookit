@@ -19,6 +19,7 @@ import com.ssafy.cooking.controller.UserController;
 import com.ssafy.cooking.dao.UserDao;
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
+import com.ssafy.cooking.dto.Filter;
 import com.ssafy.cooking.dto.User;
 import com.ssafy.cooking.util.SHA256;
 
@@ -93,8 +94,27 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<User> getFollowers(String uid) {
-		return userDao.getFollowers(uid);
+	public List<User> getFollowers(String uid, String baseUrl) {
+		List<User> users = userDao.getFollowers(uid);
+		for(User user : users) {
+			String imageName = user.getProfile_image();
+			if(imageName != null && !imageName.equals("")) {
+				user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
+			}
+		}
+		return users;
+	}
+
+	@Override
+	public List<User> getFollowings(String uid, String baseUrl) {
+		List<User> users = userDao.getFollowings(uid);
+		for(User user : users) {
+			String imageName = user.getProfile_image();
+			if(imageName != null && !imageName.equals("")) {
+				user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
+			}
+		}
+		return users;
 	}
 
 	@Override
@@ -239,6 +259,37 @@ public class UserServiceImpl implements UserService{
     	return userDao.signup(user) > 0 ? nextId : -1;
 		
 	}
+
+	@Override
+	public List<Filter> getFilterings(String uid) {
+		return userDao.getFilterings(uid);
+	}
+
+	@Override
+	public int removeFiltering(String filterId) {
+		return userDao.deleteFiltering(filterId);
+	}
+
+	@Override
+	public int addFiltering(Filter filter) {
+		return userDao.insertFiltering(filter);
+	}
+
+	@Override
+	public int plusBlogHits(String uid) {
+		return userDao.plusBlogHits(uid);
+	}
+
+	@Override
+	public int follow(String from_user, String to_user) {
+		return userDao.follow(from_user, to_user);
+	}
+
+	@Override
+	public int unfollow(String from_user, String to_user) {
+		return userDao.unfollow(from_user, to_user);
+	}
+
 
 	
 
