@@ -4,12 +4,13 @@ export default {
         accounts: {
             signup: '/user/join',
             login: '/user/login',
-            logout: '/user/logout',
-            baseuser: '/user',
+            logout: '/user/token/logout',
+            baseuser: '/user/token',
+            fetchuserinfo: '/user/',
             getcomments: '/user/comments/',
             checkemail: '/user/dup/email/',
             checknickname: '/user/dup/nickname/',
-            checkpassword: '/user/password',
+            checkpassword: '/user/token/password',
             getfollowers: '/user/followers/',
             checkkey: '/user/verification/check',
             requestkey: '/user/verification/send/',
@@ -27,6 +28,9 @@ export default {
         lookaroundrecipe:{
             getfilteredrecipes: '/recipe/recipes2',
             getingredients: '/recipe/ingredients',
+        },
+        recipeview: {
+            fetchrecipe: '/recipe/'
         },
     }
 }

@@ -6,7 +6,7 @@
       {{ authUser }}
       <hr>
       <!-- {{ myrecipes }} -->
-      <b-img id="image" v-bind="mainProps" src="http://i3a201.p.ssafy.io:8080/images/profile/profile_image_14.png" rounded="circle" alt="Circle image"></b-img>
+      <b-img id="image" v-bind="mainProps" :src="authUser.image_url" rounded="circle" alt="Circle image"></b-img>
   </div>
 </template>
 

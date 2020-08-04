@@ -158,7 +158,7 @@ const moduleAccounts = {
       axios.post(SERVER.ROUTES.accounts.login, loginData)
         .then((res) => {
           if (res.data.result == 'success') {
-            commit('SET_TOKEN', res.data.token)
+            commit('SET_TOKEN', res.headers.token)
             dispatch('fetchUser')
             dispatch('myblog/fetchMyRecipes', null, { root: true })
             dispatch('GoHome')
@@ -212,6 +212,7 @@ const moduleAccounts = {
       axios.get(SERVER.ROUTES.accounts.requestkey + String(email))
       .then(res => {
         console.log(`Code send: ${String(res.data.result)}`)
+        console.log(res.data)
         if(res.data.result == 'success') {
           commit('SET_EMAIL', email)
           this._vm.$root.$bvModal.msgBoxOk('인증 코드가 발송되었습니다.', {
@@ -464,7 +465,7 @@ const moduleAccounts = {
         axios.post(SERVER.ROUTES.accounts.signup, formData, { headers: { 'Content-Type': 'multipart/form-data' }})
           .then((res) => {
             if (res.data.result == 'success') {
-              commit('SET_TOKEN', res.data.token)
+              commit('SET_TOKEN', res.headers.token)
               dispatch('fetchUser')
               dispatch('myblog/fetchMyRecipes', null, { root: true })
               this._vm.$root.$bvModal.msgBoxOk('가입되었습니다.', {
@@ -505,7 +506,8 @@ const moduleAccounts = {
 const moduleRecipes = {
   namespaced: true,
   state: {
-
+    selectedRecipe: null,
+    recipeUser: null,
   },
 
   getters: {
@@ -513,11 +515,30 @@ const moduleRecipes = {
   },
 
   mutations: {
-
+    SET_RECIPE(state, recipe) {
+      state.selectedRecipe = recipe
+    },
+    SET_USER(state, userinfo) {
+      state.recipeUser = userinfo
+    },
   },
 
   actions: {
-
+    fetchRecipe({ commit, state }, recipe_id) {
+      axios.get(SERVER.ROUTES.recipeview.fetchrecipe + String(recipe_id))
+        .then(res => {
+          console.log(res.data)
+          commit('SET_RECIPE', res.data)
+          console.log(state.selectedRecipe)
+          router.push({ name: 'SelectedRecipe'})
+        })
+    },
+    fetchRecipeUser({ commit, state }) {
+      axios.get(SERVER.ROUTES.accounts.fetchuserinfo + String(state.selectedRecipe.recipe_user))
+        .then(res => {
+          commit('SET_USER', res.data.data)
+        })
+    }
   },
 }
 
@@ -548,7 +569,7 @@ const moduleMyBlog = {
       const filter = {
         params: recipequery
       }
-      axios.get('http://i3a201.p.ssafy.io:8080/cooking-0.0.2-SNAPSHOT/recipe/recipes', filter)
+      axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes, filter)
         .then((res) => {
           console.log(res)
           commit('SET_RECIPES', res.data)
@@ -559,6 +580,8 @@ const moduleMyBlog = {
         })
     },
     selectedRecipe({ commit }, recipe_id) {
+      console.log('3333333')
+      console.log(recipe_id)
       axios.get(SERVER.ROUTES.myrecipe.selectedrecipe + String(recipe_id))
         .then((res) => {
           console.log(res.data)
