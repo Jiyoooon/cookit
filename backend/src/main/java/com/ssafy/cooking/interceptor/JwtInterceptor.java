@@ -6,7 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.ssafy.cooking.service.JwtService;
@@ -17,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtInterceptor extends HandlerInterceptorAdapter {
 	Logger logger = LoggerFactory.getLogger("io.ojw.mall.interceptor.JwtInterceptor");
-	private static final String TOKEN = "Authorization";
+	private static final String TOKEN = HttpHeaders.AUTHORIZATION;
 	
 	@Autowired
 	private JwtService jwtService;
@@ -25,8 +27,18 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+	    response.setHeader("Access-Control-Allow-Methods","*");
+	    response.setHeader("Access-Control-Max-Age", "3600");
+	    response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+	    response.setHeader("Access-Control-Allow-Credentials", "true");
 		//option 요청은 바로 통과
-		if(request.getMethod().equals("OPTION")) {
+//	    System.out.println(request.getMethod()+", "+request.getMethod().equals("OPTIONS"));
+//	    System.out.println(request.getParameter("password"));
+//	    System.out.println(request.getHeader(HttpHeaders.CONTENT_TYPE));
+//	    System.out.println("들어온 ㅋ토큰 : "+request.getHeader(HttpHeaders.AUTHORIZATION));
+	    
+		if(request.getMethod().equals("OPTIONS")) {
 			return true;
 		}else {
 			String token = request.getHeader(TOKEN);
