@@ -61,19 +61,28 @@ public class UserServiceImpl implements UserService{
 		String imageName = user.getImage_name();
 		User oriUser = userDao.getUser(Integer.toString(user.getUser_id()));
 		
+		if(profile == null) System.out.println("프로필 null!!");
+		if(imageName != null) {
+			System.out.println("이미지 이름 : "+imageName+", "+imageName.equals("null")+", "+imageName.length()+", "+imageName.trim().equals(""));
+		}
+		
+		
 		try {
 			//profile != null => 프로필 수정
 			if(profile != null) {
+				System.out.println("프로필 수정!");
 				writeProfile(profile, user.getUser_id(), user);
 			}
 			//user.getImage_name() == null => 프로필 내림
-			else if(imageName == null || imageName == "") {
+			else if(imageName == null || imageName.trim().equals("")) {
+				System.out.println("프로필 내림!");
 				removeProfile(Integer.toString(user.getUser_id()));
 				user.setProfile_image("");
 				user.setImage_name("");
 			}
 			//수정 X
 			else{
+				System.out.println("프로필 수정하지 X");
 				user.setProfile_image(oriUser.getProfile_image());
 				user.setImage_name(oriUser.getImage_name());
 			}

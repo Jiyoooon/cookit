@@ -22,10 +22,11 @@ export default {
         myrecipe: {
             myrecipes: '/recipe/all/',
             selectedrecipe: '/recipe/',
-            fetchrecipesbytitle: 'recipe/title'
+            fetchrecipesbytitle: '/recipe/title',
+            recipesave: '/recipe/save'
         },
         lookaroundrecipe:{
-            getfilteredrecipes: '/recipe/recipes',
+            getfilteredrecipes: '/recipe/recipes2',
             getingredients: '/recipe/ingredients',
         },
         recipeview: {
