@@ -1,7 +1,6 @@
 <template>
     <div>
         <b-container >
-                    <h1 align="center" style="font-size:3rem"> 검색창입니다</h1>
             <v-row align="center" justify="center" align-self="center">
                 <v-col md ="2" lg="3">
                 </v-col>
@@ -23,7 +22,7 @@
             </v-col>
             
             <v-col xs="4" sm="5" md="5" lg="4" align-self="center" align="center">
-                <label style="font-size:1rem">넣고싶은재료</label>
+                <label style="font-size:2rem"><strong>넣고싶은재료</strong></label>
                 <div
                     class="mx-auto"
                     max-width="auto"
@@ -37,6 +36,7 @@
                         flat
                         append-icon=''
                         @keydown.enter="selectSource(selecteditems[0])"
+                        outlined
                     >
                     </v-autocomplete>
                     <v-list v-if="searchtextS !='' && this.selecteditems.length && searchtextS != null" style="position:absolute; z-index:10; width: 93.7%;overflow-y:scroll; height:auto; max-height:300px">
@@ -58,7 +58,7 @@
             </v-col>
 
             <v-col xs="4" sm="5" md="5" lg="4" align-self="center" align="center" >
-                    <label style="font-size:1rem">빼고싶은재료</label>
+                    <label style="font-size:2rem"><strong>빼고싶은재료</strong></label>
             <div
                     class="mx-auto"
                     max-width="auto"
@@ -73,6 +73,7 @@
                         flat
                         append-icon=''
                         @keydown.enter="excludedSource(excludeditems[0])"
+                        outlined
                     >
                     </v-autocomplete>
                     <v-list v-if="searchtextE !='' && this.excludeditems.length && searchtextE != null" style="position:absolute; z-index:10; width: 93.7%;overflow-y:scroll; height:auto; max-height:300px">
