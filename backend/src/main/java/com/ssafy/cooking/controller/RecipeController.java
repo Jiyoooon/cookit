@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.cooking.dto.Comment;
-import com.ssafy.cooking.dto.Food_Ingredient;
+import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.FoodIngredient;
 import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
 import com.ssafy.cooking.service.JwtService;
@@ -57,11 +58,32 @@ public class RecipeController {
 		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes(p, id, user, query, category, filter),
 				HttpStatus.OK);
 	}
-
+	
+	@ApiOperation(value = "해당 레시피 목록 가져오기2", notes = "레시피 목록을 가져온다.(각 항목은 필요시만 입력)\n" + "p  : 시작 번호\n" + "id : 레시피 아이디\n"
+			+ "user : 유저 아이디\n" + "query : 검색어(요리명)\n" + "category : 해당 카테고리 id\n"
+			+ "filter : 검색 시 추가한 재료 필터링 정보(대분류, 중분류, 소분류 각각 0개 이상씩 설정 가능하며 띄어쓰기로 구분한 String 형태로 입력)")
+	@GetMapping("/recipes2")
+	public ResponseEntity<List<Recipe>> getUserRecipes2(@RequestParam(value = "p", required = false) Integer p,
+			@RequestParam(value = "id", required = false) Integer id,
+			@RequestParam(value = "user", required = false) String user,
+			@RequestParam(value = "query", required = false) String query,
+			@RequestParam(value = "category", required = false) Integer category,
+			@ModelAttribute(value = "filter") Filter filter) throws Exception {
+		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes2(p, id, user, query, category, filter),
+				HttpStatus.OK);
+	}
+	
 	@ApiOperation(value = "모든 재료 목록 가져오기", notes = "재료 목록을 불러온다")
 	@GetMapping("/ingredients")
-	public ResponseEntity<List<Food_Ingredient>> getIngreidents() throws Exception {
-		return new ResponseEntity<List<Food_Ingredient>>(recipeservice.getAllIngredients(), HttpStatus.OK);
+	public ResponseEntity<List<FoodIngredient>> getIngreidents() throws Exception {
+		 
+		return new ResponseEntity<List<FoodIngredient>>(recipeservice.getAllIngredients(), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "모든 소분류 재료 배열 가져오기")
+	@GetMapping("/ingredients/small")
+	public ResponseEntity<String[]> getSmallIngredients() throws Exception{
+		return new ResponseEntity<String[]>(recipeservice.getSmallIngredients(), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "레시피 생성하기", notes = "레시피 추가한다.")
