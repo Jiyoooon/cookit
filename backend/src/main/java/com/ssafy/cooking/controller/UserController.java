@@ -1,6 +1,7 @@
 package com.ssafy.cooking.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.Login;
 import com.ssafy.cooking.dto.TempKey;
@@ -482,11 +484,11 @@ public class UserController {
 //   		return new ResponseEntity<List<User>>(userService.getFollowers(uid), HttpStatus.OK);
 //   	}
 //    
-//    @ApiOperation(value = "내가 쓴 댓글 가져오기")//token
-//   	@GetMapping("/comments/{id}")
-//   	public ResponseEntity<List<Comment>> getCommnets(@PathVariable("id") String uid) throws Exception {
-//   		return new ResponseEntity<List<Comment>>(userService.getCommnets(uid), HttpStatus.OK);
-//   	}
+    @ApiOperation(value = "user id로 댓글 가져오기")
+   	@GetMapping("/comments/{id}")
+   	public ResponseEntity<List<Comment>> getCommnets(@PathVariable("id") String uid) throws Exception {
+   		return new ResponseEntity<List<Comment>>(userService.getCommnets(uid), HttpStatus.OK);
+   	}
     
     
     //내 필터링 정보 가져오기, 추가하기, 삭제하기

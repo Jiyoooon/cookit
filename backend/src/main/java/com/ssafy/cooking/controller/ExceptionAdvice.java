@@ -23,14 +23,15 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler{
 		return map;
 	}
 	
-//	@ExceptionHandler(Exception.class)
-//	protected ResponseEntity<HashMap<String, Object>> defaultException(Exception e, String msg){
-//		e.printStackTrace();
-//		HashMap<String, Object> map = new HashMap<String, Object>();
-//		
-//		map.put("result", "fail");
-//		map.put("cause", msg);
-//		
-//		return new ResponseEntity<HashMap<String,Object>>(map, HttpStatus.NOT_ACCEPTABLE);
-//	}
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(Exception.class)
+	protected HashMap<String, Object> defaultException(Exception e){
+		e.printStackTrace();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("result", "fail");
+//		map.put("cause", e.getMessage());
+		
+		return map;
+	}
 }
