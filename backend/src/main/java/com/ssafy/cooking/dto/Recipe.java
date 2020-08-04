@@ -1,10 +1,8 @@
 package com.ssafy.cooking.dto;
 
-import java.io.Serializable;
-
 import org.springframework.web.multipart.MultipartFile;
 
-public class Recipe  implements Serializable{
+public class Recipe {
 	private Integer recipe_id; //레시피id
 	private Integer recipe_user;//작성자id
 	private String recipe_user_name;//작성자 이름
@@ -117,5 +115,4 @@ public class Recipe  implements Serializable{
 	public void setMain_image_file(MultipartFile main_image_file) {
 		this.main_image_file = main_image_file;
 	}
-	
 }

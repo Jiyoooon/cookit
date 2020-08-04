@@ -1,20 +1,10 @@
 package com.ssafy.cooking.dto;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class RecipeDetail implements Serializable {
-	private Recipe recipe;
+public class RecipeDetail extends Recipe {
 	private List<Ingredient> ingredients;
-	private List<CookingStep> cookingSteps;
-
-	public Recipe getRecipe() {
-		return recipe;
-	}
-
-	public void setRecipe(Recipe recipe) {
-		this.recipe = recipe;
-	}
+	private List<CookingStep> cookingStep;
 
 	public List<Ingredient> getIngredients() {
 		return ingredients;
@@ -24,11 +14,11 @@ public class RecipeDetail implements Serializable {
 		this.ingredients = ingredients;
 	}
 
-	public List<CookingStep> getCookingSteps() {
-		return cookingSteps;
+	public List<CookingStep> getCookingStep() {
+		return cookingStep;
 	}
 
-	public void setCookingSteps(List<CookingStep> cookingSteps) {
-		this.cookingSteps = cookingSteps;
+	public void setCookingStep(List<CookingStep> cookingStep) {
+		this.cookingStep = cookingStep;
 	}
 }

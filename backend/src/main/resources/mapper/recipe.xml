@@ -129,4 +129,10 @@
 	<select id="getAllIngredients" resultType="Food_Ingredient">
 		SELECT * FROM cooking.Food_ingredient_small
 	</select>
+	
+	<update id="updateTime">
+		UPDATE Cooking_steps
+		SET Time = #{time}
+		WHERE cooking_steps_id = #{cooking_steps_id}
+	</update>
 </mapper>
