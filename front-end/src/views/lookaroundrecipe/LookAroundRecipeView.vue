@@ -26,14 +26,13 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollmonitor/1.2.0/scrollMonitor.js"></script>
 <script>
-import InfiniteLoading from 'vue-infinite-loading';
+import InfiniteLoading from 'vue-infinite-loading'
 import RecipeSearchBar from "@/components/lookaroundrecipe/RecipeSearchBar.vue"
 import RecipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
 import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
     data(){
         return{
-            list: ['감자','고구마','딸기'],
             busy: false
         }
     },

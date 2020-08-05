@@ -34,9 +34,9 @@
                         color="white"
                         item-text="small"
                         flat
+                        outlined
                         append-icon=''
                         @keydown.enter="selectSource(selecteditems[0])"
-                        outlined
                     >
                     </v-autocomplete>
                     <v-list v-if="searchtextS !='' && this.selecteditems.length && searchtextS != null" style="position:absolute; z-index:10; width: 93.7%;overflow-y:scroll; height:auto; max-height:300px">
@@ -71,9 +71,9 @@
                         color="white"
                         item-text="small"
                         flat
+                        outlined
                         append-icon=''
                         @keydown.enter="excludedSource(excludeditems[0])"
-                        outlined
                     >
                     </v-autocomplete>
                     <v-list v-if="searchtextE !='' && this.excludeditems.length && searchtextE != null" style="position:absolute; z-index:10; width: 93.7%;overflow-y:scroll; height:auto; max-height:300px">
