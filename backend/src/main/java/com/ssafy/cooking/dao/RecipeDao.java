@@ -9,6 +9,7 @@ import com.ssafy.cooking.dto.CookingStep;
 import com.ssafy.cooking.dto.FoodIngredient;
 import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
+import com.ssafy.cooking.dto.RecipeDetail;
 
 @Mapper
 public interface RecipeDao {
@@ -36,4 +37,7 @@ public interface RecipeDao {
 							, List<String> like_large, List<String> like_medium, List<String> like_small);
 	String[] getSmallIngredientsArray();
 	void updateTime(Integer cooking_steps_id, String time);
+	int reviseRecipe(RecipeDetail recipeData);
+	void reviseCookingsteps(int recipe_id, List<CookingStep> cookingStep);
+	void reviseIngredients(int recipe_id, List<Ingredient> ingredients);
 }

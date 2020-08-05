@@ -41,6 +41,46 @@
 					
 	</insert>
 
+	<update id="reviseRecipe">
+		UPDATE Recipe
+		SET category_id = #{category_id}
+			, title = #{category_id}
+			, description = #{description}
+			, servings = #{servings}
+			, cooking_time = #{cooking_time}
+			, level = #{level}
+			, tag = #{tag}
+			, update_date = now()
+		WHERE recipe_id = #{recipe_id}
+	</update>
+	
+	<update id="reviseIngredients">
+		<foreach collection="ingredients" item="ingre">
+		UPDATE Ingredients
+		SET category_id = #{category_id}
+		, food_ingredient_small_id = #{ingre.food_ingredient_small_id}
+		, is_essential = #{ingre.is_essential}
+		, quantity = #{ingre.quantity}
+		, update_date = now()
+		WHERE recipe_ingredient_id = #{ingre.recipe_ingredient_id}
+		</foreach>
+	</update>
+
+	<update id="reviseCookingsteps">
+		<foreach collection="cookingSteps" item="step" separator=",">
+		UPDATE Cooking_steps
+		SET steps = #{step.steps}
+		, description = #{step.description}
+		, tip = #{step.tip}
+		, step_image = #{step.step_image}
+		, time = #{step.time}
+		, update_date = now()
+		WHERE cooking_steps_id = #{step.cooking_steps_id}
+		</foreach>
+	</update>
+
+
+	
 	<select id="getRecipes" resultType="Recipe">
 		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name,
 		category_id, title, description, main_image, servings, cooking_time, level,
@@ -143,6 +183,93 @@
 	</select>
 	
 	<select id="getRecipes2" resultType="Recipe">
+		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name,
+				category_id, title, description, main_image, servings, cooking_time, level,
+				tag, r.hits, r.create_date, r.update_date, r.delete_date, k.cnt
+		FROM Recipe r join (
+			SELECT a.recipe_id, count(a.recipe_id) as cnt
+			FROM 
+				(
+				<choose>
+					<when test="like_small != null or like_medium != null or like_large != null">
+						<if test="like_small != null">
+							<foreach collection="like_small" item="likes" separator=" UNION ALL ">
+							SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id = (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE small = #{likes})
+							</foreach>
+						</if>
+						<if test="like_small != null and like_medium != null">
+							UNION ALL
+						</if>
+						<if test="like_medium != null">
+							<foreach collection="like_medium" item="likem" separator=" UNION ALL ">
+	                    	SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id IN (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE food_ingredient_medium_id = (SELECT food_ingredient_medium_id FROM Food_ingredient_medium WHERE medium = #{likem}))
+	                    	</foreach>
+	                    </if>
+						<if test="like_large != null and (like_small != null or like_medium != null)">
+							UNION ALL
+						</if>
+						<if test="like_large != null">
+							<foreach collection="like_large" item="likel" separator=" UNION ALL ">
+	                  		SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id IN (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE food_ingredient_medium_id IN (SELECT food_ingredient_medium_id FROM Food_ingredient_medium WHERE food_ingredient_large_id = (SELECT food_ingredient_large_id FROM Food_ingredient_large WHERE large = #{likel})))
+	                  		</foreach>
+	                    </if>
+	                </when>
+	                <otherwise>
+	                	SELECT DISTINCT recipe_id FROM Ingredient
+	                </otherwise>
+                </choose>
+				) as a
+				<if test="hate_small != null or hate_medium != null or hate_large != null">
+					LEFT JOIN
+					(
+						<if test="hate_small != null">
+							<foreach collection="hate_small" item="hates" separator=" UNION ALL ">
+							SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id = (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE small = #{hates})
+							</foreach>
+						</if>
+						<if test="hate_small != null and hate_medium != null">
+							UNION ALL
+						</if>
+						<if test="hate_medium != null">
+							<foreach collection="hate_medium" item="hatem" separator=" UNION ALL ">
+	                    	SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id IN (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE food_ingredient_medium_id = (SELECT food_ingredient_medium_id FROM Food_ingredient_medium WHERE medium = #{hatem}))
+	                    	</foreach>
+	                    </if>
+						<if test="hate_large != null and (hate_small != null or hate_medium != null)">
+							UNION ALL
+						</if>
+						<if test="hate_large != null">
+							<foreach collection="hate_large" item="hatel" separator=" UNION ALL ">
+	                  		SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id IN (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE food_ingredient_medium_id IN (SELECT food_ingredient_medium_id FROM Food_ingredient_medium WHERE food_ingredient_large_id = (SELECT food_ingredient_large_id FROM Food_ingredient_large WHERE large = #{hatel})))
+	                  		</foreach>
+	                    </if>
+					) as b USING (recipe_id)
+					WHERE b.recipe_id IS NULL
+				</if>
+			GROUP BY a.recipe_id
+			ORDER BY count(a.recipe_id) desc
+		) as k
+		USING (recipe_id)
+		JOIN User u on r.recipe_user = u.user_id
+		WHERE 1 = 1
+		<if test="query != null and query != ''">
+			AND title LIKE CONCAT('%', #{query}, '%')
+		</if>
+		<if test="id != null and id != '' and id != 0">
+			AND recipe_id = #{id}
+		</if>
+		<if test="user != null and user != ''">
+			AND u.nickname = #{user}
+		</if>
+		<if test="category != null and category != ''">
+			AND category_id = #{category}
+		</if>
+		ORDER BY k.cnt desc, create_date desc
+		Limit #{start}, #{end}
+	</select>
+	
+	
+	<select id="getRecipes3" resultType="Recipe">
 		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name,
 		category_id, title, description, main_image, servings, cooking_time, level,
 		tag, r.hits as hits, r.create_date as create_date, r.update_date as
