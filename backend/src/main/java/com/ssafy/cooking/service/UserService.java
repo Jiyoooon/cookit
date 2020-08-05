@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
+import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.SNS;
 import com.ssafy.cooking.dto.User;
 
 public interface UserService {
@@ -20,7 +22,8 @@ public interface UserService {
 	public User signin(String email, String password);
 	public int delete(String uid) throws IOException;
 	public int reviseUser(MultipartFile profile, User user) throws IOException;
-	public List<User> getFollowers(String uid);
+	public List<User> getFollowers(String uid, String baseUrl);
+	public List<User> getFollowings(String uid, String baseUrl);
 	public List<Comment> getCommnets(String uid);
 	public boolean checkPassword(String uid, String password);
 	public void sendTmpPasswordEmail(String password, String email) throws Exception;
@@ -30,4 +33,16 @@ public interface UserService {
 	public void removeConfirmCode(String email);
 	public int signup(MultipartFile profile, User user) throws IOException;
 	public User getUser(String uid);
+	public List<Filter> getFilterings(String uid);
+	public int removeFiltering(String filterId);
+	public int addFiltering(Filter filter);
+	public int plusBlogHits(String uid);
+	
+	public int follow(String from_user, String to_user);
+	public int unfollow(String from_user, String to_user);
+	
+	public List<SNS> getLinkedSNS(String uid);
+	public int addLinkedSNS(String uid, String name, String url);
+	public int reviseLinkedSNS(String uid, String name, String url);
+	public int removeLinkedSNS(String uid, String name);
 }

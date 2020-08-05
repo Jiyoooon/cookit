@@ -2,6 +2,7 @@ package com.ssafy.cooking.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
@@ -19,6 +20,8 @@ import com.ssafy.cooking.controller.UserController;
 import com.ssafy.cooking.dao.UserDao;
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
+import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.SNS;
 import com.ssafy.cooking.dto.User;
 import com.ssafy.cooking.util.SHA256;
 
@@ -93,8 +96,27 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<User> getFollowers(String uid) {
-		return userDao.getFollowers(uid);
+	public List<User> getFollowers(String uid, String baseUrl) {
+		List<User> users = userDao.getFollowers(uid);
+		for(User user : users) {
+			String imageName = user.getProfile_image();
+			if(imageName != null && !imageName.equals("")) {
+				user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
+			}
+		}
+		return users;
+	}
+
+	@Override
+	public List<User> getFollowings(String uid, String baseUrl) {
+		List<User> users = userDao.getFollowings(uid);
+		for(User user : users) {
+			String imageName = user.getProfile_image();
+			if(imageName != null && !imageName.equals("")) {
+				user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
+			}
+		}
+		return users;
 	}
 
 	@Override
@@ -173,7 +195,7 @@ public class UserServiceImpl implements UserService{
 		User user = userDao.getUser(uid);
 		String fileName = user.getProfile_image();
 		
-		if(fileName == null || fileName.equals("")) {//프로필 이미지 원래 없었음
+		if(fileName == null || fileName.equals("") || fileName.equals("default_image.png")) {//프로필 이미지 원래 없거나 기본이미지
 			return true;
 		}
 		
@@ -239,6 +261,61 @@ public class UserServiceImpl implements UserService{
     	return userDao.signup(user) > 0 ? nextId : -1;
 		
 	}
+
+	@Override
+	public List<Filter> getFilterings(String uid) {
+		return userDao.getFilterings(uid);
+	}
+
+	@Override
+	public int removeFiltering(String filterId) {
+		return userDao.deleteFiltering(filterId);
+	}
+
+	@Override
+	public int addFiltering(Filter filter) {
+		return userDao.insertFiltering(filter);
+	}
+
+	@Override
+	public int plusBlogHits(String uid) {
+		return userDao.plusBlogHits(uid);
+	}
+
+	@Override
+	public int follow(String from_user, String to_user) {
+		return userDao.follow(from_user, to_user);
+	}
+
+	@Override
+	public int unfollow(String from_user, String to_user) {
+		return userDao.unfollow(from_user, to_user);
+	}
+
+	
+	
+	
+	
+	@Override
+	public List<SNS> getLinkedSNS(String uid) {
+		return userDao.getLinkedSNS(uid);
+	}
+
+	@Override
+	public int addLinkedSNS(String uid, String name, String url) {
+		return userDao.insertLinkedSNS(uid, name, url);
+	}
+
+	@Override
+	public int reviseLinkedSNS(String uid, String name, String url) {
+		return userDao.updateLinkedSNS(uid, name, url);
+	}
+
+	@Override
+	public int removeLinkedSNS(String uid, String name) {
+		return userDao.deleteLinkedSNS(uid, name);
+	}
+
 
 	
 
