@@ -6,6 +6,9 @@ public class RecipeDetail extends Recipe {
 	private List<Ingredient> ingredients;
 	private List<CookingStep> cookingStep;
 	
+	public RecipeDetail() {
+	}
+	
 	public RecipeDetail(Recipe recipe) {
 		setRecipe_id(recipe.getRecipe_id());
 		setTitle(recipe.getTitle());

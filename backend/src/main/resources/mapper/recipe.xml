@@ -82,7 +82,7 @@
 
 	
 	<select id="getRecipes" resultType="Recipe">
-		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name,
+		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
 		category_id, title, description, main_image, servings, cooking_time, level,
 		tag, r.hits as hits, r.create_date as create_date, r.update_date as
 		update_date, r.delete_date as delete_date
@@ -122,7 +122,7 @@
 	
 	<select id="getCookingSteps" resultType="CookingStep">
 		SELECT cooking_steps_id, recipe_id, 
-		steps, description, tip, step_image
+		steps, description, tip, step_image,
 		create_date, update_date, time
 		FROM Cooking_steps
 		WHERE recipe_id = #{recipe_id}

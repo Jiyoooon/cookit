@@ -28,14 +28,18 @@ public class RecipeServiceImpl implements RecipeService {
 	private RecipeDao recipeDao;
 
 	@Override
-	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, String filter) {
+	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, String filter, String baseUrl) {
 		int start = 0;
 		int end = Integer.MAX_VALUE;
 		if (p != null) {
 			start = p;
 			end = 20;
 		}
-		return recipeDao.getRecipes(start, end, id, user, query, category, filter);
+		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, query, category, filter);
+		for (Recipe r : recipes) {
+			r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
+		}
+		return recipes;
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
 
 public interface RecipeService {
-	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, String filter);
+	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, String filter, String baseUrl);
 
 	public List<Ingredient> getIngredients(int recipe_id);
 	public List<CookingStep> getCookingSteps(int recipe_id);
