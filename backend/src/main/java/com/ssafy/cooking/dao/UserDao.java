@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.SNS;
 import com.ssafy.cooking.dto.User;
 
 @Mapper
@@ -36,4 +37,9 @@ public interface UserDao {
 	
 	public int follow(String from, String to);
 	public int unfollow(String from, String to);
+	
+	public List<SNS> getLinkedSNS(String uid);
+	public int insertLinkedSNS(String uid, String name, String url);
+	public int updateLinkedSNS(String uid, String name, String url);
+	public int deleteLinkedSNS(String uid, String name);
 }
