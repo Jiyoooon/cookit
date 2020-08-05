@@ -24,7 +24,8 @@ export default {
           perPage: 6,
           paginated_items: {},
           currentPageIndex:0,
-          nbPages:0
+          nbPages:0,
+          recipes: null,
         }
     },
     components: {
@@ -45,7 +46,7 @@ export default {
         }
     },
     methods: {
-       ...mapActions('myblog', ['selectedRecipe']),
+       ...mapActions('myblog', ['selectedRecipe', 'fetchMyRecipes']),
        ...mapActions('recipes', ['fetchRecipe']),
       changePaginateditems(index, value) {
         this.paginated_items[index] = value
@@ -54,10 +55,9 @@ export default {
         this.nbPages++
       },
     },
-    // created() {
-    //   console.log(11111111)
-    //   this.fetchMyRecipes()
-    // }
+    created() {
+        this.fetchMyRecipes()
+    }
 }
 </script>
 
