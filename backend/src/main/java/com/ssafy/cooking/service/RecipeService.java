@@ -33,4 +33,6 @@ public interface RecipeService {
 	public List<Recipe> getRecipes2(Integer p, Integer id, String user, String query, Integer category, Filter filter);
 
 	public String[] getSmallIngredients();
+
+	public int reviseRecipe(RecipeDetail recipeData);
 }
