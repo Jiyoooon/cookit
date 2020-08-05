@@ -13,7 +13,7 @@
     <v-img
         :src='recipe.main_image'
         height="194"
-        @click.native="readRecipe"
+        @click.native="fetchRecipe(recipe.recipe_id)"
         style="cursor:pointer"
     ></v-img>
     
@@ -53,15 +53,17 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
     name:'RecipeCard',
     props:{
       recipe:Object,
     },
     methods:{
-        readRecipe(){
-            alert("레시피읽는화면으로 들어갑니다.( 레시피아이디 : " +this.recipe.recipe_id +" )" )
-        }
+        // readRecipe(){
+        //     alert("레시피읽는화면으로 들어갑니다.( 레시피아이디 : " +this.recipe.recipe_id +" )" )
+        // }
+        ...mapActions('recipes', ['fetchRecipe'])
     },
 }
 </script>
