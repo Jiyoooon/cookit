@@ -22,7 +22,7 @@
         </b-col>
         <b-col sm="3">
           <b-button v-if="!userEmailValid" disabled variant="primary" block>인증번호 전송</b-button>
-          <b-button v-else variant="primary" @click='emailAuthCodeSend(userEmail)'>인증번호 전송</b-button>
+          <b-button v-else variant="primary" @click='emailAuthCodeSend(userEmail)' block>인증번호 전송</b-button>
         </b-col>
         <b-col sm="1"></b-col>
       </b-row>  
