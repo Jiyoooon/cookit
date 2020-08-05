@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.SNS;
 import com.ssafy.cooking.dto.User;
 
 public interface UserService {
@@ -39,4 +40,9 @@ public interface UserService {
 	
 	public int follow(String from_user, String to_user);
 	public int unfollow(String from_user, String to_user);
+	
+	public List<SNS> getLinkedSNS(String uid);
+	public int addLinkedSNS(String uid, String name, String url);
+	public int reviseLinkedSNS(String uid, String name, String url);
+	public int removeLinkedSNS(String uid, String name);
 }

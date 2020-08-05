@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +35,7 @@ import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.Filter;
 import com.ssafy.cooking.dto.Login;
+import com.ssafy.cooking.dto.SNS;
 import com.ssafy.cooking.dto.TempKey;
 import com.ssafy.cooking.dto.User;
 import com.ssafy.cooking.service.JwtService;
@@ -490,12 +492,28 @@ public class UserController {
    	}
     
     
+    
+    
     @ApiOperation(value = "user id로 댓글 가져오기")
    	@GetMapping("/comments/{id}")
    	public ResponseEntity<List<Comment>> getCommnets(@PathVariable("id") String uid) throws Exception {
    		return new ResponseEntity<List<Comment>>(userService.getCommnets(uid), HttpStatus.OK);
    	}
     
+    //블로그 전체 조회수 + 1
+    @ApiOperation(value = "블로그 조회수 ++", notes = "id번 유저의 전체 블로그 조회수를 1 더한다.")
+    @PutMapping("/hits/{id}")
+    public ResponseEntity<HashMap<String, Object>> plusBlogHits(HttpServletRequest request, @PathVariable("id") String uid) throws Exception {
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	if(userService.plusBlogHits(uid) > 0) {
+    		map.put("result", "success");
+    	}else map.put("result", "fail");
+    	
+    	return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+    }
+    
+    /**필터링 crud*/
     
     //내 필터링 정보 가져오기, 추가하기, 삭제하기
     @ApiOperation(value = "필터링 조회", notes = "내 필터링 정보를 가져온다.")
@@ -537,19 +555,9 @@ public class UserController {
    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
    	}
     
-    //블로그 전체 조회수 + 1
-    @ApiOperation(value = "블로그 조회수 ++", notes = "id번 유저의 전체 블로그 조회수를 1 더한다.")
-    @PutMapping("/hits/{id}")
-    public ResponseEntity<HashMap<String, Object>> plusBlogHits(HttpServletRequest request, @PathVariable("id") String uid) throws Exception {
-    	HashMap<String, Object> map = new HashMap<String, Object>();
-    	
-    	if(userService.plusBlogHits(uid) > 0) {
-    		map.put("result", "success");
-    	}else map.put("result", "fail");
-    	
-   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
-   	}
     
+    
+    /**팔로우 정보 crud*/
     //내 팔로워 가져오기
     @ApiOperation(value = "팔로워 유저들 조회", notes = "id번 유저를 팔로우하는 유저들 정보")
  	@GetMapping("/followers/{id}")
@@ -602,5 +610,74 @@ public class UserController {
     	
    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
    	}
-    //sns연동 정보 저장, 조회, 삭제, 수정
+  
+    
+    /**SNS계정 crud*/
+    
+    //sns계정 조회
+    @ApiOperation(value = "sns계정 조회", notes = "id번 유저가 연동한 sns계정 정보 조회")
+    @GetMapping("/sns/{id}")
+    public ResponseEntity<List<SNS>> getLinkedSNS(@PathVariable("id") String uid) throws Exception {
+    	return new ResponseEntity<List<SNS>>(userService.getLinkedSNS(uid), HttpStatus.OK);
+    }
+    
+    //sns계정 추가
+    @ApiOperation(value = "sns계정 추가", notes = "회원정보에 sns계정 정보를 추가")
+    @PostMapping("/token/sns")
+    public ResponseEntity<HashMap<String, Object>> saveLinkedSNS(HttpServletRequest request
+    														, @RequestParam(value = "sns_name", required = true) String name
+    														, @RequestParam(value = "sns_url", required = true) String url) throws Exception {
+    	String token = request.getHeader("Authorization").split(" ")[1];
+    	Map<String, Object> claims = jwtService.get(token);
+    	
+    	String uid = (String) claims.get("uid");
+    	
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	if(userService.addLinkedSNS(uid, name, url) > 0) {
+    		map.put("result", "success");
+    	}else map.put("result", "fail");
+    	
+   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   	}
+    
+    //sns계정 수정
+    @ApiOperation(value = "sns계정 수정", notes = "회원정보에 sns계정 정보 수정")
+    @PutMapping("/token/sns")
+    public ResponseEntity<HashMap<String, Object>> updateLinkedSNS(HttpServletRequest request
+    														, @RequestParam(value = "sns_name", required = true) String name
+    														, @RequestParam(value = "sns_url", required = true) String url) throws Exception {
+    	String token = request.getHeader("Authorization").split(" ")[1];
+    	Map<String, Object> claims = jwtService.get(token);
+    	
+    	String uid = (String) claims.get("uid");
+    	
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	if(userService.reviseLinkedSNS(uid, name, url) > 0) {
+    		map.put("result", "success");
+    	}else map.put("result", "fail");
+    	
+   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   	}
+    
+    //sns계정 삭제
+    @ApiOperation(value = "sns계정 삭제", notes = "회원정보에 sns계정 정보를 삭제")
+    @DeleteMapping("/token/sns")
+    public ResponseEntity<HashMap<String, Object>> deleteLinkedSNS(HttpServletRequest request
+    														, @RequestParam(value = "sns_name", required = true) String name) throws Exception {
+    	String token = request.getHeader("Authorization").split(" ")[1];
+    	Map<String, Object> claims = jwtService.get(token);
+    	
+    	String uid = (String) claims.get("uid");
+    	
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	
+    	if(userService.removeLinkedSNS(uid, name) > 0) {
+    		map.put("result", "success");
+    	}else map.put("result", "fail");
+    	
+   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+   	}
+    
 }
