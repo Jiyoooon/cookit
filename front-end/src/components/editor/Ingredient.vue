@@ -1,9 +1,11 @@
 <template>
   <div>
     <b-container fluid="sm">
+      <b-form>
       <b-row v-for="(item, index) in ingredients" :key="index" align-v="center">
         <b-col sm="5">
-          <b-form-input type="text" v-model="item.name" required></b-form-input>
+          <b-form-input type="text" list="ingrlist" v-model="item.name" required></b-form-input>
+          <b-form-datalist id="ingrlist" :options="ingrQuery"></b-form-datalist>
         </b-col>
         <b-col sm="5">
           <b-form-input type="text" v-model="item.quantity" required></b-form-input>
@@ -20,20 +22,28 @@
         </b-col>
         <b-col sm="1"></b-col>
       </b-row>
+      </b-form>
     </b-container>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapActions, mapState } from 'vuex'
 export default {
   name: 'Ingredients',
   props: {
     ingredients: Array,
     essential: Number
   },
+  computed: {
+    ...mapState('editor', ['ingrQuery']),
+  },
   methods: {
     ...mapMutations('editor', ['addIngredient', 'deleteIngredient']),
+    ...mapActions('editor', ['loadIngredients'])
+  },
+  created() {
+    this.loadIngredients();
   }
 }
 </script>
