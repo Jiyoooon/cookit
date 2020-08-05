@@ -162,12 +162,46 @@ public class RecipeController {
 		return new ResponseEntity<RecipeDetail>(recipeDetail, HttpStatus.OK);
 	}
 
-//    @ApiOperation(value = "레시피 수정하기", notes = "레시피 id값으로 레시피 상세 정보를 수정한다.(레시피 정보, 재료 정보, 조리 순서 정보)")
-//   	@PutMapping("{id}")
-//   	public ResponseEntity<Recipe> modifyRecipe(@PathVariable("id") int recipe_id) throws Exception {
-//   		return new ResponseEntity<Recipe>(new Recipe(), HttpStatus.OK);
-//   	}
-//    
+	@ApiOperation(value = "레시피 수정하기", notes = "레시피 추가한다.")
+	@PutMapping("token/revise")////token
+	public ResponseEntity<HashMap<String, Object>> reviseRecipe(@ModelAttribute("recipeData") RecipeDetail recipeData,
+			HttpServletRequest request) throws Exception {
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		String result = "success";
+		HttpStatus status = HttpStatus.ACCEPTED;
+
+		String token = request.getHeader("Authorization");
+		Map<String, Object> claims = jwtService.get(token);
+		int uid = (int) claims.get("uid");
+		try {
+			if (recipeData == null) {
+				result = "fail";
+				map.put("cause", "레시피 정보 없음");
+			} else if (recipeData.getTitle() == null) {
+				map.put("cause", "레시피 title 없음");
+				result = "fail";
+			} else {
+				if(uid == recipeData.getRecipe_user()) {
+					recipeservice.reviseRecipe(recipeData);
+				} else {
+					map.put("cause", "유저 아이디 불일치");
+					result = "fail";
+				}
+			}
+
+			result = "success";
+		} catch (Exception e) {
+			result = "fail";
+			map.put("cause", "서버 오류");
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
+	}
+
 	@ApiOperation(value = "레시피 삭제하기", notes = "레시피 id값으로 레시피를 삭제한다.(레시피 정보, 재료 정보, 조리 순서 정보)")
 	@DeleteMapping("token/{id}")////token
 	public ResponseEntity<HashMap<String, Object>> removeRecipe(@PathVariable("id") int recipe_id,
