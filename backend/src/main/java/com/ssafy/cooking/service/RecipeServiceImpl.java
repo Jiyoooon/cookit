@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ public class RecipeServiceImpl implements RecipeService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			recipeDetail.setMain_image("http://i3a201.p.ssafy.io:8080/images/recipe/" + imageName + "jpg");
+			recipeDetail.setMain_image("http://i3a201.p.ssafy.io:8080/images/recipe/" + imageName + ".jpg");
 		} else {
 			recipeDetail.setMain_image("http://i3a201.p.ssafy.io:8080/images/recipe/default.jpg");
 		}
@@ -93,16 +94,15 @@ public class RecipeServiceImpl implements RecipeService {
 						String stepImageName = imageName + Integer.toString(i);
 						writeFile(step.getStep_image_file(), stepImageName);
 						recipeDetail.getCookingStep().get(i)
-								.setStep_image("http://i3a201.p.ssafy.io:8080/images/recipe/" + stepImageName + "jpg");
+								.setStep_image("http://i3a201.p.ssafy.io:8080/images/recipe/" + stepImageName + ".jpg");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 			}
-		}
-
-		if (recipeDetail.getCookingStep() != null)
 			recipeDao.addCookingsteps(recipe_id, recipeDetail.getCookingStep());
+		}
+		
 		if (recipeDetail.getIngredients() != null)
 			recipeDao.addIngredients(recipe_id, recipeDetail.getIngredients());
 
@@ -110,11 +110,66 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	private void writeFile(MultipartFile multipartFile, String saveFileName) throws IOException {
-//		String saveDir = "/var/lib/tomcat8/webapps/images/recipe/";
-		String saveDir = "C:/SSAFY/image/";
+		String saveDir = "/var/lib/tomcat8/webapps/images/recipe/";
 		FileOutputStream fos = new FileOutputStream(saveDir + saveFileName + ".jpg");
 		fos.write(multipartFile.getBytes());
 		fos.close();
+	}
+	
+	@Override
+	public int reviseRecipe(RecipeDetail recipeData) {
+		if (recipeData.getMain_image_file() != null && !recipeData.getMain_image_file().isEmpty()) {
+			try {
+				String saveFileName = recipeData.getMain_image().substring(44, recipeData.getMain_image().length() - 4);
+				writeFile(recipeData.getMain_image_file(), saveFileName);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		recipeDao.reviseRecipe(recipeData);
+		int recipe_id = recipeData.getRecipe_id();
+		if (recipeData.getCookingStep() != null) {
+			List<CookingStep> reviseCookSteps = new LinkedList<>();
+			List<CookingStep> addCookSteps = new LinkedList<>();
+			for (int i = 0; i < recipeData.getCookingStep().size(); i++) {
+				CookingStep step = recipeData.getCookingStep().get(i);
+				if(step.getCooking_steps_id() != null) {
+					reviseCookSteps.add(step);
+				} else {
+					addCookSteps.add(step);
+				}
+				step.setTime(Timer.getTimer(step.getDescription()));
+				if (step.getStep_image_file() != null) {
+					try {
+						String imageName = recipeData.getRecipe_user() + Long.toString(System.currentTimeMillis());
+						String stepImageName = imageName + Integer.toString(i);
+						writeFile(step.getStep_image_file(), stepImageName);
+						recipeData.getCookingStep().get(i)
+								.setStep_image("http://i3a201.p.ssafy.io:8080/images/recipe/" + stepImageName + ".jpg");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			recipeDao.reviseCookingsteps(recipe_id, reviseCookSteps);
+			recipeDao.addCookingsteps(recipe_id, addCookSteps);
+		}
+		
+		if (recipeData.getIngredients() != null) {
+			List<Ingredient> reviseIngres = new LinkedList<>();
+			List<Ingredient> addIngres = new LinkedList<>();
+			for (int i = 0; i < recipeData.getIngredients().size(); i++) {
+				if(recipeData.getIngredients().get(i).getRecipe_ingredient_id() != null) {
+					reviseIngres.add(recipeData.getIngredients().get(i));
+				} else {
+					addIngres.add(recipeData.getIngredients().get(i));
+				}
+			}
+			recipeDao.reviseIngredients(recipe_id, reviseIngres);
+			recipeDao.addIngredients(recipe_id, addIngres);
+		}
+		
+		return recipe_id;
 	}
 
 	@Override
