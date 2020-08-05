@@ -7,6 +7,16 @@
       </b-col>
       </b-row>
       <b-row>
+          <b-col lg-3>
+            <img id="userimg" :src="recipeUser.image_url">        
+            {{ selectedRecipe.recipe_user_name }}
+            
+          </b-col>
+          <b-col lg-9>
+            {{ selectedRecipe.description }}
+          </b-col>
+      </b-row>
+      <b-row>
           <b-col>
             {{ selectedRecipe.servings }}인분
           </b-col>
