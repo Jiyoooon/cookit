@@ -23,9 +23,6 @@ export default {
     props: {
         recipe: Object,
     },
-    created() {
-      console.log(this.recipe)
-    }
 }
 </script>
 

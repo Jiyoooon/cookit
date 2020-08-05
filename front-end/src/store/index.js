@@ -195,7 +195,7 @@ const moduleAccounts = {
         })
         .catch(err => {
           console.log(err.response)
-          alert(err.response)
+          alert(err.response.data.cause)
         })
     },
 
@@ -275,8 +275,6 @@ const moduleAccounts = {
       axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
           commit('SET_USER', res.data.data)
-          console.log(res.data.data)
-          console.log('!!!!')
         })
         .catch((err) => {
           console.err(err.response)
@@ -524,12 +522,10 @@ const moduleRecipes = {
   },
 
   actions: {
-    fetchRecipe({ commit, state }, recipe_id) {
+    fetchRecipe({ commit }, recipe_id) {
       axios.get(SERVER.ROUTES.recipeview.fetchrecipe + String(recipe_id))
         .then(res => {
-          console.log(res.data)
           commit('SET_RECIPE', res.data)
-          console.log(state.selectedRecipe)
           router.push({ name: 'SelectedRecipe'})
         })
     },
@@ -571,26 +567,28 @@ const moduleMyBlog = {
       }
       axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes, filter)
         .then((res) => {
-          console.log(res)
           commit('SET_RECIPES', res.data)
         })
+        // .then(() => {
+        //   router.push({ name: 'Home' })
+        // })
+        // .then(() => {
+        //   router.push({ name: 'MyBlogListView'})
+        // })
         .catch((err) => {
           console.err(err.response)
-          alert('!!!!!')
+          alert(err.response.data.cause)
         })
     },
     selectedRecipe({ commit }, recipe_id) {
-      console.log('3333333')
-      console.log(recipe_id)
       axios.get(SERVER.ROUTES.myrecipe.selectedrecipe + String(recipe_id))
         .then((res) => {
-          console.log(res.data)
           commit('SET_SELECTEDRECIPE', res.data)
           router.push({ name: 'SelectedRecipe'})
         })
         .catch((err) => {
           console.err(err.response)
-          alert('!!!!!')
+          alert(err.response.data.cause)
         })
     },
   },
@@ -854,6 +852,25 @@ const moduleLookAround = {
       commit('setRecipequery',payload)
       dispatch('getFilteredRecipes')
     },
+    setRecipequery2({commit,state},payload){
+      commit('initializing')
+      commit('setRecipequery',payload)
+      // dispatch('myblog/fetchMyRecipes', null, { root: true })
+      const filter = {
+        params:state.recipequery
+      }
+      axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes,filter)
+      .then((res) => {
+        commit('myblog/SET_RECIPES', null, { root: true })
+        commit('myblog/SET_RECIPES', res.data, { root: true })
+      })
+      .then(() => {
+        router.push({ name: 'Home'})
+      })
+      .then(() => {
+        router.push({ name: 'MyBlogListView'})
+      })
+    },
     getFilteredRecipes({commit,state}){
       const filter = {
         params:state.recipequery
@@ -893,9 +910,6 @@ const moduleLookAround = {
 
 
 export default new Vuex.Store({
-  plugins: [createPersistedState(
-    { path: ['accounts','lookaround'] }
-  )],
   state: {
   },
   mutations: {
@@ -908,5 +922,8 @@ export default new Vuex.Store({
     myblog: moduleMyBlog,
     editor: moduleEditor,
     lookaround: moduleLookAround,
-  }
+  },
+  plugins: [createPersistedState(
+    { path: ['lookaround'] }
+  )],
 })
