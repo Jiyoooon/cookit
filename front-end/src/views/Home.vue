@@ -23,7 +23,6 @@ export default {
     computed: {
         ...mapGetters('accounts', ['isLoggedIn']),
         ...mapState('accounts', ['authUser']),
-        // ...mapState('myblog', ['myrecipes'])
     },
     methods: {
     },
