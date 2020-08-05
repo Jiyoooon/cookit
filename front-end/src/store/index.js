@@ -43,8 +43,6 @@ const moduleAccounts = {
 
      SET_EMAIL(state, email) {
        state.userEmail = email
-       console.log(email)
-       console.log(state.userEmail)
        cookies.set('user-email', email)
      },
      SET_USER(state, user) {
@@ -163,7 +161,6 @@ const moduleAccounts = {
             dispatch('myblog/fetchMyRecipes', null, { root: true })
             dispatch('GoHome')
           } else {
-            console.log(res.data)
             this._vm.$root.$bvModal.msgBoxOk('이메일과 비밀번호를 확인하여 주십시오.', {
               title: 'Confirmation',
               size: 'sm',
@@ -200,7 +197,6 @@ const moduleAccounts = {
     },
 
     emailDupCheck(context, email) {
-      console.log("email dup check")
       axios.get(`/user/dup/email/${String(email)}`)
       .then(res => {
         if (res.data.result == 'success') return true
@@ -211,8 +207,6 @@ const moduleAccounts = {
     emailAuthCodeSend({ commit }, email) {
       axios.get(SERVER.ROUTES.accounts.requestkey + String(email))
       .then(res => {
-        console.log(`Code send: ${String(res.data.result)}`)
-        console.log(res.data)
         if(res.data.result == 'success') {
           commit('SET_EMAIL', email)
           this._vm.$root.$bvModal.msgBoxOk('인증 코드가 발송되었습니다.', {
@@ -340,7 +334,6 @@ const moduleAccounts = {
           })
           .catch((err) => {
             console.log(err.response)
-            console.log(err)
             alert(err.response.data.error)
           })
       }
@@ -351,11 +344,9 @@ const moduleAccounts = {
     //       console.log(res)
     //     })
     // },
-    passwordCheck({ dispatch, getters, state } ,password) {
-      console.log('토큰 :' + state.authToken)
+    passwordCheck({ dispatch, getters } ,password) {
       axios.post(SERVER.ROUTES.accounts.checkpassword, password, getters.config)
       .then((res) => {
-        console.log(res)
         if(res.data.result == 'success') {
           cookies.set('password-check', 1)
           this._vm.$root.$bvModal.msgBoxOk('확인되었습니다.', {
@@ -371,7 +362,6 @@ const moduleAccounts = {
             if (ans) {
               dispatch('GoUserInfo')
             }
-            console.log(111111)
             cookies.remove('password-check')
           })
         } else {
@@ -394,7 +384,6 @@ const moduleAccounts = {
     sendNewPassword({ dispatch }, email) {
       axios.get(SERVER.ROUTES.accounts.sendnewpassword + String(email))
       .then((res) => {
-        console.log(res)
         if(res.data.result == 'success'){
           this._vm.$root.$bvModal.msgBoxOk('새 비밀번호가 전송되었습니다', {
             title: 'Confirmation',
@@ -479,8 +468,6 @@ const moduleAccounts = {
                   router.push({ name: 'Home'})
                 })
             } else {
-              console.log(res)
-              console.log(res.data)
               this._vm.$root.$bvModal.msgBoxOk('이미지 파일이 올바르지 않습니다.', {
                 title: 'Confirmation',
                 size: 'sm',
@@ -605,7 +592,7 @@ const moduleEditor = {
       cooking_time: 0,
       level: 0,
       main_image_file: null,
-      tag: [ ]
+      tag: []
     },
     cookingStep: [
       {
@@ -620,13 +607,14 @@ const moduleEditor = {
         step_image_file: null },
     ],
     mainIngr: [
-      { name: null, quantity: null, is_essential: 1 },
-      { name: null, quantity: null, is_essential: 1 },
+      { name: "", quantity: "", is_essential: 1 },
+      { name: "", quantity: "", is_essential: 1 },
     ],
     subIngr: [
-      { name: null, quantity: null, is_essential: 0 },
-      { name: null, quantity: null, is_essential: 0 },
-    ]
+      { name: "", quantity: "", is_essential: 0 },
+      { name: "", quantity: "", is_essential: 0 },
+    ],
+    ingrQuery: [],
   },
   getters: {
 
@@ -644,11 +632,14 @@ const moduleEditor = {
     SET_SUBINGR(state, data) {
       state.subIngr = data
     },
+    SET_INGRQUERY(state, data) {
+      state.ingrQuery = data
+    },
     addIngredient(state, essential) {
       const ref = essential ? state.mainIngr : state.subIngr;
       ref.push({
-        name: null,
-        quantity: null,
+        name: "",
+        quantity: "",
         is_essential: essential
       })
     },
@@ -659,8 +650,8 @@ const moduleEditor = {
     addCookingStep(state) {
       state.cookingStep.push({
         steps: state.cookingStep.length + 1,
-        description: null,
-        tip: null,
+        description: "",
+        tip: "",
         step_image: null },)
     },
     deleteCookingStep(state, id) {
@@ -683,7 +674,73 @@ const moduleEditor = {
     getCookingSteps({commit}, data) {
       commit('SET_COOKINGSTEPS', data);
     },
+    loadIngredients({commit}) {
+      axios.get('/recipe/ingredients/small')
+      .then((res) => {
+        commit('SET_INGRQUERY', res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    },
     onSubmitButton({state, rootState}) {
+      
+      console.log(state.mainIngr)
+      console.log(state.subIngr)
+      if(state.recipe.title == "") {
+        alert("레시피 제목을 입력하세요.")
+        return;
+      }
+
+      if(state.recipe.description == "") {
+        alert("레시피 소개말을 입력하세요.")
+        return;
+      }
+
+      var ingrDone = false;
+      for (let i = 0; i < state.mainIngr.length; i++) {
+        if(state.mainIngr[i].name != "" && state.mainIngr[i].quantity != "") {
+          ingrDone = true;
+        }
+        if (state.mainIngr[i].name != "" && state.mainIngr[i].quantity == "") {
+          alert("재료의 양을 입력하세요.")
+          return;
+        }
+        if (state.mainIngr[i].name == "" && state.mainIngr[i].quantity != "") {
+          alert("재료의 이름을 입력하세요.")
+          return;
+        }
+      }
+      for (let i = 0; i < state.subIngr.length; i++) {
+        if(state.subIngr[i].name != "" && state.subIngr[i].quantity == "") {
+          ingrDone = true;
+        }
+        if (state.subIngr[i].name != "" && state.subIngr[i].quantity == "") {
+          alert("재료의 양을 입력하세요.")
+          return;
+        }
+        if (state.subIngr[i].name == "" && state.subIngr[i].quantity != "") {
+          alert("재료의 이름을 입력하세요.")
+          return;
+        }
+      }
+      if (!ingrDone) {
+        alert("재료를 입력하세요.")
+        return;
+      }
+
+      var stepDone = false;
+      for (let i = 0; i < state.cookingStep.length; i++) {
+        if (state.cookingStep[i].description != null) {
+          stepDone = true;
+          break;
+        }
+      }
+      if (!stepDone) {
+        alert("조리 과정을 한 개 이상 입력하세요.")
+        return;
+      }
+
       const recipeData = new FormData();
       for (let [key, value] of Object.entries(state.recipe)) {
         if (key == "main_image_file" && value == null) continue;
@@ -714,7 +771,8 @@ const moduleEditor = {
         'Authorization': `token ${rootState['accounts/authToken']}`,
         'Content-Type': 'multipart/form-data'
       }}
-      axios.post('/recipe/save', recipeData, headerConfig)
+
+      axios.post('/recipe/token/save', recipeData, headerConfig)
       .then((res) => {
         console.log(res)
         // 레시피 화면으로 redirect 필요
@@ -778,8 +836,6 @@ const moduleLookAround = {
       state.recipes = []
     },
     setRecipequery(state,payload){
-
-      console.log(payload.selectedarray.length)
       state.recipequery.query=payload.querydata
       for (var i in payload.selectedarray){
         if(payload.selectedarray[i].state == true){
@@ -827,11 +883,9 @@ const moduleLookAround = {
           }
         }
       }
-      console.log(state.recipequery.like_small)
     },
     setRecipes(state,recipes){
       state.recipes = [...state.recipes, ...recipes]
-      console.log(state.recipes)
     },
     setRecipequeryPage(state,payload){
       state.recipequery.p+=payload
@@ -885,17 +939,11 @@ const moduleLookAround = {
         alert(err)
       })
     },
-    getIngredients({state,commit}){
-      console.log("__불러오기전__")
-      console.log(state.ingredients)
+    getIngredients({commit}){
       //if(state.ingredients.length == 0){
         axios.get(SERVER.ROUTES.lookaroundrecipe.getingredients)
         .then((res) => {
-          console.log("res : " )
-          console.log(res)
           commit('setIngredients',res.data)
-          console.log(state.ingredients)
-          console.log("state.ingredients")
         })
         .catch((err) => {
           alert(err)
@@ -923,7 +971,9 @@ export default new Vuex.Store({
     editor: moduleEditor,
     lookaround: moduleLookAround,
   },
-  plugins: [createPersistedState(
-    { path: ['lookaround'] }
-  )],
+  plugins: [
+    createPersistedState({
+      paths: ['lookaround'],
+    })
+  ]
 })
