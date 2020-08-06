@@ -157,7 +157,7 @@ export default {
         var nameflag = true
         for (var i = 0; i < len; i++) {
           const ch = this.updateData.config.nickname[i]
-          console.log("ch: " + ch)
+          // console.log("ch: " + ch)
           if(('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'z')||('A' <= ch && ch <= 'Z')){
             NickNamelen++
           }
@@ -274,18 +274,22 @@ export default {
     },
     updated() {
       this.checkPasswordValidValue()
-      this.SET_UPDATETF(true)
+      // this.SET_UPDATETF(true)
       // this.checkInitialNickname()
     },
     created() {
       this.insertInitialValue()
       this.checkInitialNickname()
+      // this.SET_UPDATETF(false)
     },
-    // watch: {
-    //   updateData() {
-    //     this.SET_UPDATETF(true)
-    //   }
-    // },
+    watch: {
+      updateData: {
+        deep: true,
+        handler() {
+          this.SET_UPDATETF(true)
+        }
+      }
+    },
 }
 </script>
 

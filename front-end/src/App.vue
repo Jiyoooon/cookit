@@ -2,11 +2,12 @@
   <div id="app-header">
       <b-navbar toggleable="sm" type="light" variant="">
     <b-navbar-brand href="#">
-        <img @click="GoHome" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQDLFnxu6sy4oQgCw4yuNZeNq1p604iMXTq-Q&usqp=CAU" style="height: 5em">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQDLFnxu6sy4oQgCw4yuNZeNq1p604iMXTq-Q&usqp=CAU" style="height: 5em">
     </b-navbar-brand>
     <b-navbar-nav>
       <b-nav-item @click="gouserblog">내 블로그</b-nav-item>
       <b-nav-item @click="GoLookAroundRecipesView">둘러보기</b-nav-item>
+      <b-nav-item @click="gorecipeupdate">고고</b-nav-item>
     </b-navbar-nav>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
@@ -68,7 +69,11 @@ export default {
         ...mapActions('myblog',['GoMyBlog']),
         ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
         ...mapMutations('myblog',['SET_USERINFO']),
-        ...mapMutations('lookaround',['setRecipequeryUserId'])
+        ...mapMutations('lookaround',['setRecipequeryUserId']),
+        gorecipeupdate() {
+          console.log('nnnn')
+          this.$router.push({ name: 'RecipeUpdateView'})
+        }
     },
     created(){
       this.getIngredients()

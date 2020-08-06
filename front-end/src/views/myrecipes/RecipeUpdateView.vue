@@ -3,7 +3,7 @@
     <div class="container">
       <h2>레시피 정보</h2>
       <hr>
-      <recipeInfo></recipeInfo>
+      <RecipeInfoforUpdate />
     </div>
     <div class="container">
       <h2>재료</h2>
@@ -11,22 +11,22 @@
       <b-container fluid="lg">
         <b-row>
           <b-col class="mt-3">주재료</b-col>
-          <b-col sm="5"><ingredient :ingredients="mainIngr" :essential=1></ingredient></b-col>
+          <b-col sm="5"><IngredientforUpdate :ingredients="mainIngr" :essential=1 /></b-col>
           <b-col class="mt-3">부재료</b-col>
-          <b-col sm="5"><ingredient :ingredients="subIngr" :essential=0></ingredient></b-col>
+          <b-col sm="5"><IngredientforUpdate :ingredients="subIngr" :essential=0 /></b-col>
         </b-row>
       </b-container>
     </div>
     <div class="container">
       <h2>조리 과정</h2>
       <hr>
-      <cooking-step></cooking-step>
+      <CookingStepforUpdate />
     </div>
     <div>
       <b-container>
         <b-row>
           <b-col sm="3"></b-col>
-          <b-col sm="3"><b-button variant="primary" @click="onSubmitButton" block>완료</b-button></b-col>
+          <b-col sm="3"><b-button variant="primary" @click="onSubmitButtonforUpdate" block>완료</b-button></b-col>
           <b-col sm="3"><b-button variant="danger" block>취소</b-button></b-col>
           <b-col sm="3"></b-col>
         </b-row>
@@ -36,22 +36,42 @@
 </template>
 
 <script>
-import RecipeInfo from '@/components/editor/RecipeInfo.vue'
-import Ingredient from '@/components/editor/Ingredient.vue'
-import CookingStep from '@/components/editor/CookingStep.vue'
-import { mapState, mapActions } from 'vuex'
+import RecipeInfoforUpdate from '@/components/editor/RecipeInfoforUpdate.vue'
+import IngredientforUpdate from '@/components/editor/IngredientforUpdate.vue'
+import CookingStepforUpdate from '@/components/editor/CookingStepforUpdate.vue'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
-    name: 'RecipeCreateView',
+    name: 'RecipeUpdateView',
     components: {
-      RecipeInfo, Ingredient, CookingStep
+      RecipeInfoforUpdate, IngredientforUpdate, CookingStepforUpdate
     },
     computed: {
-      ...mapState('editor', ['mainIngr', 'subIngr'])
+      ...mapState('editor', ['mainIngr', 'subIngr']),
+      ...mapState('recipes', ['selectedRecipe'])
     },
     methods: {
-      ...mapActions('editor', ['onSubmitButton'])
+      ...mapActions('editor', ['onSubmitButtonforUpdate']),
+      ...mapMutations('editor', ['SET_MAININGR', 'SET_SUBINGR'])
     },
+    created() {
+      const main = []
+      const sub = []
+      for (var i=0; i < this.selectedRecipe.ingredients.length; i++) {
+        const ingre = {
+          name: this.selectedRecipe.ingredients[i].food_ingredient_small_name,
+          quantity: this.selectedRecipe.ingredients[i].quantity,
+          is_essential: this.selectedRecipe.ingredients[i].is_essential
+        }
+        if (this.selectedRecipe.ingredients[i].is_essential) {
+          main.push(ingre)
+        } else {
+          sub.push(ingre)
+        }
+      }
+      this.SET_MAININGR(main)
+      this.SET_SUBINGR(sub)
+    }
 }
 </script>
 
