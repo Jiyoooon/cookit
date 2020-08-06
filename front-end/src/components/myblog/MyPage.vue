@@ -32,8 +32,17 @@
         color="deep-purple lighten-2"
         text
         v-if="this.authUser.user_id !== this.selecteduserinfo.user_id"
+        @click="follow"
       >
-        이웃추가
+        팔로우
+      </v-btn>
+      <v-btn
+        color="deep-purple lighten-2"
+        text
+        v-if="this.authUser.user_id !== this.selecteduserinfo.user_id"
+        @click="follow"
+      >
+        언팔로우
       </v-btn>
       <v-btn
         color="deep-purple lighten-2"

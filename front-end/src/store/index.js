@@ -497,6 +497,12 @@ const moduleAccounts = {
         }
     },
   },
+  follow(){
+
+  },
+  unfollow(){
+    
+  }
 }
 
 const moduleRecipes = {
