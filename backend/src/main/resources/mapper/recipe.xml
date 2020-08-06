@@ -95,10 +95,12 @@
 	<select id="getRecipes" resultType="Recipe">
 		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
 		category_id, title, description, main_image, servings, cooking_time, level,
-		tag, r.hits as hits, r.create_date as create_date, r.update_date as
-		update_date, r.delete_date as delete_date
+		tag, r.hits, r.create_date, r.update_date, r.delete_date
 		FROM Recipe r
 		join User u on r.recipe_user = u.user_id
+		<if test="order != null and order == 3">
+        	LEFT JOIN Likes l USING(recipe_id)
+		</if>
 		WHERE 1 = 1
 		<if test="query != null and query != ''">
 			AND title LIKE CONCAT('%', #{query}, '%')
@@ -112,7 +114,18 @@
 		<if test="category != null and category != ''">
 			AND category_id = #{category}
 		</if>
-		ORDER BY create_date DESC
+		<choose>
+			<when test="order == null or order == 1">
+				ORDER BY create_date DESC
+			</when>
+			<when test="order == 2">
+				ORDER BY hits DESC
+			</when>
+			<when test="order == 3">
+				GROUP BY  recipe_id	
+				ORDER BY count(recipe_id) DESC
+			</when>
+		</choose>
 		Limit #{start}, #{end}
 	</select>
 	
@@ -262,6 +275,9 @@
 		) as k
 		USING (recipe_id)
 		JOIN User u on r.recipe_user = u.user_id
+		<if test="order != null and order == 3">
+        	LEFT JOIN Likes l USING(recipe_id)
+		</if>
 		WHERE 1 = 1
 		<if test="query != null and query != ''">
 			AND title LIKE CONCAT('%', #{query}, '%')
@@ -275,7 +291,18 @@
 		<if test="category != null and category != ''">
 			AND category_id = #{category}
 		</if>
-		ORDER BY k.cnt desc, create_date desc
+		<choose>
+			<when test="order == null or order == 1">
+				ORDER BY create_date DESC
+			</when>
+			<when test="order == 2">
+				ORDER BY hits DESC
+			</when>
+			<when test="order == 3">
+				GROUP BY  recipe_id	
+				ORDER BY count(recipe_id) DESC
+			</when>
+		</choose>
 		Limit #{start}, #{end}
 	</select>
 	
@@ -283,8 +310,7 @@
 	<select id="getRecipes3" resultType="Recipe">
 		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name,
 		category_id, title, description, main_image, servings, cooking_time, level,
-		tag, r.hits as hits, r.create_date as create_date, r.update_date as
-		update_date, r.delete_date as delete_date
+		tag, r.hits, r.create_date, r.update_date, r.delete_date
 		FROM Recipe r
 		join User u on r.recipe_user = u.user_id
 		WHERE 1 = 1

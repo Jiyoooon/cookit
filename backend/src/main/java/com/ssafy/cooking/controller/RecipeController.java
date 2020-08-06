@@ -46,7 +46,7 @@ public class RecipeController {
 	private JwtService jwtService;
 
 	@ApiOperation(value = "해당 레시피 목록 가져오기", notes = "레시피 목록을 가져온다.(각 항목은 필요시만 입력)\n" + "p  : 시작 번호\n" + "id : 레시피 아이디\n"
-			+ "user : 유저 아이디\n" + "query : 검색어(요리명)\n" + "category : 해당 카테고리 id\n"
+			+ "user : 유저 아이디\n" + "query : 검색어(요리명)\n" + "category : 해당 카테고리 id\n" + "order : 1-최신순, 2-조회순, 3-라이크순 \n"
 			+ "filter : 검색 시 추가한 재료 필터링 정보(대분류, 중분류, 소분류 각각 0개 이상씩 설정 가능하며 띄어쓰기로 구분한 String 형태로 입력)")
 	@GetMapping("/recipes")
 	public ResponseEntity<List<Recipe>> getUserRecipes(@RequestParam(value = "p", required = false) Integer p,
@@ -54,16 +54,17 @@ public class RecipeController {
 			@RequestParam(value = "user", required = false) String user,
 			@RequestParam(value = "query", required = false) String query,
 			@RequestParam(value = "category", required = false) Integer category,
+			@RequestParam(value = "order",  defaultValue = "1") Integer order,
 			@RequestParam(value = "filter", required = false) String filter, HttpServletRequest request)
 			throws Exception {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		
-		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes(p, id, user, query, category, filter, baseUrl),
+		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes(p, id, user, query, category, order, filter, baseUrl),
 				HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "해당 레시피 목록 가져오기2", notes = "레시피 목록을 가져온다.(각 항목은 필요시만 입력)\n" + "p  : 시작 번호\n"
-			+ "id : 레시피 아이디\n" + "user : 유저 아이디\n" + "query : 검색어(요리명)\n" + "category : 해당 카테고리 id\n"
+			+ "id : 레시피 아이디\n" + "user : 유저 아이디\n" + "query : 검색어(요리명)\n" + "category : 해당 카테고리 id\n" + "order : 1-최신순, 2-조회순, 3-라이크순 \n"
 			+ "filter : 검색 시 추가한 재료 필터링 정보(대분류, 중분류, 소분류 각각 0개 이상씩 설정 가능하며 띄어쓰기로 구분한 String 형태로 입력)")
 	@GetMapping("/recipes2")
 	public ResponseEntity<List<Recipe>> getUserRecipes2(@RequestParam(value = "p", required = false) Integer p,
@@ -71,8 +72,11 @@ public class RecipeController {
 			@RequestParam(value = "user", required = false) String user,
 			@RequestParam(value = "query", required = false) String query,
 			@RequestParam(value = "category", required = false) Integer category,
-			@ModelAttribute(value = "filter") Filter filter) throws Exception {
-		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes2(p, id, user, query, category, filter),
+			@RequestParam(value = "order",  defaultValue = "1") Integer order,
+			@ModelAttribute(value = "filter") Filter filter, HttpServletRequest request) throws Exception {
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		
+		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes2(p, id, user, query, category, order, filter, baseUrl),
 				HttpStatus.OK);
 	}
 
@@ -93,6 +97,7 @@ public class RecipeController {
 	@PostMapping("token/save") //// token
 	public ResponseEntity<HashMap<String, Object>> addRecipe(@ModelAttribute("recipeData") RecipeDetail recipeData,
 			HttpServletRequest request) throws Exception {
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
@@ -114,7 +119,7 @@ public class RecipeController {
 				if (recipeData.getCategory_id() == null) {
 					recipeData.setCategory_id(8);
 				}
-				recipeservice.addRecipe(recipeData);
+				recipeservice.addRecipe(recipeData, baseUrl);
 			}
 
 			result = "success";
@@ -130,26 +135,25 @@ public class RecipeController {
 
 	@ApiOperation(value = "레시피 생성하기(로그인 필요없는 테스트버전)", notes = "레시피 추가한다.")
 	@PostMapping("/save2")
-	public ResponseEntity<HashMap<String, Object>> addRecipe2(@ModelAttribute("recipeData") RecipeDetail recipeData)
+	public ResponseEntity<HashMap<String, Object>> addRecipe2(@ModelAttribute("recipeData") RecipeDetail recipeData,
+			HttpServletRequest request)
 			throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		
+
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
 		String result = "success";
 		HttpStatus status = HttpStatus.ACCEPTED;
 		if (recipeData == null) {
 			map.put("cause", "레시피 데이터 없음");
-			System.out.println("레시피 데이터 없음");
 			result = "fail";
 		} else if (recipeData.getTitle() == null) {
 			map.put("cause", "레시피 title 없음");
-			System.out.println("레시피 title 없음");
 			result = "fail";
 		} else {
 			recipeData.setRecipe_user(3);
 			recipeData.setCategory_id(8);
-			System.out.println("레시피 있음");
-			recipeservice.addRecipe(recipeData);
+			recipeservice.addRecipe(recipeData, baseUrl);
 		}
 
 		map.put("result", result);
@@ -162,7 +166,7 @@ public class RecipeController {
 	public ResponseEntity<RecipeDetail> getRecipeById(@PathVariable("id") int recipe_id, HttpServletRequest request)
 			throws Exception {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		List<Recipe> recipes = recipeservice.getRecipes(null, recipe_id, null, null, null, null, baseUrl);
+		List<Recipe> recipes = recipeservice.getRecipes(null, recipe_id, null, null, null, 0, null, baseUrl);
 		if (recipes.size() > 0) {
 			RecipeDetail recipeDetail = new RecipeDetail(recipes.get(0));
 			recipeDetail.setIngredients(recipeservice.getIngredients(recipe_id));
@@ -178,8 +182,8 @@ public class RecipeController {
 	@PutMapping("token/revise") //// token
 	public ResponseEntity<HashMap<String, Object>> reviseRecipe(@ModelAttribute("recipeData") RecipeDetail recipeData,
 			HttpServletRequest request) throws Exception {
-
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
 		String result = "success";
 		HttpStatus status = HttpStatus.ACCEPTED;
@@ -196,7 +200,7 @@ public class RecipeController {
 				result = "fail";
 			} else {
 				if (uid == recipeData.getRecipe_user()) {
-					recipeservice.reviseRecipe(recipeData);
+					recipeservice.reviseRecipe(recipeData, baseUrl);
 				} else {
 					map.put("cause", "유저 아이디 불일치");
 					result = "fail";

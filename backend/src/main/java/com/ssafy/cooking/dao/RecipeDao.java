@@ -18,7 +18,7 @@ public interface RecipeDao {
 	void checkIngredients(int recipe_id, List<Ingredient> ingredients);
 	int addIngredients(int recipe_id, List<Ingredient> ingredients);
 	int addCookingsteps(int recipe_id, List<CookingStep> cookingSteps);
-	List<Recipe> getRecipes(int start, int end, Integer id, String user, String query, Integer category, String filter);
+	List<Recipe> getRecipes(int start, int end, Integer id, String user, String query, Integer category, Integer order, String filter);
 
 	List<Ingredient> getIngredients(int recipe_id);
 	List<CookingStep> getCookingSteps(int recipe_id);
@@ -33,7 +33,7 @@ public interface RecipeDao {
 	List<FoodIngredient> getSmallIngredients();
 	List<FoodIngredient> getMediumIngredients();
 	List<FoodIngredient> getLargeIngredients();
-	List<Recipe> getRecipes2(int start, int end, Integer id, String user, String query, Integer category
+	List<Recipe> getRecipes2(int start, int end, Integer id, String user, String query, Integer category, Integer order
 							, List<String> hate_large, List<String> hate_medium, List<String> hate_small
 							, List<String> like_large, List<String> like_medium, List<String> like_small);
 	String[] getSmallIngredientsArray();
