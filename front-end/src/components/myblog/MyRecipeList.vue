@@ -1,7 +1,7 @@
 <template>
 <div>
     <b-row>   
-        <MyRecipeListItem @click.native="fetchRecipe(recipe.recipe_id)" :recipe="recipe" 
+        <MyRecipeListItem :recipe="recipe" 
         :key="index" v-for="(recipe, index) in currentPageItems" id="my-recipes" /> 
     </b-row>
     <b-row>

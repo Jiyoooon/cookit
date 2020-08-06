@@ -3,11 +3,12 @@
     max-width="344"
     min-height="344"
     class="mx-auto"
+    outlined
   >
 
     <v-list-item-title 
       class="headline"
-      @click="readRecipe"
+      @click="fetchRecipe(recipe.recipe_id)"
       style="cursor:pointer; padding: 3%; padding-bottom: 0;"
     ><h5><strong>{{ recipe.title }}</strong></h5><hr></v-list-item-title>
     <v-img
@@ -16,7 +17,7 @@
         @click.native="fetchRecipe(recipe.recipe_id)"
         style="cursor:pointer"
     ></v-img>
-    
+    <v-divider class="mx-4"></v-divider>
 
     <!-- <v-card-text class="maintext">
         <span>{{ recipe.description }}</span>
