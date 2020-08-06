@@ -1,9 +1,8 @@
 <template>
-  <div id="signform">
+  <div>
     <b-container fluid="lg">
       <b-row align-v="center">
-        <b-col sm="3">
-          <label for="input-userid">아이디(이메일)<span style="color: red">*</span></label>
+        <b-col sm="3">아이디(이메일)<span style="color: red">*</span>
         </b-col>
         <!-- 아이디 대신 이메일~--> 
         <b-col sm="9">
@@ -12,34 +11,33 @@
       </b-row>
 
       <!-- 최대 12 -->
-      <b-row align-v="center">
-        <b-col sm="3">
-          <label for="input-none">비밀번호<span style="color: red">*</span></label>
+      <b-row>
+        <b-col sm="3" class="mt-2">비밀번호<span style="color: red">*</span>
         </b-col>
         <b-col sm="9">
-          <b-form-input type="password" id="password" aria-describedby="password-feedback" v-model="signupData.config.password" :state="passwordValid" ></b-form-input>
+          <b-form-input type="password" aria-describedby="password-feedback" v-model="signupData.config.password" :state="passwordValid" ></b-form-input>
           <b-form-invalid-feedback id="password-feedback">
           영문과 숫자를 포함해 8글자 이상으로 입력하세요. </b-form-invalid-feedback>
         </b-col>
       </b-row>
 
-      <b-row align-v="center">
-        <b-col sm="3"><!--길이-->
-          <label for="input-none">비밀번호 재입력<span style="color: red">*</span></label>
+      <b-row>
+        <b-col sm="3" class="mt-2"><!--길이-->
+          비밀번호 재입력<span style="color: red">*</span>
         </b-col>
         <b-col sm="9">
-          <b-form-input type="password" id="password" aria-describedby="password-again-feedback" v-model="passwordAgain" :state="passwordAgainValid" ></b-form-input>
+          <b-form-input type="password" aria-describedby="password-again-feedback" v-model="passwordAgain" :state="passwordAgainValid" ></b-form-input>
           <b-form-invalid-feedback id="password-again-feedback">
           비밀번호가 다릅니다.</b-form-invalid-feedback>
         </b-col>
       </b-row>
       
       <!--중복 불가능, 3글자 이상, 특수문자 x 최대 7글자 , -->
-      <b-row align-v="center">
-        <b-col sm="3">
+      <b-row>
+        <b-col sm="3" class="mt-2">
           <label for="input-userid">닉네임<span style="color: red">*</span></label>
         </b-col>
-        <b-col sm="7">
+        <b-col sm="6">
           <b-form-input 
             id="input-userid" 
             v-model="signupData.config.nickname"
@@ -49,29 +47,33 @@
             >
           </b-form-input>
           <b-form-invalid-feedback>
-            닉네임이 올바르지 않습니다.(4~12글자 한글은 최대 6글자)
+            닉네임이 올바르지 않습니다.<br>(영문/숫자 4~12자, 한글 2~6자 & 특수문자 불가능)
           </b-form-invalid-feedback>
         </b-col>
-        <b-col sm="2">
-          <b-button v-if="!NickNameinValid" disabled variant="primary" block>중복확인</b-button>
-          <b-button v-else variant="primary" @click='nicknameCheck(signupData.config.nickname)'>중복확인</b-button>
-        </b-col>
-      </b-row>
-
-
-      <b-row align-v="center">
         <b-col sm="3">
-          프로필사진
-        </b-col>
-        <div v-if="signupData.config.profile"><img id="imagepreview" :src="imageURL"></div>
-        <b-col sm="3" v-if="signupData.config.profile"></b-col>
-        <b-col sm="6">
-          <b-form-file @change="imageUpload" ref="file-input" v-model="signupData.config.profile" class="mt-3" accept=".jpg, .png, .jpeg"></b-form-file> 
-          <div class="mt-3"><b-button @click="clearFiles">기본이미지로 설정</b-button> Selected file: {{ signupData.config.profile?signupData.config.profile.name : '' }}</div>
+          <div v-if="!NickNameinValid" class="block-btn btn-style3" block>중복 확인</div>
+          <div v-else class="block-btn btn-style1" @click='nicknameCheck(updateData.config.nickname)'>중복 확인</div>
         </b-col>
       </b-row>
+
       <b-row align-v="center">
-        <b-col sm="3">소개글</b-col>
+      <b-col sm="3">프로필 사진</b-col>
+      <b-col sm="6">
+        <b-form-file ref="file-input" v-model="signupData.config.profile" accept="image/*"
+        placeholder="사진 선택" @change="imageUpload"></b-form-file>
+      </b-col>
+			<b-col sm="3">
+        <div class="block-btn btn-style1" @click="clearFiles">사진 삭제</div>
+      </b-col>
+    </b-row>
+    <b-row v-if="signupData.config.profile"> 
+      <b-col sm="3"></b-col>
+      <b-col sm="9">
+        <img :src="imageURL" height="100px">
+      </b-col>
+    </b-row>
+      <b-row>
+        <b-col sm="3" class="mt-2">소개글</b-col>
         <b-col sm="9">
             <b-form-textarea
             id="textarea" rows="3" max-rows="6" v-model="signupData.config.intro" :state="CommentLimit" aria-describedby="comment-len-feedback">
@@ -81,21 +83,18 @@
             최대 100자 까지 가능합니다.</b-form-invalid-feedback>
         </b-col>
       </b-row>
+        <b-row><b-col> </b-col></b-row>
         <b-row align-v="center" align-h="center">
             <b-col sm="2"></b-col>
             <b-col sm="4">
-                <b-button type="submit" variant="primary" id="signButton" @click="signup(signupData)" block>가입하기</b-button>
+                <div class="block-btn btn-style1" @click="signup(signupData)" block>가입하기</div>
             </b-col>
             <b-col sm="4">
-                <b-button variant="danger" id="cancelButton" to="/SignupView" block>취소</b-button>
+                <div class="block-btn btn-style2" @click="$router.go(-1)">취소</div>
             </b-col>
             <b-col sm="2"></b-col>
         </b-row>
     </b-container>
-    <!--이미지 입력Form-->
-    <!-- Plain mode -->
-    {{ this.signupData.valid.password }}
-    {{ this.signupData.valid.nickname}}
   </div>
 
   
@@ -120,7 +119,7 @@ import cookies from 'vue-cookies'
             email: cookies.get('user-email'),
             password: null,
             nickname: null,
-            profile: '',
+            profile: null,
             image_name: '',
             intro: '',
           }
@@ -148,11 +147,8 @@ import cookies from 'vue-cookies'
         return IsAvailable
       },
       passwordAgainValid() {
-         console.log(this.signupData.valid.password)
         if(!this.passwordAgain) return null
-        
         if(this.passwordAgain.length > 0 && this.signupData.config.password == this.passwordAgain) return true;
-    
         return false;
       },
       NickNameinValid(){
@@ -162,7 +158,6 @@ import cookies from 'vue-cookies'
         var nameflag = true
         for (var i = 0; i < len; i++) {
           const ch = this.signupData.config.nickname[i]
-          console.log("ch: " + ch)
           if(('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'z')||('A' <= ch && ch <= 'Z')){
             NickNamelen++
           }
@@ -194,7 +189,6 @@ import cookies from 'vue-cookies'
       nicknameCheck(nickname) {
         axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
-          console.log(res)
           if (res.data.result == 'success') {
             this.signupData.valid.nickname = true
             this.$bvModal.msgBoxOk('확인되었습니다.', {
@@ -236,7 +230,6 @@ import cookies from 'vue-cookies'
       imageUpload(event) {
         const image = event.target.files[0];
         this.signupData.config.image_name = image.name
-        console.log(this.signupData)
         this.imageURL = URL.createObjectURL(image)
         // const reader = new FileReader();
         // reader.readAsDataURL(image);
@@ -253,8 +246,4 @@ import cookies from 'vue-cookies'
 </script>
 
 <style>
-  #imagepreview {
-    width: 30vw;
-    height: 30vh;
-  }
 </style>

@@ -1,4 +1,5 @@
 <template>
+<div id="list">
   <b-contanier>
       <b-row>
         <SearchBar id="searchbar" />
@@ -12,6 +13,7 @@
         </b-col>
       </b-row>
   </b-contanier>
+</div>
 </template>
 
 <script>
@@ -58,4 +60,12 @@ export default {
         margin-left: 20px;
         margin-right: 20px;
     }
+
+#list {
+  width: 90%;
+  display: block;
+  margin: 0px auto;
+  background-color: #fff;
+  padding: 5em 1em 8em 1em;
+}
 </style>
