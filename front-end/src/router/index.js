@@ -13,6 +13,8 @@ import Home from '../views/Home.vue'
 import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView.vue'
 import MyBlogListView from '../views/myblog/MyBlogListView.vue'
 import RecipeDetailView from '../views/recipeview/RecipeDetailView.vue'
+import store from '../store'
+
 
 
 
@@ -93,10 +95,11 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const RequiredLoggedInPages = ['Logout', 'PasswordAuthView', 'UserInfoView', 'UserDelete', 'MyBlogListView']
+  const RequiredLoggedInPages = ['Logout', 'PasswordAuthView', 'UserInfoView', 'UserDelete', 'MyBlogListView'] 
   const RequiredLoggedOutPages = ['Login', 'Signup', 'EmailAuthView', 'PasswordFindView']
   const RequiredAuthorized = ['Signup']
   const RequiredPasswordAuth = ['UserInfoView']
+  const BeforeUpdated = ['Logout', 'MyBlogListView', 'Login', 'Signup', 'EmailAuthView', 'PasswordFindView', 'LookAroundRecipeView']
 
   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
   const IsAuthorized = Vue.$cookies.isKey('user-email')
@@ -107,29 +110,86 @@ router.beforeEach((to, from, next) => {
   const AuthorizedRequired = RequiredAuthorized.includes(to.name)
   const AuthPasswordRequired = RequiredPasswordAuth.includes(to.name)
 
+  const FromUserInfo = RequiredPasswordAuth.includes(from.name)
+  const FromUserInfoTo = BeforeUpdated.includes(to.name)
+
+
+  // if (!IsLoggedIn && LoggedInRequired) {
+  //   next({ name: 'Login' })
+  // } else {
+  //   next()
+  // }
+
+  // if (IsLoggedIn && LoggedOutRequired) {
+  //   next({ name: 'Home' })
+  // } else {
+  //   next()
+  // }
+
+  // if (!IsAuthorized && AuthorizedRequired) {
+  //   next({ name: 'EmailAuthView' })
+  // } else {
+  //   next()
+  // }
+
+  // if (!IsPasswordAuth && AuthPasswordRequired) {
+  //   next({ name: 'PasswordAuthView' })
+  // } else {
+  //   next()
+  // }
+
+  // if (FromUserInfo && FromUserInfoTo) {
+  //   store._vm.$root.$bvModal.msgBoxConfirm('수정한 내용이 저장되지 않습니다.', {
+  //     title: '정말로 나가시겠습니까?',
+  //     size: 'md',
+  //     buttonSize: 'sm',
+  //     okVariant: 'danger',
+  //     okTitle: 'YES',
+  //     cancelTitle: 'NO',
+  //     footerClass: 'p-2',
+  //     hideHeaderClose: false,
+  //     centered: true
+  //   })
+  //     .then((ans) => {
+  //       if (ans) {
+  //         next() 
+  //       } else {
+  //         next(false)
+  //       }
+  //     }) 
+  //   }    
+  console.log(store.state.accounts.updateTF)
   if (!IsLoggedIn && LoggedInRequired) {
     next({ name: 'Login' })
-  } else {
-    next()
-  }
-
-  if (IsLoggedIn && LoggedOutRequired) {
+  } else if (IsLoggedIn && LoggedOutRequired) {
     next({ name: 'Home' })
-  } else {
-    next()
-  }
-
-  if (!IsAuthorized && AuthorizedRequired) {
+  } else if (!IsAuthorized && AuthorizedRequired) {
     next({ name: 'EmailAuthView' })
-  } else {
-    next()
-  }
-
-  if (!IsPasswordAuth && AuthPasswordRequired) {
+  } else if (!IsPasswordAuth && AuthPasswordRequired) {
     next({ name: 'PasswordAuthView' })
-  } else {
-    next()
-  }
+  } else if (FromUserInfo && FromUserInfoTo && store.state.accounts.updateTF) {
+    store._vm.$root.$bvModal.msgBoxConfirm('수정한 내용이 저장되지 않습니다.', {
+      title: '정말로 나가시겠습니까?',
+      size: 'md',
+      buttonSize: 'sm',
+      okVariant: 'danger',
+      okTitle: 'YES',
+      cancelTitle: 'NO',
+      footerClass: 'p-2',
+      hideHeaderClose: false,
+      centered: true
+    })
+      .then((ans) => {
+        if (ans) {
+          next() 
+        } else {
+          next(false)
+        }
+      }) 
+    } else {
+      next()
+    }   
+
 })
 
 export default router
