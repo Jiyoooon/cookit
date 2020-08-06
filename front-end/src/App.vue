@@ -3,6 +3,8 @@
     <header id="app-header">
       <b-navbar toggleable="sm" type="light" variant="">
     <b-navbar-brand href="#">
+<<<<<<< front-end/src/App.vue
+=======
         <img id="mainlogo" @click="mainLogoClick" src="./assets/logo.jpg" style="height: 5em; padding: 0px 2em">
     </b-navbar-brand>
     <nav class="nav-menu">
@@ -19,6 +21,7 @@
         <div class="nav-side-item btn-style2" id="logout" @click="GoLogout">Log out</div>
       </div>
     </nav>
+>>>>>>> front-end/src/App.vue
   </b-navbar>
   </header>
   <hr id="divider">
@@ -85,7 +88,11 @@ export default {
         ...mapActions('myblog',['GoMyBlog']),
         ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
         ...mapMutations('myblog',['SET_USERINFO']),
-        ...mapMutations('lookaround',['setRecipequeryUserId'])
+        ...mapMutations('lookaround',['setRecipequeryUserId']),
+        gorecipeupdate() {
+          console.log('nnnn')
+          this.$router.push({ name: 'RecipeUpdateView'})
+        }
     },
     created(){
       this.getIngredients()
