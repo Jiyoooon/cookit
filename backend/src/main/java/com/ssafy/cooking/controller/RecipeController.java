@@ -1,6 +1,5 @@
 package com.ssafy.cooking.controller;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,19 +55,20 @@ public class RecipeController {
 			@RequestParam(value = "user", required = false) String user,
 			@RequestParam(value = "query", required = false) String query,
 			@RequestParam(value = "category", required = false) Integer category,
-			@RequestParam(value = "order",  defaultValue = "1") Integer order,
-			@RequestParam(value = "likeUser",  required = false) Integer likeUser,
+			@RequestParam(value = "order", defaultValue = "1") Integer order,
+			@RequestParam(value = "likeUser", required = false) Integer likeUser,
 			@RequestParam(value = "filter", required = false) String filter, HttpServletRequest request)
 			throws Exception {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		
-		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes(p, id, user, query, category, order, likeUser, filter, baseUrl),
+
+		return new ResponseEntity<List<Recipe>>(
+				recipeservice.getRecipes(p, id, user, query, category, order, likeUser, filter, baseUrl),
 				HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "해당 레시피 목록 가져오기2", notes = "레시피 목록을 가져온다.(각 항목은 필요시만 입력)\n" + "p  : 시작 번호\n"
-			+ "id : 레시피 아이디\n" + "user : 유저 네임\n" + "query : 검색어(요리명)\n" + "category : 해당 카테고리 id\n" + "order : 1-최신순, 2-조회순, 3-라이크순 \n"
-			+ "likeUser : 유저 아아디(int) 해당 유저가 like한 레시피만\n"
+			+ "id : 레시피 아이디\n" + "user : 유저 네임\n" + "query : 검색어(요리명)\n" + "category : 해당 카테고리 id\n"
+			+ "order : 1-최신순, 2-조회순, 3-라이크순 \n" + "likeUser : 유저 아아디(int) 해당 유저가 like한 레시피만\n"
 			+ "filter : 검색 시 추가한 재료 필터링 정보(대분류, 중분류, 소분류 각각 0개 이상씩 설정 가능하며 띄어쓰기로 구분한 String 형태로 입력)")
 	@GetMapping("/recipes2")
 	public ResponseEntity<List<Recipe>> getUserRecipes2(@RequestParam(value = "p", required = false) Integer p,
@@ -76,13 +76,14 @@ public class RecipeController {
 			@RequestParam(value = "user", required = false) String user,
 			@RequestParam(value = "query", required = false) String query,
 			@RequestParam(value = "category", required = false) Integer category,
-			@RequestParam(value = "order",  defaultValue = "1") Integer order,
-			@RequestParam(value = "likeUser",  required = false) Integer likeUser,
+			@RequestParam(value = "order", defaultValue = "1") Integer order,
+			@RequestParam(value = "likeUser", required = false) Integer likeUser,
 			@ModelAttribute(value = "filter") Filter filter, HttpServletRequest request) throws Exception {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		System.out.println("query = " + query);
 		System.out.println("user = " + user);
-		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes2(p, id, user, query, category, order, likeUser, filter, baseUrl),
+		return new ResponseEntity<List<Recipe>>(
+				recipeservice.getRecipes2(p, id, user, query, category, order, likeUser, filter, baseUrl),
 				HttpStatus.OK);
 	}
 
@@ -109,7 +110,6 @@ public class RecipeController {
 
 		String result = "success";
 		HttpStatus status = HttpStatus.ACCEPTED;
-
 
 		String token = request.getHeader("Authorization").split(" ")[1];
 
@@ -144,8 +144,7 @@ public class RecipeController {
 	@ApiOperation(value = "레시피 생성하기(로그인 필요없는 테스트버전)", notes = "레시피 추가한다.")
 	@PostMapping("/save2")
 	public ResponseEntity<HashMap<String, Object>> addRecipe2(@ModelAttribute("recipeData") RecipeDetail recipeData,
-			HttpServletRequest request)
-			throws Exception {
+			HttpServletRequest request) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -200,7 +199,7 @@ public class RecipeController {
 
 		Map<String, Object> claims = jwtService.get(token);
 		int uid = Integer.parseInt((String) claims.get("uid"));
-		
+
 		try {
 			if (recipeData == null) {
 				result = "fail";
@@ -327,10 +326,11 @@ public class RecipeController {
 		map.put("result", result);
 		return new ResponseEntity<HashMap<String, Object>>(map, status);
 	}
-	
+
 	@ApiOperation(value = "레시피 LIKE", notes = "like")
 	@GetMapping("token/{recipe_id}/like") //// token
-	public ResponseEntity<HashMap<String, Object>> setLike(@PathVariable("recipe_id") int recipe_id, HttpServletRequest request) throws Exception {
+	public ResponseEntity<HashMap<String, Object>> setLike(@PathVariable("recipe_id") int recipe_id,
+			HttpServletRequest request) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String result = "success";
 		HttpStatus status = HttpStatus.ACCEPTED;

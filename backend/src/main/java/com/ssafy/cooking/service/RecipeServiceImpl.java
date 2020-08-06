@@ -37,6 +37,9 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, query, category, order, likeUser, filter);
 		for (Recipe r : recipes) {
+			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "") {
+				r.setRecipe_user_profileImage(baseUrl + "/images/profile/default_image.png");
+			}
 			r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
 			r.setLike(recipeDao.getLikeList(r.getRecipe_id()));
 		}
@@ -75,6 +78,15 @@ public class RecipeServiceImpl implements RecipeService {
 			imageName = recipeDetail.getRecipe_user() + Long.toString(System.currentTimeMillis());
 		else
 			imageName = Long.toString(System.currentTimeMillis());
+		
+		if(recipeDetail.getCooking_time() == null)
+			recipeDetail.setCooking_time(1);
+		if(recipeDetail.getLevel() == null)
+			recipeDetail.setLevel(1);
+		if(recipeDetail.getServings() == null)
+			recipeDetail.setServings(1);
+		if(recipeDetail.getTag() == null)
+			recipeDetail.setTag("");
 		
 		if (recipeDetail.getMain_image_file() != null && !recipeDetail.getMain_image_file().isEmpty()) {
 			try {
@@ -235,6 +247,9 @@ public class RecipeServiceImpl implements RecipeService {
 		List<Recipe> recipes = recipeDao.getRecipes2(start, end, id, user, query, category, order, likeUser,
 				hate_large, hate_medium, hate_small, like_large, like_medium, like_small);
 		for (Recipe r : recipes) {
+			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "") {
+				r.setRecipe_user_profileImage(baseUrl + "/images/profile/default_image.png");
+			}
 			r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
 			r.setLike(recipeDao.getLikeList(r.getRecipe_id()));
 		}
@@ -250,7 +265,4 @@ public class RecipeServiceImpl implements RecipeService {
 			return 0;
 		}
 	}
-
-	
-	
 }

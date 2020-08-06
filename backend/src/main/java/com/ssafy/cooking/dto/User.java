@@ -1,11 +1,7 @@
 package com.ssafy.cooking.dto;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
-import org.springframework.core.io.Resource;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 

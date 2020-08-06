@@ -1,5 +1,6 @@
 package com.ssafy.cooking.util;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -63,7 +64,15 @@ public class Timer {
 			}
 		});
 
-		return toJson(timer);
+		int[] array = new int[timer.size()];
+
+		int size = 0;
+
+		for (int[] temp : timer) {
+			array[size++] = temp[1];
+		}
+
+		return Arrays.toString(array);
 	}
 
 	private static String match(String regex1, String regex2, String input, List<int[]> timer, int m1, int m2,
@@ -158,21 +167,5 @@ public class Timer {
 		} else {
 			return Integer.parseInt(input.substring(start, start + 3).replaceAll("[^0-9]", "")) * mul;
 		}
-	}
-
-	private static String toJson(List<int[]> list) {
-		String result = "[ ";
-
-		for (int i = 0; i < list.size(); i++) {
-			if (i == list.size() - 1) {
-				result += list.get(i)[1] + " ";
-			} else {
-				result += list.get(i)[1] + ", ";
-			}
-		}
-
-		result += "]";
-
-		return result;
 	}
 }
