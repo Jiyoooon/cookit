@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div id="list">
         <RecipeSearchBar />
         <div class="RecipeArray">
         <v-container fluid grid-list-md >
@@ -83,8 +83,16 @@ export default {
     }
 
     .RecipeArray{
-        width: 80%;
         margin-left: auto;
         margin-right: auto;
     }
+
+#list {
+  width: 90%;
+  display: block;
+  margin: 0px auto;
+  background-color: #fff;
+  padding: 5em 1em 8em 1em;
+}
+
 </style>

@@ -16,6 +16,7 @@ const moduleAccounts = {
     authToken: cookies.get('auth-token'),
     authUser: cookies.get('auth-user'),
     userEmail: cookies.get('user-email'),
+    validEmail: false,
   },
 
   getters: {
@@ -33,6 +34,9 @@ const moduleAccounts = {
         }
       }
     },
+    isValidEmail(state) {
+      return state.validEmail
+    }
   },
 
   mutations: {
@@ -49,6 +53,9 @@ const moduleAccounts = {
        state.authUser = user
        cookies.set('auth-user', user)
      },
+     SET_VALID(state, data) {
+       state.validEmail = data
+     }
   },
 
   actions: {
@@ -196,11 +203,13 @@ const moduleAccounts = {
         })
     },
 
-    emailDupCheck(context, email) {
+    emailDupCheck({commit}, email) {
       axios.get(`/user/dup/email/${String(email)}`)
       .then(res => {
-        if (res.data.result == 'success') return true
-        else if (res.data.result == 'fail') return false
+        if (res.data.result == 'success')
+          commit('SET_VALID', true)
+        else if (res.data.result == 'fail')
+          commit('SET_VALID', false)
       })
     },
 
@@ -348,32 +357,9 @@ const moduleAccounts = {
       axios.post(SERVER.ROUTES.accounts.checkpassword, password, getters.config)
       .then((res) => {
         if(res.data.result == 'success') {
-          cookies.set('password-check', 1)
-          this._vm.$root.$bvModal.msgBoxOk('확인되었습니다.', {
-            title: 'Confirmation',
-            size: 'sm',
-            buttonSize: 'sm',
-            okVariant: 'success',
-            headerClass: 'p-2 border-bottom-0',
-            footerClass: 'p-2 border-top-0',
-            centered: true
-          })
-          .then((ans) => {
-            if (ans) {
-              dispatch('GoUserInfo')
-            }
-            cookies.remove('password-check')
-          })
+          dispatch('GoUserInfo')
         } else {
-          this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
-            title: 'Confirmation',
-            size: 'sm',
-            buttonSize: 'sm',
-            okVariant: 'danger',
-            headerClass: 'p-2 border-bottom-0',
-            footerClass: 'p-2 border-top-0',
-            centered: true
-          })
+          alert("비밀번호가 일치하지 않습니다.")
         }
       })
       .catch((err) => {
