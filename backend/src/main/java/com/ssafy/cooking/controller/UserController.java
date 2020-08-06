@@ -334,9 +334,11 @@ public class UserController {
 			
 			user.setPassword("");
 			String imageName = user.getProfile_image();
+			String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 			if(imageName != null && !imageName.equals("")) {
-				String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 				user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
+			}else {
+				user.setImage_url(baseUrl+"/images/profile/default_image.png");
 			}
 			map.put("data", user);
 			
