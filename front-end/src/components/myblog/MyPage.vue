@@ -28,21 +28,15 @@
     </v-card-text>
 
     <v-card-actions>
-      <v-btn
-        color="deep-purple lighten-2"
-        text
+      <div
         v-if="this.authUser.user_id !== this.selecteduserinfo.user_id"
-      >
+        class="inline-block-btn btn-style1">
         이웃추가
-      </v-btn>
-      <v-btn
-        color="deep-purple lighten-2"
-        text
-        @click="GoRecipeCreate"
-        v-if="this.authUser.user_id === this.selecteduserinfo.user_id"
-      >
+      </div>
+      <div v-if="this.authUser.user_id === this.selecteduserinfo.user_id"
+        class="inline-block-btn btn-style1" @click="GoRecipeCreate">
         새 글쓰기
-      </v-btn>
+      </div>
     </v-card-actions>
     <v-divider class="mx-4"></v-divider>
 

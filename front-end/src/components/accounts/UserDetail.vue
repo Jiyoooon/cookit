@@ -16,7 +16,7 @@
     <b-row align-v="center">
       <b-col sm="3"><label for="input-none">비밀번호</label></b-col>
       <b-col sm="9">
-        <b-form-input type="password" id="password" placeholder="비밀번호 변경 시 입력하세요." aria-describedby="password-feedback" v-model="updateData.config.password" :state="passwordValid"></b-form-input>
+        <b-form-input type="password" placeholder="비밀번호 변경 시 입력하세요." aria-describedby="password-feedback" v-model="updateData.config.password" :state="passwordValid"></b-form-input>
         <b-form-invalid-feedback id="password-feedback">
           영문자와 숫자를 포함해 8글자 이상으로 입력하세요. </b-form-invalid-feedback>
       </b-col>
@@ -24,14 +24,14 @@
     <b-row align-v="center">
       <b-col sm="3">비밀번호 재입력</b-col>
       <b-col sm="9">
-        <b-form-input type="password" id="password" aria-describedby="password-again-feedback" v-model="updateData.passwordAgain" :state="passwordAgainValid"></b-form-input>
+        <b-form-input type="password" aria-describedby="password-again-feedback" v-model="updateData.passwordAgain" :state="passwordAgainValid"></b-form-input>
         <b-form-invalid-feedback id="password-again-feedback">
           비밀번호가 다릅니다.</b-form-invalid-feedback>
       </b-col>
     </b-row>
-    <b-row align-v="center">
-      <b-col sm="3">닉네임</b-col>
-      <b-col sm="7">
+    <b-row>
+      <b-col sm="3" class="mt-2">닉네임</b-col>
+      <b-col sm="6">
         <b-form-input 
             id="input-userid" 
             v-model="updateData.config.nickname"
@@ -42,30 +42,38 @@
             >
           </b-form-input>
           <b-form-invalid-feedback>
-            닉네임이 올바르지 않습니다.(4~12글자 한글은 최대 6글자)
+            닉네임이 올바르지 않습니다.<br>(영문/숫자 4~12자, 한글 2~6자 & 특수문자 불가능)
           </b-form-invalid-feedback>
       </b-col>
-      <b-col sm="2">
-          <b-button v-if="!NickNameinValid || !IsNicknameChanged" disabled variant="primary" block>중복확인</b-button>
-          <b-button v-else variant="primary" @click='nicknameCheck(updateData.config.nickname)'>중복확인</b-button>
+      <b-col sm="3">
+          <div v-if="!NickNameinValid || !IsNicknameChanged" class="block-btn btn-style3" block>중복 확인</div>
+          <div v-else class="block-btn btn-style1" @click='nicknameCheck(updateData.config.nickname)'>중복 확인</div>
         </b-col>
     </b-row>
     <b-row align-v="center">
       <b-col sm="3">프로필 사진</b-col>
-      <div v-if="imageURL"><img id="imagepreview" :src="imageURL"></div>
-      <div v-else><img id="imagepreview" :src="imageURL2"></div>
-      <b-col sm="3"></b-col>
       <b-col sm="6">
-        <b-form-file ref="file-input" :placeholder="updateData.config.image_name" v-model="updateData.config.profile" class="mt-3" accept="image/*" @change="imageUpload"></b-form-file>
-        <!-- <b-form-file v-else ref="file-input" placeholder="DefaultImage" v-model="updateData.config.profile" class="mt-3" accept="image/*" @change="imageUpload"></b-form-file> -->
-        <b-button @click="selectBasicImage">기본이미지로 설정</b-button>
-        <!-- <div v-if="updateData.config.profile" class="mt-3">Selected file: {{ updateData.config.profile ? updateData.config.profile.name : '' }}</div> -->
-        <!-- <div v-else class="mt-3">Selected file: {{ updateData.config.image_name }}</div> -->
-      <!-- {{ updateData.config.image_name }} -->
+        <b-form-file ref="file-input" v-model="updateData.config.profile" accept="image/*"
+        :placeholder="updateData.config.image_name" @change="imageUpload"></b-form-file>
+      </b-col>
+			<b-col sm="3">
+        <div class="block-btn btn-style1" @click="selectBasicImage">사진 삭제</div>
       </b-col>
     </b-row>
-    <b-row align-v="center">
-      <b-col sm="3">소개글</b-col>
+    <b-row v-if="imageURL"> 
+      <b-col sm="3"></b-col>
+      <b-col sm="9">
+        <img :src="imageURL" height="100px">
+      </b-col>
+    </b-row>
+    <b-row v-else> 
+      <b-col sm="3"></b-col>
+      <b-col sm="9">
+        <img :src="imageURL2" height="100px">
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col sm="3" class="mt-2">소개글</b-col>
       <b-col sm="9"><b-form-textarea
        v-model="updateData.config.intro" id="textarea" rows="3" max-rows="6"></b-form-textarea>
       </b-col>
@@ -79,18 +87,20 @@
         </b-form-radio-group>
       </b-col>
     </b-row>
+    <b-row>
+      <b-col></b-col>
+    </b-row>
     <b-row align-v="center" align-h="center">
       <b-col sm="2"></b-col>
       <b-col sm="4">
-        <b-button type="submit" variant="primary" id="updateButton" @click="updateUser(updateData)" block>수정</b-button>
+        <div class="block-btn btn-style1" @click="updateUser(updateData)" block>수정</div>
       </b-col>
       <b-col sm="4">
-        <b-button variant="danger" id="deleteButton" @click="DeleteUser" block>탈퇴</b-button>
+        <div class="block-btn btn-style4" @click="DeleteUser" block>탈퇴</div>
       </b-col>
       <b-col sm="2"></b-col>
     </b-row>
   </b-container>
-  {{ updateTF }}
   </div>
 </template>
 
@@ -112,7 +122,7 @@ export default {
             email: null,
             password: '',
             nickname: null,
-            profile: '',
+            profile: null,
             image_name: '',
             intro: '',
             start_page: false,
@@ -157,7 +167,9 @@ export default {
         var nameflag = true
         for (var i = 0; i < len; i++) {
           const ch = this.updateData.config.nickname[i]
-          // console.log("ch: " + ch)
+<<<<<<< front-end/src/components/accounts/UserDetail.vue
+=======
+>>>>>>> front-end/src/components/accounts/UserDetail.vue
           if(('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'z')||('A' <= ch && ch <= 'Z')){
             NickNamelen++
           }
@@ -194,7 +206,6 @@ export default {
       nicknameCheck(nickname) {
         axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
-          console.log(res)
           if (res.data.result == 'success') {
             this.updateData.valid.nickname = true
             this.$bvModal.msgBoxOk('확인되었습니다.', {
@@ -294,12 +305,7 @@ export default {
 </script>
 
 <style>
-  #imagepreview {
-    width: 30vw;
-    height: 30vh;
-  }
-  .custom-file-input:lang(en) ~ .custom-file-label::after {
+.custom-file-input:lang(en) ~ .custom-file-label::after {
   content: '파일찾기';
-  }
-
+}
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div>
-    <b-container fluid="lg">
+    <b-container fluid>
       <b-row v-for="(step, index) in cookingStep" :key="index">
-				<b-col sm="1" class="mt-3"><h5>Step {{index + 1}}.</h5></b-col>
-        <b-col sm="7">
+				<b-col lg="1" class="mt-3"><h5>Step {{index + 1}}.</h5></b-col>
+        <b-col lg="7">
           <b-container fluid="lg" id="step-container">
             <b-row align-v="center">
               <b-col>
@@ -18,13 +18,18 @@
 						</b-row>
           </b-container>
         </b-col>
-        <b-col sm="3">
-					<b-container fluid="lg">
+        <b-col lg="4">
+					<b-container fluid>
             <b-row>
-              <b-col>
+              <b-col cols="11">
                 <b-form-file enctype="multipart/form-data" v-model="step.step_image_file" accept="image/*" placeholder="사진 추가"
                   @change="setThumbnail"></b-form-file>
               </b-col>
+							<b-col cols="1">
+								<div style="display:block; text-align:right;">
+									<b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer;" @click="deleteCookingStep(index)"></b-icon>
+								</div>
+							</b-col>
             </b-row>
             <b-row>
               <b-col>
@@ -34,13 +39,17 @@
             </b-row>
           </b-container>
         </b-col>
-				<b-col sm="1">
+				<!-- <b-col lg="1">
 					<b-container fluid="lg">
 						<b-row>
-							<b-col><b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer" @click="deleteCookingStep(index)"></b-icon></b-col>
+							<b-col>
+								<div style="display:block; text-align:right;">
+									<b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer;" @click="deleteCookingStep(index)"></b-icon>
+								</div>
+							</b-col>
 						</b-row>
 					</b-container>
-				</b-col>
+				</b-col> -->
       </b-row>
 			<b-row>
 				<b-col sm="4"></b-col>
