@@ -131,5 +131,14 @@ public class Recipe {
 	public void setRecipe_user_profileImage(String recipe_user_profileImage) {
 		this.recipe_user_profileImage = recipe_user_profileImage;
 	}
+	@Override
+	public String toString() {
+		return "Recipe [recipe_id=" + recipe_id + ", recipe_user=" + recipe_user + ", recipe_user_name="
+				+ recipe_user_name + ", recipe_user_profileImage=" + recipe_user_profileImage + ", category_id="
+				+ category_id + ", title=" + title + ", description=" + description + ", main_image=" + main_image
+				+ ", servings=" + servings + ", cooking_time=" + cooking_time + ", level=" + level + ", hits=" + hits
+				+ ", tag=" + tag + ", create_date=" + create_date + ", update_date=" + update_date + ", delete_date="
+				+ delete_date + ", like=" + like + ", main_image_file=" + main_image_file + "]";
+	}
 	
 }

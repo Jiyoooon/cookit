@@ -109,9 +109,6 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 		
 		if (recipeDetail.getIngredients() != null) {
-			for (Ingredient ingre : recipeDetail.getIngredients()) {
-				System.out.println(ingre);
-			}
 			recipeDao.checkIngredients(recipe_id, recipeDetail.getIngredients());
 			recipeDao.addIngredients(recipe_id, recipeDetail.getIngredients());
 		}
@@ -163,20 +160,13 @@ public class RecipeServiceImpl implements RecipeService {
 			}
 			recipeDao.reviseCookingsteps(recipe_id, reviseCookSteps);
 			recipeDao.addCookingsteps(recipe_id, addCookSteps);
+			recipeDao.deleteCookingSteps(recipe_id, recipeData.getCookingStep().size());
 		}
 		
 		if (recipeData.getIngredients() != null) {
-			List<Ingredient> reviseIngres = new LinkedList<>();
-			List<Ingredient> addIngres = new LinkedList<>();
-			for (int i = 0; i < recipeData.getIngredients().size(); i++) {
-				if(recipeData.getIngredients().get(i).getRecipe_ingredient_id() != null) {
-					reviseIngres.add(recipeData.getIngredients().get(i));
-				} else {
-					addIngres.add(recipeData.getIngredients().get(i));
-				}
-			}
-			recipeDao.reviseIngredients(recipe_id, reviseIngres);
-			recipeDao.addIngredients(recipe_id, addIngres);
+			recipeDao.checkIngredients(recipe_id, recipeData.getIngredients());
+			recipeDao.deleteIngredients(recipe_id);
+			recipeDao.addIngredients(recipe_id, recipeData.getIngredients());
 		}
 		
 		return recipe_id;

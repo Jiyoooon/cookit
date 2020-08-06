@@ -58,9 +58,7 @@ public class RecipeController {
 			throws Exception {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		
-		List<Recipe> recipes = recipeservice.getRecipes(p, id, user, query, category, filter, baseUrl);
-		System.out.println(recipes.size());
-		return new ResponseEntity<List<Recipe>>(recipes,
+		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes(p, id, user, query, category, filter, baseUrl),
 				HttpStatus.OK);
 	}
 
@@ -166,7 +164,7 @@ public class RecipeController {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		List<Recipe> recipes = recipeservice.getRecipes(null, recipe_id, null, null, null, null, baseUrl);
 		if (recipes.size() > 0) {
-			RecipeDetail recipeDetail = new RecipeDetail(recipeservice.getRecipes(null, recipe_id, null, null, null, null, baseUrl).get(0));
+			RecipeDetail recipeDetail = new RecipeDetail(recipes.get(0));
 			recipeDetail.setIngredients(recipeservice.getIngredients(recipe_id));
 			recipeDetail.setCookingStep(recipeservice.getCookingSteps(recipe_id));
 			recipeservice.upHits(recipe_id);

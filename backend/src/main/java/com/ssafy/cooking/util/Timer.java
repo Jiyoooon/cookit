@@ -161,13 +161,13 @@ public class Timer {
 	}
 
 	private static String toJson(List<int[]> list) {
-		String result = "[";
+		String result = "[ ";
 
 		for (int i = 0; i < list.size(); i++) {
 			if (i == list.size() - 1) {
-				result += "\"" + list.get(i)[1] + "\"";
+				result += list.get(i)[1] + " ";
 			} else {
-				result += "\"" + list.get(i)[1] + "\", ";
+				result += list.get(i)[1] + ", ";
 			}
 		}
 

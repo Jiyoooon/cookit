@@ -67,18 +67,6 @@
 			, update_date = now()
 		WHERE recipe_id = #{recipe_id}
 	</update>
-	
-	<update id="reviseIngredients">
-		<foreach collection="ingredients" item="ingre">
-		UPDATE Ingredient
-		SET category_id = #{category_id}
-		, food_ingredient_small_id = #{ingre.food_ingredient_small_id}
-		, is_essential = #{ingre.is_essential}
-		, quantity = #{ingre.quantity}
-		, update_date = now()
-		WHERE recipe_ingredient_id = #{ingre.recipe_ingredient_id}
-		</foreach>
-	</update>
 
 	<update id="reviseCookingsteps">
 		<foreach collection="cookingSteps" item="step" separator=",">
@@ -93,7 +81,16 @@
 		</foreach>
 	</update>
 
+	<delete id="deleteIngredients">
+		DELETE FROM Ingredient
+		WEHRE 	recipe_id = #{recipe_id}
+	</delete>
 
+	<delete id="deleteCookingSteps">
+		DELETE FROM Cooking_steps
+		WEHRE 	recipe_id = #{recipe_id}
+			AND	steps > #{step}
+	</delete>
 	
 	<select id="getRecipes" resultType="Recipe">
 		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
