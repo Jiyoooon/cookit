@@ -42,11 +42,14 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
     name:'RecipeCard',
     props:{
       recipe:Object,
+    },
+    computed: {
+      ...mapState('accounts', ['authUser'])
     },
     methods:{
         // readRecipe(){

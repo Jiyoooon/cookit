@@ -53,12 +53,15 @@
     <b-row align-v="center">
       <b-col sm="3">프로필 사진</b-col>
       <div v-if="imageURL"><img id="imagepreview" :src="imageURL"></div>
-      <b-col sm="3" v-if="imageURL"></b-col>
+      <div v-else><img id="imagepreview" :src="imageURL2"></div>
+      <b-col sm="3"></b-col>
       <b-col sm="6">
         <b-form-file ref="file-input" :placeholder="updateData.config.image_name" v-model="updateData.config.profile" class="mt-3" accept="image/*" @change="imageUpload"></b-form-file>
+        <!-- <b-form-file v-else ref="file-input" placeholder="DefaultImage" v-model="updateData.config.profile" class="mt-3" accept="image/*" @change="imageUpload"></b-form-file> -->
         <b-button @click="selectBasicImage">기본이미지로 설정</b-button>
-        <div v-if="updateData.config.profile" class="mt-3">Selected file: {{ updateData.config.profile ? updateData.config.profile.name : '' }}</div>
-        <div v-else class="mt-3">Selected file: {{ updateData.config.image_name }}</div>
+        <!-- <div v-if="updateData.config.profile" class="mt-3">Selected file: {{ updateData.config.profile ? updateData.config.profile.name : '' }}</div> -->
+        <!-- <div v-else class="mt-3">Selected file: {{ updateData.config.image_name }}</div> -->
+      <!-- {{ updateData.config.image_name }} -->
       </b-col>
     </b-row>
     <b-row align-v="center">
@@ -126,6 +129,7 @@ export default {
           { text: '둘러보기', value: false },
         ],
         imageURL: null,
+        imageURL2: 'http://i3a201.p.ssafy.io:8080/images/profile/default_image.png',
         filesize: null,
       }
     },
@@ -266,8 +270,9 @@ export default {
       selectBasicImage() {
         this.updateData.config.image_name = ''
         this.imageURL = ''
-        if (this.updateData.config.profile) {
-          this.$ref['file-input'].reset() }
+        this.updateData.config.profile = null 
+            // if (this.updateData.config.profile) {
+            //   this.$ref['file-input'].reset() }
       },
     },
     updated() {
