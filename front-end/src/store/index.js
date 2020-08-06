@@ -395,7 +395,7 @@ const moduleAccounts = {
     },
     signup({ commit, dispatch }, signupData) {
       if (!signupData.valid.password) {
-        this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
+        this._vm.$root.$bvModal.msgBoxOk('비밀번호를 확인해주세요.', {
           title: 'Confirmation',
           size: 'sm',
           buttonSize: 'sm',
