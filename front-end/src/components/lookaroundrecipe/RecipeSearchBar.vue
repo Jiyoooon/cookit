@@ -225,4 +225,8 @@ import { mapActions, mapState } from 'vuex'
     margin: 0.5%;
     padding: 0.5%;
 }
+
+.theme--light.v-divider {
+    border-color: sandybrown !important;
+}
 </style>
