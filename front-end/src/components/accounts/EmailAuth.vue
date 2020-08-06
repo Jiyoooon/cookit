@@ -2,8 +2,7 @@
   <div>
     <b-container fluid id ="userinfo-container">
       <b-row>
-        <b-col md="2" class="mt-2">이메일
-        </b-col>
+        <b-col md="2" class="mt-2">이메일</b-col>
         <b-col md="7">
           <b-form-input 
             id="input-email" 
@@ -54,7 +53,7 @@ import { mapActions, mapGetters } from 'vuex'
       return {
         userEmail: null,
         authCode: null,
-        sendBtnActive: false
+        sendBtnActive: false,
       }
     },
     methods: {
@@ -84,6 +83,11 @@ import { mapActions, mapGetters } from 'vuex'
   margin: 1em;
   cursor: pointer;
   padding: 6px 10px 6px 10px;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 .block-btn {
@@ -93,6 +97,11 @@ import { mapActions, mapGetters } from 'vuex'
   text-align: center;
   cursor: pointer;
   padding: 6px 10px 6px 10px;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 /* 기본 청록색 버튼 */

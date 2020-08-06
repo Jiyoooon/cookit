@@ -9,6 +9,7 @@ import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 import PasswordFindView from '../views/accounts/PasswordFindView.vue'
 import EmailAuthView from '../views/accounts/EmailAuthView.vue'
 import RecipeCreateView from '@/views/myrecipes/RecipeCreateView.vue'
+import RecipeUpdateView from '@/views/myrecipes/RecipeUpdateView.vue'
 import Home from '../views/Home.vue'
 import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView.vue'
 import MyBlogListView from '../views/myblog/MyBlogListView.vue'
@@ -22,7 +23,7 @@ Vue.use(VueRouter)
 
   const routes = [
   {
-    path: '',
+    path: '/home',
     name: 'Home',
     component: Home
   },
@@ -72,7 +73,12 @@ Vue.use(VueRouter)
     component: RecipeCreateView
   },
   {
-    path: '/lookAroundRecipe',
+    path: '/recipeUpdate',
+    name: 'RecipeUpdateView',
+    component: RecipeUpdateView
+  },
+  {
+    path: '/', //lookAroundRecipe
     name: 'LookAroundRecipeView',
     component: LookAroundRecipeView
   },
@@ -162,7 +168,7 @@ router.beforeEach((to, from, next) => {
   if (!IsLoggedIn && LoggedInRequired) {
     next({ name: 'Login' })
   } else if (IsLoggedIn && LoggedOutRequired) {
-    next({ name: 'Home' })
+    next({ name: 'LookAroundRecipeView' })
   } else if (!IsAuthorized && AuthorizedRequired) {
     next({ name: 'EmailAuthView' })
   } else if (!IsPasswordAuth && AuthPasswordRequired) {
