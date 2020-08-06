@@ -57,7 +57,10 @@ public class RecipeController {
 			@RequestParam(value = "filter", required = false) String filter, HttpServletRequest request)
 			throws Exception {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		return new ResponseEntity<List<Recipe>>(recipeservice.getRecipes(p, id, user, query, category, filter, baseUrl),
+		
+		List<Recipe> recipes = recipeservice.getRecipes(p, id, user, query, category, filter, baseUrl);
+		System.out.println(recipes.size());
+		return new ResponseEntity<List<Recipe>>(recipes,
 				HttpStatus.OK);
 	}
 

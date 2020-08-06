@@ -43,4 +43,5 @@ public interface RecipeDao {
 	void reviseIngredients(int recipe_id, List<Ingredient> ingredients);
 	void setLike(int recipe_id, int uid);
 	int deleteLike(int recipe_id, int uid);
+	List<Integer> getLikeList(Integer recipe_id);
 }

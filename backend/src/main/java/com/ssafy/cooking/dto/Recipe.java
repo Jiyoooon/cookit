@@ -1,5 +1,7 @@
 package com.ssafy.cooking.dto;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class Recipe {
@@ -19,7 +21,7 @@ public class Recipe {
 	private String create_date; //작성시간
 	private String update_date;
 	private String delete_date;
-	private boolean like;
+	private List<Integer> like;
 	private MultipartFile main_image_file;
 	public Integer getRecipe_id() {
 		return recipe_id;
@@ -111,10 +113,10 @@ public class Recipe {
 	public void setDelete_date(String delete_date) {
 		this.delete_date = delete_date;
 	}
-	public boolean isLike() {
+	public List<Integer> getLike() {
 		return like;
 	}
-	public void setLike(boolean like) {
+	public void setLike(List<Integer> like) {
 		this.like = like;
 	}
 	public MultipartFile getMain_image_file() {
