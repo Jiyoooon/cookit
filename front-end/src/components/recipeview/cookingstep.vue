@@ -1,6 +1,6 @@
 <template>
   <div>
-      <b-container>
+      <b-container fluid="lg">
             <h2>조리순서</h2>
             <cookingstepitem class="cookingstepitem" :cookingstep="cookingstep" v-for="cookingstep in selectedRecipe.cookingStep" :key="cookingstep.cooking_steps_id"/>
       </b-container>

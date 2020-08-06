@@ -10,7 +10,7 @@
                 </v-flex>
             </v-layout>
         <div @click="scrollToTop" id= "button-bottom">
-            <b-icon icon="arrow-up-circle" scale="1"></b-icon>
+            <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로"></b-icon>
         </div>
         
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="0" style="text-align:center">

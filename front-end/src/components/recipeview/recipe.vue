@@ -2,21 +2,23 @@
   <b-container>
       <b-row>
       <b-col>
-      <img :src="selectedRecipe.main_image" alt="mainimage" style="max-width:100%;max-height:100%;">
+      <img :src="selectedRecipe.main_image" alt="mainimage" style="max-width:80vw;max-height:80vh;">
       <h2 style="text-align:center">{{ selectedRecipe.title }}</h2>
       </b-col>
       </b-row>
-      <b-row>
+      <strong>
+      <b-row style="text-align:center">
           <b-col>
-            {{ selectedRecipe.servings }}인분
+            인원 : {{ this.serving[selectedRecipe.servings] }}
           </b-col>
           <b-col>
-            난이도 : {{ selectedRecipe.level }}
+            난이도 : {{ this.level[selectedRecipe.level] }}
           </b-col>
           <b-col>
-            조리시간 : {{ selectedRecipe.cooking_time }}
+            조리시간 : {{ this.cooking_time[selectedRecipe.cooking_time] }}
           </b-col>
       </b-row>
+      </strong>
       <hr>
       <b-row>
           <b-col lg-3 style="text-align:center">
@@ -24,9 +26,7 @@
             {{ selectedRecipe.recipe_user_name }}
           </b-col>
           <b-col lg-9>
-          <div class="arrow_box" style="font-style:italic">
-              "{{ selectedRecipe.description }}"
-          </div>
+            <p class="triangle-border left" style="font-size:1.2rem">"{{ selectedRecipe.description }}"</p>
           </b-col>
       </b-row>
       
@@ -39,6 +39,13 @@
 import { mapState } from 'vuex'
 export default {
     name: 'recipe',
+    data(){
+        return{
+            serving:['',"혼자","둘이서","3~4인","5인이상"],
+            cooking_time:['',"15분이하","15~30분","30분~1시간","1~2시간","2시간이상"],
+            level:['','★☆☆☆☆','★★☆☆☆','★★★☆☆','★★★★☆','★★★★★']
+        }
+    },
     computed: {
         ...mapState('recipes', ['selectedRecipe', 'recipeUser']),
     },
@@ -54,7 +61,7 @@ export default {
 <style>
     #userimg {
         height: 20vw;
-        weight: 20vw;
+        width: 20vw;
     }
     .arrow_box {
         font-size: 2vw;
@@ -85,4 +92,71 @@ export default {
         border-width: 21px;
         margin-top: -21px;
     }
+    .triangle-border:before {
+  content:"";
+  position:absolute;
+  bottom:-20px; /* value = - border-top-width - border-bottom-width */
+  left:40px; /* controls horizontal position */
+  border-width:20px 20px 0;
+  border-style:solid;
+  border-color:#5a8f00 transparent;
+  /* reduce the damage in FF3.0 */
+  display:block;
+  width:0;
+}
+
+/* creates the smaller  triangle */
+.triangle-border:after {
+  content:"";
+  position:absolute;
+  bottom:-13px; /* value = - border-top-width - border-bottom-width */
+  left:47px; /* value = (:before left) + (:before border-left) - (:after border-left) */
+  border-width:13px 13px 0;
+  border-style:solid;
+  border-color:#fff transparent;
+  /* reduce the damage in FF3.0 */
+  display:block;
+  width:0;
+}
+.triangle-border.right {
+  margin-right:30px;
+}
+.triangle-border.top:before {
+  top:-20px; /* value = - border-top-width - border-bottom-width */
+  bottom:auto;
+  left:auto;
+  right:40px; /* controls horizontal position */
+  border-width:0 20px 20px;
+}
+
+/* creates the smaller  triangle */
+.triangle-border.top:after {
+  top:-13px; /* value = - border-top-width - border-bottom-width */
+  bottom:auto;
+  left:auto;
+  right:47px; /* value = (:before right) + (:before border-right) - (:after border-right) */
+  border-width:0 13px 13px;
+}
+
+/* Variant : left
+------------------------------------------ */
+
+/* creates the larger triangle */
+.triangle-border.left:before {
+  top:10px; /* controls vertical position */
+  bottom:auto;
+  left:-30px; /* value = - border-left-width - border-right-width */
+  border-width:15px 30px 15px 0;
+  border-color:transparent #5a8f00;
+}
+
+/* creates the smaller  triangle */
+.triangle-border.left:after {
+  top:16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom:auto;
+  left:-21px; /* value = - border-left-width - border-right-width */
+  border-width:9px 21px 9px 0;
+  border-color:transparent #fff;
+}
+
 </style>
