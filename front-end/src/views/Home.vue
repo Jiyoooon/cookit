@@ -1,10 +1,14 @@
 <template>
-  <div>
+  <div id="wrapper">
       <h1>Welcome to Home</h1>
-      {{ isLoggedIn }}
       <hr>
-      {{ authUser }}
-      <hr>
+      <div v-if="!isLoggedIn" class="inform">
+        임시 홈화면입니다.<br>
+        내 블로그 기능을 이용하려면 로그인을 해주세요.
+      </div>
+      <div v-else class="inform">
+        {{ authUser.nickname }} 님, 환영합니다!
+      </div>
       <!-- {{ myrecipes }} -->
       <b-img v-if="isLoggedIn" id="image" v-bind="mainProps" :src="authUser.image_url" rounded="circle" alt="Circle image"></b-img>
   </div>

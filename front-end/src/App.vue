@@ -3,10 +3,10 @@
     <header id="app-header">
       <b-navbar toggleable="sm" type="light" variant="">
     <b-navbar-brand href="#">
-        <img @click="mainLogoClick" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQDLFnxu6sy4oQgCw4yuNZeNq1p604iMXTq-Q&usqp=CAU" style="height: 5em; padding: 0px 1em 0px 1em;">
+        <img @click="mainLogoClick" src="./assets/logo.jpg" style="height: 5em; padding: 0px 2em">
     </b-navbar-brand>
     <nav class="nav-menu">
-      <div id="myblog" @click="goUserBlog">내 블로그</div>
+      <div v-if="isLoggedIn" id="myblog" @click="goUserBlog">내 블로그</div>
       <div id="browsing" @click="GoLookAroundRecipesView">둘러보기</div>
     </nav>
     <nav class="nav-side">
@@ -25,6 +25,21 @@
   <div id="app-router">
     <router-view></router-view>
   </div>
+  <footer id="app-footer">
+    <ul>
+      <li><strong>Made by. </strong></li>
+      <li>곽은정</li>
+      <li>김지윤</li>
+      <li>김태형</li>
+      <li>이건수</li>
+      <li>차보람</li>
+      <div class="copyright">
+        Copyright ©
+        <a href="http://www.ssafy.com"><strong>Samsung SW Academy For Youth</strong></a>
+        All Rights Reserved.
+      </div>
+    </ul>
+  </footer>
   </div>
 </template>
 
@@ -140,7 +155,7 @@ export default {
   padding: 6px 12px;
 }
 
-@media (max-width: 505px) {
+@media (max-width: 496px) {
   .nav-menu {
     margin-left: auto;
     margin-right: auto;
@@ -195,6 +210,7 @@ export default {
   width: 90%;
   margin: 0px auto;
   background-color: white;
+  min-height: 512px;
 }
 
 @media (max-width: 768px) {
@@ -204,6 +220,36 @@ export default {
     margin: 0px auto;
     background-color: white;
   }
+}
+
+#app-footer {
+  text-align: center;
+  padding: 30px 50px;
+  color: white;
+  background-color: #24282C;
+  position: relative;
+  height: 9em;
+  width: 100%;
+  margin: 0 auto;
+  font-size: 12px;
+} 
+
+#app-footer li {
+  position: relative;
+  display: inline;
+  padding: 12px;
+  white-space: nowrap;
+  text-decoration: none;
+  color: white;
+}
+
+#app-footer .copyright {
+  padding: 10px;
+}
+
+#app-footer a {
+  text-decoration: none;
+  color: white;
 }
 
 /* 버튼 */

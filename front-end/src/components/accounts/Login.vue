@@ -2,28 +2,17 @@
   <div>
     <b-container fluid="lg" id ="login-container">
       <b-row align-v="center" align-h="center">
-        <b-col sm="2">
-          <label for="login-email">Email</label>
-        </b-col>
+        <b-col sm="2">이메일</b-col>
         <b-col sm="8">
-          <b-form-input @keyup.enter="login(loginData)"
-            id="login-email" 
-            v-model="loginData.email"
-            >
+          <b-form-input id="login-email" v-model="loginData.email">
           </b-form-input>
         </b-col>
       </b-row>  
 
       <b-row align-v="center" align-h="center">
-        <b-col sm="2">
-          <label for="login-password">Password</label>
-        </b-col>
+        <b-col sm="2">비밀번호</b-col>
         <b-col sm="8">
-          <b-form-input @keyup.enter="login(loginData)"
-            type="password" 
-            id="login-passwod" 
-            v-model="loginData.password"
-            >
+          <b-form-input type="password" id="login-password" v-model="loginData.password" @keyup.enter="login(loginData)">
           </b-form-input>
         </b-col>
       </b-row>
