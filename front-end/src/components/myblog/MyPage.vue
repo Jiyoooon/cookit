@@ -8,10 +8,10 @@
   >
     <v-img
       height="250"
-      :src="authUser.image_url"
+      :src="selecteduserinfo.image_url"
     ></v-img>
 
-    <v-card-title>{{ authUser.nickname }}</v-card-title>
+    <v-card-title>{{ selecteduserinfo.nickname }}</v-card-title>
 
     <v-card-text>
       <!-- <v-row
@@ -22,7 +22,7 @@
       <!-- </v-row> -->
 
       <div class="my-4 subtitle-1">
-        {{ authUser.intro }}
+        {{ selecteduserinfo.intro }}
       </div>
 
     </v-card-text>
@@ -31,14 +31,15 @@
       <v-btn
         color="deep-purple lighten-2"
         text
-        @click="reserve"
+        v-if="this.authUser.user_id !== this.selecteduserinfo.user_id"
       >
         이웃추가
       </v-btn>
       <v-btn
         color="deep-purple lighten-2"
         text
-        @click="reserve"
+        @click="GoRecipeCreate"
+        v-if="this.authUser.user_id === this.selecteduserinfo.user_id"
       >
         새 글쓰기
       </v-btn>
@@ -49,7 +50,6 @@
 
     <v-card-text>
       <v-chip-group
-        v-model="selection"
         active-class="deep-purple accent-4 white--text"
         column
       >
@@ -68,12 +68,21 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState,mapActions } from 'vuex'
 
 export default {
     name: 'MyPage',
+    data(){
+      return{
+        loading:true,
+      }
+    },
     computed: {
-      ...mapState('accounts', ['authUser'])
+      ...mapState('accounts', ['authUser']),
+      ...mapState('myblog',['selecteduserinfo'])
+    },
+    methods: {
+      ...mapActions('accounts',['GoRecipeCreate'])
     },
 }
 </script>

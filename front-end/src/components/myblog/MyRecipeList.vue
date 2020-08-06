@@ -1,8 +1,9 @@
 <template>
 <div>
+    <router-view :key="$route.fullPath"/>
     <b-row>   
         <MyRecipeListItem :recipe="recipe" 
-        :key="index" v-for="(recipe, index) in currentPageItems" id="my-recipes" /> 
+        :key="recipe.recipe_id" v-for="recipe in currentPageItems" id="my-recipes" /> 
     </b-row>
     <b-row>
         <b-pagination id="pagination" :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
@@ -11,13 +12,17 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import MyRecipeListItem from './MyRecipeListItem.vue'
 
 export default {
     name: 'MyRecipeList',
+    props:{
+
+    },
     data() {
         return {
+          flag: false,
           currentPage: 1,
           perPage: 6,
           paginated_items: {},
@@ -37,6 +42,8 @@ export default {
             this.changePaginateditems(this.nbPages, this.myrecipes.slice(i,i+this.perPage))
             this.increasenbpages()
           }
+          console.log("테스트")
+          console.log(this.paginated_items[this.currentPage-1])
           return this.paginated_items[this.currentPage-1];
         },
         totalRows() {
@@ -46,16 +53,36 @@ export default {
     methods: {
        ...mapActions('myblog', ['selectedRecipe', 'fetchMyRecipes']),
        ...mapActions('recipes', ['fetchRecipe']),
+       ...mapMutations('myblog',['SET_FLAG']),
       changePaginateditems(index, value) {
         this.paginated_items[index] = value
       },
       increasenbpages() {
         this.nbPages++
       },
+      fortest(){
+        if(this.flag ===false){
+          this.$router.go(0)
+          this.flag = true
+        }
+      }
+    },
+    watch: {
+      myrecipes(){
+        console.log("마이레시피 변화!")
+      }
+    },
+    mounted() {
+      this.SET_FLAG(false)
+    },
+    updated() {
+        // setTimeout(() => {
+        //     this.fortest()
+        // },1000);
     },
     created() {
         this.fetchMyRecipes()
-    }
+    },
 }
 </script>
 

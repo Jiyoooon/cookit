@@ -5,7 +5,7 @@
         <img @click="GoHome" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQDLFnxu6sy4oQgCw4yuNZeNq1p604iMXTq-Q&usqp=CAU" style="height: 5em">
     </b-navbar-brand>
     <b-navbar-nav>
-      <b-nav-item @click="GoMyBlog">내 블로그</b-nav-item>
+      <b-nav-item @click="gouserblog">내 블로그</b-nav-item>
       <b-nav-item @click="GoLookAroundRecipesView">둘러보기</b-nav-item>
     </b-navbar-nav>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions,mapState,mapMutations } from 'vuex'
 
 export default {
     name: 'AppHeader',
@@ -51,15 +51,24 @@ export default {
     },
     computed: {
         // ...mapState([ 'me' ]),
-        ...mapGetters('accounts', ['isLoggedIn'])
+        ...mapGetters('accounts', ['isLoggedIn']),
+        ...mapState('accounts',['authUser'])
     },
     methods: {
         toggle() {
             this.isActive = !this.isActive
             console.log(this.isActive)
         },
-        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'GoMyBlog']),
-        ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients'])
+        gouserblog(){
+          this.SET_USERINFO(this.authUser)
+          this.setRecipequeryUserId(this.authUser.nickname)
+          this.GoMyBlog()
+        },
+        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth']),
+        ...mapActions('myblog',['GoMyBlog']),
+        ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
+        ...mapMutations('myblog',['SET_USERINFO']),
+        ...mapMutations('lookaround',['setRecipequeryUserId'])
     },
     created(){
       this.getIngredients()

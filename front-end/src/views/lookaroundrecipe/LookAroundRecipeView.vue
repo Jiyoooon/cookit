@@ -46,7 +46,6 @@ export default {
             this.busy = false
         },
         loadMore (){
-
             this.busy = true;
             setTimeout(() => {
                 this.getFilteredRecipes()
