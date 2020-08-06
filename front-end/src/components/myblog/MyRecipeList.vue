@@ -1,6 +1,5 @@
 <template>
-<b-container>
-  <!-- <b-col lg-9> -->
+<div>
     <b-row>   
         <MyRecipeListItem @click.native="fetchRecipe(recipe.recipe_id)" :recipe="recipe" 
         :key="index" v-for="(recipe, index) in currentPageItems" id="my-recipes" /> 
@@ -8,8 +7,7 @@
     <b-row>
         <b-pagination id="pagination" :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
     </b-row>
-</b-container>
-<!-- </b-col> -->
+</div>
 </template>
 
 <script>

@@ -4,10 +4,10 @@
         <SearchBar id="searchbar" />
       </b-row>
       <b-row>
-        <b-col lg="3" md="3" sm="12">
+        <b-col lg="3">
             <MyPage id="mypage" />
         </b-col>
-        <b-col lg="9" sm="12">
+        <b-col lg="9">
             <MyRecipeList />
         </b-col>
       </b-row>

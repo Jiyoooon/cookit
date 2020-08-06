@@ -8,8 +8,8 @@
     <v-list-item-title 
       class="headline"
       @click="readRecipe"
-      style="cursor:pointer; padding: 3%"
-    ><h5><strong>{{ recipe.title }}</strong></h5></v-list-item-title>
+      style="cursor:pointer; padding: 3%; padding-bottom: 0;"
+    ><h5><strong>{{ recipe.title }}</strong></h5><hr></v-list-item-title>
     <v-img
         :src='recipe.main_image'
         height="194"
@@ -18,36 +18,24 @@
     ></v-img>
     
 
-    <v-card-text class="maintext">
+    <!-- <v-card-text class="maintext">
         <span>{{ recipe.description }}</span>
-    </v-card-text>
-    <v-list-item>
-      <v-list-item-avatar> <img 
-        :src='recipe.main_image'></v-list-item-avatar>
-      <v-list-item-content>
-        <v-list-item-subtitle ><span style="cursor:pointer">by {{ recipe.recipe_user_name}}</span></v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
+    </v-card-text> -->
     <v-card-actions>
-      <v-btn
-        text
-        color="deep-purple accent-4"
-      >
-        Read
-      </v-btn>
-      <v-btn
-        text
-        color="deep-purple accent-4"
-      >
-        Bookmark
-      </v-btn>
-      <v-spacer></v-spacer>
       <v-btn icon>
         <v-icon>mdi-heart</v-icon>
       </v-btn>
       <v-btn icon>
         <v-icon>mdi-share-variant</v-icon>
       </v-btn>
+      <v-spacer></v-spacer>
+      <v-list-item>
+      <v-list-item-avatar> <img 
+        :src='recipe.main_image'></v-list-item-avatar>
+      <v-list-item-content>
+        <v-list-item-subtitle ><span style="cursor:pointer">by {{ recipe.recipe_user_name}}</span></v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
     </v-card-actions>
   </v-card>
 </template>
