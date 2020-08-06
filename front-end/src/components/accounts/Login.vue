@@ -12,6 +12,7 @@
             aria-describedby="input-email-feedback"
             placeholder="email"
             trim
+            @keydown.enter="login(loginData)"
             >
           </b-form-input>
           <b-form-invalid-feedback id="input-email-feedback">
@@ -32,6 +33,7 @@
             aria-describedby="input-password-feedback"
             placeholder="Password"
             trim
+            @keydown.enter="login(loginData)"
             >
           </b-form-input>
           <b-form-invalid-feedback id="input-password-feedback">
