@@ -6,7 +6,7 @@
       {{ authUser }}
       <hr>
       <!-- {{ myrecipes }} -->
-      <b-img id="image" v-bind="mainProps" :src="authUser.image_url" rounded="circle" alt="Circle image"></b-img>
+      <b-img v-if="isLoggedIn" id="image" v-bind="mainProps" :src="authUser.image_url" rounded="circle" alt="Circle image"></b-img>
   </div>
 </template>
 
