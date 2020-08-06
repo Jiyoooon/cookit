@@ -83,6 +83,11 @@ import { mapActions, mapGetters } from 'vuex'
   margin: 1em;
   cursor: pointer;
   padding: 6px 10px 6px 10px;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 .block-btn {
@@ -92,6 +97,11 @@ import { mapActions, mapGetters } from 'vuex'
   text-align: center;
   cursor: pointer;
   padding: 6px 10px 6px 10px;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 /* 기본 청록색 버튼 */
