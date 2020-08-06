@@ -4,10 +4,10 @@
         <SearchBar id="searchbar" />
       </b-row>
       <b-row>
-        <b-col lg="3" md="3" sm="12">
+        <b-col lg="3">
             <MyPage id="mypage" />
         </b-col>
-        <b-col lg="9" sm="12">
+        <b-col lg="9">
             <MyRecipeList />
         </b-col>
       </b-row>
@@ -18,14 +18,26 @@
 import SearchBar from '../../components/myblog/SerachBar.vue'
 import MyPage from '../../components/myblog/MyPage.vue'
 import MyRecipeList from '../../components/myblog/MyRecipeList.vue'
+import { mapActions, mapState } from 'vuex'
 
 export default {
     name: 'MyBlogListView',
+    data() {
+        return {
+            
+        }
+    },
     components: {
         SearchBar,
         MyPage,
         MyRecipeList,
-    }
+    },
+    computed: {
+        ...mapState('myblog', ['myrecipes'])
+    },
+    methods: {
+        ...mapActions('myblog', ['fetchMyRecipes']),
+    },
 }
 </script>
 

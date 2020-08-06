@@ -1,16 +1,16 @@
 <template>
-    <div>
+    <div >
         <RecipeSearchBar />
         <div class="RecipeArray">
-        <v-container fluid grid-list-md>
-            <v-layout row wrap>
-                <v-flex xs12 sm6 md4 lg3 xl2 v-for="recipeinfo in recipes" :key="recipeinfo.recipe_id" style="margin:1%" >
-                    <RecipeCard :recipe="recipeinfo">
+        <v-container fluid grid-list-md >
+            <v-layout row wrap >
+                <v-flex xs12 sm6 md4 lg3 xl2 v-for="recipeinfo in recipes" :key="recipeinfo.recipe_id" style="margin:auto%" >
+                    <RecipeCard :recipe="recipeinfo" >
                     </RecipeCard>
                 </v-flex>
             </v-layout>
         <div @click="scrollToTop" id= "button-bottom">
-            <b-icon icon="arrow-up-circle" scale="1"></b-icon>
+            <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로"></b-icon>
         </div>
         
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="0" style="text-align:center">
@@ -26,14 +26,13 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollmonitor/1.2.0/scrollMonitor.js"></script>
 <script>
-import InfiniteLoading from 'vue-infinite-loading';
+import InfiniteLoading from 'vue-infinite-loading'
 import RecipeSearchBar from "@/components/lookaroundrecipe/RecipeSearchBar.vue"
 import RecipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
 import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
     data(){
         return{
-            list: ['감자','고구마','딸기'],
             busy: false
         }
     },
@@ -54,7 +53,7 @@ export default {
             },1000);
         },
         scrollToTop(){
-            window.scroll(0,0)//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
+            window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
         ...mapActions('lookaround',['getFilteredRecipes','alertfortest']),
         ...mapMutations('lookaround',['initializing']),

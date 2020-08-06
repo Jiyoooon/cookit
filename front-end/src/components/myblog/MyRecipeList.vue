@@ -1,15 +1,13 @@
 <template>
-<b-container>
-  <!-- <b-col lg-9> -->
+<div>
     <b-row>   
-        <MyRecipeListItem @click.native="fetchRecipe(recipe.recipe_id)" :recipe="recipe" 
+        <MyRecipeListItem :recipe="recipe" 
         :key="index" v-for="(recipe, index) in currentPageItems" id="my-recipes" /> 
     </b-row>
     <b-row>
         <b-pagination id="pagination" :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
     </b-row>
-</b-container>
-<!-- </b-col> -->
+</div>
 </template>
 
 <script>
@@ -24,7 +22,8 @@ export default {
           perPage: 6,
           paginated_items: {},
           currentPageIndex:0,
-          nbPages:0
+          nbPages:0,
+          recipes: null,
         }
     },
     components: {
@@ -45,7 +44,7 @@ export default {
         }
     },
     methods: {
-       ...mapActions('myblog', ['selectedRecipe']),
+       ...mapActions('myblog', ['selectedRecipe', 'fetchMyRecipes']),
        ...mapActions('recipes', ['fetchRecipe']),
       changePaginateditems(index, value) {
         this.paginated_items[index] = value
@@ -54,10 +53,9 @@ export default {
         this.nbPages++
       },
     },
-    // created() {
-    //   console.log(11111111)
-    //   this.fetchMyRecipes()
-    // }
+    created() {
+        this.fetchMyRecipes()
+    }
 }
 </script>
 
@@ -69,5 +67,11 @@ export default {
      #pagination {
       margin-left: auto;
       margin-right: auto;
+    }
+    .page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: grey !important;
+    border-color: lightgrey !important;
     }
 </style>

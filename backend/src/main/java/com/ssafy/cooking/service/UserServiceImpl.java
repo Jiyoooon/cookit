@@ -2,6 +2,9 @@ package com.ssafy.cooking.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
@@ -20,6 +23,7 @@ import com.ssafy.cooking.dao.UserDao;
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
 import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.SNS;
 import com.ssafy.cooking.dto.User;
 import com.ssafy.cooking.util.SHA256;
 
@@ -72,14 +76,15 @@ public class UserServiceImpl implements UserService{
 			//profile != null => 프로필 수정
 			if(profile != null) {
 				System.out.println("프로필 수정!");
+				removeProfile(Integer.toString(user.getUser_id()));
 				writeProfile(profile, user.getUser_id(), user);
 			}
 			//user.getImage_name() == null => 프로필 내림
 			else if(imageName == null || imageName.trim().equals("")) {
 				System.out.println("프로필 내림!");
 				removeProfile(Integer.toString(user.getUser_id()));
-				user.setProfile_image("default_image.png");
-				user.setImage_name("default_image.png");
+				user.setProfile_image("");
+				user.setImage_name("");
 			}
 			//수정 X
 			else{
@@ -193,7 +198,7 @@ public class UserServiceImpl implements UserService{
 		User user = userDao.getUser(uid);
 		String fileName = user.getProfile_image();
 		
-		if(fileName == null || fileName.equals("")) {//프로필 이미지 원래 없었음
+		if(fileName == null || fileName.equals("") || fileName.equals("default_image.png")) {//프로필 이미지 원래 없거나 기본이미지
 			return true;
 		}
 		
@@ -217,12 +222,13 @@ public class UserServiceImpl implements UserService{
 		user.setImage_name(oriName);
 		
 		String extension = oriName.substring(oriName.lastIndexOf("."));//확장자
+		String timestamp = new Timestamp(System.currentTimeMillis()).toString();
 		
-		String fileName = "profile_image_"+userId+extension;//파일명
+		String fileName = "profile_image_"+timestamp+extension;//파일명
 		String fileFullPath = filePath+separator+fileName;
 		try {
 //    			파일 저장
-			profile.transferTo(new File(fileFullPath));//window
+			profile.transferTo(new File(fileFullPath));
 			user.setProfile_image(fileName);
 			
 			return true;
@@ -288,6 +294,30 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int unfollow(String from_user, String to_user) {
 		return userDao.unfollow(from_user, to_user);
+	}
+
+	
+	
+	
+	
+	@Override
+	public List<SNS> getLinkedSNS(String uid) {
+		return userDao.getLinkedSNS(uid);
+	}
+
+	@Override
+	public int addLinkedSNS(String uid, String name, String url) {
+		return userDao.insertLinkedSNS(uid, name, url);
+	}
+
+	@Override
+	public int reviseLinkedSNS(String uid, String name, String url) {
+		return userDao.updateLinkedSNS(uid, name, url);
+	}
+
+	@Override
+	public int removeLinkedSNS(String uid, String name) {
+		return userDao.deleteLinkedSNS(uid, name);
 	}
 
 

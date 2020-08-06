@@ -35,6 +35,13 @@
       >
         이웃추가
       </v-btn>
+      <v-btn
+        color="deep-purple lighten-2"
+        text
+        @click="reserve"
+      >
+        새 글쓰기
+      </v-btn>
     </v-card-actions>
     <v-divider class="mx-4"></v-divider>
 
