@@ -38,6 +38,7 @@ public class RecipeServiceImpl implements RecipeService {
 		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, query, category, filter);
 		for (Recipe r : recipes) {
 			r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
+			r.setLike(recipeDao.getLikeList(r.getRecipe_id()));
 		}
 		return recipes;
 	}

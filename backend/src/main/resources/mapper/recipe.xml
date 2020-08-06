@@ -395,4 +395,9 @@
 		WHERE recipe_id = #{recipe_id} 
 			and like_user = #{uid}
 	</delete>
+	
+	<select id="getLikeList" resultType="Integer">
+		SELECT like_user FROM Likes
+		WHERE recipe_id = #{recipe_id}
+	</select>
 </mapper>
