@@ -28,13 +28,13 @@
       <v-btn icon>
         <v-icon>mdi-share-variant</v-icon>
       </v-btn>
-      <v-spacer></v-spacer>
       <v-list-item>
+      <v-spacer></v-spacer>
       <v-list-item-avatar> <img 
         :src='recipe.main_image'></v-list-item-avatar>
-      <v-list-item-content>
+      <!-- <v-list-item-content>
         <v-list-item-subtitle ><span style="cursor:pointer">by {{ recipe.recipe_user_name}}</span></v-list-item-subtitle>
-      </v-list-item-content>
+      </v-list-item-content> -->
     </v-list-item>
     </v-card-actions>
   </v-card>
@@ -68,5 +68,12 @@ export default {
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical; 
+    }
+    .v-sheet.v-card {
+    border-radius: 7px !important;
+    border-color: rgb(235, 199, 133) !important;
+    }
+    .v-image {
+      border-radius: 3px !important;
     }
 </style>
