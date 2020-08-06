@@ -22,6 +22,22 @@
 	</properties>
 
 	<dependencies>
+		<!-- google speech-to-text api -->
+		<dependency>
+		    <groupId>com.google.cloud</groupId>
+		    <artifactId>libraries-bom</artifactId>
+		    <version>8.0.0</version>
+		    <type>pom</type>
+		    <scope>import</scope>
+	    </dependency>
+	    
+		<dependency>
+		    <groupId>com.google.cloud</groupId>
+		    <artifactId>google-cloud-speech</artifactId>
+		    <version>1.24.0</version>
+		</dependency>
+
+	
 		<!-- file upload -->
 		<dependency>
  			<groupId>commons-fileupload</groupId>

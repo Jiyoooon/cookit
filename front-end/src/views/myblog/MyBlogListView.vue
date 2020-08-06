@@ -5,10 +5,10 @@
         <SearchBar id="searchbar" />
       </b-row>
       <b-row>
-        <b-col lg="3" md="3" sm="12">
+        <b-col lg="3">
             <MyPage id="mypage" />
         </b-col>
-        <b-col lg="9" sm="12">
+        <b-col lg="9">
             <MyRecipeList />
         </b-col>
       </b-row>
@@ -21,12 +21,13 @@ import SearchBar from '../../components/myblog/SerachBar.vue'
 import MyPage from '../../components/myblog/MyPage.vue'
 import MyRecipeList from '../../components/myblog/MyRecipeList.vue'
 import { mapActions, mapState } from 'vuex'
+//import recipeVue from '../../components/recipeview/recipe.vue'
 
 export default {
     name: 'MyBlogListView',
     data() {
         return {
-            
+            recipelen:null,
         }
     },
     components: {
@@ -35,10 +36,13 @@ export default {
         MyRecipeList,
     },
     computed: {
-        ...mapState('myblog', ['myrecipes'])
+        ...mapState('myblog', ['myrecipes','selectedRecipe'])
     },
     methods: {
         ...mapActions('myblog', ['fetchMyRecipes']),
+    },
+    updated() {
+        this.recipelen = this.selectedRecipe.length
     },
 }
 </script>

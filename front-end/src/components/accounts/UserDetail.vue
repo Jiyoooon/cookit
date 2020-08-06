@@ -66,6 +66,12 @@
         <img :src="imageURL" height="100px">
       </b-col>
     </b-row>
+    <b-row v-else> 
+      <b-col sm="3"></b-col>
+      <b-col sm="9">
+        <img :src="imageURL2" height="100px">
+      </b-col>
+    </b-row>
     <b-row>
       <b-col sm="3" class="mt-2">소개글</b-col>
       <b-col sm="9"><b-form-textarea
@@ -100,7 +106,7 @@
 
 <script>
 import axios from 'axios'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 import SERVER from '../../api/url.js'
 
 export default {
@@ -129,11 +135,12 @@ export default {
           { text: '둘러보기', value: false },
         ],
         imageURL: null,
+        imageURL2: 'http://i3a201.p.ssafy.io:8080/images/profile/default_image.png',
         filesize: null,
       }
     },
     computed: {
-      ...mapState('accounts', ['authUser']),
+      ...mapState('accounts', ['authUser', 'updateTF']),
       passwordValid() {
         if (!this.updateData.config.password) return null;
         const len = this.updateData.config.password.length
@@ -193,6 +200,7 @@ export default {
     },
     methods: {
       ...mapActions('accounts', ['DeleteUser', 'updateUser']),
+      ...mapMutations('accounts', ['SET_UPDATETF']),
       nicknameCheck(nickname) {
         axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
@@ -239,7 +247,7 @@ export default {
         this.updateData.config.nickname = this.authUser.nickname
         this.updateData.config.intro = this.authUser.intro
         this.updateData.config.start_page = this.authUser.start_page
-        // this.updateData.config.profile = this.authUser.profile
+        this.updateData.config.profile = this.authUser.profile
         this.updateData.config.image_name = this.authUser.image_name
         this.updateData.config.email = this.authUser.email
         this.imageURL = this.authUser.image_url
@@ -269,18 +277,25 @@ export default {
       selectBasicImage() {
         this.updateData.config.image_name = ''
         this.imageURL = ''
-        if (this.updateData.config.profile) {
-          this.$ref['file-input'].reset() }
+        this.updateData.config.profile = null 
+            // if (this.updateData.config.profile) {
+            //   this.$ref['file-input'].reset() }
       },
     },
     updated() {
       this.checkPasswordValidValue()
+      this.SET_UPDATETF(true)
       // this.checkInitialNickname()
     },
     created() {
       this.insertInitialValue()
       this.checkInitialNickname()
-    }
+    },
+    // watch: {
+    //   updateData() {
+    //     this.SET_UPDATETF(true)
+    //   }
+    // },
 }
 </script>
 

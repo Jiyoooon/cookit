@@ -2,6 +2,8 @@ package com.ssafy.cooking.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -74,14 +76,15 @@ public class UserServiceImpl implements UserService{
 			//profile != null => 프로필 수정
 			if(profile != null) {
 				System.out.println("프로필 수정!");
+				removeProfile(Integer.toString(user.getUser_id()));
 				writeProfile(profile, user.getUser_id(), user);
 			}
 			//user.getImage_name() == null => 프로필 내림
 			else if(imageName == null || imageName.trim().equals("")) {
 				System.out.println("프로필 내림!");
 				removeProfile(Integer.toString(user.getUser_id()));
-				user.setProfile_image("default_image.png");
-				user.setImage_name("default_image.png");
+				user.setProfile_image("");
+				user.setImage_name("");
 			}
 			//수정 X
 			else{
@@ -219,12 +222,13 @@ public class UserServiceImpl implements UserService{
 		user.setImage_name(oriName);
 		
 		String extension = oriName.substring(oriName.lastIndexOf("."));//확장자
+		String timestamp = new Timestamp(System.currentTimeMillis()).toString();
 		
-		String fileName = "profile_image_"+userId+extension;//파일명
+		String fileName = "profile_image_"+timestamp+extension;//파일명
 		String fileFullPath = filePath+separator+fileName;
 		try {
 //    			파일 저장
-			profile.transferTo(new File(fileFullPath));//window
+			profile.transferTo(new File(fileFullPath));
 			user.setProfile_image(fileName);
 			
 			return true;

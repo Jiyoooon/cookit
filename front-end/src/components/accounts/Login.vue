@@ -9,8 +9,7 @@
           <b-form-input @keyup.enter="login(loginData)"
             id="login-email" 
             v-model="loginData.email"
-            trim
-            block
+            trim@keydown.enter="login(loginData)"
             >
           </b-form-input>
         </b-col>
@@ -25,8 +24,7 @@
             type="password" 
             id="login-passwod" 
             v-model="loginData.password"
-            trim
-            block
+            trim@keydown.enter="login(loginData)"
             >
           </b-form-input>
         </b-col>

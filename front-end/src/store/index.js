@@ -17,6 +17,7 @@ const moduleAccounts = {
     authUser: cookies.get('auth-user'),
     userEmail: cookies.get('user-email'),
     validEmail: false,
+    updateTF: false,
   },
 
   getters: {
@@ -55,7 +56,10 @@ const moduleAccounts = {
      },
      SET_VALID(state, data) {
        state.validEmail = data
-     }
+     },
+     SET_UPDATETF(state, value) {
+       state.updateTF = value
+     },
   },
 
   actions: {
@@ -121,10 +125,6 @@ const moduleAccounts = {
       router.push({ name: 'Home'})
     },
 
-    GoMyBlog() {
-      router.push({ name: 'MyBlogListView'})
-    },
-
     GoSignup() {
       router.push({ name: 'Signup'})
     },
@@ -137,8 +137,9 @@ const moduleAccounts = {
       router.push({ name: 'Logout'})
     },
 
-    GoUserInfo() {
+    GoUserInfo({ commit }) {
       router.push({ name: 'UserInfoView'})
+      commit('SET_UPDATETF', false)
     },
 
     GoEmailAuth() {
@@ -150,7 +151,9 @@ const moduleAccounts = {
     GoPasswordFind(){
       router.push({ name: 'PasswordFindView'})
     },
-
+    GoRecipeCreate(){
+      router.push({ name: 'RecipeCreateView'})
+    },
     RedirectAfterUserUpdate() {
       router.push({ name: 'UserInfoView' })
     },
@@ -181,7 +184,7 @@ const moduleAccounts = {
         })
         .catch((err) => {
           console.log(err.response)
-          alert(err.response)
+          alert("비밀번호를 입력해주세요!")
         })
     },
 
@@ -317,8 +320,11 @@ const moduleAccounts = {
         formData.append('intro', updateData.config.intro)
         formData.append('start_page', updateData.config.start_page)
 
-        for (let key of formData.entries()) {
-          console.log(`${key}`)
+        for (let [key, value] of formData.entries()) {
+          console.log(`${key} : ${value}`)
+          if (key == 'profile') {
+            console.log(value)
+          }
         }
 
         const headerconfig = { headers: {
@@ -507,15 +513,32 @@ const moduleRecipes = {
         .then(res => {
           commit('SET_USER', res.data.data)
         })
+    },
+    recipeLike({ rootGetters, dispatch }, recipe_id) {
+      axios.get(SERVER.ROUTES.myrecipe.recipelike + String(recipe_id) +'/like', rootGetters['accounts/config'])
+      .then(() => {
+        dispatch('fetchMyRecipes', null, { root: true })
+      })
     }
   },
 }
 
 const moduleMyBlog = {
+  flag: false,
   namespaced: true,
   state: {
     myrecipes: null,
     selectedrecipe: null,
+    selecteduserinfo:{//들어가는 블로그의 유저정보
+      email: null,
+      hits: null,
+      image_name: null,
+      image_url: null,
+      nickname: null,
+      password: null,
+      start_page: null,
+      user_id: null,
+    },
   },
 
   getters: {
@@ -529,25 +552,43 @@ const moduleMyBlog = {
     SET_SELETCERECIPE(state, recipe) {
       state.selectedrecipe = recipe
     },
+    SET_USERINFO(state, payload){
+      state.selecteduserinfo = payload
+    },
+    SET_FLAG(state, payload){
+      state.flag = payload
+    }
   },
 
   actions: {
-    fetchMyRecipes({ rootState, commit }) {
-      let recipequery = rootState['lookaround/recipequery']
-      // recipequery.user = user_id
+    GoMyBlog() {
+      router.push({ name: 'MyBlogListView'})
+    },
+    fetchMyRecipes({ rootState, commit, state }) {
+      let recipequery = rootState.lookaround.recipequery
+      recipequery.user = state.selecteduserinfo.nickname
+      recipequery.p = null
       const filter = {
         params: recipequery
       }
       axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes, filter)
+        // .then(()=>{
+        //   commit('SET_RECIPES',null)
+        // })
         .then((res) => {
           commit('SET_RECIPES', res.data)
         })
-        // .then(() => {
-        //   router.push({ name: 'Home' })
-        // })
-        // .then(() => {
-        //   router.push({ name: 'MyBlogListView'})
-        // })
+        .then(()=>{
+          if(state.flag == false){
+            console.log("만들어졌을때 플래그")
+            console.log(state.flag)
+            router.push({name : 'Home'})
+            router.push({name : 'MyBlogListView'})
+            commit('SET_FLAG',true)
+            console.log("갔다온후 플래그")
+            console.log(state.flag)
+          }
+        })
         .catch((err) => {
           console.err(err.response)
           alert(err.response.data.cause)
@@ -562,6 +603,18 @@ const moduleMyBlog = {
         .catch((err) => {
           console.err(err.response)
           alert(err.response.data.cause)
+        })
+    },
+    getUserInfo({commit,dispatch},user_id){
+      axios.get(SERVER.ROUTES.info.getuserinfo + String(user_id))
+        .then((res) => {
+          commit('lookaround/initializing',null,{root:true})
+          commit('SET_USERINFO', res.data.data)
+          commit('lookaround/setRecipequeryUserId',res.data.data.nickname,{root:true})
+          dispatch('GoMyBlog')
+        })
+        .catch((err) => {
+          console.err(err.response)
         })
     },
   },
@@ -821,7 +874,16 @@ const moduleLookAround = {
       }
       state.recipes = []
     },
+    setRecipequeryUserId(state,payload){
+      state.recipequery.user = payload
+      console.log("레시피쿼리에 유저정보들어갔나?")
+      console.log(payload)
+    },
     setRecipequery(state,payload){
+<<<<<<< front-end/src/store/index.js
+=======
+      console.log(payload.selectedarray.length)
+>>>>>>> front-end/src/store/index.js
       state.recipequery.query=payload.querydata
       for (var i in payload.selectedarray){
         if(payload.selectedarray[i].state == true){
@@ -893,22 +955,18 @@ const moduleLookAround = {
       dispatch('getFilteredRecipes')
     },
     setRecipequery2({commit,state},payload){
-      commit('initializing')
       commit('setRecipequery',payload)
-      // dispatch('myblog/fetchMyRecipes', null, { root: true })
+      let trecipequery = state.recipequery
       const filter = {
-        params:state.recipequery
+        params: trecipequery
       }
       axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes,filter)
       .then((res) => {
+        console.log("테스트")
+        console.log(state.recipequery)
+        console.log(res)
         commit('myblog/SET_RECIPES', null, { root: true })
         commit('myblog/SET_RECIPES', res.data, { root: true })
-      })
-      .then(() => {
-        router.push({ name: 'Home'})
-      })
-      .then(() => {
-        router.push({ name: 'MyBlogListView'})
       })
     },
     getFilteredRecipes({commit,state}){
@@ -926,15 +984,13 @@ const moduleLookAround = {
       })
     },
     getIngredients({commit}){
-      //if(state.ingredients.length == 0){
-        axios.get(SERVER.ROUTES.lookaroundrecipe.getingredients)
-        .then((res) => {
-          commit('setIngredients',res.data)
-        })
-        .catch((err) => {
-          alert(err)
-        })
-      //}
+      axios.get(SERVER.ROUTES.lookaroundrecipe.getingredients)
+      .then((res) => {
+        commit('setIngredients',res.data)
+      })
+      .catch((err) => {
+        alert(err)
+      })
     },
     GoLookAroundRecipesView() {
       router.push({ name: 'LookAroundRecipeView',})

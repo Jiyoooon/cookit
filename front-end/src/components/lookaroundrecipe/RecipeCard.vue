@@ -3,68 +3,98 @@
     max-width="344"
     min-height="344"
     class="mx-auto"
+    outlined
   >
 
     <v-list-item-title 
       class="headline"
-      @click="readRecipe"
-      style="cursor:pointer; padding: 3%"
-    ><h5><strong>{{ recipe.title }}</strong></h5></v-list-item-title>
+      @click="fetchRecipe(recipe.recipe_id)"
+      style="cursor:pointer; padding: 3%; padding-bottom: 0;"
+    ><h5><strong>{{ recipe.title }}</strong></h5><hr></v-list-item-title>
     <v-img
         :src='recipe.main_image'
         height="194"
         @click.native="fetchRecipe(recipe.recipe_id)"
         style="cursor:pointer"
     ></v-img>
-    
+    <v-divider class="mx-4"></v-divider>
 
-    <v-card-text class="maintext">
+    <!-- <v-card-text class="maintext">
         <span>{{ recipe.description }}</span>
-    </v-card-text>
-    <v-list-item>
-      <v-list-item-avatar> <img 
-        :src='recipe.main_image'></v-list-item-avatar>
-      <v-list-item-content>
-        <v-list-item-subtitle ><span style="cursor:pointer">by {{ recipe.recipe_user_name}}</span></v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
+    </v-card-text> -->
     <v-card-actions>
-      <v-btn
-        text
-        color="deep-purple accent-4"
-      >
-        Read
+      <v-btn @click="likefunction(recipe.recipe_id)" icon>
+        <v-icon v-show="isliked">mdi-heart</v-icon>
+        <v-icon v-show="!isliked">mdi-heart-outline</v-icon>
       </v-btn>
-      <v-btn
-        text
-        color="deep-purple accent-4"
-      >
-        Bookmark
+      {{ recipe.likeNum }}
+      <v-btn icon>
+        <v-icon>mdi-download</v-icon>
       </v-btn>
+      <v-list-item>
       <v-spacer></v-spacer>
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-      <v-btn icon>
-        <v-icon>mdi-share-variant</v-icon>
-      </v-btn>
+      <v-list-item-avatar  style="cursor:pointer" @click="gouserblog"> <img 
+        :src='recipe.main_image'></v-list-item-avatar>
+      <!-- <v-list-item-content>
+        <v-list-item-subtitle ><span style="cursor:pointer">by {{ recipe.recipe_user_name}}</span></v-list-item-subtitle>
+      </v-list-item-content> -->
+    </v-list-item>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
     name:'RecipeCard',
+    data() {
+      return {
+        isliked: null,
+        likenumber: null,
+      }
+    },
     props:{
       recipe:Object,
+    },
+    computed: {
+      ...mapState('accounts', ['authUser']),
+      isLike() {
+        if (this.recipe.like.includes(this.authUser.user_id)) {
+          return true
+        } else {
+          return false
+        }
+      }
     },
     methods:{
         // readRecipe(){
         //     alert("레시피읽는화면으로 들어갑니다.( 레시피아이디 : " +this.recipe.recipe_id +" )" )
         // }
-        ...mapActions('recipes', ['fetchRecipe'])
+<<<<<<< front-end/src/components/lookaroundrecipe/RecipeCard.vue
+        ...mapActions('recipes', ['fetchRecipe', 'recipeLike']),
+         likefunction(recipe_id) {
+          this.recipeLike(recipe_id)
+          if (this.isliked) {
+            this.recipe.likeNum--
+            // this.likenumber--
+            this.isliked = !this.isliked
+          } else {
+            this.recipe.likeNum++
+            // this.likenumber++
+            this.isliked = !this.isliked
+          }
+        },
+=======
+        gouserblog(){
+          this.getUserInfo(this.recipe.recipe_user)
+        },
+        ...mapActions('myblog',['getUserInfo']),
+>>>>>>> front-end/src/components/lookaroundrecipe/RecipeCard.vue
     },
+    created() {
+      this.isliked = this.isLike
+      // this.likenumber = this.recipe.likeNum
+    }
 }
 </script>
 
@@ -80,5 +110,12 @@ export default {
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical; 
+    }
+    .v-sheet.v-card {
+    border-radius: 7px !important;
+    border-color: rgb(235, 199, 133) !important;
+    }
+    .v-image {
+      border-radius: 3px !important;
     }
 </style>

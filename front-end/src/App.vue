@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions,mapState,mapMutations } from 'vuex'
 import $ from 'jquery'
 $(document).ready(function(){
   $('.nav-menu div').click(function() {
@@ -48,7 +48,8 @@ export default {
     },
     computed: {
         // ...mapState([ 'me' ]),
-        ...mapGetters('accounts', ['isLoggedIn'])
+        ...mapGetters('accounts', ['isLoggedIn']),
+        ...mapState('accounts',['authUser'])
     },
     methods: {
         toggle() {
@@ -60,8 +61,16 @@ export default {
           $("#browsing").removeClass("active");
           this.GoHome();
         },
-        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'GoMyBlog']),
-        ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients'])
+        goUserBlog(){
+          this.SET_USERINFO(this.authUser)
+          this.setRecipequeryUserId(this.authUser.nickname)
+          this.GoMyBlog()
+        },
+        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth']),
+        ...mapActions('myblog',['GoMyBlog']),
+        ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
+        ...mapMutations('myblog',['SET_USERINFO']),
+        ...mapMutations('lookaround',['setRecipequeryUserId'])
     },
     created(){
       this.getIngredients()
