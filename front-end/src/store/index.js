@@ -880,10 +880,6 @@ const moduleLookAround = {
       console.log(payload)
     },
     setRecipequery(state,payload){
-<<<<<<< front-end/src/store/index.js
-=======
-      console.log(payload.selectedarray.length)
->>>>>>> front-end/src/store/index.js
       state.recipequery.query=payload.querydata
       for (var i in payload.selectedarray){
         if(payload.selectedarray[i].state == true){
