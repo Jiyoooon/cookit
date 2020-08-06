@@ -5,6 +5,7 @@ public class Ingredient {
 	private Integer recipe_id;
 	private Integer food_ingredient_small_id;
 	private String food_ingredient_small_name;
+	private String name;
 	private Integer is_essential;
 	private String quantity;
 	private String create_date;
@@ -57,5 +58,18 @@ public class Ingredient {
 	}
 	public void setUpdate_date(String update_date) {
 		this.update_date = update_date;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "Ingredient [recipe_ingredient_id=" + recipe_ingredient_id + ", recipe_id=" + recipe_id
+				+ ", food_ingredient_small_id=" + food_ingredient_small_id + ", food_ingredient_small_name="
+				+ food_ingredient_small_name + ", name=" + name + ", is_essential=" + is_essential + ", quantity="
+				+ quantity + ", create_date=" + create_date + ", update_date=" + update_date + "]";
 	}
 }

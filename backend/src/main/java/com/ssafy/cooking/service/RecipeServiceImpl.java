@@ -107,8 +107,13 @@ public class RecipeServiceImpl implements RecipeService {
 			recipeDao.addCookingsteps(recipe_id, recipeDetail.getCookingStep());
 		}
 		
-		if (recipeDetail.getIngredients() != null)
+		if (recipeDetail.getIngredients() != null) {
+			for (Ingredient ingre : recipeDetail.getIngredients()) {
+				System.out.println(ingre);
+			}
+			recipeDao.checkIngredients(recipe_id, recipeDetail.getIngredients());
 			recipeDao.addIngredients(recipe_id, recipeDetail.getIngredients());
+		}
 
 		return recipe_id;
 	}

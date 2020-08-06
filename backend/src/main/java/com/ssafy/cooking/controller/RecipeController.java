@@ -107,7 +107,6 @@ public class RecipeController {
 				map.put("cause", "레시피 정보 없음");
 			} else if (recipeData.getTitle() == null) {
 				map.put("cause", "레시피 title 없음");
-				System.out.println("레시피 title 없음");
 				result = "fail";
 			} else {
 				recipeData.setRecipe_user(uid);
@@ -133,6 +132,7 @@ public class RecipeController {
 	public ResponseEntity<HashMap<String, Object>> addRecipe2(@ModelAttribute("recipeData") RecipeDetail recipeData)
 			throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		
 
 		String result = "success";
 		HttpStatus status = HttpStatus.ACCEPTED;
@@ -145,6 +145,8 @@ public class RecipeController {
 			System.out.println("레시피 title 없음");
 			result = "fail";
 		} else {
+			recipeData.setRecipe_user(3);
+			recipeData.setCategory_id(8);
 			System.out.println("레시피 있음");
 			recipeservice.addRecipe(recipeData);
 		}

@@ -17,15 +17,29 @@
 			SELECT LAST_INSERT_ID()
 			</selectKey>
 	</insert>
-	<insert id = "addIngredients">
-		insert into Ingredients(
-						recipe_id, food_ingredient_small_id, is_essential, quantity
-					) values
-					<foreach collection="ingredients" item="ingre" separator=",">
-					(
-						#{recipe_id}, #{ingre.food_ingredient_small_id}, #{ingre.is_essential}, #{ingre.quantity}
-						
-					)
+	
+	<insert id = "checkIngredients">
+			<foreach collection="ingredients" item="ingre" separator=",">
+		<if test="ingre.name != null and ingre.name != ''">
+			insert into Food_ingredient_small(food_ingredient_medium_id, small)
+								select 49, #{ingre.name} from dual
+								where not exists
+								( select food_ingredient_medium_id, small
+									from Food_ingredient_small
+									where small = #{ingre.name} )
+									</if>
+			</foreach>
+	</insert>
+	<insert id = "addIngredients">				
+					<foreach collection="ingredients" item="ingre">
+				<if test="ingre.name != null and ingre.name != ''">
+				insert into Ingredient(
+								recipe_id, food_ingredient_small_id, is_essential, quantity
+							)
+							(
+								SELECT #{recipe_id}, food_ingredient_small_id, #{ingre.is_essential}, #{ingre.quantity} FROM Food_ingredient_small WHERE small = #{ingre.name}
+							)
+					</if>
 					</foreach>
 	</insert>
 	<insert id = "addCookingsteps">
@@ -56,7 +70,7 @@
 	
 	<update id="reviseIngredients">
 		<foreach collection="ingredients" item="ingre">
-		UPDATE Ingredients
+		UPDATE Ingredient
 		SET category_id = #{category_id}
 		, food_ingredient_small_id = #{ingre.food_ingredient_small_id}
 		, is_essential = #{ingre.is_essential}

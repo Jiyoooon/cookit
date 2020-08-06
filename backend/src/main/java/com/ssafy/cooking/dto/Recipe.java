@@ -19,6 +19,7 @@ public class Recipe {
 	private String create_date; //작성시간
 	private String update_date;
 	private String delete_date;
+	private boolean like;
 	private MultipartFile main_image_file;
 	public Integer getRecipe_id() {
 		return recipe_id;
@@ -110,6 +111,12 @@ public class Recipe {
 	public void setDelete_date(String delete_date) {
 		this.delete_date = delete_date;
 	}
+	public boolean isLike() {
+		return like;
+	}
+	public void setLike(boolean like) {
+		this.like = like;
+	}
 	public MultipartFile getMain_image_file() {
 		return main_image_file;
 	}
@@ -122,4 +129,5 @@ public class Recipe {
 	public void setRecipe_user_profileImage(String recipe_user_profileImage) {
 		this.recipe_user_profileImage = recipe_user_profileImage;
 	}
+	
 }
