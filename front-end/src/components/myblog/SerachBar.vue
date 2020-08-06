@@ -161,6 +161,9 @@ import { mapActions, mapState } from 'vuex'
         searchRecipe(){//버튼을 눌렀을때,
             this.setRecipequery2({querydata:this.searchtext1,selectedarray:this.selected})
             this.searchtext1=''
+            setTimeout(() => {
+                this.fortest()
+            },1000);
         },
         selectSource(payload){
             if(!this.isOverlap(payload.name))
@@ -188,6 +191,10 @@ import { mapActions, mapState } from 'vuex'
                     return false
             else
                 return false
+        },
+        
+        fortest(){
+            this.$router.go(0)
         },
         // 넣고싶은재료
         querySelectionsS (v) {

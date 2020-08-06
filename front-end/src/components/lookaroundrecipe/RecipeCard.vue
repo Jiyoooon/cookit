@@ -31,7 +31,7 @@
       </v-btn>
       <v-list-item>
       <v-spacer></v-spacer>
-      <v-list-item-avatar> <img 
+      <v-list-item-avatar  style="cursor:pointer" @click="gouserblog"> <img 
         :src='recipe.main_image'></v-list-item-avatar>
       <!-- <v-list-item-content>
         <v-list-item-subtitle ><span style="cursor:pointer">by {{ recipe.recipe_user_name}}</span></v-list-item-subtitle>
@@ -52,7 +52,11 @@ export default {
         // readRecipe(){
         //     alert("레시피읽는화면으로 들어갑니다.( 레시피아이디 : " +this.recipe.recipe_id +" )" )
         // }
-        ...mapActions('recipes', ['fetchRecipe'])
+        gouserblog(){
+          this.getUserInfo(this.recipe.recipe_user)
+        },
+        ...mapActions('recipes', ['fetchRecipe']),
+        ...mapActions('myblog',['getUserInfo']),
     },
 }
 </script>
