@@ -4,11 +4,11 @@
       <h2>재료 준비</h2>
           <b-row>
               <b-col lg-6>
-                  주재료
+                  <strong>주재료</strong>
       <b-table striped hover :items="essentialIngre"></b-table>
               </b-col>
               <b-col lg-6>
-                  보조재료
+                  <strong>보조재료</strong>
       <b-table striped hover :items="inessentialIngre"></b-table>
         </b-col>
         </b-row>
