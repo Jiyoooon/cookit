@@ -1,32 +1,32 @@
 <template>
-    <div>
+    <div >
         <RecipeSearchBar />
         <div class="RecipeArray">
-            <v-container fluid grid-list-md left>
-                <v-layout row wrap style="align:left">
-                    <v-flex xs12 sm6 md4 lg3 xl2 left v-for="recipeinfo in recipes" :key="recipeinfo.recipe_id" style="margin:auto;" >
-                        <RecipeCard :recipe="recipeinfo">
-                        </RecipeCard>
-                    </v-flex>
-                </v-layout>
-                <div @click="scrollToTop" id= "button-bottom">
-                    <b-icon icon="arrow-up-circle" scale="1"></b-icon>
-                </div>
-            
-                <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="0" style="text-align:center">
-                    <b-spinner v-if="numberofgetrecipes != 0" label="Spinning" ></b-spinner>
-                    <span v-if="numberofgetrecipes == 0">더 이상 불러올 레시피가 없어요...</span>
-                </div>
-            
-            <!-- <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
-            </v-container>
+        <v-container fluid grid-list-md >
+            <v-layout row wrap >
+                <v-flex xs12 sm6 md4 lg3 xl2 v-for="recipeinfo in recipes" :key="recipeinfo.recipe_id" style="margin:auto%" >
+                    <RecipeCard :recipe="recipeinfo" >
+                    </RecipeCard>
+                </v-flex>
+            </v-layout>
+        <div @click="scrollToTop" id= "button-bottom">
+            <b-icon icon="arrow-up-circle" scale="1"></b-icon>
+        </div>
+        
+        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="0" style="text-align:center">
+            <b-spinner v-if="numberofgetrecipes != 0" label="Spinning" ></b-spinner>
+            <span v-if="numberofgetrecipes == 0">더 이상 불러올 레시피가 없어요...</span>
+        </div>
+        
+        <!-- <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
+        </v-container>
         </div>
     </div>
 </template>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollmonitor/1.2.0/scrollMonitor.js"></script>
 <script>
-import InfiniteLoading from 'vue-infinite-loading';
+import InfiniteLoading from 'vue-infinite-loading'
 import RecipeSearchBar from "@/components/lookaroundrecipe/RecipeSearchBar.vue"
 import RecipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
 import { mapState, mapActions, mapMutations } from 'vuex'

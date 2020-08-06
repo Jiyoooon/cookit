@@ -1,7 +1,6 @@
 <template>
     <div>
         <b-container >
-                    <h1 align="center" style="font-size:3rem"></h1>
             <v-row align="center" justify="center" align-self="center">
                 <v-col md ="2" lg="3">
                 </v-col>
