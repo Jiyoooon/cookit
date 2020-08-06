@@ -68,4 +68,10 @@ export default {
       margin-left: auto;
       margin-right: auto;
     }
+    .page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: grey !important;
+    border-color: lightgrey !important;
+    }
 </style>
