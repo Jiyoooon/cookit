@@ -75,7 +75,7 @@ export default {
         box-sizing: content-box;
         position: fixed;
         right: 5vw;
-        bottom: 18vh;
+        bottom: 20vh;
         cursor: pointer;
     }
     #button-bottom{
