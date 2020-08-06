@@ -19,12 +19,13 @@ import SearchBar from '../../components/myblog/SerachBar.vue'
 import MyPage from '../../components/myblog/MyPage.vue'
 import MyRecipeList from '../../components/myblog/MyRecipeList.vue'
 import { mapActions, mapState } from 'vuex'
+//import recipeVue from '../../components/recipeview/recipe.vue'
 
 export default {
     name: 'MyBlogListView',
     data() {
         return {
-            
+            recipelen:null,
         }
     },
     components: {
@@ -33,10 +34,13 @@ export default {
         MyRecipeList,
     },
     computed: {
-        ...mapState('myblog', ['myrecipes'])
+        ...mapState('myblog', ['myrecipes','selectedRecipe'])
     },
     methods: {
         ...mapActions('myblog', ['fetchMyRecipes']),
+    },
+    updated() {
+        this.recipelen = this.selectedRecipe.length
     },
 }
 </script>

@@ -1,11 +1,14 @@
 package com.ssafy.cooking.dto;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class Recipe {
 	private Integer recipe_id; //레시피id
 	private Integer recipe_user;//작성자id
 	private String recipe_user_name;//작성자 이름
+	private String recipe_user_profileImage;//작성자 사진
 	private Integer category_id;//카테고리id
 	private String title; //제목
 	private String description; //설명 
@@ -18,6 +21,8 @@ public class Recipe {
 	private String create_date; //작성시간
 	private String update_date;
 	private String delete_date;
+	private Integer likeNum;
+	private List<Integer> like;
 	private MultipartFile main_image_file;
 	public Integer getRecipe_id() {
 		return recipe_id;
@@ -109,10 +114,38 @@ public class Recipe {
 	public void setDelete_date(String delete_date) {
 		this.delete_date = delete_date;
 	}
+	public List<Integer> getLike() {
+		return like;
+	}
+	public void setLike(List<Integer> like) {
+		this.like = like;
+		this.likeNum = like.size();
+	}
 	public MultipartFile getMain_image_file() {
 		return main_image_file;
 	}
 	public void setMain_image_file(MultipartFile main_image_file) {
 		this.main_image_file = main_image_file;
+	}
+	public String getRecipe_user_profileImage() {
+		return recipe_user_profileImage;
+	}
+	public void setRecipe_user_profileImage(String recipe_user_profileImage) {
+		this.recipe_user_profileImage = recipe_user_profileImage;
+	}
+	public Integer getLikeNum() {
+		return likeNum;
+	}
+	public void setLikeNum(Integer likeNum) {
+		this.likeNum = likeNum;
+	}
+	@Override
+	public String toString() {
+		return "Recipe [recipe_id=" + recipe_id + ", recipe_user=" + recipe_user + ", recipe_user_name="
+				+ recipe_user_name + ", recipe_user_profileImage=" + recipe_user_profileImage + ", category_id="
+				+ category_id + ", title=" + title + ", description=" + description + ", main_image=" + main_image
+				+ ", servings=" + servings + ", cooking_time=" + cooking_time + ", level=" + level + ", hits=" + hits
+				+ ", tag=" + tag + ", create_date=" + create_date + ", update_date=" + update_date + ", delete_date="
+				+ delete_date + ", like=" + like + ", main_image_file=" + main_image_file + "]";
 	}
 }

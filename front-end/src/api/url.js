@@ -17,7 +17,7 @@ export default {
             sendnewpassword: '/user/password/',
         },
         info: {
-
+            getuserinfo: '/user/',
         },
         myrecipe: {
             myrecipes: '/recipe/all/',

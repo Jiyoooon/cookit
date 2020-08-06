@@ -11,7 +11,7 @@ import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
 
 public interface RecipeService {
-	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, String filter);
+	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, Integer order, Integer likeUser, String filter, String baseUrl);
 
 	public List<Ingredient> getIngredients(int recipe_id);
 	public List<CookingStep> getCookingSteps(int recipe_id);
@@ -20,7 +20,7 @@ public interface RecipeService {
 
 	public int addCommnet(int recipe_id, Comment comment);
 
-	public int addRecipe(RecipeDetail recipeDetail);
+	public int addRecipe(RecipeDetail recipeDetail, String baseUrl);
 
 	public int deleteRecipe(int recipe_id, int uid);
 
@@ -30,9 +30,11 @@ public interface RecipeService {
 
 	public List<FoodIngredient> getAllIngredients();
 
-	public List<Recipe> getRecipes2(Integer p, Integer id, String user, String query, Integer category, Filter filter);
+	public List<Recipe> getRecipes2(Integer p, Integer id, String user, String query, Integer category, Integer order, Integer likeUser, Filter filter, String baseUrl);
 
 	public String[] getSmallIngredients();
 
-	public int reviseRecipe(RecipeDetail recipeData);
+	public int reviseRecipe(RecipeDetail recipeData, String baseUrl);
+
+	public int setLike(int recipe_id, int uid);
 }

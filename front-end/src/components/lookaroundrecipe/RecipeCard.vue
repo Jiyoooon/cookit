@@ -33,7 +33,7 @@
       </v-btn>
       <v-list-item>
       <v-spacer></v-spacer>
-      <v-list-item-avatar> <img 
+      <v-list-item-avatar  style="cursor:pointer" @click="gouserblog"> <img 
         :src='recipe.main_image'></v-list-item-avatar>
       <!-- <v-list-item-content>
         <v-list-item-subtitle ><span style="cursor:pointer">by {{ recipe.recipe_user_name}}</span></v-list-item-subtitle>
@@ -70,6 +70,7 @@ export default {
         // readRecipe(){
         //     alert("레시피읽는화면으로 들어갑니다.( 레시피아이디 : " +this.recipe.recipe_id +" )" )
         // }
+<<<<<<< front-end/src/components/lookaroundrecipe/RecipeCard.vue
         ...mapActions('recipes', ['fetchRecipe', 'recipeLike']),
          likefunction(recipe_id) {
           this.recipeLike(recipe_id)
@@ -82,7 +83,13 @@ export default {
             // this.likenumber++
             this.isliked = !this.isliked
           }
-        }
+        },
+=======
+        gouserblog(){
+          this.getUserInfo(this.recipe.recipe_user)
+        },
+        ...mapActions('myblog',['getUserInfo']),
+>>>>>>> front-end/src/components/lookaroundrecipe/RecipeCard.vue
     },
     created() {
       this.isliked = this.isLike

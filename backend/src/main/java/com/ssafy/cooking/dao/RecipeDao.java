@@ -15,9 +15,10 @@ import com.ssafy.cooking.dto.RecipeDetail;
 public interface RecipeDao {
 	
 	int addRecipe(Recipe recipe);
+	void checkIngredients(int recipe_id, List<Ingredient> ingredients);
 	int addIngredients(int recipe_id, List<Ingredient> ingredients);
 	int addCookingsteps(int recipe_id, List<CookingStep> cookingSteps);
-	List<Recipe> getRecipes(int start, int end, Integer id, String user, String query, Integer category, String filter);
+	List<Recipe> getRecipes(int start, int end, Integer id, String user, String query, Integer category, Integer order, Integer likeUser, String filter);
 
 	List<Ingredient> getIngredients(int recipe_id);
 	List<CookingStep> getCookingSteps(int recipe_id);
@@ -32,12 +33,16 @@ public interface RecipeDao {
 	List<FoodIngredient> getSmallIngredients();
 	List<FoodIngredient> getMediumIngredients();
 	List<FoodIngredient> getLargeIngredients();
-	List<Recipe> getRecipes2(int start, int end, Integer id, String user, String query, Integer category
+	List<Recipe> getRecipes2(int start, int end, Integer id, String user, String query, Integer category, Integer order, Integer likeUser
 							, List<String> hate_large, List<String> hate_medium, List<String> hate_small
 							, List<String> like_large, List<String> like_medium, List<String> like_small);
 	String[] getSmallIngredientsArray();
 	void updateTime(Integer cooking_steps_id, String time);
 	int reviseRecipe(RecipeDetail recipeData);
 	void reviseCookingsteps(int recipe_id, List<CookingStep> cookingStep);
-	void reviseIngredients(int recipe_id, List<Ingredient> ingredients);
+	void setLike(int recipe_id, int uid);
+	int deleteLike(int recipe_id, int uid);
+	List<Integer> getLikeList(Integer recipe_id);
+	void deleteCookingSteps(int recipe_id, int step);
+	void deleteIngredients(int recipe_id);
 }

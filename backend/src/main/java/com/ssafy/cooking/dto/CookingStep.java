@@ -9,10 +9,10 @@ public class CookingStep {
 	private String description;
 	private String tip;
 	private String step_image;
-	private MultipartFile step_image_file;
 	private String create_date;
 	private String update_date;
 	private String time;
+	private MultipartFile step_image_file;
 	public Integer getCooking_steps_id() {
 		return cooking_steps_id;
 	}
