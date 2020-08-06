@@ -167,7 +167,6 @@ export default {
         var nameflag = true
         for (var i = 0; i < len; i++) {
           const ch = this.updateData.config.nickname[i]
-          console.log("ch: " + ch)
           if(('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'z')||('A' <= ch && ch <= 'Z')){
             NickNamelen++
           }
@@ -204,7 +203,6 @@ export default {
       nicknameCheck(nickname) {
         axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
-          console.log(res)
           if (res.data.result == 'success') {
             this.updateData.valid.nickname = true
             this.$bvModal.msgBoxOk('확인되었습니다.', {

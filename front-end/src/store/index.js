@@ -249,15 +249,12 @@ const moduleAccounts = {
     },
 
     emailAuthCodeCheck({ commit, state, dispatch }, code) {
-      console.log(code)
       const emailConfirm = {
         email: state.userEmail,
         code: code,
       }
-      console.log(emailConfirm)
       axios.post(SERVER.ROUTES.accounts.checkkey, emailConfirm)
       .then(res => {
-        console.log(`Code check: ${String(res.data.result)}`)
         if (res.data.result == 'success') dispatch('GoSignup')
         else if (res.data.result == 'fail') {
           this._vm.$root.$bvModal.msgBoxOk('코드가 맞지 않습니다.', {
@@ -309,8 +306,6 @@ const moduleAccounts = {
           centered: true
         })
       } else {
-        console.log(updateData.config)
-
         const formData = new FormData()
         formData.append('email', updateData.config.email)
         formData.append('password', updateData.config.password)
@@ -320,12 +315,12 @@ const moduleAccounts = {
         formData.append('intro', updateData.config.intro)
         formData.append('start_page', updateData.config.start_page)
 
-        for (let [key, value] of formData.entries()) {
-          console.log(`${key} : ${value}`)
-          if (key == 'profile') {
-            console.log(value)
-          }
-        }
+        // for (let [key, value] of formData.entries()) {
+        //   console.log(`${key} : ${value}`)
+        //   if (key == 'profile') {
+        //     console.log(value)
+        //   }
+        // }
 
         const headerconfig = { headers: {
           'Authorization': `token ${state.authToken}`,
@@ -353,12 +348,6 @@ const moduleAccounts = {
           })
       }
     },
-    // nicknameCheck(context, nickname) {
-    //   axios.get(SERVER.ROUTES.accounts.nicknameCheck + String(nickname))
-    //     .then((res) => {
-    //       console.log(res)
-    //     })
-    // },
     passwordCheck({ dispatch, getters } ,password) {
       axios.post(SERVER.ROUTES.accounts.checkpassword, password, getters.config)
       .then((res) => {
@@ -435,12 +424,9 @@ const moduleAccounts = {
         formData.append('intro', signupData.config.intro)
         formData.append('image_name', signupData.config.image_name)
 
-        for (let key of formData.entries()) {
-          console.log(`${key}`)
-        }
-       
-        console.log(signupData.config.profile)
-        
+        // for (let key of formData.entries()) {
+        //   console.log(`${key}`)
+        // }
         axios.post(SERVER.ROUTES.accounts.signup, formData, { headers: { 'Content-Type': 'multipart/form-data' }})
           .then((res) => {
             if (res.data.result == 'success') {
@@ -580,13 +566,9 @@ const moduleMyBlog = {
         })
         .then(()=>{
           if(state.flag == false){
-            console.log("만들어졌을때 플래그")
-            console.log(state.flag)
             router.push({name : 'Home'})
             router.push({name : 'MyBlogListView'})
             commit('SET_FLAG',true)
-            console.log("갔다온후 플래그")
-            console.log(state.flag)
           }
         })
         .catch((err) => {
@@ -723,9 +705,6 @@ const moduleEditor = {
       })
     },
     onSubmitButton({state, rootState}) {
-      
-      console.log(state.mainIngr)
-      console.log(state.subIngr)
       if(state.recipe.title == "") {
         alert("레시피 제목을 입력하세요.")
         return;
@@ -783,7 +762,7 @@ const moduleEditor = {
       const recipeData = new FormData();
       for (let [key, value] of Object.entries(state.recipe)) {
         if (key == "main_image_file" && value == null) continue;
-        console.log(`recipe.${key}: ${value}`)
+        // console.log(`recipe.${key}: ${value}`)
         recipeData.append(key, value);
       }
       
@@ -791,7 +770,7 @@ const moduleEditor = {
       for (let i = 0; i < ingredients.length; i++) {
         if (ingredients[i].name == null && ingredients[i].quantity == null) continue;
         for (let [key, value] of Object.entries(ingredients[i])) {
-          console.log(`ingredients[${i}].${key}: ${value}`)
+          // console.log(`ingredients[${i}].${key}: ${value}`)
           recipeData.append(`ingredients[${i}].${key}`, value)
         }
       }
@@ -801,7 +780,7 @@ const moduleEditor = {
           && state.cookingStep[i].step_image_file == null) continue;
         for (let [key, value] of Object.entries(state.cookingStep[i])) {
           if (key == "step_image_file" && value == null) continue;
-          console.log(`cookingStep[${i}].${key}: ${value}`)
+          // console.log(`cookingStep[${i}].${key}: ${value}`)
           recipeData.append(`cookingStep[${i}].${key}`, value)
         }
       }
@@ -876,8 +855,6 @@ const moduleLookAround = {
     },
     setRecipequeryUserId(state,payload){
       state.recipequery.user = payload
-      console.log("레시피쿼리에 유저정보들어갔나?")
-      console.log(payload)
     },
     setRecipequery(state,payload){
       state.recipequery.query=payload.querydata
@@ -958,9 +935,6 @@ const moduleLookAround = {
       }
       axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes,filter)
       .then((res) => {
-        console.log("테스트")
-        console.log(state.recipequery)
-        console.log(res)
         commit('myblog/SET_RECIPES', null, { root: true })
         commit('myblog/SET_RECIPES', res.data, { root: true })
       })

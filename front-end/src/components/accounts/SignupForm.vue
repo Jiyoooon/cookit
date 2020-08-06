@@ -231,12 +231,6 @@ import cookies from 'vue-cookies'
         const image = event.target.files[0];
         this.signupData.config.image_name = image.name
         this.imageURL = URL.createObjectURL(image)
-        // const reader = new FileReader();
-        // reader.readAsDataURL(image);
-        // reader.onload(event => {
-        //   this.imageURL = event.target.result
-        //   console.log(this.imageURL)
-        // })
       },
     },
     updated() {

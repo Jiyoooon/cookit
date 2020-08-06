@@ -1,6 +1,6 @@
 <template>
   <div id="wrapper">
-    <h2>이메일 확인</h2>
+    <h2>회원가입</h2>
     <hr>
      <div class="inform">회원 가입을 위해서는 이메일 인증이 필요합니다.<br>
     입력한 이메일로 인증코드를 보냅니다.</div>

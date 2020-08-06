@@ -2,8 +2,7 @@
   <div>
     <b-container fluid id ="userinfo-container">
       <b-row>
-        <b-col md="2" class="mt-2">이메일
-        </b-col>
+        <b-col md="2" class="mt-2">이메일</b-col>
         <b-col md="7">
           <b-form-input 
             id="input-email" 
@@ -54,7 +53,7 @@ import { mapActions, mapGetters } from 'vuex'
       return {
         userEmail: null,
         authCode: null,
-        sendBtnActive: false
+        sendBtnActive: false,
       }
     },
     methods: {
