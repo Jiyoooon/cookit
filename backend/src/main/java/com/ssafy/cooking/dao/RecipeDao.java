@@ -40,4 +40,6 @@ public interface RecipeDao {
 	int reviseRecipe(RecipeDetail recipeData);
 	void reviseCookingsteps(int recipe_id, List<CookingStep> cookingStep);
 	void reviseIngredients(int recipe_id, List<Ingredient> ingredients);
+	void setLike(int recipe_id, int uid);
+	int deleteLike(int recipe_id, int uid);
 }

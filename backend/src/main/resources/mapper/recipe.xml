@@ -368,4 +368,17 @@
 		SET Time = #{time}
 		WHERE cooking_steps_id = #{cooking_steps_id}
 	</update>
+	
+	<insert id = "setLike">
+		INSERT INTO Likes
+				(recipe_id, like_user)
+				VALUES
+				(#{recipe_id}, #{uid})
+	</insert>
+	
+	<delete id = "deleteLike">
+		DELETE FROM Likes
+		WHERE recipe_id = #{recipe_id} 
+			and like_user = #{uid}
+	</delete>
 </mapper>

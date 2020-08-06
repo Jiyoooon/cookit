@@ -310,4 +310,25 @@ public class RecipeController {
 		map.put("result", result);
 		return new ResponseEntity<HashMap<String, Object>>(map, status);
 	}
+	
+	@ApiOperation(value = "레시피 LIKE", notes = "like")
+	@PostMapping("token/{recipe_id}/like") //// token
+	public ResponseEntity<HashMap<String, Object>> setLike(@PathVariable("recipe_id") int recipe_id, HttpServletRequest request) throws Exception {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		String result = "success";
+		HttpStatus status = HttpStatus.ACCEPTED;
+
+		String token = request.getHeader("Authorization");
+
+		Map<String, Object> claims = jwtService.get(token);
+		int uid = (int) claims.get("uid");
+		if (recipeservice.setLike(recipe_id, uid) > 0) {
+			result = "unlike";
+		} else {
+			result = "like";
+		}
+
+		map.put("result", result);
+		return new ResponseEntity<HashMap<String, Object>>(map, status);
+	}
 }

@@ -236,6 +236,16 @@ public class RecipeServiceImpl implements RecipeService {
 									hate_large, hate_medium, hate_small, like_large, like_medium, like_small);
 	}
 
+	@Override
+	public int setLike(int recipe_id, int uid) {
+		if(recipeDao.deleteLike(recipe_id, uid) > 0) {
+			return 1;
+		} else {
+			recipeDao.setLike(recipe_id, uid);
+			return 0;
+		}
+	}
+
 	
 	
 }
