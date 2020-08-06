@@ -21,6 +21,7 @@ public class Recipe {
 	private String create_date; //작성시간
 	private String update_date;
 	private String delete_date;
+	private Integer likeNum;
 	private List<Integer> like;
 	private MultipartFile main_image_file;
 	public Integer getRecipe_id() {
@@ -118,6 +119,7 @@ public class Recipe {
 	}
 	public void setLike(List<Integer> like) {
 		this.like = like;
+		this.likeNum = like.size();
 	}
 	public MultipartFile getMain_image_file() {
 		return main_image_file;
@@ -131,5 +133,19 @@ public class Recipe {
 	public void setRecipe_user_profileImage(String recipe_user_profileImage) {
 		this.recipe_user_profileImage = recipe_user_profileImage;
 	}
-	
+	public Integer getLikeNum() {
+		return likeNum;
+	}
+	public void setLikeNum(Integer likeNum) {
+		this.likeNum = likeNum;
+	}
+	@Override
+	public String toString() {
+		return "Recipe [recipe_id=" + recipe_id + ", recipe_user=" + recipe_user + ", recipe_user_name="
+				+ recipe_user_name + ", recipe_user_profileImage=" + recipe_user_profileImage + ", category_id="
+				+ category_id + ", title=" + title + ", description=" + description + ", main_image=" + main_image
+				+ ", servings=" + servings + ", cooking_time=" + cooking_time + ", level=" + level + ", hits=" + hits
+				+ ", tag=" + tag + ", create_date=" + create_date + ", update_date=" + update_date + ", delete_date="
+				+ delete_date + ", like=" + like + ", main_image_file=" + main_image_file + "]";
+	}
 }
