@@ -4,10 +4,10 @@
     <b-navbar-brand href="#">
         <img @click="GoHome" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQDLFnxu6sy4oQgCw4yuNZeNq1p604iMXTq-Q&usqp=CAU" style="height: 5em">
     </b-navbar-brand>
-    <b-navbar-nav>
-      <b-nav-item @click="GoMyBlog">내 블로그</b-nav-item>
-      <b-nav-item @click="GoLookAroundRecipesView">둘러보기</b-nav-item>
-    </b-navbar-nav>
+    <nav class="nav-menu">
+      <nav-item id="myblog" @click="GoMyBlog">내 블로그</nav-item>
+      <nav-item id="browsing" @click="GoLookAroundRecipesView">둘러보기</nav-item>
+    </nav>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
 
@@ -33,14 +33,23 @@
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
-  <hr>
-  <!-- <router-link to='recipeCreate'>글쓰기</router-link> -->
-  <router-view></router-view>
+  <hr style="margin-top: -8px">
+  <div id="app-router">
+    <router-view></router-view>
+  </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import $ from 'jquery'
+$(document).ready(function(){
+  $('nav-item').click(function() {
+    $("#myblog").removeClass("active");
+    $("#browsing").removeClass("active");
+    $(this).toggleClass("active");
+  });
+});
 
 export default {
     name: 'AppHeader',
@@ -69,7 +78,7 @@ export default {
 
 <style scoped>
 * {
-    margin: 0px;
+    margin: 5px;
     padding: 0px;
 }
 
@@ -77,4 +86,66 @@ export default {
     width: 100%;
     height: 100%;
 }
+
+.nav-menu {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav-menu nav-item {
+  color: #888888;
+  font-size: 18px;
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: 70px;
+  margin-left: 20px;
+  margin-right: 20px;
+  height: 1em;
+  position: relative;
+  padding: 6px 12px;
+}
+
+.nav-menu nav-item:hover {
+  color: black;
+}
+
+.nav-menu nav-item::after {
+  content: "";
+  position: absolute;
+  bottom: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0%;
+  height: 4px;
+  background: #53AAA1;
+  transition: all .5s ease-out;
+}
+
+.nav-menu nav-item:hover::after {
+  width: 100%;
+}
+
+nav-item.active {
+  color: black;
+}
+
+nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 4px;
+  background: #53AAA1;
+  transition: all .5s ease-out;
+}
+
+#app-router {
+  display: block;
+  width: 100%;
+  margin: 3em auto;
+}
+
 </style>
