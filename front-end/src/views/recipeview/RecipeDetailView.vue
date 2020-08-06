@@ -5,7 +5,10 @@
       <ingredient />
       <hr>
       <cookingstep />
-      <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button>
+      <div  id= "button-bottom">
+            <b-icon icon="book" v-b-modal="'my-modal'" scale="1" v-b-tooltip.hover title="가로보기"></b-icon>
+      </div>
+      <!-- <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button> -->
 
         <!-- The modal -->
         <b-modal size="xl" id="my-modal" title="쿠킹스텝">
@@ -21,7 +24,7 @@
             v-for="cookingstep in selectedRecipe.cookingStep"
             :key="cookingstep.cooking_steps_id"
             :caption="cookingstep.steps"
-            img-src="https://picsum.photos/1024/480/?image=10"
+            :img-src="cookingstep.step_image"
             text="ddd"
             ><h1>{{ cookingstep.description }}</h1></b-carousel-slide>
             </b-carousel>

@@ -2,7 +2,7 @@
   <b-container>
       <b-row>
       <b-col>
-      <img :src="selectedRecipe.main_image" alt="mainimage">
+      <img :src="selectedRecipe.main_image" alt="mainimage" style="max-width:100%;max-height:100%;">
       <h2 style="text-align:center">{{ selectedRecipe.title }}</h2>
       </b-col>
       </b-row>
@@ -24,7 +24,7 @@
             {{ selectedRecipe.recipe_user_name }}
           </b-col>
           <b-col lg-9>
-          <div class="arrow_box">
+          <div class="arrow_box" style="font-style:italic">
               "{{ selectedRecipe.description }}"
           </div>
           </b-col>
