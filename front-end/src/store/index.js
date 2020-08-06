@@ -542,6 +542,12 @@ const moduleRecipes = {
         .then(res => {
           commit('SET_USER', res.data.data)
         })
+    },
+    recipeLike({ rootGetters, dispatch }, recipe_id) {
+      axios.get(SERVER.ROUTES.myrecipe.recipelike + String(recipe_id) +'/like', rootGetters['accounts/config'])
+      .then(() => {
+        dispatch('fetchMyRecipes', null, { root: true })
+      })
     }
   },
 }
