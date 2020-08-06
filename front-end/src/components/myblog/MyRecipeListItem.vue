@@ -23,11 +23,14 @@
         <span>{{ recipe.description }}</span>
     </v-card-text> -->
     <v-card-actions>
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
+      <v-btn @click="likefunction(recipe.recipe_id)" icon>
+        <v-icon v-show="isliked">mdi-heart</v-icon>
+        <v-icon v-show="!isliked">mdi-heart-outline</v-icon>
       </v-btn>
+      {{ recipe.likeNum }}
+      <!-- {{ likenumber }} -->
       <v-btn icon>
-        <v-icon>mdi-share-variant</v-icon>
+        <v-icon>mdi-download</v-icon>
       </v-btn>
       <v-list-item>
       <v-spacer></v-spacer>
@@ -38,22 +41,67 @@
       </v-list-item-content> -->
     </v-list-item>
     </v-card-actions>
+    <!-- {{ recipe.likeNum }}
+    {{ recipe.like }}
+    {{ isLike }}
+    {{ isliked }} -->
   </v-card>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
     name:'RecipeCard',
+    data() {
+      return {
+        isliked: null,
+        likenumber: null,
+      }
+    },
     props:{
       recipe:Object,
+    },
+    computed: {
+      ...mapState('accounts', ['authUser']),
+      isLike() {
+        if (this.recipe.like.includes(this.authUser.user_id)) {
+          return true
+        } else {
+          return false
+        }
+      }
     },
     methods:{
         // readRecipe(){
         //     alert("레시피읽는화면으로 들어갑니다.( 레시피아이디 : " +this.recipe.recipe_id +" )" )
         // }
-        ...mapActions('recipes', ['fetchRecipe'])
+        ...mapActions('recipes', ['fetchRecipe', 'recipeLike']),
+        likefunction(recipe_id) {
+          this.recipeLike(recipe_id)
+          if (this.isliked) {
+            this.recipe.likeNum--
+            // this.likenumber--
+            this.isliked = !this.isliked
+          } else {
+            this.recipe.likeNum++
+            // this.likenumber++
+            this.isliked = !this.isliked
+          }
+        }
     },
+    // updated() {
+    //   this.isliked = this.isLike
+    //   this.likenumber = this.recipe.likeNum
+    // },
+    created() {
+      this.isliked = this.isLike
+      // this.likenumber = this.recipe.likeNum
+    }
+    // updated() {
+    //   if (this.tf)
+    //     this.isliked = this.isLike
+    //     this.tf = false
+    // }
 }
 </script>
 

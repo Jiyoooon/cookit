@@ -16,6 +16,7 @@ const moduleAccounts = {
     authToken: cookies.get('auth-token'),
     authUser: cookies.get('auth-user'),
     userEmail: cookies.get('user-email'),
+    updateTF: false,
   },
 
   getters: {
@@ -50,6 +51,9 @@ const moduleAccounts = {
      SET_USER(state, user) {
        state.authUser = user
        cookies.set('auth-user', user)
+     },
+     SET_UPDATETF(state, value) {
+       state.updateTF = value
      },
   },
 
@@ -128,8 +132,9 @@ const moduleAccounts = {
       router.push({ name: 'Logout'})
     },
 
-    GoUserInfo() {
+    GoUserInfo({ commit }) {
       router.push({ name: 'UserInfoView'})
+      commit('SET_UPDATETF', false)
     },
 
     GoEmailAuth() {
@@ -312,8 +317,11 @@ const moduleAccounts = {
         formData.append('intro', updateData.config.intro)
         formData.append('start_page', updateData.config.start_page)
 
-        for (let key of formData.entries()) {
-          console.log(`${key}`)
+        for (let [key, value] of formData.entries()) {
+          console.log(`${key} : ${value}`)
+          if (key == 'profile') {
+            console.log(value)
+          }
         }
 
         const headerconfig = { headers: {
@@ -532,6 +540,12 @@ const moduleRecipes = {
         .then(res => {
           commit('SET_USER', res.data.data)
         })
+    },
+    recipeLike({ rootGetters, dispatch }, recipe_id) {
+      axios.get(SERVER.ROUTES.myrecipe.recipelike + String(recipe_id) +'/like', rootGetters['accounts/config'])
+      .then(() => {
+        dispatch('fetchMyRecipes', null, { root: true })
+      })
     }
   },
 }

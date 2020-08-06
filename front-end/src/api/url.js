@@ -23,7 +23,8 @@ export default {
             myrecipes: '/recipe/all/',
             selectedrecipe: '/recipe/',
             fetchrecipesbytitle: '/recipe/title',
-            recipesave: '/recipe/save'
+            recipesave: '/recipe/save',
+            recipelike: '/recipe/token/'
         },
         lookaroundrecipe:{
             getfilteredrecipes: '/recipe/recipes2',
