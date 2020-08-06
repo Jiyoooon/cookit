@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.ssafy.cooking.service.JwtService;
@@ -54,7 +53,4 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 		}
 		return true;
 	}
-	
-	
-	
 }

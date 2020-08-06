@@ -1,12 +1,11 @@
 <template>
   <div>
-    <b-container fluid="lg" id ="passwordfind-container">
-      <b-row align-v = "center">
-        <b-col sm="1"></b-col>
-        <b-col sm="2">
+    <b-container fluid>
+      <b-row align-v="center">
+        <b-col md="2">
           <label for="input-email">E-mail</label>
         </b-col>
-        <b-col sm="5">
+        <b-col md="6">
           <b-form-input 
             id="input-email" 
             v-model="userEmail"
@@ -20,11 +19,10 @@
             이메일을 확인해주세요.
           </b-form-invalid-feedback>
         </b-col>
-        <b-col sm="3">
-          <b-button v-if="!userEmailValid" disabled variant="primary" block>새 비밀번호 전송</b-button>
-          <b-button v-else variant="primary" @click='sendNewPassword(userEmail)'>새 비밀번호 전송</b-button>
+        <b-col md="4">
+          <div v-if="!userEmailValid" class="block-btn btn-style3">새 비밀번호 전송</div>
+          <div v-else class="block-btn btn-style1" @click='sendNewPassword(userEmail)'>새 비밀번호 전송</div>
         </b-col>
-        <b-col sm="1"></b-col>
       </b-row> 
   </b-container>
   </div>
