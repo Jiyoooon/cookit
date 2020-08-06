@@ -23,19 +23,19 @@ import com.ssafy.cooking.util.Timer;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
-
+	
 	@Autowired
 	private RecipeDao recipeDao;
 
 	@Override
-	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, Integer order, String filter, String baseUrl) {
+	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, Integer order, Integer likeUser, String filter, String baseUrl) {
 		int start = 0;
 		int end = Integer.MAX_VALUE;
 		if (p != null) {
 			start = p;
 			end = 20;
 		}
-		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, query, category, order, filter);
+		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, query, category, order, likeUser, filter);
 		for (Recipe r : recipes) {
 			r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
 			r.setLike(recipeDao.getLikeList(r.getRecipe_id()));
@@ -127,7 +127,7 @@ public class RecipeServiceImpl implements RecipeService {
 	public int reviseRecipe(RecipeDetail recipeData, String baseUrl) {
 		if (recipeData.getMain_image_file() != null && !recipeData.getMain_image_file().isEmpty()) {
 			try {
-				String saveFileName = recipeData.getMain_image().substring(44, recipeData.getMain_image().length() - 4);
+				String saveFileName = recipeData.getRecipe_user() + Long.toString(System.currentTimeMillis());
 				writeFile(recipeData.getMain_image_file(), saveFileName, baseUrl);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -203,7 +203,7 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 	
 	@Override
-	public List<Recipe> getRecipes2(Integer p, Integer id, String user, String query, Integer category, Integer order, Filter filter, String baseUrl) {
+	public List<Recipe> getRecipes2(Integer p, Integer id, String user, String query, Integer category, Integer order, Integer likeUser, Filter filter, String baseUrl) {
 		int start = 0;
 		int end = Integer.MAX_VALUE;
 		if (p != null) {
@@ -232,7 +232,7 @@ public class RecipeServiceImpl implements RecipeService {
 //		if(filter.getLike_medium() != null) System.out.println(like_medium+", "+like_medium.size());
 //		if(filter.getLike_small() != null) System.out.println(like_small+", "+like_small.size());
 		
-		List<Recipe> recipes = recipeDao.getRecipes2(start, end, id, user, query, category, order, 
+		List<Recipe> recipes = recipeDao.getRecipes2(start, end, id, user, query, category, order, likeUser,
 				hate_large, hate_medium, hate_small, like_large, like_medium, like_small);
 		for (Recipe r : recipes) {
 			r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());

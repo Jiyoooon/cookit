@@ -101,6 +101,9 @@
 		<if test="order != null and order == 3">
         	LEFT JOIN Likes l USING(recipe_id)
 		</if>
+		<if test="likeUser != null and likeUser != ''">
+        	JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+		</if>
 		WHERE 1 = 1
 		<if test="query != null and query != ''">
 			AND title LIKE CONCAT('%', #{query}, '%')
@@ -276,7 +279,10 @@
 		USING (recipe_id)
 		JOIN User u on r.recipe_user = u.user_id
 		<if test="order != null and order == 3">
-        	LEFT JOIN Likes l USING(recipe_id)
+        	LEFT JOIN Likes l USING (recipe_id)
+		</if>
+		<if test="likeUser != null and likeUser != ''">
+        	JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
 		</if>
 		WHERE 1 = 1
 		<if test="query != null and query != ''">
