@@ -6,6 +6,7 @@ public class Recipe {
 	private Integer recipe_id; //레시피id
 	private Integer recipe_user;//작성자id
 	private String recipe_user_name;//작성자 이름
+	private String recipe_user_profileImage;//작성자 사진
 	private Integer category_id;//카테고리id
 	private String title; //제목
 	private String description; //설명 
@@ -18,6 +19,7 @@ public class Recipe {
 	private String create_date; //작성시간
 	private String update_date;
 	private String delete_date;
+	private boolean like;
 	private MultipartFile main_image_file;
 	public Integer getRecipe_id() {
 		return recipe_id;
@@ -109,10 +111,23 @@ public class Recipe {
 	public void setDelete_date(String delete_date) {
 		this.delete_date = delete_date;
 	}
+	public boolean isLike() {
+		return like;
+	}
+	public void setLike(boolean like) {
+		this.like = like;
+	}
 	public MultipartFile getMain_image_file() {
 		return main_image_file;
 	}
 	public void setMain_image_file(MultipartFile main_image_file) {
 		this.main_image_file = main_image_file;
 	}
+	public String getRecipe_user_profileImage() {
+		return recipe_user_profileImage;
+	}
+	public void setRecipe_user_profileImage(String recipe_user_profileImage) {
+		this.recipe_user_profileImage = recipe_user_profileImage;
+	}
+	
 }

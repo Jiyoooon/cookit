@@ -28,14 +28,18 @@ public class RecipeServiceImpl implements RecipeService {
 	private RecipeDao recipeDao;
 
 	@Override
-	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, String filter) {
+	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, String filter, String baseUrl) {
 		int start = 0;
 		int end = Integer.MAX_VALUE;
 		if (p != null) {
 			start = p;
 			end = 20;
 		}
-		return recipeDao.getRecipes(start, end, id, user, query, category, filter);
+		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, query, category, filter);
+		for (Recipe r : recipes) {
+			r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
+		}
+		return recipes;
 	}
 
 	@Override
@@ -103,8 +107,13 @@ public class RecipeServiceImpl implements RecipeService {
 			recipeDao.addCookingsteps(recipe_id, recipeDetail.getCookingStep());
 		}
 		
-		if (recipeDetail.getIngredients() != null)
+		if (recipeDetail.getIngredients() != null) {
+			for (Ingredient ingre : recipeDetail.getIngredients()) {
+				System.out.println(ingre);
+			}
+			recipeDao.checkIngredients(recipe_id, recipeDetail.getIngredients());
 			recipeDao.addIngredients(recipe_id, recipeDetail.getIngredients());
+		}
 
 		return recipe_id;
 	}
@@ -230,6 +239,16 @@ public class RecipeServiceImpl implements RecipeService {
 //		if(filter.getLike_small() != null) System.out.println(like_small+", "+like_small.size());
 		return recipeDao.getRecipes2(p, 20, id, user, query, category, 
 									hate_large, hate_medium, hate_small, like_large, like_medium, like_small);
+	}
+
+	@Override
+	public int setLike(int recipe_id, int uid) {
+		if(recipeDao.deleteLike(recipe_id, uid) > 0) {
+			return 1;
+		} else {
+			recipeDao.setLike(recipe_id, uid);
+			return 0;
+		}
 	}
 
 	
