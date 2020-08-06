@@ -6,7 +6,7 @@
         <img @click="mainLogoClick" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQDLFnxu6sy4oQgCw4yuNZeNq1p604iMXTq-Q&usqp=CAU" style="height: 5em; padding: 0px 1em 0px 1em;">
     </b-navbar-brand>
     <nav class="nav-menu">
-      <div id="myblog" @click="GoMyBlog">내 블로그</div>
+      <div id="myblog" @click="GoUserBlog">내 블로그</div>
       <div id="browsing" @click="GoLookAroundRecipesView">둘러보기</div>
     </nav>
     <nav class="nav-side">
