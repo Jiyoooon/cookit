@@ -221,9 +221,6 @@ const moduleAccounts = {
     emailAuthCodeSend({ commit }, email) {
       axios.get(SERVER.ROUTES.accounts.requestkey + String(email))
       .then(res => {
-<<<<<<< front-end/src/store/index.js
-=======
->>>>>>> front-end/src/store/index.js
         if(res.data.result == 'success') {
           commit('SET_EMAIL', email)
           this._vm.$root.$bvModal.msgBoxOk('인증 코드가 발송되었습니다.', {
@@ -358,7 +355,6 @@ const moduleAccounts = {
       axios.post(SERVER.ROUTES.accounts.checkpassword, password, getters.config)
       .then((res) => {
         if(res.data.result == 'success') {
-<<<<<<< front-end/src/store/index.js
           cookies.set('password-check', 1)
           this._vm.$root.$bvModal.msgBoxOk('확인되었습니다.', {
             title: 'Confirmation',

@@ -51,13 +51,11 @@ export default {
     },
     methods: {
       ...mapActions('editor', ['onSubmitButton']),
-<<<<<<< front-end/src/views/myrecipes/RecipeCreateView.vue
       ...mapMutations('editor', ['SET_RECIPE', 'SET_COOKINGSTEP', 'SET_MAININGR', 'SET_SUBINGR']),
       cancel() {
         alert("레시피 작성을 취소하시겠습니까?")
         this.$router.go(-1)
       }
->>>>>>> front-end/src/views/myrecipes/RecipeCreateView.vue
     },
     created() {
       this.SET_RECIPE({
