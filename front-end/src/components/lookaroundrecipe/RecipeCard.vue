@@ -70,7 +70,6 @@ export default {
         // readRecipe(){
         //     alert("레시피읽는화면으로 들어갑니다.( 레시피아이디 : " +this.recipe.recipe_id +" )" )
         // }
-<<<<<<< front-end/src/components/lookaroundrecipe/RecipeCard.vue
         ...mapActions('recipes', ['fetchRecipe', 'recipeLike']),
          likefunction(recipe_id) {
           this.recipeLike(recipe_id)
@@ -84,12 +83,10 @@ export default {
             this.isliked = !this.isliked
           }
         },
-=======
         gouserblog(){
           this.getUserInfo(this.recipe.recipe_user)
         },
         ...mapActions('myblog',['getUserInfo']),
->>>>>>> front-end/src/components/lookaroundrecipe/RecipeCard.vue
     },
     created() {
       this.isliked = this.isLike
