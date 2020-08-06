@@ -11,8 +11,8 @@
     </nav>
     <nav class="nav-side">
       <div v-if="!isLoggedIn">
-        <div class="nav-side-item btn-style1" id="login" @click="GoLogin">Sign In</div>
-        <div class="nav-side-item btn-style2" id="signup" @click="GoEmailAuth">Join</div>
+        <div class="nav-side-item btn-style1" id="signup" @click="GoEmailAuth">Join</div>
+        <div class="nav-side-item btn-style2" id="login" @click="GoLogin">Sign In</div>
       </div>
       <div v-else>
         <div class="nav-side-item btn-style1" id="userInfo" @click="GoPasswordAuth">My Info</div>
