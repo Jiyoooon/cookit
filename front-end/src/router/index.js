@@ -23,7 +23,7 @@ Vue.use(VueRouter)
 
   const routes = [
   {
-    path: '/home',
+    path: '/',
     name: 'Home',
     component: Home
   },
@@ -78,7 +78,7 @@ Vue.use(VueRouter)
     component: RecipeUpdateView
   },
   {
-    path: '/', //lookAroundRecipe
+    path: '/lookAroundRecipe',
     name: 'LookAroundRecipeView',
     component: LookAroundRecipeView
   },
