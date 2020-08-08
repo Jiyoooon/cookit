@@ -23,7 +23,9 @@
   </header>
   <hr id="divider">
   <div id="app-router">
-    <router-view></router-view>
+    <transition name="fade" mode="out-in" @after-leave="afterLeave">
+      <router-view></router-view>
+    </transition>
   </div>
   <footer id="app-footer">
     <ul>
@@ -70,6 +72,9 @@ export default {
         toggle() {
             this.isActive = !this.isActive
             console.log(this.isActive)
+        },
+        afterLeave() {
+          this.$root.$emit('triggerScroll')
         },
         mainLogoClick() {
           $("#myblog").removeClass("active");
@@ -135,6 +140,13 @@ export default {
   -webkit-user-select: none;
   -khtml-user-select: none;
   user-select: none;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 
 .wrapper {
