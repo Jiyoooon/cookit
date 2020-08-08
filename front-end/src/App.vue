@@ -102,7 +102,7 @@ export default {
           // this.setRecipequeryUserId(this.authUser.nickname)
           else this.GoMyBlog()
         },
-        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth']),
+        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout']),
         ...mapActions('myblog',['GoMyBlog']),
         ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
         ...mapMutations('myblog',['SET_USERINFO']),

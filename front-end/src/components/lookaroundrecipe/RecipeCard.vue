@@ -34,7 +34,7 @@
       <v-list-item>
       <v-spacer></v-spacer>
       <v-list-item-avatar  style="cursor:pointer" @click="gouserblog"> <img 
-        :src='recipe.main_image'></v-list-item-avatar>
+        :src='recipe.recipe_user_profileImage'></v-list-item-avatar>
       <!-- <v-list-item-content>
         <v-list-item-subtitle ><span style="cursor:pointer">by {{ recipe.recipe_user_name}}</span></v-list-item-subtitle>
       </v-list-item-content> -->
