@@ -51,7 +51,7 @@
         </b-col>
         <b-col sm="3">
           <div v-if="!NickNameinValid" class="block-btn btn-style3" block>중복 확인</div>
-          <div v-else class="block-btn btn-style1" @click='nicknameCheck(updateData.config.nickname)'>중복 확인</div>
+          <div v-else class="block-btn btn-style1" @click='nicknameCheck(signupData.config.nickname)'>중복 확인</div>
         </b-col>
       </b-row>
 
@@ -188,6 +188,7 @@ import cookies from 'vue-cookies'
       nicknameCheck(nickname) {
         axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
+          console.log(res)
           if (res.data.result == 'success') {
             this.signupData.valid.nickname = true
             this.$bvModal.msgBoxOk('확인되었습니다.', {

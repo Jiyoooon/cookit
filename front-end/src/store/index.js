@@ -639,12 +639,16 @@ const moduleEditor = {
         steps: 1,
         description: null,
         tip: null,
-        step_image_file: null },
+        step_image_file: null,
+        step_image_url: null
+      },
       {
         steps: 2,
         description: null,
         tip: null,
-        step_image_file: null },
+        step_image_file: null,
+        step_image_url: null
+      },
     ],
     mainIngr: [
       { name: "", quantity: "", is_essential: 1 },
@@ -692,7 +696,9 @@ const moduleEditor = {
         steps: state.cookingStep.length + 1,
         description: "",
         tip: "",
-        step_image: null },)
+        step_image_file: null,
+        step_image_url: null
+      },)
     },
     deleteCookingStep(state, id) {
       state.cookingStep.splice(id, 1);
@@ -752,10 +758,6 @@ const moduleEditor = {
         if(state.subIngr[i].name != "" && state.subIngr[i].quantity == "") {
           ingrDone = true;
         }
-        if (state.subIngr[i].name != "" && state.subIngr[i].quantity == "") {
-          alert("재료의 양을 입력하세요.")
-          return;
-        }
         if (state.subIngr[i].name == "" && state.subIngr[i].quantity != "") {
           alert("재료의 이름을 입력하세요.")
           return;
@@ -799,6 +801,7 @@ const moduleEditor = {
           && state.cookingStep[i].step_image_file == null) continue;
         for (let [key, value] of Object.entries(state.cookingStep[i])) {
           if (key == "step_image_file" && value == null) continue;
+          if (key == "step_image_url") continue;
           // console.log(`cookingStep[${i}].${key}: ${value}`)
           recipeData.append(`cookingStep[${i}].${key}`, value)
         }

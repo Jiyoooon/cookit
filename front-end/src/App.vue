@@ -81,7 +81,7 @@ export default {
           this.setRecipequeryUserId(this.authUser.nickname)
           this.GoMyBlog()
         },
-        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth']),
+        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout']),
         ...mapActions('myblog',['GoMyBlog']),
         ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
         ...mapMutations('myblog',['SET_USERINFO']),
@@ -263,7 +263,6 @@ export default {
   color: white;
   background-color: #24282C;
   position: relative;
-  height: 9em;
   width: 100%;
   margin: 0 auto;
   font-size: 12px;
@@ -276,7 +275,7 @@ export default {
 
 #app-footer li {
   position: relative;
-  display: inline;
+  display: inline-block;
   padding: 12px;
   white-space: nowrap;
   text-decoration: none;

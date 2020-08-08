@@ -9,7 +9,7 @@
                     </RecipeCard>
                 </v-flex>
             </v-layout>
-        <div @click="scrollToTop" id= "button-bottom">
+        <div @click="scrollToTop" id="button-bottom">
             <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로"></b-icon>
         </div>
         
