@@ -58,7 +58,6 @@ const moduleAccounts = {
        state.validEmail = data
      },
      SET_UPDATETF(state, value) {
-       console.log('fsdfsf')
        state.updateTF = value
      },
   },

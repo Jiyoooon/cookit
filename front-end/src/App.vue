@@ -6,17 +6,17 @@
         <img id="mainlogo" @click="mainLogoClick" src="./assets/logo.jpg" style="height: 5em; padding: 0px 2em">
     </b-navbar-brand>
     <nav class="nav-menu">
-      <div v-if="isLoggedIn" id="myblog" @click="goUserBlog">내 블로그</div>
+      <div id="myblog" @click="goUserBlog">내 블로그</div>
       <div id="browsing" @click="GoLookAroundRecipesView">둘러보기</div>
     </nav>
     <nav class="nav-side">
       <div v-if="!isLoggedIn">
-        <div class="nav-side-item btn-style1" id="signup" @click="GoEmailAuth">Join</div>
-        <div class="nav-side-item btn-style2" id="login" @click="GoLogin">Sign In</div>
+        <div class="nav-side-item btn-style1" id="signup" @click="joinClick">Join</div>
+        <div class="nav-side-item btn-style2" id="login" @click="signinClick">Sign In</div>
       </div>
       <div v-else>
-        <div class="nav-side-item btn-style1" id="userInfo" @click="GoPasswordAuth">My Info</div>
-        <div class="nav-side-item btn-style2" id="logout" @click="GoLogout">Log out</div>
+        <div class="nav-side-item btn-style1" id="userInfo" @click="myinfoClick">My Info</div>
+        <div class="nav-side-item btn-style2" id="logout" @click="logoutClick">Log out</div>
       </div>
     </nav>
   </b-navbar>
@@ -76,10 +76,31 @@ export default {
           $("#browsing").removeClass("active");
           this.GoHome();
         },
+        joinClick(){
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.GoEmailAuth();
+        },
+        signinClick(){
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.GoLogin();
+        },
+        myinfoClick(){
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.GoPasswordAuth();
+        },
+        logoutClick(){
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.GoLogout();
+        },
         goUserBlog(){
-          this.SET_USERINFO(this.authUser)
-          this.setRecipequeryUserId(this.authUser.nickname)
-          this.GoMyBlog()
+          if(!this.isLoggedIn) this.GoLogin();
+          // this.SET_USERINFO(this.authUser)
+          // this.setRecipequeryUserId(this.authUser.nickname)
+          else this.GoMyBlog()
         },
         ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth']),
         ...mapActions('myblog',['GoMyBlog']),
@@ -201,7 +222,7 @@ export default {
   }
 }
 .nav-menu #myblog:hover, .nav-menu #browsing:hover {
-  color: black;
+  color: #53AAA1;
 }
 
 .nav-menu #myblog::after, .nav-menu #browsing::after {
@@ -222,7 +243,7 @@ export default {
 }
 
 .nav-menu #myblog.active, .nav-menu #browsing.active {
-  color: black;
+  color: #53AAA1;
 }
 
 .nav-menu #myblog.active::after, .nav-menu #browsing.active::after {
