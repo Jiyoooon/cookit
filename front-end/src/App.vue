@@ -102,7 +102,11 @@ export default {
           this.GoLogout();
         },
         goUserBlog(){
-          if(!this.isLoggedIn) this.GoLogin();
+          if(!this.isLoggedIn) {
+            $("#myblog").removeClass("active");
+            $("#browsing").removeClass("active");
+            this.GoLogin();
+          }
           else {
             this.SET_USERINFO(this.authUser)
             this.setRecipequeryUserId(this.authUser.nickname)
