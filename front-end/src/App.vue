@@ -103,9 +103,11 @@ export default {
         },
         goUserBlog(){
           if(!this.isLoggedIn) this.GoLogin();
-          // this.SET_USERINFO(this.authUser)
-          // this.setRecipequeryUserId(this.authUser.nickname)
-          else this.GoMyBlog()
+          else {
+            this.SET_USERINFO(this.authUser)
+            this.setRecipequeryUserId(this.authUser.nickname)
+            this.GoMyBlog()
+          }
         },
         ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout']),
         ...mapActions('myblog',['GoMyBlog']),
