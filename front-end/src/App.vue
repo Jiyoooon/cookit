@@ -201,7 +201,7 @@ export default {
   }
 }
 .nav-menu #myblog:hover, .nav-menu #browsing:hover {
-  color: black;
+  color: #53AAA1;
 }
 
 .nav-menu #myblog::after, .nav-menu #browsing::after {
@@ -222,7 +222,7 @@ export default {
 }
 
 .nav-menu #myblog.active, .nav-menu #browsing.active {
-  color: black;
+  color: #53AAA1;
 }
 
 .nav-menu #myblog.active::after, .nav-menu #browsing.active::after {
