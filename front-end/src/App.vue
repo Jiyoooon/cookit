@@ -6,24 +6,26 @@
         <img id="mainlogo" @click="mainLogoClick" src="./assets/logo.jpg" style="height: 5em; padding: 0px 2em">
     </b-navbar-brand>
     <nav class="nav-menu">
-      <div v-if="isLoggedIn" id="myblog" @click="goUserBlog">내 블로그</div>
+      <div id="myblog" @click="goUserBlog">내 블로그</div>
       <div id="browsing" @click="GoLookAroundRecipesView">둘러보기</div>
     </nav>
     <nav class="nav-side">
       <div v-if="!isLoggedIn">
-        <div class="nav-side-item btn-style1" id="signup" @click="GoEmailAuth">Join</div>
-        <div class="nav-side-item btn-style2" id="login" @click="GoLogin">Sign In</div>
+        <div class="nav-side-item btn-style1" id="signup" @click="joinClick">Join</div>
+        <div class="nav-side-item btn-style2" id="login" @click="signinClick">Sign In</div>
       </div>
       <div v-else>
-        <div class="nav-side-item btn-style1" id="userInfo" @click="GoPasswordAuth">My Info</div>
-        <div class="nav-side-item btn-style2" id="logout" @click="GoLogout">Log out</div>
+        <div class="nav-side-item btn-style1" id="userInfo" @click="myinfoClick">My Info</div>
+        <div class="nav-side-item btn-style2" id="logout" @click="logoutClick">Log out</div>
       </div>
     </nav>
   </b-navbar>
   </header>
   <hr id="divider">
   <div id="app-router">
-    <router-view></router-view>
+    <transition name="fade" mode="out-in" @after-leave="afterLeave">
+      <router-view></router-view>
+    </transition>
   </div>
   <footer id="app-footer">
     <ul>
@@ -71,15 +73,41 @@ export default {
             this.isActive = !this.isActive
             console.log(this.isActive)
         },
+        afterLeave() {
+          this.$root.$emit('triggerScroll')
+        },
         mainLogoClick() {
           $("#myblog").removeClass("active");
           $("#browsing").removeClass("active");
           this.GoHome();
         },
         goUserBlog(){
-          this.SET_USERINFO(this.authUser)
-          this.setRecipequeryUserId(this.authUser.nickname)
-          this.GoMyBlog()
+          if(!this.isLoggedIn) this.GoLogin();
+          else {
+            this.SET_USERINFO(this.authUser)
+            this.setRecipequeryUserId(this.authUser.nickname)
+            this.GoMyBlog()
+          }
+        },
+        signinClick() {
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.GoLogin();
+        },
+        joinClick() {
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.GoEmailAuth();
+        },
+        myinfoClick() {
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.GoPasswordAuth();
+        },
+        logoutClick() {
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.logout();
         },
         ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout']),
         ...mapActions('myblog',['GoMyBlog']),
@@ -114,6 +142,13 @@ export default {
   -webkit-user-select: none;
   -khtml-user-select: none;
   user-select: none;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 
 .wrapper {
