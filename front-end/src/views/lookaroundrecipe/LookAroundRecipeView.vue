@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div id="list">
         <RecipeSearchBar />
         <div class="RecipeArray">
         <v-container fluid grid-list-md >
@@ -9,7 +9,7 @@
                     </RecipeCard>
                 </v-flex>
             </v-layout>
-        <div @click="scrollToTop" id= "button-bottom">
+        <div @click="scrollToTop" id="button-bottom">
             <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로"></b-icon>
         </div>
         
@@ -46,7 +46,6 @@ export default {
             this.busy = false
         },
         loadMore (){
-
             this.busy = true;
             setTimeout(() => {
                 this.getFilteredRecipes()
@@ -83,8 +82,16 @@ export default {
     }
 
     .RecipeArray{
-        width: 80%;
         margin-left: auto;
         margin-right: auto;
     }
+
+#list {
+  width: 90%;
+  display: block;
+  margin: 0px auto;
+  background-color: #fff;
+  padding: 5em 1em 8em 1em;
+}
+
 </style>

@@ -9,35 +9,40 @@ import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 import PasswordFindView from '../views/accounts/PasswordFindView.vue'
 import EmailAuthView from '../views/accounts/EmailAuthView.vue'
 import RecipeCreateView from '@/views/myrecipes/RecipeCreateView.vue'
+import RecipeUpdateView from '@/views/myrecipes/RecipeUpdateView.vue'
 import Home from '../views/Home.vue'
 import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView.vue'
 import MyBlogListView from '../views/myblog/MyBlogListView.vue'
 import RecipeDetailView from '../views/recipeview/RecipeDetailView.vue'
-
+import store from '../store'
 
 
 Vue.use(VueRouter)
 
   const routes = [
   {
-    path: '',
+    path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: { scrollToTop: true }
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: SignupView
+    component: SignupView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/login',
     name: 'Login',
-    component: LoginView
+    component: LoginView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/logout',
     name: 'Logout',
-    component: LogoutView
+    component: LogoutView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/userDelete',
@@ -47,27 +52,38 @@ Vue.use(VueRouter)
   {
     path: '/userInfo',
     name: 'UserInfoView',
-    component: UserInfoView
+    component: UserInfoView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/passwordAuth',
     name: 'PasswordAuthView',
-    component: PasswordAuthView
+    component: PasswordAuthView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/passwordFind',
     name: 'PasswordFindView',
     component: PasswordFindView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/emailAuth',
     name: 'EmailAuthView',
-    component: EmailAuthView
+    component: EmailAuthView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/recipeCreate',
     name: 'RecipeCreateView',
-    component: RecipeCreateView
+    component: RecipeCreateView,
+    meta: { scrollToTop: true }
+  },
+  {
+    path: '/recipeUpdate',
+    name: 'RecipeUpdateView',
+    component: RecipeUpdateView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/lookAroundRecipe',
@@ -82,21 +98,53 @@ Vue.use(VueRouter)
   {
     path: '/recipe/:recipe_id',
     name: 'SelectedRecipe',
-    component: RecipeDetailView
+    component: RecipeDetailView,
+    meta: { scrollToTop: true }
   },
 ]
+
+// scrollBehavior:
+// - only available in html5 history mode
+// - defaults to no scroll behavior
+// - return false to prevent scroll
+const scrollBehavior = function (to, from, savedPosition) {
+  if (savedPosition) {
+    // savedPosition is only available for popstate navigations.
+    return savedPosition
+  } else {
+    const position = {}
+    return new Promise(resolve => {
+      // check if any matched route config has meta that requires scrolling to top
+      if (to.matched.some(m => m.meta.scrollToTop)) {
+        // coords will be used if no selector is provided,
+        // or if the selector didn't match any element.
+        position.x = 0
+        position.y = 0
+      }
+
+      // wait for the out transition to complete (if necessary)
+      this.app.$root.$once('triggerScroll', () => {
+        // if the resolved position is falsy or an empty object,
+        // will retain current scroll position.
+        resolve(position)
+      })
+    })
+  }
+}
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior
 })
 
 router.beforeEach((to, from, next) => {
-  const RequiredLoggedInPages = ['Logout', 'PasswordAuthView', 'UserInfoView', 'UserDelete', 'MyBlogListView']
+  const RequiredLoggedInPages = ['Logout', 'PasswordAuthView', 'UserInfoView', 'UserDelete', 'MyBlogListView'] 
   const RequiredLoggedOutPages = ['Login', 'Signup', 'EmailAuthView', 'PasswordFindView']
   const RequiredAuthorized = ['Signup']
   const RequiredPasswordAuth = ['UserInfoView']
+  const BeforeUpdated = ['Logout', 'MyBlogListView', 'Login', 'Signup', 'EmailAuthView', 'PasswordFindView', 'LookAroundRecipeView']
 
   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
   const IsAuthorized = Vue.$cookies.isKey('user-email')
@@ -107,29 +155,86 @@ router.beforeEach((to, from, next) => {
   const AuthorizedRequired = RequiredAuthorized.includes(to.name)
   const AuthPasswordRequired = RequiredPasswordAuth.includes(to.name)
 
+  const FromUserInfo = RequiredPasswordAuth.includes(from.name)
+  const FromUserInfoTo = BeforeUpdated.includes(to.name)
+
+
+  // if (!IsLoggedIn && LoggedInRequired) {
+  //   next({ name: 'Login' })
+  // } else {
+  //   next()
+  // }
+
+  // if (IsLoggedIn && LoggedOutRequired) {
+  //   next({ name: 'Home' })
+  // } else {
+  //   next()
+  // }
+
+  // if (!IsAuthorized && AuthorizedRequired) {
+  //   next({ name: 'EmailAuthView' })
+  // } else {
+  //   next()
+  // }
+
+  // if (!IsPasswordAuth && AuthPasswordRequired) {
+  //   next({ name: 'PasswordAuthView' })
+  // } else {
+  //   next()
+  // }
+
+  // if (FromUserInfo && FromUserInfoTo) {
+  //   store._vm.$root.$bvModal.msgBoxConfirm('수정한 내용이 저장되지 않습니다.', {
+  //     title: '정말로 나가시겠습니까?',
+  //     size: 'md',
+  //     buttonSize: 'sm',
+  //     okVariant: 'danger',
+  //     okTitle: 'YES',
+  //     cancelTitle: 'NO',
+  //     footerClass: 'p-2',
+  //     hideHeaderClose: false,
+  //     centered: true
+  //   })
+  //     .then((ans) => {
+  //       if (ans) {
+  //         next() 
+  //       } else {
+  //         next(false)
+  //       }
+  //     }) 
+  //   }    
+  console.log(store.state.accounts.updateTF)
   if (!IsLoggedIn && LoggedInRequired) {
     next({ name: 'Login' })
-  } else {
-    next()
-  }
-
-  if (IsLoggedIn && LoggedOutRequired) {
-    next({ name: 'Home' })
-  } else {
-    next()
-  }
-
-  if (!IsAuthorized && AuthorizedRequired) {
+  } else if (IsLoggedIn && LoggedOutRequired) {
+    next({ name: 'LookAroundRecipeView' })
+  } else if (!IsAuthorized && AuthorizedRequired) {
     next({ name: 'EmailAuthView' })
-  } else {
-    next()
-  }
-
-  if (!IsPasswordAuth && AuthPasswordRequired) {
+  } else if (!IsPasswordAuth && AuthPasswordRequired) {
     next({ name: 'PasswordAuthView' })
-  } else {
-    next()
-  }
+  } else if (FromUserInfo && FromUserInfoTo && store.state.accounts.updateTF) {
+    store._vm.$root.$bvModal.msgBoxConfirm('수정한 내용이 저장되지 않습니다.', {
+      title: '정말로 나가시겠습니까?',
+      size: 'md',
+      buttonSize: 'sm',
+      okVariant: 'danger',
+      okTitle: 'YES',
+      cancelTitle: 'NO',
+      footerClass: 'p-2',
+      hideHeaderClose: false,
+      centered: true
+    })
+      .then((ans) => {
+        if (ans) {
+          next() 
+        } else {
+          next(false)
+        }
+      }) 
+    } else {
+      next()
+    }   
+
 })
 
 export default router

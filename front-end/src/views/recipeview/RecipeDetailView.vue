@@ -1,5 +1,6 @@
 <template>
   <div>
+      <button @click="gorecipeupdate">고고</button>
       <recipe />
       <hr>
       <ingredient />
@@ -60,7 +61,11 @@ export default {
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
-        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser'])
+        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser']),
+        gorecipeupdate() {
+          console.log('nnnn')
+          this.$router.push({ name: 'RecipeUpdateView'})
+        }
     },
     created() {
         // this.fetchRecipe(),

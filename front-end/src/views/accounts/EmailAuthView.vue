@@ -1,8 +1,8 @@
 <template>
-  <div id="email-auth">
-    <h2>이메일 확인</h2>
+  <div id="wrapper">
+    <h2>회원가입</h2>
     <hr>
-     <div class="inner-center">회원 가입을 위해서는 E-mail 인증이 필요합니다.<br>
+     <div class="inform">회원 가입을 위해서는 이메일 인증이 필요합니다.<br>
     입력한 이메일로 인증코드를 보냅니다.</div>
     <EmailAuth/>
   </div>
@@ -19,13 +19,26 @@ export default {
 </script>
 
 <style>
-  #email-auth {
-    width: 50%;
+#wrapper {
+  width: 690px;
+  display: block;
+  margin: 0px auto;
+  background-color: #fff;
+  padding: 5em 1em 8em 1em;
+}
+
+@media (max-width: 768px) {
+  #wrapper {
+    width: 90%;
     display: block;
     margin: 0px auto;
+    background-color: #fff;
+    padding: 5em 1em 8em 1em;
   }
-  .inner-center {
-    text-align: center;
-    margin: 2em;
-  }
+}
+
+.inform {
+  text-align: center;
+  margin: 2em;
+}
 </style>

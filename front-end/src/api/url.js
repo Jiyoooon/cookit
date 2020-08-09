@@ -17,13 +17,14 @@ export default {
             sendnewpassword: '/user/password/',
         },
         info: {
-
+            getuserinfo: '/user/',
         },
         myrecipe: {
             myrecipes: '/recipe/all/',
             selectedrecipe: '/recipe/',
             fetchrecipesbytitle: '/recipe/title',
-            recipesave: '/recipe/save'
+            recipesave: '/recipe/save',
+            recipelike: '/recipe/token/'
         },
         lookaroundrecipe:{
             getfilteredrecipes: '/recipe/recipes2',
@@ -32,5 +33,9 @@ export default {
         recipeview: {
             fetchrecipe: '/recipe/'
         },
+        editor: {
+            saveRecipe: '/recipe/token/save',
+            updateRecipe: '/recipe/token/revise'
+        }
     }
 }
