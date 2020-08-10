@@ -23,7 +23,7 @@
   </header>
   <hr id="divider">
   <div id="app-router">
-    <transition name="fade" mode="out-in" @after-leave="afterLeave">
+    <transition name="fade" mode="out-in" @after-leave="afterLeave" :key="$route.fullPath">
       <router-view></router-view>
     </transition>
   </div>
@@ -102,7 +102,11 @@ export default {
           this.GoLogout();
         },
         goUserBlog(){
-          if(!this.isLoggedIn) this.GoLogin();
+          if(!this.isLoggedIn) {
+            $("#myblog").removeClass("active");
+            $("#browsing").removeClass("active");
+            this.GoLogin();
+          }
           else {
             this.SET_USERINFO(this.authUser)
             this.setRecipequeryUserId(this.authUser.nickname)
