@@ -93,7 +93,8 @@ Vue.use(VueRouter)
   {
     path: '/myBlog',
     name: 'MyBlogListView',
-    component: MyBlogListView
+    component: MyBlogListView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/recipe/:recipe_id',
