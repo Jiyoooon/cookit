@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper">
+  <div id="acc_wrapper">
     <h2>회원가입</h2>
     <hr>
      <div class="inform">회원 가입을 위해서는 이메일 인증이 필요합니다.<br>
@@ -19,7 +19,7 @@ export default {
 </script>
 
 <style>
-#wrapper {
+#acc_wrapper {
   width: 690px;
   display: block;
   margin: 0px auto;
@@ -28,12 +28,8 @@ export default {
 }
 
 @media (max-width: 768px) {
-  #wrapper {
+  #acc_wrapper {
     width: 90%;
-    display: block;
-    margin: 0px auto;
-    background-color: #fff;
-    padding: 5em 1em 8em 1em;
   }
 }
 

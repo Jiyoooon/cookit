@@ -274,7 +274,7 @@ export default {
   width: 90%;
   margin: 0px auto;
   background-color: white;
-  min-height: 512px;
+  min-height: 482px;
 }
 
 @media (max-width: 768px) {

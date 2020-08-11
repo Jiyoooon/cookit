@@ -81,7 +81,7 @@ export default {
   padding: 5em 1em 8em 1em;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 496px) {
   #lookaround {
     width: 100%
   }
