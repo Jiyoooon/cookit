@@ -1,6 +1,6 @@
 <template>
     <div id="list">
-        <RecipeSearchBar />
+        <RecipeSearchBar/>
         <div class="RecipeArray">
         <v-container fluid grid-list-md >
             <v-layout row wrap >
@@ -58,7 +58,7 @@ export default {
         ...mapMutations('lookaround',['initializing']),
     },
     computed:{
-        ...mapState('lookaround',['recipes','numberofgetrecipes']),
+        ...mapState('lookaround',['recipes','numberofgetrecipes','ingredients']),
     },
     updated(){
         if(this.numberofgetrecipes != 0){//가져온 데이터수가 0이 아니면 동작
