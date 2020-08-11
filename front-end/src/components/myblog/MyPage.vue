@@ -32,7 +32,7 @@
         color="deep-purple lighten-2"
         text
         v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate && (this.authUser != null)"
-        @click="follow"
+        @click="clickfollow"
       >
         팔로우
       </v-btn>
@@ -40,7 +40,7 @@
         color="deep-purple lighten-2"
         text
         v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate && (this.authUser != null)"
-        @click="unfollow"
+        @click="clickunfollow"
       >
         언팔로우
       </v-btn>
@@ -103,20 +103,19 @@ export default {
         else
           this.fstate = false
       },
-      follow(){
-        alert("팔로우테스트")
+      clickfollow(){
         this.follow(this.selecteduserinfo.user_id)
-        this.rerendering()
+        //this.rerendering()
       },
-      unfollow(){
-
+      clickunfollow(){
+        this.unfollow(this.selecteduserinfo.user_id)
       },
       rerendering(){
         this.$router.go(0)
       },
       ...mapActions('accounts',['GoRecipeCreate']),
       ...mapMutations('storage',['ADD_FOLLOWINGS',]),
-      ...mapActions('storage',['follow'])
+      ...mapActions('storage',['follow','unfollow'])
     },
     beforeMount() {
       this.setfstate()

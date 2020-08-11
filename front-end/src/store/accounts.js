@@ -269,13 +269,13 @@ export default {
         alert('!!!!!!')
        })
     },
-    fetchUser({ getters, commit }) {
+    fetchUser({ getters, commit, dispatch}) {
       axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
           commit('SET_USER', res.data.data)
+          dispatch('storage/getfollowings',null,{root : true})
         })
         .catch((err) => {
-          console.err(err.response)
           alert(err.response)
         })
     },
