@@ -76,35 +76,33 @@ export default {
         afterLeave() {
           this.$root.$emit('triggerScroll')
         },
-        mainLogoClick() {
+        removeActiveClass() {
           $("#myblog").removeClass("active");
           $("#browsing").removeClass("active");
+        },
+        mainLogoClick() {
+          this.removeActiveClass();
           this.GoHome();
         },
         joinClick(){
-          $("#myblog").removeClass("active");
-          $("#browsing").removeClass("active");
+          this.removeActiveClass();
           this.GoEmailAuth();
         },
         signinClick(){
-          $("#myblog").removeClass("active");
-          $("#browsing").removeClass("active");
+          this.removeActiveClass();
           this.GoLogin();
         },
         myinfoClick(){
-          $("#myblog").removeClass("active");
-          $("#browsing").removeClass("active");
+          this.removeActiveClass();
           this.GoPasswordAuth();
         },
         logoutClick(){
-          $("#myblog").removeClass("active");
-          $("#browsing").removeClass("active");
+          this.removeActiveClass();
           this.GoLogout();
         },
         goUserBlog(){
           if(!this.isLoggedIn) {
-            $("#myblog").removeClass("active");
-            $("#browsing").removeClass("active");
+          this.removeActiveClass();
             this.GoLogin();
           }
           else {
@@ -229,7 +227,7 @@ export default {
   user-select: none;
 }
 
-@media (max-width: 496px) {
+@media (max-width: 506px) {
   .nav-menu {
     margin-left: auto;
     margin-right: auto;
@@ -239,6 +237,7 @@ export default {
     margin-bottom: 20px;
   }
 }
+
 .nav-menu #myblog:hover, .nav-menu #browsing:hover {
   color: #53AAA1;
 }
