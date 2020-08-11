@@ -33,7 +33,7 @@
             </b-row>
             <b-row>
               <b-col>
-                <img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px">
+                <img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" width="240px">
                 <span v-else></span>
               </b-col>
             </b-row>
@@ -76,6 +76,7 @@ export default {
 		setThumbnail(e) {
 			const file = e.target.files[0];
 			if(!file) return;
+			console.log(e)
 			const index = Number(e.path[0].id);
 			this.cookingStep[index].step_image_url = URL.createObjectURL(file);
 		},
