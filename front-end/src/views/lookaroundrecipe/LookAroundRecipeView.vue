@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div id="lookaround">
         <RecipeSearchBar/>
         <div class="RecipeArray">
         <v-container fluid grid-list-md >
@@ -73,7 +73,7 @@ export default {
 </script>
 
 <style>
-#wrapper {
+#lookaround {
   width: 90%;
   display: block;
   margin: 0px auto;
@@ -82,7 +82,7 @@ export default {
 }
 
 @media (max-width: 768px) {
-  #wrapper {
+  #lookaround {
     width: 100%
   }
 }
