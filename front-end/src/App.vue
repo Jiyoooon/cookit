@@ -6,8 +6,8 @@
         <img id="mainlogo" @click="mainLogoClick" src="./assets/logo.jpg" style="height: 5em; padding: 0px 2em">
     </b-navbar-brand>
     <nav class="nav-menu">
-      <div id="myblog" @click="goUserBlog">내 블로그</div>
-      <div id="browsing" @click="GoLookAroundRecipesView">둘러보기</div>
+      <div id="myblog" @click="myBlogClick">내 블로그</div>
+      <div id="browsing" @click="browsingClick">둘러보기</div>
     </nav>
     <nav class="nav-side">
       <div v-if="!isLoggedIn">
@@ -46,33 +46,17 @@
 </template>
 
 <script>
-import { mapGetters, mapActions,mapState,mapMutations } from 'vuex'
+import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
 import $ from 'jquery'
-$(document).ready(function(){
-  $('.nav-menu div').click(function() {
-    $("#myblog").removeClass("active");
-    $("#browsing").removeClass("active");
-    $(this).toggleClass("active");
-  });
-});
 
 export default {
     name: 'AppHeader',
-    data() {
-        return {
-            isActive: false
-        }
-    },
     computed: {
         // ...mapState([ 'me' ]),
         ...mapGetters('accounts', ['isLoggedIn']),
-        ...mapState('accounts',['authUser'])
+        ...mapState('accounts',['authUser']),
     },
     methods: {
-        toggle() {
-            this.isActive = !this.isActive
-            console.log(this.isActive)
-        },
         afterLeave() {
           this.$root.$emit('triggerScroll')
         },
@@ -100,16 +84,23 @@ export default {
           this.removeActiveClass();
           this.GoLogout();
         },
-        goUserBlog(){
+        myBlogClick() {
           if(!this.isLoggedIn) {
-          this.removeActiveClass();
+            this.removeActiveClass();
             this.GoLogin();
           }
           else {
+            $("#myblog").addClass("active");
+            $("#browsing").removeClass("active");
             this.SET_USERINFO(this.authUser)
             this.setRecipequeryUserId(this.authUser.nickname)
-            this.GoMyBlog()
+            this.GoMyBlog();
           }
+        },
+        browsingClick() {
+          this.removeActiveClass();
+          $("#browsing").addClass("active");
+          this.GoLookAroundRecipesView();
         },
         ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout']),
         ...mapActions('myblog',['GoMyBlog']),
