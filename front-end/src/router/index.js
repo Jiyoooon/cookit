@@ -9,6 +9,7 @@ import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 import PasswordFindView from '../views/accounts/PasswordFindView.vue'
 import EmailAuthView from '../views/accounts/EmailAuthView.vue'
 import RecipeCreateView from '@/views/myrecipes/RecipeCreateView.vue'
+import RecipeUpdateView from '@/views/myrecipes/RecipeUpdateView.vue'
 import Home from '../views/Home.vue'
 import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView.vue'
 import MyBlogListView from '../views/myblog/MyBlogListView.vue'
@@ -16,30 +17,32 @@ import RecipeDetailView from '../views/recipeview/RecipeDetailView.vue'
 import store from '../store'
 
 
-
-
 Vue.use(VueRouter)
 
   const routes = [
   {
-    path: '',
+    path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: { scrollToTop: true }
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: SignupView
+    component: SignupView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/login',
     name: 'Login',
-    component: LoginView
+    component: LoginView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/logout',
     name: 'Logout',
-    component: LogoutView
+    component: LogoutView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/userDelete',
@@ -49,27 +52,38 @@ Vue.use(VueRouter)
   {
     path: '/userInfo',
     name: 'UserInfoView',
-    component: UserInfoView
+    component: UserInfoView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/passwordAuth',
     name: 'PasswordAuthView',
-    component: PasswordAuthView
+    component: PasswordAuthView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/passwordFind',
     name: 'PasswordFindView',
     component: PasswordFindView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/emailAuth',
     name: 'EmailAuthView',
-    component: EmailAuthView
+    component: EmailAuthView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/recipeCreate',
     name: 'RecipeCreateView',
-    component: RecipeCreateView
+    component: RecipeCreateView,
+    meta: { scrollToTop: true }
+  },
+  {
+    path: '/recipeUpdate',
+    name: 'RecipeUpdateView',
+    component: RecipeUpdateView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/lookAroundRecipe',
@@ -79,19 +93,51 @@ Vue.use(VueRouter)
   {
     path: '/myBlog',
     name: 'MyBlogListView',
-    component: MyBlogListView
+    component: MyBlogListView,
+    meta: { scrollToTop: true }
   },
   {
     path: '/recipe/:recipe_id',
     name: 'SelectedRecipe',
-    component: RecipeDetailView
+    component: RecipeDetailView,
+    meta: { scrollToTop: true }
   },
 ]
+
+// scrollBehavior:
+// - only available in html5 history mode
+// - defaults to no scroll behavior
+// - return false to prevent scroll
+const scrollBehavior = function (to, from, savedPosition) {
+  if (savedPosition) {
+    // savedPosition is only available for popstate navigations.
+    return savedPosition
+  } else {
+    const position = {}
+    return new Promise(resolve => {
+      // check if any matched route config has meta that requires scrolling to top
+      if (to.matched.some(m => m.meta.scrollToTop)) {
+        // coords will be used if no selector is provided,
+        // or if the selector didn't match any element.
+        position.x = 0
+        position.y = 0
+      }
+
+      // wait for the out transition to complete (if necessary)
+      this.app.$root.$once('triggerScroll', () => {
+        // if the resolved position is falsy or an empty object,
+        // will retain current scroll position.
+        resolve(position)
+      })
+    })
+  }
+}
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior
 })
 
 router.beforeEach((to, from, next) => {
@@ -162,7 +208,7 @@ router.beforeEach((to, from, next) => {
   if (!IsLoggedIn && LoggedInRequired) {
     next({ name: 'Login' })
   } else if (IsLoggedIn && LoggedOutRequired) {
-    next({ name: 'Home' })
+    next({ name: 'LookAroundRecipeView' })
   } else if (!IsAuthorized && AuthorizedRequired) {
     next({ name: 'EmailAuthView' })
   } else if (!IsPasswordAuth && AuthPasswordRequired) {

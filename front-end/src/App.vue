@@ -3,28 +3,45 @@
     <header id="app-header">
       <b-navbar toggleable="sm" type="light" variant="">
     <b-navbar-brand href="#">
-        <img @click="mainLogoClick" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQDLFnxu6sy4oQgCw4yuNZeNq1p604iMXTq-Q&usqp=CAU" style="height: 5em; padding: 0px 1em 0px 1em;">
+        <img id="mainlogo" @click="mainLogoClick" src="./assets/logo.jpg" style="height: 5em; padding: 0px 2em">
     </b-navbar-brand>
     <nav class="nav-menu">
-      <div id="myblog" @click="GoMyBlog">내 블로그</div>
+      <div id="myblog" @click="goUserBlog">내 블로그</div>
       <div id="browsing" @click="GoLookAroundRecipesView">둘러보기</div>
     </nav>
     <nav class="nav-side">
       <div v-if="!isLoggedIn">
-        <div class="nav-side-item btn-style1" id="login" @click="GoLogin">Sign In</div>
-        <div class="nav-side-item btn-style2" id="signup" @click="GoEmailAuth">Join</div>
+        <div class="nav-side-item btn-style1" id="signup" @click="joinClick">Join</div>
+        <div class="nav-side-item btn-style2" id="login" @click="signinClick">Sign In</div>
       </div>
       <div v-else>
-        <div class="nav-side-item btn-style1" id="userInfo" @click="GoPasswordAuth">My Info</div>
-        <div class="nav-side-item btn-style2" id="logout" @click="GoLogout">Log out</div>
+        <div class="nav-side-item btn-style1" id="userInfo" @click="myinfoClick">My Info</div>
+        <div class="nav-side-item btn-style2" id="logout" @click="logoutClick">Log out</div>
       </div>
     </nav>
   </b-navbar>
   </header>
   <hr id="divider">
   <div id="app-router">
-    <router-view></router-view>
+    <transition name="fade" mode="out-in" @after-leave="afterLeave" :key="$route.fullPath">
+      <router-view></router-view>
+    </transition>
   </div>
+  <footer id="app-footer">
+    <ul>
+      <li><strong>Made by. </strong></li>
+      <li>곽은정</li>
+      <li>김지윤</li>
+      <li>김태형</li>
+      <li>이건수</li>
+      <li>차보람</li>
+      <div class="copyright">
+        Copyright ©
+        <a href="http://www.ssafy.com"><strong>Samsung SW Academy For Youth</strong></a>
+        All Rights Reserved.
+      </div>
+    </ul>
+  </footer>
   </div>
 </template>
 
@@ -56,21 +73,55 @@ export default {
             this.isActive = !this.isActive
             console.log(this.isActive)
         },
+        afterLeave() {
+          this.$root.$emit('triggerScroll')
+        },
         mainLogoClick() {
           $("#myblog").removeClass("active");
           $("#browsing").removeClass("active");
           this.GoHome();
         },
-        goUserBlog(){
-          this.SET_USERINFO(this.authUser)
-          this.setRecipequeryUserId(this.authUser.nickname)
-          this.GoMyBlog()
+        joinClick(){
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.GoEmailAuth();
         },
-        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth']),
+        signinClick(){
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.GoLogin();
+        },
+        myinfoClick(){
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.GoPasswordAuth();
+        },
+        logoutClick(){
+          $("#myblog").removeClass("active");
+          $("#browsing").removeClass("active");
+          this.GoLogout();
+        },
+        goUserBlog(){
+          if(!this.isLoggedIn) {
+            $("#myblog").removeClass("active");
+            $("#browsing").removeClass("active");
+            this.GoLogin();
+          }
+          else {
+            this.SET_USERINFO(this.authUser)
+            this.setRecipequeryUserId(this.authUser.nickname)
+            this.GoMyBlog()
+          }
+        },
+        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout']),
         ...mapActions('myblog',['GoMyBlog']),
         ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
         ...mapMutations('myblog',['SET_USERINFO']),
-        ...mapMutations('lookaround',['setRecipequeryUserId'])
+        ...mapMutations('lookaround',['setRecipequeryUserId']),
+        gorecipeupdate() {
+          console.log('nnnn')
+          this.$router.push({ name: 'RecipeUpdateView'})
+        }
     },
     created(){
       this.getIngredients()
@@ -80,8 +131,28 @@ export default {
 
 <style scoped>
 * {
-    margin: 0px;
-    padding: 0px;
+  margin: 0px;
+  padding: 0px;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+.no-drag {
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 
 .wrapper {
@@ -93,6 +164,14 @@ export default {
   background-color: white;
   width: 100%;
   height: 100%;
+}
+
+#mainlogo {
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 .nav-side {
@@ -109,6 +188,11 @@ export default {
   font-size: 12px;
   cursor: pointer;
   padding: 5px 8px 5px 8px;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 .btn-style1 {
@@ -138,9 +222,14 @@ export default {
   height: 1em;
   position: relative;
   padding: 6px 12px;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
-@media (max-width: 505px) {
+@media (max-width: 496px) {
   .nav-menu {
     margin-left: auto;
     margin-right: auto;
@@ -151,7 +240,7 @@ export default {
   }
 }
 .nav-menu #myblog:hover, .nav-menu #browsing:hover {
-  color: black;
+  color: #53AAA1;
 }
 
 .nav-menu #myblog::after, .nav-menu #browsing::after {
@@ -172,7 +261,7 @@ export default {
 }
 
 .nav-menu #myblog.active, .nav-menu #browsing.active {
-  color: black;
+  color: #53AAA1;
 }
 
 .nav-menu #myblog.active::after, .nav-menu #browsing.active::after {
@@ -195,6 +284,7 @@ export default {
   width: 90%;
   margin: 0px auto;
   background-color: white;
+  min-height: 512px;
 }
 
 @media (max-width: 768px) {
@@ -206,6 +296,40 @@ export default {
   }
 }
 
+#app-footer {
+  text-align: center;
+  padding: 30px 50px;
+  color: white;
+  background-color: #24282C;
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  font-size: 12px;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+} 
+
+#app-footer li {
+  position: relative;
+  display: inline-block;
+  padding: 12px;
+  white-space: nowrap;
+  text-decoration: none;
+  color: white;
+}
+
+#app-footer .copyright {
+  padding: 10px;
+}
+
+#app-footer a {
+  text-decoration: none;
+  color: white;
+}
+
 /* 버튼 */
 
 .inline-block-btn {
@@ -215,6 +339,11 @@ export default {
   margin: 1em;
   cursor: pointer;
   padding: 6px 10px 6px 10px;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 .block-btn {
@@ -224,6 +353,11 @@ export default {
   text-align: center;
   cursor: pointer;
   padding: 6px 10px 6px 10px;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 /* 기본 청록색 버튼 */

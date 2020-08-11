@@ -167,7 +167,6 @@ export default {
         var nameflag = true
         for (var i = 0; i < len; i++) {
           const ch = this.updateData.config.nickname[i]
-          console.log("ch: " + ch)
           if(('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'z')||('A' <= ch && ch <= 'Z')){
             NickNamelen++
           }
@@ -204,7 +203,6 @@ export default {
       nicknameCheck(nickname) {
         axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
-          console.log(res)
           if (res.data.result == 'success') {
             this.updateData.valid.nickname = true
             this.$bvModal.msgBoxOk('확인되었습니다.', {
@@ -263,29 +261,22 @@ export default {
       },
       imageUpload(event) {
         const image = event.target.files[0];
-        // this.imageURL = URL.createObjectURL(image)
         this.updateData.config.image_name = image.name
-        console.log(image)
-        // console.log(this.updateData.config.profile.files)
         const reader = new FileReader();
         reader.readAsDataURL(image);
         reader.onload = (event) => {
           this.imageURL = event.target.result
-          // console.log(this.imageURL)
         }
       },
       selectBasicImage() {
         this.updateData.config.image_name = ''
         this.imageURL = ''
-        this.updateData.config.profile = null 
-            // if (this.updateData.config.profile) {
-            //   this.$ref['file-input'].reset() }
+        this.updateData.config.profile = null
       },
     },
     updated() {
       this.checkPasswordValidValue()
       this.SET_UPDATETF(true)
-      // this.checkInitialNickname()
     },
     created() {
       this.insertInitialValue()

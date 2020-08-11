@@ -4,11 +4,11 @@
       <b-form>
       <b-row v-for="(item, index) in ingredients" :key="index" align-v="center">
         <b-col cols="5">
-          <b-form-input type="text" list="ingrlist" v-model="item.name" required></b-form-input>
+          <b-form-input type="text" list="ingrlist" v-model="item.name" placeholder="재료명"></b-form-input>
           <b-form-datalist id="ingrlist" :options="ingrQuery"></b-form-datalist>
         </b-col>
         <b-col cols="5">
-          <b-form-input type="text" v-model="item.quantity" required></b-form-input>
+          <b-form-input type="text" v-model="item.quantity" placeholder="무게 / 수량"></b-form-input>
         </b-col>
         <b-col cols="2">
           <b-icon icon="backspace-fill" variant="warning" style="cursor: pointer" @click="deleteIngredient({index, essential})"></b-icon>

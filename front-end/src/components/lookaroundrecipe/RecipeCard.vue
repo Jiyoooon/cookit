@@ -67,9 +67,19 @@ export default {
       }
     },
     methods:{
-        // readRecipe(){
-        //     alert("레시피읽는화면으로 들어갑니다.( 레시피아이디 : " +this.recipe.recipe_id +" )" )
-        // }
+        ...mapActions('recipes', ['fetchRecipe', 'recipeLike']),
+         likefunction(recipe_id) {
+          this.recipeLike(recipe_id)
+          if (this.isliked) {
+            this.recipe.likeNum--
+            // this.likenumber--
+            this.isliked = !this.isliked
+          } else {
+            this.recipe.likeNum++
+            // this.likenumber++
+            this.isliked = !this.isliked
+          }
+        },
         gouserblog(){
           this.getUserInfo(this.recipe.recipe_user)
         },

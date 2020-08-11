@@ -39,10 +39,9 @@
         </b-col>
         <b-col sm="6">
           <b-form-input 
-            id="input-userid" 
             v-model="signupData.config.nickname"
             :state="NickNameinValid"
-            aria-describedby="input-userid-help input-userid-feedback"
+            aria-describedby="input-userid-feedback"
             toLowerCase
             >
           </b-form-input>
@@ -52,7 +51,7 @@
         </b-col>
         <b-col sm="3">
           <div v-if="!NickNameinValid" class="block-btn btn-style3" block>중복 확인</div>
-          <div v-else class="block-btn btn-style1" @click='nicknameCheck(updateData.config.nickname)'>중복 확인</div>
+          <div v-else class="block-btn btn-style1" @click='nicknameCheck(signupData.config.nickname)'>중복 확인</div>
         </b-col>
       </b-row>
 
@@ -189,6 +188,7 @@ import cookies from 'vue-cookies'
       nicknameCheck(nickname) {
         axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
+          console.log(res)
           if (res.data.result == 'success') {
             this.signupData.valid.nickname = true
             this.$bvModal.msgBoxOk('확인되었습니다.', {
@@ -231,12 +231,6 @@ import cookies from 'vue-cookies'
         const image = event.target.files[0];
         this.signupData.config.image_name = image.name
         this.imageURL = URL.createObjectURL(image)
-        // const reader = new FileReader();
-        // reader.readAsDataURL(image);
-        // reader.onload(event => {
-        //   this.imageURL = event.target.result
-        //   console.log(this.imageURL)
-        // })
       },
     },
     updated() {

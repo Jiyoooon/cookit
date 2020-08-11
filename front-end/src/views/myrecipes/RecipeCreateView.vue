@@ -39,7 +39,7 @@
 import RecipeInfo from '@/components/editor/RecipeInfo.vue'
 import Ingredient from '@/components/editor/Ingredient.vue'
 import CookingStep from '@/components/editor/CookingStep.vue'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
     name: 'RecipeCreateView',
@@ -51,11 +51,45 @@ export default {
     },
     methods: {
       ...mapActions('editor', ['onSubmitButton']),
+      ...mapMutations('editor', ['SET_RECIPE', 'SET_COOKINGSTEP', 'SET_MAININGR', 'SET_SUBINGR']),
       cancel() {
         alert("레시피 작성을 취소하시겠습니까?")
         this.$router.go(-1)
       }
     },
+    created() {
+      this.SET_RECIPE({
+      title: null,
+      description: null,
+      category_id: 0,
+      servings: 0,
+      cooking_time: 0,
+      level: 0,
+      main_image_file: null,
+      tag: [ ]
+      })
+      this.SET_COOKINGSTEP([
+      {
+        steps: 1,
+        description: null,
+        tip: null,
+        step_image_file: null },
+      {
+        steps: 2,
+        description: null,
+        tip: null,
+        step_image_file: null },
+      ])
+      this.SET_MAININGR([
+      { name: null, quantity: null, is_essential: 1 },
+      { name: null, quantity: null, is_essential: 1 },
+      ])
+      this.SET_SUBINGR([
+      { name: null, quantity: null, is_essential: 0 },
+      { name: null, quantity: null, is_essential: 0 },
+      ])
+
+    }
 }
 </script>
 

@@ -23,7 +23,7 @@
             <b-row>
               <b-col cols="11">
                 <b-form-file enctype="multipart/form-data" v-model="step.step_image_file" accept="image/*" placeholder="사진 추가"
-                  @change="setThumbnail"></b-form-file>
+                  :id="index+''" @change="setThumbnail"></b-form-file>
               </b-col>
 							<b-col cols="1">
 								<div style="display:block; text-align:right;">
@@ -33,7 +33,7 @@
             </b-row>
             <b-row>
               <b-col>
-                <img v-if="step.step_image_file!=null" :src="imageUrl" height="180px">
+                <img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" width="240px">
                 <span v-else></span>
               </b-col>
             </b-row>
@@ -68,11 +68,6 @@ import { mapState, mapMutations } from 'vuex'
 
 export default {
 	name: 'CookingStep',
-	data() {
-		return {
-			imageUrl: null
-		}
-	},
 	computed: {
 		...mapState('editor', ['cookingStep'])
 	},
@@ -80,7 +75,10 @@ export default {
 		...mapMutations('editor', ['addCookingStep', 'deleteCookingStep']),
 		setThumbnail(e) {
 			const file = e.target.files[0];
-			this.imageUrl = URL.createObjectURL(file);
+			if(!file) return;
+			console.log(e)
+			const index = Number(e.path[0].id);
+			this.cookingStep[index].step_image_url = URL.createObjectURL(file);
 		},
 	},
 }

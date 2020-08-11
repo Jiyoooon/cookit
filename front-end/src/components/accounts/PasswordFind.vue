@@ -2,16 +2,13 @@
   <div>
     <b-container fluid>
       <b-row align-v="center">
-        <b-col md="2">
-          <label for="input-email">E-mail</label>
-        </b-col>
+        <b-col md="2">이메일</b-col>
         <b-col md="6">
           <b-form-input 
             id="input-email" 
             v-model="userEmail"
             :state="userEmailValid"
             aria-describedby="email-feedback"
-            placeholder="이메일"
             trim
             >
           </b-form-input>

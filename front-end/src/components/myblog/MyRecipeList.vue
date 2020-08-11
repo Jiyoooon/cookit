@@ -1,12 +1,12 @@
 <template>
 <div>
     <router-view :key="$route.fullPath"/>
-    <b-row>   
+    <b-row> 
         <MyRecipeListItem :recipe="recipe" 
-        :key="recipe.recipe_id" v-for="recipe in currentPageItems" id="my-recipes" /> 
+        :key="recipe.recipe_id" v-for="recipe in paginated_items[currentPage-1]" id="my-recipes" /> 
     </b-row>
     <b-row>
-        <b-pagination id="pagination" :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
+        <b-pagination id="pagination" :total-rows="totalRows()" :per-page="perPage" v-model="currentPage" class="my-0" />
     </b-row>
 </div>
 </template>
@@ -36,19 +36,6 @@ export default {
     },
     computed: {
         ...mapState('myblog', ['myrecipes']),
-        currentPageItems() {
-          let lengthAll =this.myrecipes.length;
-          for (let i = 0; i < lengthAll; i = i + this.perPage) {
-            this.changePaginateditems(this.nbPages, this.myrecipes.slice(i,i+this.perPage))
-            this.increasenbpages()
-          }
-          console.log("테스트")
-          console.log(this.paginated_items[this.currentPage-1])
-          return this.paginated_items[this.currentPage-1];
-        },
-        totalRows() {
-            return this.myrecipes.length
-        }
     },
     methods: {
        ...mapActions('myblog', ['selectedRecipe', 'fetchMyRecipes']),
@@ -65,6 +52,19 @@ export default {
           this.$router.go(0)
           this.flag = true
         }
+      },
+      currentPageItems() {//문제의 원인은 얘다/
+          let lengthAll =this.myrecipes.length;
+          for (let i = 0; i < lengthAll; i = i + this.perPage) {
+            this.changePaginateditems(this.nbPages, this.myrecipes.slice(i,i+this.perPage))
+            this.increasenbpages()
+          }
+          console.log("before moun : paging 완료")
+          // console.log(this.paginated_items[this.currentPage-1])
+          // return this.paginated_items[this.currentPage-1];
+        },
+        totalRows() {
+            return this.myrecipes.length
       }
     },
     watch: {
@@ -76,6 +76,9 @@ export default {
       this.SET_FLAG(false)
     },
     updated() {
+      this.currentPageItems();
+      this.totalRows();
+      // for(var i = 0; i < this.nbPages; i++) console.log(this.paginated_items[i]);
         // setTimeout(() => {
         //     this.fortest()
         // },1000);

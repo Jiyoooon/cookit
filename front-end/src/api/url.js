@@ -37,5 +37,9 @@ export default {
         recipeview: {
             fetchrecipe: '/recipe/'
         },
+        editor: {
+            saveRecipe: '/recipe/token/save',
+            updateRecipe: '/recipe/token/revise'
+        }
     }
 }
