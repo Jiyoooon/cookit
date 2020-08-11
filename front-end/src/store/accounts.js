@@ -280,6 +280,7 @@ export default {
         })
     },
     updateUser({ dispatch, state, commit }, updateData) {
+      console.log(updateData.valid.filesize)
       if (!updateData.valid.password) {
         this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
           title: 'Confirmation',
@@ -292,6 +293,16 @@ export default {
         })
       } else if (!updateData.valid.nickname) {
         this._vm.$root.$bvModal.msgBoxOk('닉네임 중복체크를 해주세요.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
+      } else if (updateData.valid.filesize > 10000000) {
+        this._vm.$root.$bvModal.msgBoxOk('이미지 크기가 너무 큽니다.', {
           title: 'Confirmation',
           size: 'sm',
           buttonSize: 'sm',

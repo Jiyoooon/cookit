@@ -4,8 +4,6 @@
     <b-row> 
         <MyRecipeListItem :recipe="recipe" 
         :key="recipe.recipe_id" v-for="recipe in paginated_items[currentPage-1]" id="my-recipes" /> 
-         <!-- <MyRecipeListItem :recipe="recipe" 
-        :key="recipe.recipe_id" v-for="recipe in myrecipes" id="my-recipes" />  -->
     </b-row>
     <b-row>
         <b-pagination id="pagination" :total-rows="totalRows()" :per-page="perPage" v-model="currentPage" class="my-0" />
