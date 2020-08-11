@@ -183,10 +183,10 @@ export default {
 
       // [5] 헤더 설정
       const headerConfig = { headers: {
-        'Authorization': `token ${rootState['accounts/authToken']}`,
+        'Authorization': `token ${rootState.accounts.authToken}`,
         'Content-Type': 'multipart/form-data'
       }}
-
+      
       // [6] POST
       axios.post(SERVER.ROUTES.editor.saveRecipe, recipeData, headerConfig)
       .then((res) => {

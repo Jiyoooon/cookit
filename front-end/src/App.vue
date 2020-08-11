@@ -23,7 +23,7 @@
   </header>
   <hr id="divider">
   <div id="app-router">
-    <transition name="fade" mode="out-in" @after-leave="afterLeave">
+    <transition name="fade" mode="out-in" @after-leave="afterLeave" :key="$route.fullPath">
       <router-view></router-view>
     </transition>
   </div>
