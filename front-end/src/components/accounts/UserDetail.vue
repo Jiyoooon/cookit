@@ -117,6 +117,7 @@ export default {
           valid: {
             password: true,
             nickname: false,
+            filesize: null,
           },
           config: {
             email: null,
@@ -136,7 +137,6 @@ export default {
         ],
         imageURL: null,
         imageURL2: 'http://i3a201.p.ssafy.io:8080/images/profile/default_image.png',
-        filesize: null,
       }
     },
     computed: {
@@ -262,6 +262,7 @@ export default {
       imageUpload(event) {
         const image = event.target.files[0];
         this.updateData.config.image_name = image.name
+        this.updateData.valid.filesize = image.size
         const reader = new FileReader();
         reader.readAsDataURL(image);
         reader.onload = (event) => {
@@ -271,6 +272,7 @@ export default {
       selectBasicImage() {
         this.updateData.config.image_name = ''
         this.imageURL = ''
+        this.updateData.valid.filesize = null
         this.updateData.config.profile = null
       },
     },

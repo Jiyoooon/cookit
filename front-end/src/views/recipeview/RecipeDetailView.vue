@@ -1,5 +1,8 @@
 <template>
   <div>
+      <div v-if="checkdeleteauth">
+      <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
+      </div>
       <button @click="gorecipeupdate">고고</button>
       <recipe />
       <hr>
@@ -55,13 +58,22 @@ export default {
         recipe,
     },
     computed: {
-        ...mapState('recipes', ['selectedRecipe'])
+        ...mapState('recipes', ['selectedRecipe']),
+        ...mapState('accounts', ['authUser']),
+        checkdeleteauth() {
+            if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
+                return true
+            } else {
+                return false
+            }
+        },
     },
     methods: {
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
         ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser']),
+        ...mapActions('editor', ['deleteRecipe']),
         gorecipeupdate() {
           console.log('nnnn')
           this.$router.push({ name: 'RecipeUpdateView'})

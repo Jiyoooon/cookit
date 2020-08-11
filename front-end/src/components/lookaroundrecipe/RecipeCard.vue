@@ -23,10 +23,11 @@
         <span>{{ recipe.description }}</span>
     </v-card-text> -->
     <v-card-actions>
-      <v-btn @click="likefunction(recipe.recipe_id)" icon>
+      <v-btn v-if="isLoggedIn" @click="likefunction(recipe.recipe_id)" icon>
         <v-icon v-show="isliked">mdi-heart</v-icon>
         <v-icon v-show="!isliked">mdi-heart-outline</v-icon>
       </v-btn>
+      <v-icon v-else v-show="!isliked">mdi-heart-outline</v-icon>
       {{ recipe.likeNum }}
       <v-btn icon>
         <v-icon>mdi-download</v-icon>
@@ -44,7 +45,7 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex'
+import { mapActions, mapState, mapMutations, mapGetters } from 'vuex'
 export default {
     name:'RecipeCard',
     data() {
@@ -58,6 +59,7 @@ export default {
     },
     computed: {
       ...mapState('accounts', ['authUser']),
+      ...mapGetters('accounts', ['isLoggedIn']),
       isLike() {
         if (this.recipe.like.includes(this.authUser.user_id)) {
           return true
@@ -70,11 +72,11 @@ export default {
         ...mapActions('recipes', ['fetchRecipe', 'recipeLike']),
          likefunction(recipe_id) {
           this.recipeLike(recipe_id)
-          if (this.isliked) {
+          if (this.isliked && this.isLoggedIn) {
             this.recipe.likeNum--
             // this.likenumber--
             this.isliked = !this.isliked
-          } else {
+          } else if (!this.isliked && this.isLoggedIn) {
             this.recipe.likeNum++
             // this.likenumber++
             this.isliked = !this.isliked
