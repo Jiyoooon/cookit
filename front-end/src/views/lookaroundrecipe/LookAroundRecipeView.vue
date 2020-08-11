@@ -46,6 +46,7 @@ export default {
             this.busy = false
         },
         loadMore (){
+            console.log("더 불러오기")
             this.busy = true;
             setTimeout(() => {
                 this.getFilteredRecipes()
