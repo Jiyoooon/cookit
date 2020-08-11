@@ -105,6 +105,11 @@ export default {
   margin-bottom: 2em
 }
 
+@media (max-width: 496px) {
+  #editor {
+    width: 100%;
+  }
+}
 
 .inline-block-btn {
   display: inline-block;

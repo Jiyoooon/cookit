@@ -25,7 +25,7 @@
 								WHERE NOT EXISTS
 								( SELECT food_ingredient_medium_id, small
 									FROM Food_ingredient_small
-									SELECT small = #{ingre.name} )
+									WHERE small = #{ingre.name} )
 									</if>
 		</foreach>
 	</insert>

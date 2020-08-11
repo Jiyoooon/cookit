@@ -13,6 +13,7 @@ import RecipeUpdateView from '@/views/myrecipes/RecipeUpdateView.vue'
 import Home from '../views/Home.vue'
 import LookAroundRecipeView from '../views/lookaroundrecipe/LookAroundRecipeView.vue'
 import MyBlogListView from '../views/myblog/MyBlogListView.vue'
+import UserBlogListView from '../views/myblog/UserBlogListView.vue'
 import RecipeDetailView from '../views/recipeview/RecipeDetailView.vue'
 import store from '../store'
 
@@ -91,10 +92,16 @@ Vue.use(VueRouter)
     component: LookAroundRecipeView
   },
   {
-    path: '/myBlog',
+    path: '/myblog',
     name: 'MyBlogListView',
     component: MyBlogListView,
     meta: { scrollToTop: true }
+  },
+  {
+    path: '/userblog/:user_id',
+    name: 'UserBlogListView',
+    component: UserBlogListView,
+    meta: { scrollToTop: true}
   },
   {
     path: '/recipe/:recipe_id',
