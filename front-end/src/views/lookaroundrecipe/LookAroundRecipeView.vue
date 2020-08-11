@@ -1,5 +1,5 @@
 <template>
-    <div id="list">
+    <div id="wrapper">
         <RecipeSearchBar/>
         <div class="RecipeArray">
         <v-container fluid grid-list-md >
@@ -73,26 +73,31 @@ export default {
 </script>
 
 <style>
-    #button-bottom{
-        font-size: 4rem;
-        box-sizing: content-box;
-        position: fixed;
-        right: 5vw;
-        bottom: 10vh;
-        cursor: pointer;
-    }
-
-    .RecipeArray{
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-#list {
+#wrapper {
   width: 90%;
   display: block;
   margin: 0px auto;
   background-color: #fff;
   padding: 5em 1em 8em 1em;
+}
+
+@media (max-width: 768px) {
+  #wrapper {
+    width: 100%
+  }
+}
+
+.RecipeArray{
+    margin: 0px auto;
+}
+
+#button-bottom{
+    font-size: 4rem;
+    box-sizing: content-box;
+    position: fixed;
+    right: 5vw;
+    bottom: 10vh;
+    cursor: pointer;
 }
 
 </style>
