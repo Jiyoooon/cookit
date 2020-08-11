@@ -221,13 +221,13 @@ import { mapActions, mapState, mapMutations } from 'vuex'
             }, 500)
         },
         selectCategory(index){
-            this.selectedcategory = index+1
+            this.selectedcategory = index
         },
-        ...mapActions('lookaround',['setRecipequery',]),
+        ...mapActions('lookaround',['setRecipequery','getFilteredRecipes']),
         ...mapMutations('lookaround',['initPage','setRecipequeryCategory','initRecipes'])
     },
     computed:{
-        ...mapState('lookaround',['ingredients'])
+        ...mapState('lookaround',['ingredients','recipequery'])
     },
     watch: {
         searchtextS(val){
@@ -245,6 +245,9 @@ import { mapActions, mapState, mapMutations } from 'vuex'
         },
         selectedcategory(){
             this.setRecipequeryCategory(this.selectedcategory)
+            this.initPage()
+            this.initRecipes()
+            this.getFilteredRecipes()
         }
     },
   }
