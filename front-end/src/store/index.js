@@ -53,6 +53,7 @@ const moduleAccounts = {
      SET_USER(state, user) {
        state.authUser = user
        cookies.set('auth-user', user)
+
      },
      SET_VALID(state, data) {
        state.validEmail = data
@@ -60,6 +61,9 @@ const moduleAccounts = {
      SET_UPDATETF(state, value) {
        state.updateTF = value
      },
+     
+     //수정해야함
+     
   },
 
   actions: {
@@ -277,10 +281,11 @@ const moduleAccounts = {
         alert('!!!!!!')
        })
     },
-    fetchUser({ getters, commit }) {
+    fetchUser({ getters, commit,dispatch}) {
       axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
           commit('SET_USER', res.data.data)
+          dispatch('getfollowings',res.data.data,{root:true})
         })
         .catch((err) => {
           console.err(err.response)
@@ -477,13 +482,13 @@ const moduleAccounts = {
           })
         }
     },
+    getfollowers({commit},payload){
+      axios.get(SERVER.ROUTES.accounts.followers + String(payload.user_id))
+      .then(res => {
+        commit('SET_FOLLOWERS',res.data)
+      })
+    },
   },
-  follow(){
-
-  },
-  unfollow(){
-    
-  }
 }
 
 const moduleRecipes = {
@@ -612,6 +617,8 @@ const moduleMyBlog = {
         })
     },
     getUserInfo({commit,dispatch},user_id){
+      console.log("user_id")
+      console.log(user_id)
       axios.get(SERVER.ROUTES.info.getuserinfo + String(user_id))
         .then((res) => {
           commit('lookaround/initializing',null,{root:true})
@@ -886,10 +893,7 @@ const moduleLookAround = {
       console.log(payload)
     },
     setRecipequery(state,payload){
-<<<<<<< front-end/src/store/index.js
-=======
       console.log(payload.selectedarray.length)
->>>>>>> front-end/src/store/index.js
       state.recipequery.query=payload.querydata
       for (var i in payload.selectedarray){
         if(payload.selectedarray[i].state == true){
@@ -1004,6 +1008,60 @@ const moduleLookAround = {
   },
 }
 
+const moduleStorage = {//로컬스토리지에 저장할 필요가 있는 정보들은 여기 저장
+  namespaced:true,
+  state: {
+    followings:['asdf'],
+    followers:[],
+  },
+
+  getters: {
+
+  },
+
+  mutations: {
+    SET_FOLLOWERS(state, payload){
+      state.followers = payload
+    },
+    SET_FOLLOWINGS(state, payload){
+       state.followings = payload
+   },
+   ADD_FOLLOWINGS(state,payload){
+    state.followings.push(payload)
+    console.log(state.followings)
+    }
+  },
+
+  actions: {
+    getfollowings({commit},payload){
+      console.log("로그인! 팔로우중인사람가져오기")
+      console.log(payload)
+      axios.get(SERVER.ROUTES.accounts.following + String(payload.user_id))
+      .then(res => {
+        console.log("__팔로우중인사람__")
+        console.log(res.data)
+        commit('SET_FOLLOWINGS',res.data)
+      })
+      .catch((err) => {
+        console.log(err.response)
+      })
+    },
+    follow({commit,rootGetters},payload){
+      //여기 수정 필
+      console.log(rootGetters.config)
+      axios.post(SERVER.ROUTES.accounts.follow, payload,rootGetters['moduleAccounts/config'])
+        .then((res) => {
+          console.log("성공")
+          console.log(res)
+          commit('ADD_FOLLOWINGS',payload)
+        })
+        .catch((err) => {
+          console.log(err.response)
+          alert("비밀번호를 입력해주세요!")
+        })
+    }
+  },
+}
 
 export default new Vuex.Store({
   state: {
@@ -1018,10 +1076,11 @@ export default new Vuex.Store({
     myblog: moduleMyBlog,
     editor: moduleEditor,
     lookaround: moduleLookAround,
+    storage: moduleStorage,
   },
   plugins: [
     createPersistedState({
-      paths: ['lookaround'],
+      paths: ['lookaround','storage'],
     })
   ]
 })

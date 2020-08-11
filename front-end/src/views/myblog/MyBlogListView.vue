@@ -36,14 +36,19 @@ export default {
         MyRecipeList,
     },
     computed: {
-        ...mapState('myblog', ['myrecipes','selectedRecipe'])
+        ...mapState('myblog', ['myrecipes','selectedRecipe']),
+        ...mapState('accounts',['authUser'])
     },
     methods: {
         ...mapActions('myblog', ['fetchMyRecipes']),
+        ...mapActions('storage', ['getfollowings']),
     },
     updated() {
         this.recipelen = this.selectedRecipe.length
     },
+    created(){
+        this.getfollowings(this.authUser)
+    }
 }
 </script>
 
