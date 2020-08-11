@@ -17,7 +17,7 @@
         <b-col sm="9">
           <b-form-input type="password" aria-describedby="password-feedback" v-model="signupData.config.password" :state="passwordValid" ></b-form-input>
           <b-form-invalid-feedback id="password-feedback">
-          영문과 숫자를 포함해 8글자 이상으로 입력하세요. </b-form-invalid-feedback>
+          영문과 숫자를 포함해 8~12자로 입력하세요. </b-form-invalid-feedback>
         </b-col>
       </b-row>
 
