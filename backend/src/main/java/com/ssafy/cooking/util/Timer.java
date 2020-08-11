@@ -120,7 +120,7 @@ public class Timer {
 					}
 
 					int time = (convert(regex1, input, matcher.start(), m1, false)
-							+ convert(regex2, input, matcher.end(), m2, true)) / 2;
+							+ convert(regex2, input, matcher.end(), m2, true));
 					timer.add(new int[] { matcher.start(), time });
 					for (int i = matcher.start(); i < matcher.end(); i++) {
 						visit[i] = true;
