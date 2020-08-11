@@ -31,12 +31,12 @@ export default {
       },
     ],
     mainIngr: [
-      { name: null, quantity: null, is_essential: 1 },
-      { name: null, quantity: null, is_essential: 1 },
+      { name: null, quantity: null, is_essential: 1, valid: null },
+      { name: null, quantity: null, is_essential: 1, valid: null },
     ],
     subIngr: [
-      { name: null, quantity: null, is_essential: 0 },
-      { name: null, quantity: null, is_essential: 0 },
+      { name: null, quantity: null, is_essential: 0, valid: null },
+      { name: null, quantity: null, is_essential: 0, valid: null },
     ],
     ingrQuery: [],
   },
@@ -64,7 +64,8 @@ export default {
       ref.push({
         name: null,
         quantity: null,
-        is_essential: essential
+        is_essential: essential,
+        valid: null
       })
     },
     deleteIngredient(state, data) {
@@ -103,7 +104,10 @@ export default {
     loadIngredients({commit}) {
       axios.get('/recipe/ingredients/small')
       .then((res) => {
-        commit('SET_INGRQUERY', res.data);
+        commit('SET_INGRQUERY', 
+        res.data.sort(function(a, b) {
+          return a.length < b.length ? -1 : a.length > b.length ? 1 : 0;
+        }));
       })
       .catch((err) => {
         console.log(err);
@@ -164,6 +168,7 @@ export default {
       for (let i = 0; i < ingredients.length; i++) {
         if (ingredients[i].name == null && ingredients[i].quantity == null) continue;
         for (let [key, value] of Object.entries(ingredients[i])) {
+          if(key == "valid") continue;
           // console.log(`ingredients[${i}].${key}: ${value}`)
           recipeData.append(`ingredients[${i}].${key}`, value)
         }
