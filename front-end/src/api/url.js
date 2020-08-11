@@ -39,7 +39,8 @@ export default {
         },
         editor: {
             saveRecipe: '/recipe/token/save',
-            updateRecipe: '/recipe/token/revise'
+            updateRecipe: '/recipe/token/revise',
+            deleteRecipe: '/recipe/token/'
         }
     }
 }

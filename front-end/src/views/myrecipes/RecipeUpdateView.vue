@@ -1,5 +1,5 @@
 <template>
-  <div id="recipePage">
+  <div id="editor">
     <div class="container">
       <h2>레시피 정보</h2>
       <hr>
@@ -76,12 +76,4 @@ export default {
 </script>
 
 <style>
-#recipePage {
-  width: 80%;
-  display: block;
-  margin: 0px auto;
-}
-.container {
-  margin: 2em
-}
 </style>

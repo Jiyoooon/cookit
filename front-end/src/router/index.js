@@ -81,7 +81,7 @@ Vue.use(VueRouter)
     meta: { scrollToTop: true }
   },
   {
-    path: '/recipeUpdate',
+    path: '/recipeUpdate/:recipe_id',
     name: 'RecipeUpdateView',
     component: RecipeUpdateView,
     meta: { scrollToTop: true }
