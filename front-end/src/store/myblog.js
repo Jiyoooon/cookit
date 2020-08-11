@@ -41,7 +41,7 @@ export default {
 
   actions: {
     GoMyBlog() {
-      router.push({ name: 'MyBlogListView'})
+      router.push({ name: 'MyBlogListView' })
     },
     fetchMyRecipes({ rootState, commit, state }) {
       let recipequery = rootState.lookaround.recipequery
@@ -57,17 +57,17 @@ export default {
         .then((res) => {
           commit('SET_RECIPES', res.data)
         })
-        .then(()=>{
-          if(state.flag == false){
-            router.push({name : 'Home'})
-            router.push({name : 'MyBlogListView'})
-            commit('SET_FLAG',true)
-          }
-        })
-        .catch((err) => {
-          console.err(err.response)
-          alert(err.response.data.cause)
-        })
+        // .then(()=>{
+        //   if(state.flag == false){
+        //     router.push({name : 'Home'})
+        //     router.push({name : 'MyBlogListView'})
+        //     commit('SET_FLAG',true)
+        //   }
+        // })
+        // .catch((err) => {
+        //   console.err(err.response)
+        //   alert(err.response.data.cause)
+        // })
     },
     selectedRecipe({ commit }, recipe_id) {
       axios.get(SERVER.ROUTES.myrecipe.selectedrecipe + String(recipe_id))
@@ -80,13 +80,17 @@ export default {
           alert(err.response.data.cause)
         })
     },
-    getUserInfo({commit,dispatch},user_id){
+    getUserInfo({commit,dispatch,rootState, state},user_id){
       axios.get(SERVER.ROUTES.info.getuserinfo + String(user_id))
         .then((res) => {
           commit('lookaround/initializing',null,{root:true})
           commit('SET_USERINFO', res.data.data)
           commit('lookaround/setRecipequeryUserId',res.data.data.nickname,{root:true})
-          dispatch('GoMyBlog')
+          if (rootState.accounts.authUser.user_id == state.selecteduserinfo.user_id) {
+            dispatch('GoMyBlog')
+          } else {
+            router.push({ name: 'UserBlogListView', params: { user_id: user_id }})
+          }
         })
         .catch((err) => {
           console.err(err.response)

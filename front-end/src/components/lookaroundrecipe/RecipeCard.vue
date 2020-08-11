@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
     name:'RecipeCard',
     data() {
@@ -82,8 +82,16 @@ export default {
         },
         gouserblog(){
           this.getUserInfo(this.recipe.recipe_user)
+          // console.log('!!!!!!!!!!!!!!!!')
+          // console.log(this.recipe.recipe_user)
+          if (this.authUser.user_id == this.recipe.recipe_user) {
+            this.$router.push({ name: 'MyBlogListView'})
+          } else {
+            this.$router.push({ name: 'UserBlogListView', params: { user_id: this.recipe.recipe_user } })
+          }
         },
         ...mapActions('myblog',['getUserInfo']),
+        ...mapMutations('myblog', ['SET_USERINFO'])
     },
     created() {
       this.isliked = this.isLike
