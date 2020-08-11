@@ -28,15 +28,30 @@
     </v-card-text>
 
     <v-card-actions>
-      <div
-        v-if="this.authUser.user_id !== this.selecteduserinfo.user_id"
-        class="inline-block-btn btn-style1">
-        이웃추가
-      </div>
-      <div v-if="this.authUser.user_id === this.selecteduserinfo.user_id"
-        class="inline-block-btn btn-style1" @click="GoRecipeCreate">
+      <v-btn
+        color="deep-purple lighten-2"
+        text
+        v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate && (this.authUser != null)"
+        @click="follow"
+      >
+        팔로우
+      </v-btn>
+      <v-btn
+        color="deep-purple lighten-2"
+        text
+        v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate && (this.authUser != null)"
+        @click="unfollow"
+      >
+        언팔로우
+      </v-btn>
+      <v-btn
+        color="deep-purple lighten-2"
+        text
+        @click="GoRecipeCreate"
+        v-if="this.authUser.user_id === this.selecteduserinfo.user_id"
+      >
         새 글쓰기
-      </div>
+      </v-btn>
     </v-card-actions>
     <v-divider class="mx-4"></v-divider>
 
@@ -62,21 +77,48 @@
 </template>
 
 <script>
-import { mapState,mapActions } from 'vuex'
+import { mapState,mapActions, mapMutations } from 'vuex'
 
 export default {
     name: 'MyPage',
     data(){
       return{
         loading:true,
+        fstate:null,
       }
     },
     computed: {
+      
       ...mapState('accounts', ['authUser']),
+      ...mapState('storage',['followings']),
       ...mapState('myblog',['selecteduserinfo'])
     },
     methods: {
-      ...mapActions('accounts',['GoRecipeCreate'])
+      setfstate(){
+        console.log("팔로우테스트")
+        console.log(this.followings)
+        console.log(this.followings.findIndex(x => x.user_id === this.selecteduserinfo.user_id))
+        if(this.followings.findIndex(x => x.user_id === this.selecteduserinfo.user_id)>0)
+          this.fstate = true
+        else
+          this.fstate = false
+      },
+      follow(){
+        this.follow(this.selecteduserinfo.user_id)
+        this.rerendering()
+      },
+      unfollow(){
+
+      },
+      rerendering(){
+        this.$router.go(0)
+      },
+      ...mapActions('accounts',['GoRecipeCreate']),
+      ...mapMutations('storage',['ADD_FOLLOWINGS',]),
+      ...mapActions('storage',['follow'])
+    },
+    beforeMount() {
+      this.setfstate()
     },
 }
 </script>
