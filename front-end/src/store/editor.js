@@ -1,5 +1,6 @@
 import axios from 'axios'
 import SERVER from '@/api/url.js'
+import router from '../router'
 
 export default {
   namespaced: true,
@@ -195,6 +196,7 @@ export default {
       axios.post(SERVER.ROUTES.editor.saveRecipe, recipeData, headerConfig)
       .then((res) => {
         console.log(res)
+        router.push({ name: 'MyBlogListView'})
         // 레시피 화면으로 redirect 필요
       })
       .catch((err) => {
