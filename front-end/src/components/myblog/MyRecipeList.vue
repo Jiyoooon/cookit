@@ -4,6 +4,8 @@
     <b-row> 
         <MyRecipeListItem :recipe="recipe" 
         :key="recipe.recipe_id" v-for="recipe in paginated_items[currentPage-1]" id="my-recipes" /> 
+         <!-- <MyRecipeListItem :recipe="recipe" 
+        :key="recipe.recipe_id" v-for="recipe in myrecipes" id="my-recipes" />  -->
     </b-row>
     <b-row>
         <b-pagination id="pagination" :total-rows="totalRows()" :per-page="perPage" v-model="currentPage" class="my-0" />
@@ -25,7 +27,7 @@ export default {
           flag: false,
           currentPage: 1,
           perPage: 6,
-          paginated_items: {},
+          paginated_items: [],
           currentPageIndex:0,
           nbPages:0,
           recipes: null,
@@ -68,8 +70,13 @@ export default {
       }
     },
     watch: {
-      myrecipes(){
-        console.log("마이레시피 변화!")
+      myrecipes: {
+        deep: true,
+        handler() {
+          this.currentPageItems();
+          this.totalRows();
+          console.log("마이레시피 변화!")
+        }
       }
     },
     mounted() {
@@ -84,7 +91,6 @@ export default {
         // },1000);
     },
     created() {
-        this.fetchMyRecipes()
     },
 }
 </script>
