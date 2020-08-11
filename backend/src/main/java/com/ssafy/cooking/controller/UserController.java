@@ -585,9 +585,12 @@ public class UserController {
     	
     	String from_user = (String) claims.get("uid");
     	
+    	System.out.println(from_user+"=>"+to_user+" 팔로우");
+    	
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
     	if(userService.follow(from_user, to_user) > 0) {
+    		System.out.println("팔로우성공");
     		map.put("result", "success");
     	}else map.put("result", "fail");
     	
