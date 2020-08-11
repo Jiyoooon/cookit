@@ -3,7 +3,9 @@
       <div v-if="checkdeleteauth">
       <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
       </div>
+      <div v-if="checkdeleteauth">
       <button @click="gorecipeupdate">고고</button>
+      </div>
       <recipe />
       <hr>
       <ingredient />
@@ -76,7 +78,9 @@ export default {
         ...mapActions('editor', ['deleteRecipe']),
         gorecipeupdate() {
           console.log('nnnn')
-          this.$router.push({ name: 'RecipeUpdateView'})
+          if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
+              this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
+          }
         }
     },
     created() {

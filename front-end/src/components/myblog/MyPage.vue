@@ -104,6 +104,7 @@ export default {
           this.fstate = false
       },
       follow(){
+        alert("팔로우테스트")
         this.follow(this.selecteduserinfo.user_id)
         this.rerendering()
       },
