@@ -11,11 +11,14 @@
       </div>
       <!-- {{ myrecipes }} -->
       <b-img v-if="isLoggedIn" id="image" v-bind="mainProps" :src="authUser.image_url" rounded="circle" alt="Circle image"></b-img>
+      <cardComp></cardComp>
   </div>
 </template>
 
 <script>
+
 import { mapGetters, mapState } from 'vuex'
+import cardComp from '@/components/lookaroundrecipe/RecipeCard.vue'
 
 export default {
     name: 'Home',
@@ -23,6 +26,9 @@ export default {
       return {
          mainProps: { blank: false, blankColor: '#777', width: 75, height: 75, class: 'm1' }
       }
+    },
+    components: {
+      cardComp
     },
     computed: {
         ...mapGetters('accounts', ['isLoggedIn']),
