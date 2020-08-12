@@ -5,7 +5,8 @@
             <!-- Thumbnail-->
             <div class="thumbnail">
                 <div @click="gouserblog">
-                  <b-img class="user_profile" :src='recipe.recipe_user_profileImage' style="cursor:pointer;" rounded="circle" thumbnail></b-img>
+                  <b-img class="user_profile" :src='recipe.recipe_user_profileImage' onerror="this.src='http://i3a201.p.ssafy.io:8080/images/profile/default_image.png'"
+                  style="cursor:pointer;" rounded="circle" thumbnail></b-img>
                 </div>
                   <b-img :v-if="recipe.main_image" class="main_image" @click="fetchRecipe(recipe.recipe_id)" :src='recipe.main_image' style="cursor:pointer" center/>
               </div>
@@ -25,14 +26,14 @@
                   </span>
                   <span class="comments">
                        <v-btn icon disabled><font-awesome-icon :icon="['fas', 'comment']" /></v-btn>
-                       <span class="text"> {{ recipe.comments }} </span>
+                       <span class="text">{{ recipe.comments }} </span>
                   </span>
                   <span class="likes">
                     <v-btn v-if="isLoggedIn" @click="likefunction(recipe.recipe_id)" icon>
                       <v-icon v-show="isliked" style="color: #ED4956">mdi-heart</v-icon>
                       <v-icon v-show="!isliked" style="color: #ED4956">mdi-heart-outline</v-icon>
                     </v-btn>
-                    <v-btn v-else><v-icon v-show="!isliked">mdi-heart-outline</v-icon></v-btn>
+                    <v-btn v-else icon disabled><v-icon v-show="!isliked">mdi-heart-outline</v-icon></v-btn>
                     <span class="likes_text">{{ recipe.likeNum }}  </span>
                   </span>
                 </div>
@@ -131,7 +132,7 @@ export default {
   overflow: hidden;
   max-height: 0px;
   color: gray;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.8em;
   transition: all .2s ease-in-out;
 }
@@ -139,8 +140,7 @@ export default {
 .post-module:hover .post-content .description {
   display: block !important;
   opacity: 1 !important;
-  max-height: 70px;
-  margin-bottom: 20px;
+  max-height: 60px;
   overflow: hidden;
   white-space: pre-wrap;
   text-overflow: ellipsis;
@@ -176,7 +176,6 @@ export default {
 }
 
 .post-module .post-content .title {
-  margin-bottom: 15px;
   max-height: 40px;
   color: black;
   font-weight: 700;
@@ -189,6 +188,7 @@ export default {
 .post-module .post-content .post-meta {
   color: #999999;
   text-decoration: none;
+  margin-top: 15px;
 }
 
 .post-module .text {

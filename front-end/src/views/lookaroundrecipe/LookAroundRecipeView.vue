@@ -1,6 +1,7 @@
 <template>
     <div id="lookaround">
         <RecipeSearchBar/>
+        <hr id="divider">
         <div class="RecipeArray">
         <v-container fluid grid-list-md >
             <v-layout row wrap >
@@ -13,9 +14,10 @@
             <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로"></b-icon>
         </div>
         
-        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="0" style="text-align:center">
+        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="0"
+            style="text-align:center; font-size:0.9em; margin-top:3em;">
             <b-spinner v-if="numberofgetrecipes != 0" label="Spinning" ></b-spinner>
-            <span v-if="numberofgetrecipes == 0">더 이상 불러올 레시피가 없어요...</span>
+            <div v-if="numberofgetrecipes == 0">더 이상 불러올 레시피가 없어요. 다시 검색해볼까요?</div>
         </div>
         
         <!-- <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
@@ -46,7 +48,7 @@ export default {
             this.busy = false
         },
         loadMore (){
-            console.log("더 불러오기")
+            // console.log("더 불러오기")
             this.busy = true;
             setTimeout(() => {
                 this.getFilteredRecipes()
@@ -78,7 +80,7 @@ export default {
   display: block;
   margin: 0px auto;
   background-color: #fff;
-  padding: 5em 1em 8em 1em;
+  padding: 4em 1em 8em 1em;
 }
 
 @media (max-width: 496px) {
