@@ -62,11 +62,13 @@
         active-class="deep-purple accent-4 white--text"
         column
       >
-        <v-chip>페이스북</v-chip>
+        <v-chip><i class="fab fa-facebook-square"></i></v-chip>
 
-        <v-chip>인스타</v-chip>
+        <v-chip><i class="fab fa-instagram"></i></v-chip>
 
-        <v-chip>트위터</v-chip>
+        <v-chip><i class="fab fa-twitter"></i></v-chip>
+
+        <v-chip><i class="fab fa-youtube"></i></v-chip>
 
       </v-chip-group>
     </v-card-text>
