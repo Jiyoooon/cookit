@@ -124,7 +124,7 @@ public class RecipeController {
 				result = "fail";
 			} else {
 				recipeData.setRecipe_user(uid);
-				if (recipeData.getCategory_id() == null) {
+				if (recipeData.getCategory_id() == null || recipeData.getCategory_id() == 0) {
 					recipeData.setCategory_id(8);
 				}
 				recipeservice.addRecipe(recipeData, baseUrl);
