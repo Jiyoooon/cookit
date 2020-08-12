@@ -12,6 +12,8 @@ export default {
     userEmail: cookies.get('user-email'),
     validEmail: false,
     updateTF: false,
+    followers: null,
+    followings: null,
   },
 
   getters: {
@@ -55,6 +57,12 @@ export default {
        console.log('fsdfsf')
        state.updateTF = value
      },
+     SET_FOLLOWERS(state, followers) {
+       state.followers = followers
+     },
+     SET_FOLLOWINGS(state, followings) {
+       state.followings = followings
+     }
   },
 
   actions: {
@@ -165,6 +173,7 @@ export default {
             console.log(state)
             dispatch('fetchUser')
             dispatch('myblog/fetchMyRecipes', null, { root: true })
+            dispatch('myblog/fetchLikeRecipes', null, { root: true })
             return new Promise(function() {
               window.setTimeout(function() {
                 if (state.authUser.start_page) {
@@ -514,7 +523,19 @@ export default {
           })
         }
     },
-
+    fetchFollowers({ state, commit }) {
+      axios.get(SERVER.ROUTES.accounts.follower + String(state.authUser.user_id))
+        .then(res => {
+          console.log(res.data)
+          commit('SET_FOLLOWERS', res.data)
+        })
+    },
+    fetchFollowings({ state, commit }) {
+      axios.get(SERVER.ROUTES.accounts.following + String(state.authUser.user_id))
+        .then(res => {
+          commit('SET_FOLLOWINGS', res.data)
+        })
+    },
     hituser(state,payload){
       console.log(state)
       console.log("유저히트!"+payload)
@@ -527,6 +548,5 @@ export default {
         console.log(err)
       })
     }
-    
   },
 }

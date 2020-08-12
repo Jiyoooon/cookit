@@ -80,7 +80,9 @@ export default {
       this.totalRows();
     },
     created() {
-        this.fetchLikeRecipes()
+        // this.fetchLikeRecipes()
+      this.currentPageItems();
+      this.totalRows();
     },
 }
 </script>

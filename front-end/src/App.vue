@@ -93,6 +93,7 @@ export default {
             $("#myblog").addClass("active");
             $("#browsing").removeClass("active");
             this.SET_USERINFO(this.authUser)
+            this.SET_CURRENTSHOW(1)
             this.setRecipequeryUserId(this.authUser.nickname)
             this.GoMyBlog();
           }
@@ -105,7 +106,7 @@ export default {
         ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout']),
         ...mapActions('myblog',['GoMyBlog']),
         ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
-        ...mapMutations('myblog',['SET_USERINFO']),
+        ...mapMutations('myblog',['SET_USERINFO', 'SET_CURRENTSHOW']),
         ...mapMutations('lookaround',['setRecipequeryUserId']),
         gorecipeupdate() {
           console.log('nnnn')

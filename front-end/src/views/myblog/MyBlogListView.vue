@@ -1,23 +1,38 @@
 <template>
 <div id="list">
-    <b-button @click="showMyRecipes">내포스팅</b-button>
-    <b-button @click="showLikeRecipes">좋아요글</b-button>
+    <!-- <b-button @click="showMyRecipes">내포스팅</b-button>
+    <b-button @click="showLikeRecipes">좋아요글</b-button> -->
+    <b-tabs content-class="mt-3" align="center">
+        <b-tab @click="showMyRecipes" title="Post" active></b-tab>
+        <b-tab @click="showLikeRecipes" title="Likes"></b-tab>
+        <b-tab @click="showFollowers" title="Followers"></b-tab>
+        <b-tab @click="showFollowings" title="Followings"></b-tab>
+    </b-tabs>
+    <!-- <b-button @click="showMyRecipes">Post</b-button>
+    <b-button @click="showLikeRecipes">Likes</b-button>
+    <b-button @click="showFollowers">Followers</b-button>
+    <b-button @click="showFollowings">Followings</b-button> -->
+<b-tabs content-class="mt-3" align="center">
   <b-contanier>
-      <b-row>
+      <b-row v-if="currentshow < 3">
         <SearchBar id="searchbar" />
       </b-row>
       <b-row>
         <b-col lg="3">
             <MyPage id="mypage" />
         </b-col>
-        <b-col v-if="currentshow==1" lg="9">
-            <MyRecipeList />
+        <b-col lg="9">
+            <MyRecipeList v-if="currentshow==1" />
+            <LikeRecipeList v-if="currentshow==2"/>
+            <FollowerList v-if="currentshow==3" />
+            <FollowingList v-if="currentshow==4" />
         </b-col>
-        <b-col v-if="currentshow==2" lg="9">
+        <!-- <b-col v-if="currentshow==2" lg="9">
             <LikeRecipeList />
-        </b-col>
+        </b-col> -->
       </b-row>
   </b-contanier>
+</b-tabs>
 </div>
 </template>
 
@@ -26,8 +41,10 @@ import SearchBar from '../../components/myblog/SerachBar.vue'
 import MyPage from '../../components/myblog/MyPage.vue'
 import MyRecipeList from '../../components/myblog/MyRecipeList.vue'
 import LikeRecipeList from '../../components/myblog/LikeRecipeList.vue'
+import FollowerList from '../../components/myblog/FollowerList.vue'
+import FollowingList from '../../components/myblog/FollowingList.vue'
 import { mapActions, mapState, mapMutations } from 'vuex'
-//import recipeVue from '../../components/recipeview/recipe.vue'
+// import recipeVue from '../../components/recipeview/recipe.vue'
 
 export default {
     name: 'MyBlogListView',
@@ -41,6 +58,8 @@ export default {
         MyPage,
         MyRecipeList,
         LikeRecipeList,
+        FollowerList,
+        FollowingList,
     },
     computed: {
         ...mapState('myblog', ['myrecipes','selectedRecipe', 'selecteduserinfo', 'likerecipes', 'currentshow']),
@@ -48,6 +67,7 @@ export default {
     },
     methods: {
         ...mapActions('myblog', ['fetchMyRecipes', 'getUserInfo', 'fetchLikeRecipes']),
+        ...mapActions('accounts', ['fetchFollowers', 'fetchFollowings']),
         ...mapMutations('myblog', ['SET_USERINFO', 'SET_RECIPES', 'SET_LIKERECIPES', 'SET_CURRENTSHOW']),
         ...mapMutations('lookaround',['setRecipequeryUserId']),
         showMyRecipes() {
@@ -58,15 +78,17 @@ export default {
         showLikeRecipes() {
             this.SET_CURRENTSHOW(2)
             this.fetchLikeRecipes()
+            // this.$router.push({ name: 'LikeRecipesListView' })
             // this.SET_RECIPES(null)
         },
-        // checkNowShowing() {
-        //     if (this.myrecipes) {
-        //         this.currentshow = 1
-        //     } else if (this.likerecipes) {
-        //         this.currentshow = null
-        //     }
-        // }
+        showFollowers() {
+            this.SET_CURRENTSHOW(3)
+            this.fetchFollowers()
+        },
+        showFollowings() {
+            this.SET_CURRENTSHOW(4)
+            this.fetchFollowings()
+        }
     },
     updated() {
         this.recipelen = this.selectedRecipe.length
@@ -74,7 +96,6 @@ export default {
     created() {
         this.SET_USERINFO(this.authUser)
         this.getUserInfo(this.selecteduserinfo.user_id)
-        // this.checkNowShowing()
     },
     // watch: {
     //     myrecipes: {
