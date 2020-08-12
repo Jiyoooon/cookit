@@ -20,7 +20,7 @@
 import SearchBar from '../../components/myblog/SerachBar.vue'
 import MyPage from '../../components/myblog/MyPage.vue'
 import MyRecipeList from '../../components/myblog/MyRecipeList.vue'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 
 export default {
     name: 'UserBlogListView',
@@ -39,10 +39,14 @@ export default {
     },
     methods: {
         ...mapActions('myblog', ['fetchMyRecipes', 'getUserInfo']),
+        ... mapMutations('myblog', ['SET_USERINFO'])
     },
     created() {
-        this.getUserInfo(this.selecteduserinfo.user_id)
-        this.fetchMyRecipes() 
+        console.log(this.selecteduserinfo)
+        this.SET_USERINFO(this.selecteduserinfo)
+        this.getUserInfo(this.$route.params.user_id)
+        console.log('?????????')
+        // this.fetchMyRecipes(this.selecteduserinfo) 
     },
 
 }

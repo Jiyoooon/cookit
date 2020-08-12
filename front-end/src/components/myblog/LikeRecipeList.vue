@@ -70,19 +70,26 @@ export default {
           this.currentPageItems();
           this.totalRows();
         }
+      },
+      paginated_items: {
+        deep:true,
+        handler() {
+          this.currentPageItems();
+          this.totalRows();
+        }
       }
     },
     mounted() {
       this.SET_FLAG(false)
     },
     updated() {
-      this.currentPageItems();
-      this.totalRows();
+      // this.currentPageItems();
+      // this.totalRows();
     },
     created() {
-        this.fetchLikeRecipes()
-      this.currentPageItems();
-      this.totalRows();
+      this.fetchLikeRecipes()
+      // this.currentPageItems();
+      // this.totalRows();
     },
 }
 </script>

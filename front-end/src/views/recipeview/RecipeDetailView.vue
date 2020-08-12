@@ -94,8 +94,6 @@ export default {
         this.fetchRecipe(this.$route.params.recipe_id),
         this.fetchRecipeUser()
         this.fetchComments()
-        console.log(this.authUser)
-        console.log(this.checkdeleteauth)
     },
 }
 </script>

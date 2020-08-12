@@ -294,17 +294,28 @@ export default {
     updated() {
       this.checkPasswordValidValue()
       this.checkInitialNickname()
-      this.SET_UPDATETF(true)
+      // this.SET_UPDATETF(true)
+      console.log(this.updateTF)
     },
     created() {
       this.insertInitialValue()
       this.checkInitialNickname()
     },
-    // watch: {
-    //   updateData() {
-    //     this.SET_UPDATETF(true)
-    //   }
-    // },
+    watch: {
+      updateData: {
+        deep:true,
+        handler() {
+          if (!(this.updateData.config.intro == this.authUser.intro) || 
+          !(this.updateData.config.nickname == this.authUser.nickname) ||
+          !(this.updateData.config.profile == this.authUser.profile) ||
+          !(this.updateData.config.image_name == this.authUser.image_name) ||
+          !(this.updateData.config.start_page == this.authUser.start_page)
+          )
+            this.SET_UPDATETF(true)
+            console.log('??????????')
+        }
+      }
+    },
 }
 </script>
 

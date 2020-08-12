@@ -8,6 +8,7 @@
     <b-row>
         <b-pagination id="pagination" :total-rows="totalRows()" :per-page="perPage" v-model="currentPage" class="my-0" />
     </b-row>
+    <div :key="flag"></div>
 </div>
 </template>
 
@@ -22,20 +23,19 @@ export default {
     },
     data() {
         return {
-          flag: false,
+          // flag: false,
           currentPage: 1,
           perPage: 6,
           paginated_items: [],
           currentPageIndex:0,
           nbPages:0,
-         
         }
     },
     components: {
         MyRecipeListItem
     },
     computed: {
-        ...mapState('myblog', ['myrecipes']),
+        ...mapState('myblog', ['myrecipes', 'selecteduserinfo', 'flag']),
     },
     methods: {
        ...mapActions('myblog', ['selectedRecipe', 'fetchMyRecipes']),
@@ -72,24 +72,43 @@ export default {
         handler() {
           this.currentPageItems();
           this.totalRows();
+          // this.$router.go(this.$router.currentRoute)
+          // this.$router.go(0)
+          // location.reload()
+          // console.log(this.myrecipes[0].recipe_user_name)
+        }
+      },
+      // flag: {
+      //   deep:true,
+      //   handler() {
+      //     console.log(this.flag)
+      //     console.log(this.myrecipes[0].recipe_user_name)
+      //   }
+      // },
+      paginated_items: {
+        deep:true,
+        handler() {
+          this.currentPageItems();
+          this.totalRows();
         }
       }
     },
     mounted() {
-      this.SET_FLAG(false)
+      // this.SET_FLAG(false)
+      // console.log(this.flag)
     },
     updated() {
-      this.currentPageItems();
-      this.totalRows();
+      // this.currentPageItems();
+      // this.totalRows();
       // for(var i = 0; i < this.nbPages; i++) console.log(this.paginated_items[i]);
         // setTimeout(() => {
         //     this.fortest()
         // },1000);
     },
     created() {
-      this.fetchMyRecipes()
-      this.currentPageItems();
-      this.totalRows();
+      this.fetchMyRecipes(this.selecteduserinfo)
+      // this.SET_FLAG(false)
+      // console.log(this.flag)
     },
 }
 </script>
