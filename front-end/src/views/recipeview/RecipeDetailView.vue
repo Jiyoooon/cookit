@@ -18,7 +18,8 @@
             <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로" ></b-icon>
     </div>
       <!-- <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button> -->
-
+    <commentCreate />
+    <commentList />
         <!-- The modal -->
         <b-modal size="xl" id="my-modal" title="쿠킹스텝">
             <b-carousel
@@ -51,6 +52,8 @@ import { mapState, mapActions } from 'vuex'
 import cookingstep from '../../components/recipeview/cookingstep.vue'
 import ingredient from '../../components/recipeview/ingredient.vue'
 import recipe from '../../components/recipeview/recipe.vue'
+import commentCreate from '../../components/recipeview/commentCreate.vue'
+import commentList from '../../components/recipeview/commentList.vue'
 
 export default {
     name: 'recipeDetailView',
@@ -58,6 +61,8 @@ export default {
         cookingstep,
         ingredient,
         recipe,
+        commentCreate,
+        commentList,
     },
     computed: {
         ...mapState('recipes', ['selectedRecipe']),
@@ -74,7 +79,7 @@ export default {
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
-        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser']),
+        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
         ...mapActions('editor', ['deleteRecipe']),
         gorecipeupdate() {
           console.log('nnnn')
@@ -86,6 +91,7 @@ export default {
     created() {
         // this.fetchRecipe(),
         this.fetchRecipeUser()
+        this.fetchComments()
     },
 }
 </script>

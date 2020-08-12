@@ -5,7 +5,7 @@
             <!-- Thumbnail-->
             <div class="thumbnail">
                 <div @click="gouserblog">
-                  <b-img class="user_profile" :src='recipe.recipe_user_profileImage' style="cursor:pointer;" rounded="circle" thumbnail alt="Circle image"></b-img>
+                  <b-img class="user_profile" :src='recipe.recipe_user_profileImage' style="cursor:pointer;" rounded="circle" thumbnail></b-img>
                 </div>
                   <b-img :v-if="recipe.main_image" class="main_image" @click="fetchRecipe(recipe.recipe_id)" :src='recipe.main_image' style="cursor:pointer" center/>
               </div>
@@ -19,17 +19,21 @@
                   <!-- <span class="comments">
                     <font-awesome-icon :icon="['fas', 'comment']" /><a href="#"> 39 comments</a>
                   </span> -->
-                  <span class="like">
-                    <v-btn v-if="isLoggedIn" @click="likefunction(recipe.recipe_id)" icon>
-                      <v-icon v-show="isliked">mdi-heart</v-icon>
-                      <v-icon v-show="!isliked">mdi-heart-outline</v-icon>
-                    </v-btn>
-                    <v-icon v-else v-show="!isliked">mdi-heart-outline</v-icon>{{ recipe.likeNum }}  
+                  <span class="hits">
+                    <v-btn icon disabled><font-awesome-icon :icon="['far', 'eye']" /></v-btn>
+                    <span class="text">{{ recipe.hits }} </span>
                   </span>
-                  <span class="download">
-                    <v-btn icon>
-                      <v-icon>mdi-download</v-icon>
+                  <span class="comments">
+                       <v-btn icon disabled><font-awesome-icon :icon="['fas', 'comment']" /></v-btn>
+                       <span class="text"> {{ recipe.comments }} </span>
+                  </span>
+                  <span class="likes">
+                    <v-btn v-if="isLoggedIn" @click="likefunction(recipe.recipe_id)" icon>
+                      <v-icon v-show="isliked" style="color: #ED4956">mdi-heart</v-icon>
+                      <v-icon v-show="!isliked" style="color: #ED4956">mdi-heart-outline</v-icon>
                     </v-btn>
+                    <v-btn v-else><v-icon v-show="!isliked">mdi-heart-outline</v-icon></v-btn>
+                    <span class="likes_text">{{ recipe.likeNum }}  </span>
                   </span>
                 </div>
             </div>
@@ -120,6 +124,9 @@ export default {
   opacity: 0.6;
 }
 
+.post-module:hover .post-content .title {
+  color: #53AAA1;
+}
 .post-module .post-content .description {
   overflow: hidden;
   max-height: 0px;
@@ -176,15 +183,37 @@ export default {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: all .2s ease-in-out;
 }
 
 .post-module .post-content .post-meta {
-  color: gray;
+  color: #999999;
+  text-decoration: none;
 }
 
-.post-module .post-content .post-meta a {
-  color: lightgray;
-  text-decoration: none;
+.post-module .text {
+  position: relative;
+  left: -0.2em;
+  font-size: 0.8em;
+  text-align: center;
+}
+
+.post-module .likes_text {
+  position: relative;
+  top: 0.1em;
+  font-size: 1em;
+  text-align: center;
+}
+
+.post-meta .hits, .post-meta .comments {
+  position: relative;
+  left: -0.2em;
+}
+
+.post-module .post-content .post-meta .likes {
+  float: right;
+  position: relative;
+  right: 0.3em;
 }
 
 .container {

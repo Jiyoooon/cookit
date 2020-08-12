@@ -28,7 +28,11 @@ export default {
             selectedrecipe: '/recipe/',
             fetchrecipesbytitle: '/recipe/title',
             recipesave: '/recipe/save',
-            recipelike: '/recipe/token/'
+            recipelike: '/recipe/token/',
+            commentcreate: '/recipe/token/',
+            fetchcomments: '/recipe/',
+            deletecomment: '/recipe/token/',
+            updatecomment: '/recipe/token/'
         },
         lookaroundrecipe:{
             getfilteredrecipes: '/recipe/recipes2',
