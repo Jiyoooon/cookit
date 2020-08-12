@@ -81,7 +81,7 @@
     <b-row v-for="(sns, index) in updateData.sns_list" :key="index">
       <b-col sm="3">{{ sns.sns_name }} : </b-col>
       <b-col sm="9">
-        <b-form-input v-model="updateData.sns_list[index].sns_url"></b-form-input>
+        <b-form-input v-model="updateData.sns_list[index].sns_url" placeholder="https://www.example.com"></b-form-input>
       </b-col>
     </b-row>
     <b-row align-v="center">
@@ -261,6 +261,9 @@ export default {
         this.updateData.config.image_name = this.authUser.image_name
         this.updateData.config.email = this.authUser.email
         this.imageURL = this.authUser.image_url
+        for (let i=0; i<4; i++) {
+          this.updateData.sns_list[i].sns_url = this.authUser.sns_list[i].sns_url
+        }
       },
       checkInitialNickname() {
         if (this.authUser.nickname == this.updateData.config.nickname) {
@@ -290,6 +293,7 @@ export default {
     },
     updated() {
       this.checkPasswordValidValue()
+      this.checkInitialNickname()
       this.SET_UPDATETF(true)
     },
     created() {

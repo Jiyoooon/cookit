@@ -165,6 +165,7 @@ export default {
             console.log(state)
             dispatch('fetchUser')
             dispatch('myblog/fetchMyRecipes', null, { root: true })
+            dispatch('myblog/fetchLikeRecipes', null, { root: true })
             return new Promise(function() {
               window.setTimeout(function() {
                 if (state.authUser.start_page) {

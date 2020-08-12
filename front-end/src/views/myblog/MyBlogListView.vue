@@ -1,7 +1,10 @@
 <template>
 <div id="list">
+    <!-- <b-button @click="showMyRecipes">내포스팅</b-button>
+    <b-button @click="showLikeRecipes">좋아요글</b-button> -->
     <b-button @click="showMyRecipes">내포스팅</b-button>
     <b-button @click="showLikeRecipes">좋아요글</b-button>
+<b-tabs content-class="mt-3" align="center">
   <b-contanier>
       <b-row>
         <SearchBar id="searchbar" />
@@ -10,14 +13,16 @@
         <b-col lg="3">
             <MyPage id="mypage" />
         </b-col>
-        <b-col v-if="currentshow==1" lg="9">
-            <MyRecipeList />
+        <b-col lg="9">
+            <MyRecipeList v-if="currentshow==1" />
+            <LikeRecipeList v-if="currentshow==2"/>
         </b-col>
-        <b-col v-if="currentshow==2" lg="9">
+        <!-- <b-col v-if="currentshow==2" lg="9">
             <LikeRecipeList />
-        </b-col>
+        </b-col> -->
       </b-row>
   </b-contanier>
+</b-tabs>
 </div>
 </template>
 
@@ -60,13 +65,6 @@ export default {
             this.fetchLikeRecipes()
             // this.SET_RECIPES(null)
         },
-        // checkNowShowing() {
-        //     if (this.myrecipes) {
-        //         this.currentshow = 1
-        //     } else if (this.likerecipes) {
-        //         this.currentshow = null
-        //     }
-        // }
     },
     updated() {
         this.recipelen = this.selectedRecipe.length
@@ -74,7 +72,6 @@ export default {
     created() {
         this.SET_USERINFO(this.authUser)
         this.getUserInfo(this.selecteduserinfo.user_id)
-        // this.checkNowShowing()
     },
     // watch: {
     //     myrecipes: {
