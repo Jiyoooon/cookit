@@ -6,8 +6,8 @@
         <img id="mainlogo" @click="mainLogoClick" src="./assets/logo.jpg" style="height: 5em; padding: 0px 2em">
     </b-navbar-brand>
     <nav class="nav-menu">
-      <div id="myblog" @click="goUserBlog">내 블로그</div>
-      <div id="browsing" @click="GoLookAroundRecipesView">둘러보기</div>
+      <div id="myblog" @click="myBlogClick">내 블로그</div>
+      <div id="browsing" @click="browsingClick">둘러보기</div>
     </nav>
     <nav class="nav-side">
       <div v-if="!isLoggedIn">
@@ -23,7 +23,7 @@
   </header>
   <hr id="divider">
   <div id="app-router">
-    <transition name="fade" mode="out-in" @after-leave="afterLeave">
+    <transition name="fade" mode="out-in" @after-leave="afterLeave" :key="$route.fullPath">
       <router-view></router-view>
     </transition>
   </div>
@@ -46,77 +46,67 @@
 </template>
 
 <script>
-import { mapGetters, mapActions,mapState,mapMutations } from 'vuex'
+import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
 import $ from 'jquery'
-$(document).ready(function(){
-  $('.nav-menu div').click(function() {
-    $("#myblog").removeClass("active");
-    $("#browsing").removeClass("active");
-    $(this).toggleClass("active");
-  });
-});
 
 export default {
     name: 'AppHeader',
-    data() {
-        return {
-            isActive: false
-        }
-    },
     computed: {
         // ...mapState([ 'me' ]),
         ...mapGetters('accounts', ['isLoggedIn']),
-        ...mapState('accounts',['authUser'])
+        ...mapState('accounts',['authUser']),
     },
     methods: {
-        toggle() {
-            this.isActive = !this.isActive
-            console.log(this.isActive)
-        },
         afterLeave() {
           this.$root.$emit('triggerScroll')
         },
-        mainLogoClick() {
+        removeActiveClass() {
           $("#myblog").removeClass("active");
           $("#browsing").removeClass("active");
+        },
+        mainLogoClick() {
+          this.removeActiveClass();
           this.GoHome();
         },
         joinClick(){
-          $("#myblog").removeClass("active");
-          $("#browsing").removeClass("active");
+          this.removeActiveClass();
           this.GoEmailAuth();
         },
         signinClick(){
-          $("#myblog").removeClass("active");
-          $("#browsing").removeClass("active");
+          this.removeActiveClass();
           this.GoLogin();
         },
         myinfoClick(){
-          $("#myblog").removeClass("active");
-          $("#browsing").removeClass("active");
+          this.removeActiveClass();
           this.GoPasswordAuth();
         },
         logoutClick(){
-          $("#myblog").removeClass("active");
-          $("#browsing").removeClass("active");
+          this.removeActiveClass();
           this.GoLogout();
         },
-        goUserBlog(){
+        myBlogClick() {
           if(!this.isLoggedIn) {
-            $("#myblog").removeClass("active");
-            $("#browsing").removeClass("active");
+            this.removeActiveClass();
             this.GoLogin();
           }
           else {
+            $("#myblog").addClass("active");
+            $("#browsing").removeClass("active");
             this.SET_USERINFO(this.authUser)
+            this.SET_CURRENTSHOW(1)
             this.setRecipequeryUserId(this.authUser.nickname)
-            this.GoMyBlog()
+            this.GoMyBlog();
           }
+        },
+        browsingClick() {
+          this.removeActiveClass();
+          $("#browsing").addClass("active");
+          this.GoLookAroundRecipesView();
         },
         ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout']),
         ...mapActions('myblog',['GoMyBlog']),
         ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
-        ...mapMutations('myblog',['SET_USERINFO']),
+        ...mapMutations('myblog',['SET_USERINFO', 'SET_CURRENTSHOW']),
         ...mapMutations('lookaround',['setRecipequeryUserId']),
         gorecipeupdate() {
           console.log('nnnn')
@@ -229,7 +219,7 @@ export default {
   user-select: none;
 }
 
-@media (max-width: 496px) {
+@media (max-width: 506px) {
   .nav-menu {
     margin-left: auto;
     margin-right: auto;
@@ -239,6 +229,7 @@ export default {
     margin-bottom: 20px;
   }
 }
+
 .nav-menu #myblog:hover, .nav-menu #browsing:hover {
   color: #53AAA1;
 }
@@ -284,7 +275,7 @@ export default {
   width: 90%;
   margin: 0px auto;
   background-color: white;
-  min-height: 512px;
+  min-height: 482px;
 }
 
 @media (max-width: 768px) {

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import SERVER from '@/api/url.js'
+import router from '../router'
 
 export default {
   namespaced: true,
@@ -31,12 +32,12 @@ export default {
       },
     ],
     mainIngr: [
-      { name: null, quantity: null, is_essential: 1 },
-      { name: null, quantity: null, is_essential: 1 },
+      { name: null, quantity: null, is_essential: 1, valid: null },
+      { name: null, quantity: null, is_essential: 1, valid: null },
     ],
     subIngr: [
-      { name: null, quantity: null, is_essential: 0 },
-      { name: null, quantity: null, is_essential: 0 },
+      { name: null, quantity: null, is_essential: 0, valid: null },
+      { name: null, quantity: null, is_essential: 0, valid: null },
     ],
     ingrQuery: [],
   },
@@ -64,7 +65,8 @@ export default {
       ref.push({
         name: null,
         quantity: null,
-        is_essential: essential
+        is_essential: essential,
+        valid: null
       })
     },
     deleteIngredient(state, data) {
@@ -103,7 +105,10 @@ export default {
     loadIngredients({commit}) {
       axios.get('/recipe/ingredients/small')
       .then((res) => {
-        commit('SET_INGRQUERY', res.data);
+        commit('SET_INGRQUERY', 
+        res.data.sort(function(a, b) {
+          return a.length < b.length ? -1 : a.length > b.length ? 1 : 0;
+        }));
       })
       .catch((err) => {
         console.log(err);
@@ -164,6 +169,7 @@ export default {
       for (let i = 0; i < ingredients.length; i++) {
         if (ingredients[i].name == null && ingredients[i].quantity == null) continue;
         for (let [key, value] of Object.entries(ingredients[i])) {
+          if(key == "valid") continue;
           // console.log(`ingredients[${i}].${key}: ${value}`)
           recipeData.append(`ingredients[${i}].${key}`, value)
         }
@@ -182,14 +188,15 @@ export default {
 
       // [5] 헤더 설정
       const headerConfig = { headers: {
-        'Authorization': `token ${rootState['accounts/authToken']}`,
+        'Authorization': `token ${rootState.accounts.authToken}`,
         'Content-Type': 'multipart/form-data'
       }}
-
+      
       // [6] POST
       axios.post(SERVER.ROUTES.editor.saveRecipe, recipeData, headerConfig)
       .then((res) => {
         console.log(res)
+        router.push({ name: 'MyBlogListView'})
         // 레시피 화면으로 redirect 필요
       })
       .catch((err) => {
@@ -238,5 +245,34 @@ export default {
         console.log(err)
       })
     },
+    deleteRecipe({ rootState }, recipe_id) {
+      this._vm.$root.$bvModal.msgBoxConfirm('한번 삭제된 데이터는 복구되지 않습니다.', {
+        title: '정말로 삭제하시겠습니까?',
+        size: 'md',
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: 'YES',
+        cancelTitle: 'NO',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      })
+        .then((ans) => {
+          if (ans) {
+            const headerConfig = { headers: {
+              'Authorization': `token ${rootState.accounts.authToken}`,
+              'Content-Type': 'multipart/form-data'
+            }}
+            axios.delete(SERVER.ROUTES.editor.deleteRecipe + String(recipe_id), headerConfig)
+            .then(res => {
+              console.log(res.data)
+              router.push({ name: 'MyBlogListView' })
+            })
+            .catch(err => {
+              console.err(err.response)
+            })
+          }
+        })
+    }
   }
 }

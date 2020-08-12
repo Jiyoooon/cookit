@@ -2,6 +2,7 @@ import router from '../router'
 import axios from 'axios'
 import cookies from 'vue-cookies'
 import SERVER from '../api/url.js'
+import $ from 'jquery'
 
 export default {
   namespaced: true,
@@ -11,6 +12,8 @@ export default {
     userEmail: cookies.get('user-email'),
     validEmail: false,
     updateTF: false,
+    followers: null,
+    followings: null,
   },
 
   getters: {
@@ -54,6 +57,12 @@ export default {
        console.log('fsdfsf')
        state.updateTF = value
      },
+     SET_FOLLOWERS(state, followers) {
+       state.followers = followers
+     },
+     SET_FOLLOWINGS(state, followings) {
+       state.followings = followings
+     }
   },
 
   actions: {
@@ -156,15 +165,30 @@ export default {
       router.push({ name: 'UserInfoView' })
     },
 
-    login({ commit, dispatch }, loginData) {
+    login({ commit, dispatch, state }, loginData) {
       axios.post(SERVER.ROUTES.accounts.login, loginData)
         .then((res) => {
           if (res.data.result == 'success') {
             commit('SET_TOKEN', res.headers.token)
+            console.log(state)
             dispatch('fetchUser')
             dispatch('myblog/fetchMyRecipes', null, { root: true })
+            dispatch('myblog/fetchLikeRecipes', null, { root: true })
+            return new Promise(function() {
+              window.setTimeout(function() {
+                if (state.authUser.start_page) {
+                  $("#myblog").addClass("active");
+                  $("#browsing").removeClass("active");
+                  router.push({ name: 'MyBlogListView'})
+                }
+                else {
+                  $("#myblog").removeClass("active");
+                  $("#browsing").addClass("active");
+                  router.push({ name: 'LookAroundRecipeView'})
+                }
+              }, 500);
+            })
             // dispatch('GoHome')
-            router.push({ name: 'LookAroundRecipeView'})
           } else {
             this._vm.$root.$bvModal.msgBoxOk('이메일과 비밀번호를 확인하여 주십시오.', {
               title: 'Confirmation',
@@ -178,7 +202,15 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err.response)
+          console.log(err)
+          commit('SET_TOKEN', null)
+          commit('SET_USER', null)
+          commit('SET_EMAIL', null)
+          commit('myblog/SET_RECIPES', null, { root: true })
+          cookies.remove('auth-token')
+          cookies.remove('auth-user')
+          cookies.remove('user-email')
+          router.push({ name: 'Login'})
           alert("!!!!")
         })
     },
@@ -269,17 +301,19 @@ export default {
         alert('!!!!!!')
        })
     },
-    fetchUser({ getters, commit }) {
+    fetchUser({ state, getters, commit, dispatch}) {
       axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
+          console.log(res.data.data)
           commit('SET_USER', res.data.data)
+          dispatch('storage/getfollowings',state.authUser.user_id,{root : true})
         })
         .catch((err) => {
-          console.err(err.response)
           alert(err.response)
         })
     },
     updateUser({ dispatch, state, commit }, updateData) {
+      console.log(updateData.valid.filesize)
       if (!updateData.valid.password) {
         this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
           title: 'Confirmation',
@@ -300,6 +334,16 @@ export default {
           footerClass: 'p-2 border-top-0',
           centered: true
         })
+      } else if (updateData.valid.filesize > 10000000) {
+        this._vm.$root.$bvModal.msgBoxOk('이미지 크기가 너무 큽니다.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true
+        })
       } else {
         const formData = new FormData()
         formData.append('email', updateData.config.email)
@@ -309,6 +353,10 @@ export default {
         formData.append('image_name', updateData.config.image_name)
         formData.append('intro', updateData.config.intro)
         formData.append('start_page', updateData.config.start_page)
+        for (let i=0; i<4; i++) {
+          formData.append(`sns_list[${i}].sns_name`, updateData.sns_list[i].sns_name)
+          formData.append(`sns_list[${i}].sns_url`, updateData.sns_list[i].sns_url)
+        }
 
         // for (let [key, value] of formData.entries()) {
         //   console.log(`${key} : ${value}`)
@@ -475,5 +523,30 @@ export default {
           })
         }
     },
+    fetchFollowers({ state, commit }) {
+      axios.get(SERVER.ROUTES.accounts.follower + String(state.authUser.user_id))
+        .then(res => {
+          console.log(res.data)
+          commit('SET_FOLLOWERS', res.data)
+        })
+    },
+    fetchFollowings({ state, commit }) {
+      axios.get(SERVER.ROUTES.accounts.following + String(state.authUser.user_id))
+        .then(res => {
+          commit('SET_FOLLOWINGS', res.data)
+        })
+    },
+    hituser(state,payload){
+      console.log(state)
+      console.log("유저히트!"+payload)
+      axios.put(SERVER.ROUTES.accounts.hituser+String(payload))
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        alert("실패!")
+        console.log(err)
+      })
+    }
   },
 }
