@@ -32,7 +32,7 @@ public interface UserService {
 	public boolean checkConfirmCode(EmailConfirm emailConfirm);
 	public void removeConfirmCode(String email);
 	public int signup(MultipartFile profile, User user) throws IOException;
-	public User getUser(String uid);
+	public User getUser(String uid, String baseUrl);
 	public List<Filter> getFilterings(String uid);
 	public int removeFiltering(String filterId);
 	public int addFiltering(Filter filter);
