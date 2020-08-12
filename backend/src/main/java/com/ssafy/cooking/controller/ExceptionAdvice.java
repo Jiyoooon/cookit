@@ -30,7 +30,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler{
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("result", "fail");
-//		map.put("cause", e.getMessage());
+		map.put("cause", e.getMessage());
 		
 		return map;
 	}
