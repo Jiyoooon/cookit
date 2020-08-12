@@ -19,6 +19,7 @@ export default {
             unfollow: '/user/token/unfollow/',
             follower: '/user/followers/',
             following: '/user/following/',
+            hituser: '/user/hits/'
         },
         info: {
             getuserinfo: '/user/',
