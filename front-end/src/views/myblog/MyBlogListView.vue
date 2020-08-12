@@ -1,5 +1,7 @@
 <template>
 <div id="list">
+    <b-button @click="showMyRecipes">내포스팅</b-button>
+    <b-button @click="showLikeRecipes">좋아요글</b-button>
   <b-contanier>
       <b-row>
         <SearchBar id="searchbar" />
@@ -8,8 +10,11 @@
         <b-col lg="3">
             <MyPage id="mypage" />
         </b-col>
-        <b-col lg="9">
+        <b-col v-if="currentshow==1" lg="9">
             <MyRecipeList />
+        </b-col>
+        <b-col v-if="currentshow==2" lg="9">
+            <LikeRecipeList />
         </b-col>
       </b-row>
   </b-contanier>
@@ -20,6 +25,7 @@
 import SearchBar from '../../components/myblog/SerachBar.vue'
 import MyPage from '../../components/myblog/MyPage.vue'
 import MyRecipeList from '../../components/myblog/MyRecipeList.vue'
+import LikeRecipeList from '../../components/myblog/LikeRecipeList.vue'
 import { mapActions, mapState, mapMutations } from 'vuex'
 //import recipeVue from '../../components/recipeview/recipe.vue'
 
@@ -34,15 +40,33 @@ export default {
         SearchBar,
         MyPage,
         MyRecipeList,
+        LikeRecipeList,
     },
     computed: {
-        ...mapState('myblog', ['myrecipes','selectedRecipe', 'selecteduserinfo']),
+        ...mapState('myblog', ['myrecipes','selectedRecipe', 'selecteduserinfo', 'likerecipes', 'currentshow']),
         ...mapState('accounts', ['authUser'])
     },
     methods: {
-        ...mapActions('myblog', ['fetchMyRecipes', 'getUserInfo']),
-        ...mapMutations('myblog', ['SET_USERINFO']),
+        ...mapActions('myblog', ['fetchMyRecipes', 'getUserInfo', 'fetchLikeRecipes']),
+        ...mapMutations('myblog', ['SET_USERINFO', 'SET_RECIPES', 'SET_LIKERECIPES', 'SET_CURRENTSHOW']),
         ...mapMutations('lookaround',['setRecipequeryUserId']),
+        showMyRecipes() {
+            this.SET_CURRENTSHOW(1)
+            this.fetchMyRecipes()
+            // this.SET_LIKERECIPES(null)
+        },
+        showLikeRecipes() {
+            this.SET_CURRENTSHOW(2)
+            this.fetchLikeRecipes()
+            // this.SET_RECIPES(null)
+        },
+        // checkNowShowing() {
+        //     if (this.myrecipes) {
+        //         this.currentshow = 1
+        //     } else if (this.likerecipes) {
+        //         this.currentshow = null
+        //     }
+        // }
     },
     updated() {
         this.recipelen = this.selectedRecipe.length
@@ -50,8 +74,16 @@ export default {
     created() {
         this.SET_USERINFO(this.authUser)
         this.getUserInfo(this.selecteduserinfo.user_id)
-        this.fetchMyRecipes()
-    }
+        // this.checkNowShowing()
+    },
+    // watch: {
+    //     myrecipes: {
+    //         deep: true,
+    //         handler() {
+
+    //         }
+    //     }
+    // }
 }
 </script>
 

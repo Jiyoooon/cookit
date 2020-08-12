@@ -16,7 +16,7 @@ import { mapState, mapActions, mapMutations } from 'vuex'
 import MyRecipeListItem from './MyRecipeListItem.vue'
 
 export default {
-    name: 'MyRecipeList',
+    name: 'LikeRecipeList',
     props:{
 
     },
@@ -28,17 +28,16 @@ export default {
           paginated_items: [],
           currentPageIndex:0,
           nbPages:0,
-         
         }
     },
     components: {
         MyRecipeListItem
     },
     computed: {
-        ...mapState('myblog', ['myrecipes']),
+        ...mapState('myblog', ['likerecipes']),
     },
     methods: {
-       ...mapActions('myblog', ['selectedRecipe', 'fetchMyRecipes']),
+       ...mapActions('myblog', ['selectedRecipe', 'fetchLikeRecipes']),
        ...mapActions('recipes', ['fetchRecipe']),
        ...mapMutations('myblog',['SET_FLAG']),
       changePaginateditems(index, value) {
@@ -53,21 +52,19 @@ export default {
           this.flag = true
         }
       },
-      currentPageItems() {//문제의 원인은 얘다/
-          let lengthAll =this.myrecipes.length;
+      currentPageItems() {
+          let lengthAll =this.likerecipes.length;
           for (let i = 0; i < lengthAll; i = i + this.perPage) {
-            this.changePaginateditems(this.nbPages, this.myrecipes.slice(i,i+this.perPage))
+            this.changePaginateditems(this.nbPages, this.likerecipes.slice(i,i+this.perPage))
             this.increasenbpages()
           }
-          // console.log(this.paginated_items[this.currentPage-1])
-          // return this.paginated_items[this.currentPage-1];
         },
         totalRows() {
-            return this.myrecipes.length
+            return this.likerecipes.length
       }
     },
     watch: {
-      myrecipes: {
+      likerecipes: {
         deep: true,
         handler() {
           this.currentPageItems();
@@ -81,13 +78,9 @@ export default {
     updated() {
       this.currentPageItems();
       this.totalRows();
-      // for(var i = 0; i < this.nbPages; i++) console.log(this.paginated_items[i]);
-        // setTimeout(() => {
-        //     this.fortest()
-        // },1000);
     },
     created() {
-      this.fetchMyRecipes()
+        this.fetchLikeRecipes()
     },
 }
 </script>
