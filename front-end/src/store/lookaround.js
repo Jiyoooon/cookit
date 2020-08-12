@@ -22,7 +22,8 @@ export default {
       like_small:null,
       p:0,//무한 스크롤에서 설정
       query:null,// 서치바에서 설정
-      user:null,// 해당
+      user:null,
+      likeUser:null,// 해당
     },
     recipes:[],
     ingredients:null,//모든재료를 저장
@@ -48,6 +49,7 @@ export default {
         p:0,
         query:null,
         user:null,
+        likeUser:null,
       }
       state.recipes = []
     },

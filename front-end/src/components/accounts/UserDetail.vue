@@ -78,6 +78,12 @@
        v-model="updateData.config.intro" id="textarea" rows="3" max-rows="6"></b-form-textarea>
       </b-col>
     </b-row>
+    <b-row v-for="(sns, index) in updateData.sns_list" :key="index">
+      <b-col sm="3">{{ sns.sns_name }} : </b-col>
+      <b-col sm="9">
+        <b-form-input v-model="updateData.sns_list[index].sns_url"></b-form-input>
+      </b-col>
+    </b-row>
     <b-row align-v="center">
       <b-col sm="3">메인화면 선택</b-col>
       <b-col sm="9">
@@ -128,6 +134,12 @@ export default {
             intro: '',
             start_page: false,
           },
+          sns_list: [
+            { sns_name: 'facebook', sns_url: ''},
+            { sns_name: 'instagram', sns_url: ''},
+            { sns_name: 'twitter', sns_url: ''},
+            { sns_name: 'youtube', sns_url: ''},
+          ]
         },
         file:null,
         passwordAgain: null,

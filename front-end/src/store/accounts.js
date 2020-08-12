@@ -295,6 +295,7 @@ export default {
     fetchUser({ state, getters, commit, dispatch}) {
       axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
+          console.log(res.data.data)
           commit('SET_USER', res.data.data)
           dispatch('storage/getfollowings',state.authUser.user_id,{root : true})
         })
@@ -343,6 +344,10 @@ export default {
         formData.append('image_name', updateData.config.image_name)
         formData.append('intro', updateData.config.intro)
         formData.append('start_page', updateData.config.start_page)
+        for (let i=0; i<4; i++) {
+          formData.append(`sns_list[${i}].sns_name`, updateData.sns_list[i].sns_name)
+          formData.append(`sns_list[${i}].sns_url`, updateData.sns_list[i].sns_url)
+        }
 
         // for (let [key, value] of formData.entries()) {
         //   console.log(`${key} : ${value}`)
