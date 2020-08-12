@@ -199,10 +199,17 @@
 	</delete>
 	
 	
-	<select id="getLinkedSNS" parameterType="string" resultType="SNS">
+	<select id="getAllLinkedSNS" parameterType="string" resultType="SNS">
 		SELECT sns_user, sns_name, sns_url, create_date
 		FROM Linked_sns
 		WHERE sns_user = #{uid}
+	</select>
+	
+	<select id="getLinkedSNS" parameterType="string" resultType="SNS">
+		SELECT sns_user, sns_name, sns_url
+		FROM Linked_sns
+		WHERE 	sns_user = #{uid} 
+				and sns_name = #{name}
 	</select>
 	
 	<insert id="insertLinkedSNS" parameterType="string">
@@ -212,7 +219,7 @@
 	
 	<update id="updateLinkedSNS" parameterType="string">
 		UPDATE	Linked_sns
-				set sns_name = #{name}
+				set sns_name = #{name},
 					sns_url = #{url}
 		WHERE sns_user = #{uid}
 	</update>
@@ -223,4 +230,6 @@
 				AND sns_user = #{uid}
 				AND sns_name = #{name}
 	</delete>
+	
+	
 </mapper>
