@@ -54,7 +54,7 @@ export default {
       ...mapMutations('editor', ['SET_RECIPE', 'SET_COOKINGSTEP', 'SET_MAININGR', 'SET_SUBINGR']),
       cancel() {
         alert("레시피 작성을 취소하시겠습니까?")
-        this.$router.go(-1)
+        this.$router.push({name: 'MyBlogListView'})
       }
     },
     created() {
@@ -105,6 +105,11 @@ export default {
   margin-bottom: 2em
 }
 
+@media (max-width: 496px) {
+  #editor {
+    width: 100%;
+  }
+}
 
 .inline-block-btn {
   display: inline-block;

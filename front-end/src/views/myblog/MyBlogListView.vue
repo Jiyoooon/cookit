@@ -20,7 +20,7 @@
 import SearchBar from '../../components/myblog/SerachBar.vue'
 import MyPage from '../../components/myblog/MyPage.vue'
 import MyRecipeList from '../../components/myblog/MyRecipeList.vue'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 //import recipeVue from '../../components/recipeview/recipe.vue'
 
 export default {
@@ -36,14 +36,22 @@ export default {
         MyRecipeList,
     },
     computed: {
-        ...mapState('myblog', ['myrecipes','selectedRecipe'])
+        ...mapState('myblog', ['myrecipes','selectedRecipe', 'selecteduserinfo']),
+        ...mapState('accounts', ['authUser'])
     },
     methods: {
-        ...mapActions('myblog', ['fetchMyRecipes']),
+        ...mapActions('myblog', ['fetchMyRecipes', 'getUserInfo']),
+        ...mapMutations('myblog', ['SET_USERINFO']),
+        ...mapMutations('lookaround',['setRecipequeryUserId']),
     },
     updated() {
         this.recipelen = this.selectedRecipe.length
     },
+    created() {
+        this.SET_USERINFO(this.authUser)
+        this.getUserInfo(this.selecteduserinfo.user_id)
+        this.fetchMyRecipes()
+    }
 }
 </script>
 

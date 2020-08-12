@@ -25,7 +25,7 @@ export default {
           flag: false,
           currentPage: 1,
           perPage: 6,
-          paginated_items: {},
+          paginated_items: [],
           currentPageIndex:0,
           nbPages:0,
           recipes: null,
@@ -68,8 +68,13 @@ export default {
       }
     },
     watch: {
-      myrecipes(){
-        console.log("마이레시피 변화!")
+      myrecipes: {
+        deep: true,
+        handler() {
+          this.currentPageItems();
+          this.totalRows();
+          console.log("마이레시피 변화!")
+        }
       }
     },
     mounted() {
@@ -84,7 +89,6 @@ export default {
         // },1000);
     },
     created() {
-        this.fetchMyRecipes()
     },
 }
 </script>

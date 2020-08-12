@@ -7,6 +7,11 @@ export default {
   state: {
     selectedRecipe: null,
     recipeUser: null,
+    comments: null,
+    selectedcomment: {
+      id: null,
+      tf: false,
+    },
   },
 
   getters: {
@@ -20,6 +25,12 @@ export default {
     SET_USER(state, userinfo) {
       state.recipeUser = userinfo
     },
+    SET_COMMENTS(state, comments) {
+      state.comments = comments
+    },
+    SET_SELECTEDCOMMENT(state, id) {
+      state.selectedcomment.id = id
+    }
   },
 
   actions: {
@@ -27,7 +38,7 @@ export default {
       axios.get(SERVER.ROUTES.recipeview.fetchrecipe + String(recipe_id))
         .then(res => {
           commit('SET_RECIPE', res.data)
-          router.push({ name: 'SelectedRecipe'})
+          router.push({ name: 'SelectedRecipe', params: { recipe_id: recipe_id }})
         })
     },
     fetchRecipeUser({ commit, state }) {
@@ -40,6 +51,39 @@ export default {
       axios.get(SERVER.ROUTES.myrecipe.recipelike + String(recipe_id) +'/like', rootGetters['accounts/config'])
       .then(() => {
         dispatch('fetchMyRecipes', null, { root: true })
+      })
+    },
+    createComment({ state, rootGetters, dispatch }, commentData) {
+      axios.post(SERVER.ROUTES.myrecipe.commentcreate + String(state.selectedRecipe.recipe_id) + '/comments', commentData, rootGetters['accounts/config'])
+      .then(res => {
+        console.log(res.data)
+        dispatch('fetchComments')
+        // router.push({ name: 'SelectedRecipe', params: { recipe_id: state.selectedRecipe.recipe_id } })
+      })
+    },
+    fetchComments({ state, commit }) {
+      axios.get(SERVER.ROUTES.myrecipe.fetchcomments + String(state.selectedRecipe.recipe_id) + '/comments')
+      .then(res => {
+        commit('SET_COMMENTS', res.data)
+        console.log(res.data)
+      })
+    },
+    deleteComment({ rootGetters, state, dispatch }, comment_id) {
+      axios.delete(SERVER.ROUTES.myrecipe.deletecomment + String(state.selectedRecipe.recipe_id) + '/comments/' + String(comment_id), rootGetters['accounts/config'])
+      .then(res => {
+        console.log(res)
+        dispatch('fetchComments')
+      })
+    },
+    updateComment({ rootGetters, state, dispatch, commit }, commentData) {
+      axios.put(SERVER.ROUTES.myrecipe.updatecomment + String(state.selectedRecipe.recipe_id) + '/comments/' + String(commentData.comment_id), commentData, rootGetters['accounts/config'])
+      .then(res => {
+        console.log(res)
+        dispatch('fetchComments')
+        commit('SET_SELECTEDCOMMENT', null)
+      })
+      .catch(err => {
+        console.err(err.response)
       })
     }
   },

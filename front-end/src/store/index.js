@@ -8,6 +8,7 @@ import moduleEditor from '@/store/editor.js'
 import moduleLookAround from '@/store/lookaround.js'
 import moduleRecipes from '@/store/recipes.js'
 import moduleMyBlog from '@/store/myblog.js'
+import moduleStorage from '@/store/storage.js'
 
 Vue.use(Vuex)
 axios.defaults.baseURL = 'http://i3a201.p.ssafy.io:8080/cooking-0.0.1-SNAPSHOT';
@@ -29,10 +30,11 @@ export default new Vuex.Store({
     myblog: moduleMyBlog,
     editor: moduleEditor,
     lookaround: moduleLookAround,
+    storage: moduleStorage,
   },
   plugins: [
     createPersistedState({
-      paths: ['lookaround'],
+      paths: ['lookaround', 'myblog', 'recipes'],
     })
   ]
 })
