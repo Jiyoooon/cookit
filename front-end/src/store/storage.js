@@ -1,91 +1,85 @@
-//import router from '../router'
 import axios from 'axios'
 import SERVER from '../api/url.js'
 
 export default {//로컬스토리지에 저장할 필요가 있는 정보들은 여기 저장
     namespaced:true,
     state: {
-      followings:[],
+      myfollowings:[],//나
+      myfollowers:[],
+      followings:[],//다른사람
       followers:[],
     },
-  
-    getters: {
-  
-    },
-  
     mutations: {
       SET_FOLLOWERS(state, payload){
-        state.followers = payload
+        if(payload.user == payload.Me){
+          state.myfollowers = payload.array
+          state.followers = payload.array
+        }
+        else {
+          state.followers = payload.array
+        }
       },
       SET_FOLLOWINGS(state, payload){
-         state.followings = payload
+        if(payload.user == payload.Me){
+          state.myfollowings = payload.array
+          state.followings = payload.array
+        }
+        else {
+          state.followings = payload.array
+        }
       },
-      ADD_FOLLOWINGS(state,payload){
-        state.followings.push(payload)
-        console.log(state.followings)
-      },
-      DEL_FOLLOWINGS(state,payload){
-        state.followings.splice(state.followings.map(x => x.user_id).indexOf(payload), 1)
-        state.followings = [...state.followings]
-      }
     },
   
     actions: {
-      getfollowings({commit,rootState}){
-        console.log("내가 팔로우중인사람가져오기")
-        console.log(rootState.accounts.authUser)
-        axios.get(SERVER.ROUTES.accounts.following + String(rootState.accounts.authUser.user_id))
+      getfollowings({commit,rootState},user){
+        axios.get(SERVER.ROUTES.accounts.following + String(user))
         .then(res => {
-          console.log("__내가 팔로우중인사람__")
-          console.log(res.data)
-          commit('SET_FOLLOWINGS',res.data)
+          commit('SET_FOLLOWINGS',{ user : user, array : res.data, Me : rootState.accounts.authUser.user_id})
         })
         .catch((err) => {
-          console.log(err.response)
-        })
-      },
-      getfollowers({commit,rootState}){
-        console.log("나를 팔로우중인사람가져오기")
-        axios.get(SERVER.ROUTES.accounts.follower + String(rootState.accounts.authUser.user_id))
-        .then(res => {
-          console.log("__나를 팔로우중인사람__")
-          console.log(res.data)
-          commit('SET_FOLLOWERS',res.data)
-        })
-        .catch((err) => {
-          console.log(err.response)
+          console.log(err)
         })
       },
 
-      follow({commit,rootGetters},payload){
-        // const headerConfig = { headers: {
-        //   'Authorization': `token ${rootState['accounts/authToken']}`,
-        // }}
-        console.log((payload))
-        // const targetid = {
-        //   id : String(payload) 
-        // }
-        //rootGetters['accounts/config']
-        axios.post(SERVER.ROUTES.accounts.follow,String(payload),rootGetters['accounts/config'])
-          .then((res) => {
-            console.log("성공")
-            console.log(res)
-            commit('ADD_FOLLOWINGS',payload)
+      getfollowers({commit,rootState},user){
+        axios.get(SERVER.ROUTES.accounts.follower + String(user))
+        .then(res => {
+          commit('SET_FOLLOWERS',{user : user, array : res.data, Me : rootState.accounts.authUser.user_id})
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      },
+
+      follow({rootState,rootGetters,dispatch},payload){
+        const targetid = {
+          id : String(payload) 
+        }
+        
+        axios.post(SERVER.ROUTES.accounts.follow+String(payload),targetid,rootGetters['accounts/config'])
+          .then(() => {
+            dispatch('getfollowings',rootState.accounts.authUser.user_id)
           })
           .catch((err) => {
-            console.log(err.response)
+            console.log(err)
             alert("팔로우실패")
           })
       },
-      unfollow({commit,rootGetters},payload){
-        axios.post(SERVER.ROUTES.accounts.unfollow,String(payload),rootGetters['accounts/config'])
-          .then((res) => {
-            console.log("언팔성공")
-            console.log(res)
-            commit('DEL_FOLLOWINGS',payload)
+      unfollow({rootState,dispatch},payload){
+        const headerConfig = {
+          headers: {
+            Authorization: `token ${rootState.accounts.authToken}`,
+          },
+          data:{
+            id : String(payload)
+          }
+        }
+        axios.delete(SERVER.ROUTES.accounts.unfollow+String(payload),headerConfig)
+          .then(() => {
+            dispatch('getfollowings',rootState.accounts.authUser.user_id)
           })
           .catch((err) => {
-            console.log(err.response)
+            console.log(err)
             alert("언팔로우실패")
           })
       },

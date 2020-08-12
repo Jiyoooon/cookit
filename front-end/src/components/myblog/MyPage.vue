@@ -19,6 +19,7 @@
         class="mx-0"
       > -->
         <div class="grey--text">조회수 : 413</div>
+        <div class="grey--text"><span>팔로워 : {{this.userfollowers}}</span><span>팔로잉 : {{this.userfollowings}}</span></div>
       <!-- </v-row> -->
 
       <div class="my-4 subtitle-1">
@@ -77,7 +78,7 @@
 </template>
 
 <script>
-import { mapState,mapActions, mapMutations } from 'vuex'
+import { mapState,mapActions} from 'vuex'
 
 export default {
     name: 'MyPage',
@@ -85,27 +86,31 @@ export default {
       return{
         loading:true,
         fstate:null,
+        userfollowers:null,
+        userfollowings:null,
       }
     },
     computed: {
       
       ...mapState('accounts', ['authUser']),
-      ...mapState('storage',['followings']),
+      ...mapState('storage',['myfollowings','followings','followers']),
       ...mapState('myblog',['selecteduserinfo'])
     },
     methods: {
       setfstate(){
-        console.log("팔로우테스트")
-        console.log(this.followings)
-        console.log(this.followings.findIndex(x => x.user_id === this.selecteduserinfo.user_id))
-        if(this.followings.findIndex(x => x.user_id === this.selecteduserinfo.user_id)>0)
-          this.fstate = true
-        else
+        if(this.myfollowings.findIndex(x => x.user_id === this.selecteduserinfo.user_id)<0)
           this.fstate = false
+        else
+          this.fstate = true
+      },
+      setfollowers(){
+        this.userfollowers = this.followers.length
+      },
+      setfollowings(){
+        this.userfollowings = this.followings.length
       },
       clickfollow(){
         this.follow(this.selecteduserinfo.user_id)
-        //this.rerendering()
       },
       clickunfollow(){
         this.unfollow(this.selecteduserinfo.user_id)
@@ -114,11 +119,29 @@ export default {
         this.$router.go(0)
       },
       ...mapActions('accounts',['GoRecipeCreate']),
-      ...mapMutations('storage',['ADD_FOLLOWINGS',]),
-      ...mapActions('storage',['follow','unfollow'])
+      ...mapActions('storage',['follow','unfollow','getfollowings','getfollowers']),
     },
-    beforeMount() {
+    watch: {
+      myfollowings:{
+        handler(){
+          this.setfstate()
+        }
+      },
+      followers:{
+        handler(){
+          this.setfollowers()
+        }
+      },
+      followings:{
+        handler(){
+          this.setfollowings()
+        }
+      }
+    },
+    updated() {
       this.setfstate()
+      this.getfollowings(this.selecteduserinfo.user_id)
+      this.getfollowers(this.selecteduserinfo.user_id)
     },
 }
 </script>
