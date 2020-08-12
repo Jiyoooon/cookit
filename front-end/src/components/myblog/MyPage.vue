@@ -18,7 +18,7 @@
         align="center"
         class="mx-0"
       > -->
-        <div class="grey--text">조회수 : 413</div>
+        <div class="grey--text">조회수 : {{ this.selecteduserinfo.hits }}</div>
         <div class="grey--text"><span>팔로워 : {{this.userfollowers}}</span><span>팔로잉 : {{this.userfollowings}}</span></div>
       <!-- </v-row> -->
 
@@ -120,7 +120,7 @@ export default {
       rerendering(){
         this.$router.go(0)
       },
-      ...mapActions('accounts',['GoRecipeCreate']),
+      ...mapActions('accounts',['GoRecipeCreate','hituser']),
       ...mapActions('storage',['follow','unfollow','getfollowings','getfollowers']),
     },
     watch: {
@@ -139,6 +139,10 @@ export default {
           this.setfollowings()
         }
       }
+    },
+    created() {
+      if(this.selecteduserinfo.user_id !== this.authUser.user_id)
+        this.hituser(this.selecteduserinfo.user_id)
     },
     updated() {
       this.setfstate()

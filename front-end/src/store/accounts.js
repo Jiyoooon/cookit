@@ -514,5 +514,19 @@ export default {
           })
         }
     },
+
+    hituser(state,payload){
+      console.log(state)
+      console.log("유저히트!"+payload)
+      axios.put(SERVER.ROUTES.accounts.hituser+String(payload))
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        alert("실패!")
+        console.log(err)
+      })
+    }
+    
   },
 }
