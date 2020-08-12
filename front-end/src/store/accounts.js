@@ -12,6 +12,8 @@ export default {
     userEmail: cookies.get('user-email'),
     validEmail: false,
     updateTF: false,
+    followers: null,
+    followings: null,
   },
 
   getters: {
@@ -55,6 +57,12 @@ export default {
        console.log('fsdfsf')
        state.updateTF = value
      },
+     SET_FOLLOWERS(state, followers) {
+       state.followers = followers
+     },
+     SET_FOLLOWINGS(state, followings) {
+       state.followings = followings
+     }
   },
 
   actions: {
@@ -515,5 +523,18 @@ export default {
           })
         }
     },
+    fetchFollowers({ state, commit }) {
+      axios.get(SERVER.ROUTES.accounts.follower + String(state.authUser.user_id))
+        .then(res => {
+          console.log(res.data)
+          commit('SET_FOLLOWERS', res.data)
+        })
+    },
+    fetchFollowings({ state, commit }) {
+      axios.get(SERVER.ROUTES.accounts.following + String(state.authUser.user_id))
+        .then(res => {
+          commit('SET_FOLLOWINGS', res.data)
+        })
+    }
   },
 }
