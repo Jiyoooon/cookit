@@ -120,6 +120,9 @@ export default {
   opacity: 0.6;
 }
 
+.post-module:hover .post-content .title {
+  color: #53AAA1;
+}
 .post-module .post-content .description {
   overflow: hidden;
   max-height: 0px;
@@ -176,6 +179,7 @@ export default {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: all .2s ease-in-out;
 }
 
 .post-module .post-content .post-meta {
