@@ -1,10 +1,12 @@
 <template>
   <div>
-      <div v-if="checkdeleteauth">
-      <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
-      </div>
-      <div v-if="checkdeleteauth">
-      <button @click="gorecipeupdate">고고</button>
+      <div v-if="authUser">
+        <div v-if="checkdeleteauth">
+        <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
+        </div>
+        <div v-if="checkdeleteauth">
+        <button @click="gorecipeupdate">고고</button>
+        </div>
       </div>
       <recipe />
       <hr>
@@ -89,9 +91,11 @@ export default {
         }
     },
     created() {
-        // this.fetchRecipe(),
+        this.fetchRecipe(this.$route.params.recipe_id),
         this.fetchRecipeUser()
         this.fetchComments()
+        console.log(this.authUser)
+        console.log(this.checkdeleteauth)
     },
 }
 </script>

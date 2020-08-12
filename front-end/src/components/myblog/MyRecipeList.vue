@@ -87,7 +87,7 @@ export default {
         // },1000);
     },
     created() {
-      // this.fetchMyRecipes()
+      this.fetchMyRecipes()
       this.currentPageItems();
       this.totalRows();
     },
