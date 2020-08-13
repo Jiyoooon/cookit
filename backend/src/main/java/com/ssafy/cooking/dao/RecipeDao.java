@@ -38,7 +38,7 @@ public interface RecipeDao {
 							, List<String> like_large, List<String> like_medium, List<String> like_small);
 	String[] getSmallIngredientsArray();
 	void updateTime(Integer cooking_steps_id, String time);
-	int reviseRecipe(RecipeDetail recipeData);
+	int reviseRecipe(Integer uid, RecipeDetail recipeData);
 	void reviseCookingsteps(int recipe_id, List<CookingStep> cookingStep);
 	void setLike(int recipe_id, int uid);
 	int deleteLike(int recipe_id, int uid);

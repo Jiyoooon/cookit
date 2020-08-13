@@ -199,7 +199,6 @@ public class RecipeController {
 
 		Map<String, Object> claims = jwtService.get(token);
 		int uid = Integer.parseInt((String) claims.get("uid"));
-
 		try {
 			if (recipeData == null) {
 				result = "fail";
@@ -208,9 +207,7 @@ public class RecipeController {
 				map.put("cause", "레시피 title 없음");
 				result = "fail";
 			} else {
-				if (uid == recipeData.getRecipe_user()) {
-					recipeservice.reviseRecipe(recipeData, baseUrl);
-				} else {
+				if(recipeservice.reviseRecipe(uid, recipeData, baseUrl) < 1) {
 					map.put("cause", "유저 아이디 불일치");
 					result = "fail";
 				}
@@ -218,6 +215,7 @@ public class RecipeController {
 
 			result = "success";
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = "fail";
 			map.put("cause", "서버 오류");
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
