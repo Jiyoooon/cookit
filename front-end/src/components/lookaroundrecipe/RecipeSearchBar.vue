@@ -45,28 +45,31 @@
             </b-col>
             <b-col cols="11" class="ml-n3" style="padding-top: 0px; padding-bottom: 0px;">
               <v-autocomplete
+                ref="input"
+                @keydown="focusevent1" 
+                tabindex="0"
                 class="b-flex"
                 :selecteditems="selecteditems"
                 :search-input.sync="searchtextS"
                 append-icon
                 single-line
-                @keydown.enter="selectSource(selecteditems[0])"
+                @keydown.enter="selectSource(selecteditems[(focus1)? focus1 : 0])"
                 placeholder=" 포함할 재료 추가"
                 color="#3F51B5"
               />
               <!-- 추가할 재료 자동 완성 -->
               <v-list
-                autofocus
                 ref="Slist"
                 v-if="searchtextS && this.selecteditems.length"
                 style="position: absolute; margin-top: -10px; z-index: 10; width: 95.6%; overflow-y: scroll; height: auto; max-height: 300px"
               >
                 <v-list-item
-                  v-for="selecteditem in selecteditems"
+                  v-for="(selecteditem, index) in selecteditems"
+                  :class="(index == focus1)? 'focus':'focus-default' "
                   @click="selectSource(selecteditem)"
                   onmouseover="this.style.backgroundColor='#eee'"
                   onmouseout="this.style.backgroundColor='white'"
-                  :key="String(selecteditem.name)+ String(selecteditem.id)"
+                  :key="index"
                   style="cursor: pointer;"
                 >
                   <v-list-item-title v-text="selecteditem.name"></v-list-item-title>
@@ -84,12 +87,15 @@
             </b-col>
             <b-col cols="11" class="ml-n3" style="padding-top: 0px; padding-bottom: 0px;">
               <v-autocomplete
+                ref="input"
+                @keydown="focusevent2" 
+                tabindex="0"
                 class="b-flex"
                 :selecteditems="excludeditems"
                 :search-input.sync="searchtextE"
                 append-icon
                 single-line
-                @keydown.enter="excludedSource(excludeditems[0])"
+                @keydown.enter="excludedSource(excludeditems[(focus2)? focus2 : 0])"
                 placeholder=" 제외할 재료 추가"
                 color="#B71C1C"
               />
@@ -100,11 +106,12 @@
                 style="position: absolute; margin-top: -10px; z-index: 10; width: 92%; overflow-y: scroll; height: auto; max-height: 300px"
               >
                 <v-list-item
-                  v-for="excludeditem in excludeditems"
+                  v-for="(excludeditem,index) in excludeditems"
+                  :class="(index == focus2)? 'focus':'focus-default' "
                   @click="selectSource(excludeditem)"
                   onmouseover="this.style.backgroundColor='#eee'"
                   onmouseout="this.style.backgroundColor='white'"
-                  :key="String(excludeditem.name)+ String(excludeditem.id)"
+                  :key="index"
                   style="cursor: pointer;"
                 >
                   <v-list-item-content>
@@ -161,6 +168,8 @@ export default {
       searchtextS: "",
       searchtextE: "",
       selectedcategory: 0,
+      focus1:null,
+      focus2:null,
     };
   },
   props: {
@@ -242,6 +251,44 @@ export default {
     selectCategory(index) {
       this.selectedcategory = index;
     },
+    // 추가
+    focusevent1 (event) {
+        switch (event.keyCode) {
+            case 38:// 위 방향키
+            if (this.focus1 === null) {
+                this.focus1 = 0;
+            } else if (this.focus1 > 0) {
+                this.focus1--;
+            }
+            break;
+            case 40:// 아래 방향키
+            if (this.focus1 === null) {
+                this.focus1 = 0;
+            } else if (this.focus1 < this.selecteditems.length - 1) {
+                this.focus1++;
+            }
+            break;
+        }
+    },
+    focusevent2 (event) {
+        switch (event.keyCode) {
+            case 38:// 위 방향키
+            if (this.focus2 === null) {
+                this.focus2 = 0;
+            } else if (this.focus2 > 0) {
+                this.focus2--;
+            }
+            break;
+            case 40:// 아래 방향키
+            if (this.focus2 === null) {
+                this.focus2 = 0;
+            } else if (this.focus2 < this.excludeditems.length - 1) {
+                this.focus2++;
+            }
+            break;
+        }
+    },
+    // 추가끝
     ...mapActions("lookaround", [ "setRecipequery", "getFilteredRecipes" ]),
     ...mapMutations("lookaround", [ "initPage", "setRecipequeryCategory", "initRecipes","setRecipequeryOrder" ]),
   },
@@ -251,6 +298,7 @@ export default {
   watch: {
     // 넣을 재료 자동 완성 리스트
     searchtextS(val) {
+      this.focus1 = null
       if (val == "" || val == null) this.selecteditems = [];
       else {
         this.selecteditems = this.ingredients
@@ -265,6 +313,7 @@ export default {
     },
     // 뺄 재료 자동 완성 리스트
     searchtextE(val) {
+      this.focus2 = null
       if (val == "" || val == null) this.excludeditems = [];
       else {
         this.excludeditems = this.ingredients
@@ -276,6 +325,16 @@ export default {
           return (e.name || "").indexOf(val || "") > -1;
         });
       }
+
+
+    // 뺄 재료 자동 완성 리스트
+    searchtextE(val) {
+        if (val == "" || val == null) this.excludeditems = [];
+        else {
+            this.excludeditems = this.ingredients.filter((e) => {
+            return (e.name || "").indexOf(val || "") > -1;
+            });
+        }
     },
     selectedcategory() {
       this.setRecipequeryCategory(this.selectedcategory);
@@ -365,5 +424,13 @@ export default {
 
 .cate-item.defalut {
   content:"";
+}
+
+.focus {
+    background-color:#eee;
+}
+
+.focusdefault{
+    background-color:white;
 }
 </style>

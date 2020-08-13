@@ -3,8 +3,6 @@ package com.ssafy.cooking.service;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
@@ -56,24 +54,26 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	@Transactional
-	public User getUser(String uid) {
+	public User getUser(String uid, String baseUrl) {
 		User user = userDao.getUser(uid);
 		user.setSns_list(userDao.getAllLinkedSNS(uid));
+		String fileFullPath = "/var/lib/tomcat8/webapps/images/profile/"+user.getProfile_image();
+		
+		if(!new File(fileFullPath).exists()) {
+			user.setImage_name(null);
+			user.setImage_url(baseUrl+"/images/profile/default_image.png");
+		}else {
+			user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
+		}
+		
 		return user;
 	}
 	
-
 	@Override
 	@Transactional
 	public int reviseUser(MultipartFile profile, User user) throws IOException {
 		String imageName = user.getImage_name();
 		User oriUser = userDao.getUser(Integer.toString(user.getUser_id()));
-		
-//		if(profile == null) System.out.println("프로필 null!!");
-//		if(imageName != null) {
-//			System.out.println("이미지 이름 : "+imageName+", "+imageName.equals("null")+", "+imageName.length()+", "+imageName.trim().equals(""));
-//		}
-		
 		
 		try {
 			//profile != null => 프로필 수정
