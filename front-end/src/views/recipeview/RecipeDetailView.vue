@@ -1,5 +1,7 @@
 <template>
   <div>
+      <button>asdfasdfasdf</button>
+      <timervue/>
       <div v-if="checkdeleteauth">
       <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
       </div>
@@ -54,6 +56,7 @@ import ingredient from '../../components/recipeview/ingredient.vue'
 import recipe from '../../components/recipeview/recipe.vue'
 import commentCreate from '../../components/recipeview/commentCreate.vue'
 import commentList from '../../components/recipeview/commentList.vue'
+import timervue from "@/components/recipeview/Timer.vue";
 
 export default {
     name: 'recipeDetailView',
@@ -63,6 +66,7 @@ export default {
         recipe,
         commentCreate,
         commentList,
+        timervue,
     },
     computed: {
         ...mapState('recipes', ['selectedRecipe']),
