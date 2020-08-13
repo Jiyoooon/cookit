@@ -56,19 +56,20 @@
 
 	<update id="reviseRecipe">
 		UPDATE Recipe
-		SET category_id = #{category_id}
-			, title = #{category_id}
-			, description = #{description}
-			, servings = #{servings}
-			, cooking_time = #{cooking_time}
-			, level = #{level}
-			, tag = #{tag}
-			, update_date = now()
-		WHERE recipe_id = #{recipe_id}
+		SET update_date = now()
+			, category_id = #{recipeData.category_id}
+			, title = #{recipeData.title}
+			, description = #{recipeData.description}
+			, servings = #{recipeData.servings}
+			, cooking_time = #{recipeData.cooking_time}
+			, level = #{recipeData.level}
+			, tag = #{recipeData.tag}
+		WHERE recipe_id = #{recipeData.recipe_id}
+		AND recipe_user = #{uid}
 	</update>
 
 	<update id="reviseCookingsteps">
-		<foreach collection="cookingSteps" item="step" separator=",">
+		<foreach collection="cookingStep" item="step" separator=",">
 		UPDATE Cooking_steps
 		SET steps = #{step.steps}
 		, description = #{step.description}
@@ -82,12 +83,12 @@
 
 	<delete id="deleteIngredients">
 		DELETE FROM Ingredient
-		WEHRE 	recipe_id = #{recipe_id}
+		WHERE 	recipe_id = #{recipe_id}
 	</delete>
 
 	<delete id="deleteCookingSteps">
 		DELETE FROM Cooking_steps
-		WEHRE 	recipe_id = #{recipe_id}
+		WHERE 	recipe_id = #{recipe_id}
 			AND	steps > #{step}
 	</delete>
 	
