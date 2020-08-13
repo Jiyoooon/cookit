@@ -56,7 +56,7 @@ export default {
     fetchMyRecipes({ rootState, commit }, user) {
       let recipequery = rootState.lookaround.recipequery
       // recipequery.user = state.selecteduserinfo.nickname
-      recipequery.user = user.nickname
+      recipequery.user = user.user_id
       recipequery.p = null
       recipequery.likeUser = null
       const filter = {
@@ -101,7 +101,7 @@ export default {
         .then((res) => {
           commit('lookaround/initializing',null,{root:true})
           commit('SET_USERINFO', res.data.data)
-          commit('lookaround/setRecipequeryUserId',res.data.data.nickname,{root:true})
+          commit('lookaround/setRecipequeryUserId',res.data.data.user_id,{root:true})
           if (rootState.accounts.authUser.user_id == state.selecteduserinfo.user_id) {
             dispatch('GoMyBlog')
           } else {
