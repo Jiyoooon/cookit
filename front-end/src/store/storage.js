@@ -1,58 +1,87 @@
-//import router from '../router'
 import axios from 'axios'
 import SERVER from '../api/url.js'
 
 export default {//로컬스토리지에 저장할 필요가 있는 정보들은 여기 저장
     namespaced:true,
     state: {
-      followings:['asdf'],
+      myfollowings:[],//나
+      myfollowers:[],
+      followings:[],//다른사람
       followers:[],
     },
-  
-    getters: {
-  
-    },
-  
     mutations: {
       SET_FOLLOWERS(state, payload){
-        state.followers = payload
+        if(payload.user == payload.Me){
+          state.myfollowers = payload.array
+          state.followers = payload.array
+        }
+        else {
+          state.followers = payload.array
+        }
       },
       SET_FOLLOWINGS(state, payload){
-         state.followings = payload
-     },
-     ADD_FOLLOWINGS(state,payload){
-      state.followings.push(payload)
-      console.log(state.followings)
-      }
+        if(payload.user == payload.Me){
+          state.myfollowings = payload.array
+          state.followings = payload.array
+        }
+        else {
+          state.followings = payload.array
+        }
+      },
     },
   
     actions: {
-      getfollowings({commit},payload){
-        console.log("로그인! 팔로우중인사람가져오기")
-        console.log(payload)
-        axios.get(SERVER.ROUTES.accounts.following + String(payload.user_id))
+      getfollowings({commit,rootState},user){
+        axios.get(SERVER.ROUTES.accounts.following + String(user))
         .then(res => {
-          console.log("__팔로우중인사람__")
-          console.log(res.data)
-          commit('SET_FOLLOWINGS',res.data)
+          commit('SET_FOLLOWINGS',{ user : user, array : res.data, Me : rootState.accounts.authUser.user_id})
         })
         .catch((err) => {
-          console.log(err.response)
+          console.log(err)
         })
       },
-      follow({commit,rootGetters},payload){
-        //여기 수정 필
-        console.log(rootGetters.config)
-        axios.post(SERVER.ROUTES.accounts.follow, payload,rootGetters['moduleAccounts/config'])
-          .then((res) => {
-            console.log("성공")
-            console.log(res)
-            commit('ADD_FOLLOWINGS',payload)
+
+      getfollowers({commit,rootState},user){
+        axios.get(SERVER.ROUTES.accounts.follower + String(user))
+        .then(res => {
+          commit('SET_FOLLOWERS',{user : user, array : res.data, Me : rootState.accounts.authUser.user_id})
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      },
+
+      follow({rootState,rootGetters,dispatch},payload){
+        const targetid = {
+          id : String(payload) 
+        }
+        
+        axios.post(SERVER.ROUTES.accounts.follow+String(payload),targetid,rootGetters['accounts/config'])
+          .then(() => {
+            dispatch('getfollowings',rootState.accounts.authUser.user_id)
           })
           .catch((err) => {
-            console.log(err.response)
-            alert("비밀번호를 입력해주세요!")
+            console.log(err)
+            alert("팔로우실패")
           })
-      }
+      },
+      unfollow({rootState,dispatch},payload){
+        const headerConfig = {
+          headers: {
+            Authorization: `token ${rootState.accounts.authToken}`,
+          },
+          data:{
+            id : String(payload)
+          }
+        }
+        axios.delete(SERVER.ROUTES.accounts.unfollow+String(payload),headerConfig)
+          .then(() => {
+            dispatch('getfollowings',rootState.accounts.authUser.user_id)
+          })
+          .catch((err) => {
+            console.log(err)
+            alert("언팔로우실패")
+          })
+      },
     },
   }

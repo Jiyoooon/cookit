@@ -17,8 +17,9 @@ export default {
             sendnewpassword: '/user/password/',
             follow: '/user/token/follow/',
             unfollow: '/user/token/unfollow/',
-            followers: '/user/followers/',
+            follower: '/user/followers/',
             following: '/user/following/',
+            hituser: '/user/hits/'
         },
         info: {
             getuserinfo: '/user/',

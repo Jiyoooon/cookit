@@ -18,7 +18,8 @@
         align="center"
         class="mx-0"
       > -->
-        <div class="grey--text">조회수 : 413</div>
+        <div class="grey--text">조회수 : {{ this.selecteduserinfo.hits }}</div>
+        <div class="grey--text"><span>팔로워 : {{this.userfollowers}}</span><span>팔로잉 : {{this.userfollowings}}</span></div>
       <!-- </v-row> -->
 
       <div class="my-4 subtitle-1">
@@ -32,7 +33,7 @@
         color="deep-purple lighten-2"
         text
         v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate && (this.authUser != null)"
-        @click="follow"
+        @click="clickfollow"
       >
         팔로우
       </v-btn>
@@ -40,7 +41,7 @@
         color="deep-purple lighten-2"
         text
         v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate && (this.authUser != null)"
-        @click="unfollow"
+        @click="clickunfollow"
       >
         언팔로우
       </v-btn>
@@ -62,13 +63,13 @@
         active-class="deep-purple accent-4 white--text"
         column
       >
-        <v-chip><i class="fab fa-facebook-square"></i></v-chip>
+        <v-chip><a :href="authUser.sns_list[0].sns_url" target=_blank><i class="fab fa-facebook-square"></i></a></v-chip>
 
-        <v-chip><i class="fab fa-instagram"></i></v-chip>
+        <v-chip v-if="authUser.sns_list[1].sns_url"><a :href="authUser.sns_list[1].sns_url" target=_blank><i class="fab fa-instagram"></i></a></v-chip>
 
-        <v-chip><i class="fab fa-twitter"></i></v-chip>
+        <v-chip v-if="authUser.sns_list[2].sns_url"><a :href="authUser.sns_list[2].sns_url" target=_blank><i class="fab fa-twitter"></i></a></v-chip>
 
-        <v-chip><i class="fab fa-youtube"></i></v-chip>
+        <v-chip v-if="authUser.sns_list[3].sns_url"><a :href="authUser.sns_list[3].sns_url" target=_blank><i class="fab fa-youtube"></i></a></v-chip>
 
       </v-chip-group>
     </v-card-text>
@@ -79,7 +80,7 @@
 </template>
 
 <script>
-import { mapState,mapActions, mapMutations } from 'vuex'
+import { mapState,mapActions} from 'vuex'
 
 export default {
     name: 'MyPage',
@@ -87,41 +88,66 @@ export default {
       return{
         loading:true,
         fstate:null,
+        userfollowers:null,
+        userfollowings:null,
       }
     },
     computed: {
       
       ...mapState('accounts', ['authUser']),
-      ...mapState('storage',['followings']),
+      ...mapState('storage',['myfollowings','followings','followers']),
       ...mapState('myblog',['selecteduserinfo'])
     },
     methods: {
       setfstate(){
-        console.log("팔로우테스트")
-        console.log(this.followings)
-        console.log(this.followings.findIndex(x => x.user_id === this.selecteduserinfo.user_id))
-        if(this.followings.findIndex(x => x.user_id === this.selecteduserinfo.user_id)>0)
-          this.fstate = true
-        else
+        if(this.myfollowings.findIndex(x => x.user_id === this.selecteduserinfo.user_id)<0)
           this.fstate = false
+        else
+          this.fstate = true
       },
-      follow(){
-        alert("팔로우테스트")
+      setfollowers(){
+        this.userfollowers = this.followers.length
+      },
+      setfollowings(){
+        this.userfollowings = this.followings.length
+      },
+      clickfollow(){
         this.follow(this.selecteduserinfo.user_id)
-        this.rerendering()
       },
-      unfollow(){
-
+      clickunfollow(){
+        this.unfollow(this.selecteduserinfo.user_id)
       },
       rerendering(){
         this.$router.go(0)
       },
-      ...mapActions('accounts',['GoRecipeCreate']),
-      ...mapMutations('storage',['ADD_FOLLOWINGS',]),
-      ...mapActions('storage',['follow'])
+      ...mapActions('accounts',['GoRecipeCreate','hituser']),
+      ...mapActions('storage',['follow','unfollow','getfollowings','getfollowers']),
     },
-    beforeMount() {
+    watch: {
+      myfollowings:{
+        handler(){
+          this.setfstate()
+        }
+      },
+      followers:{
+        handler(){
+          this.setfollowers()
+        }
+      },
+      followings:{
+        handler(){
+          this.setfollowings()
+        }
+      }
+    },
+    created() {
+      if(this.selecteduserinfo.user_id !== this.authUser.user_id)
+        this.hituser(this.selecteduserinfo.user_id)
+    },
+    updated() {
       this.setfstate()
+      this.getfollowings(this.selecteduserinfo.user_id)
+      this.getfollowers(this.selecteduserinfo.user_id)
     },
 }
 </script>

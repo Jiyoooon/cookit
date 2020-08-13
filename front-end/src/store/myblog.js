@@ -7,6 +7,8 @@ export default {
   namespaced: true,
   state: {
     myrecipes: null,
+    likerecipes: null,
+    currentshow: 1,
     selectedrecipe: null,
     selecteduserinfo:{//들어가는 블로그의 유저정보
       email: null,
@@ -36,6 +38,12 @@ export default {
     },
     SET_FLAG(state, payload){
       state.flag = payload
+    },
+    SET_LIKERECIPES(state, recipes) {
+      state.likerecipes = recipes
+    },
+    SET_CURRENTSHOW(state, data) {
+      state.currentshow = data
     }
   },
 
@@ -47,6 +55,7 @@ export default {
       let recipequery = rootState.lookaround.recipequery
       recipequery.user = state.selecteduserinfo.nickname
       recipequery.p = null
+      recipequery.likeUser = null
       const filter = {
         params: recipequery
       }
@@ -55,6 +64,7 @@ export default {
         //   commit('SET_RECIPES',null)
         // })
         .then((res) => {
+          console.log(res.data)
           commit('SET_RECIPES', res.data)
         })
         // .then(()=>{
@@ -78,6 +88,19 @@ export default {
         .catch((err) => {
           console.err(err.response)
           alert(err.response.data.cause)
+        })
+    },
+    fetchLikeRecipes({ rootState, commit, state }) {
+      let recipequery = rootState.lookaround.recipequery
+      recipequery.user = null
+      recipequery.p = null
+      recipequery.likeUser = state.selecteduserinfo.user_id
+      const filter = {
+        params: recipequery
+      }
+      axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes, filter)
+        .then((res) => {
+          commit('SET_LIKERECIPES', res.data)
         })
     },
     getUserInfo({commit,dispatch,rootState, state},user_id){

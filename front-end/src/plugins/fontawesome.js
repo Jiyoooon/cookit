@@ -9,5 +9,3 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(fas, far, fab)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
-Vue.use(fas, far, fab)
-Vue.use(FontAwesomeIcon)

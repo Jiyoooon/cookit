@@ -1,11 +1,8 @@
 package com.ssafy.cooking.dto;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.List;
 
-import org.springframework.core.io.Resource;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -39,6 +36,14 @@ public class User implements Serializable{
 	private String image_url;
 	private String image_name;
 	
+	private List<SNS> sns_list;
+	
+	public List<SNS> getSns_list() {
+		return sns_list;
+	}
+	public void setSns_list(List<SNS> sns_list) {
+		this.sns_list = sns_list;
+	}
 	public String getImage_name() {
 		return image_name;
 	}
@@ -141,7 +146,7 @@ public class User implements Serializable{
 				+ ", nickname=" + nickname + ", intro=" + intro + ", start_page=" + start_page + ", profile_image="
 				+ profile_image + ", hits=" + hits + ", create_date=" + create_date + ", update_date=" + update_date
 				+ ", sns_type=" + sns_type + ", sns_token_id=" + sns_token_id + ", sns_connect_date=" + sns_connect_date
-				+ ", image_url=" + image_url + ", image_name=" + image_name + "]";
+				+ ", image_url=" + image_url + ", image_name=" + image_name + ", sns_list=" + sns_list + "]";
 	}
 
 	

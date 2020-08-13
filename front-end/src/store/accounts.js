@@ -12,6 +12,8 @@ export default {
     userEmail: cookies.get('user-email'),
     validEmail: false,
     updateTF: false,
+    followers: null,
+    followings: null,
   },
 
   getters: {
@@ -55,6 +57,12 @@ export default {
        console.log('fsdfsf')
        state.updateTF = value
      },
+     SET_FOLLOWERS(state, followers) {
+       state.followers = followers
+     },
+     SET_FOLLOWINGS(state, followings) {
+       state.followings = followings
+     }
   },
 
   actions: {
@@ -165,6 +173,7 @@ export default {
             console.log(state)
             dispatch('fetchUser')
             dispatch('myblog/fetchMyRecipes', null, { root: true })
+            dispatch('myblog/fetchLikeRecipes', null, { root: true })
             return new Promise(function() {
               window.setTimeout(function() {
                 if (state.authUser.start_page) {
@@ -292,13 +301,14 @@ export default {
         alert('!!!!!!')
        })
     },
-    fetchUser({ getters, commit }) {
+    fetchUser({ state, getters, commit, dispatch}) {
       axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
+          console.log(res.data.data)
           commit('SET_USER', res.data.data)
+          dispatch('storage/getfollowings',state.authUser.user_id,{root : true})
         })
         .catch((err) => {
-          console.err(err.response)
           alert(err.response)
         })
     },
@@ -343,6 +353,10 @@ export default {
         formData.append('image_name', updateData.config.image_name)
         formData.append('intro', updateData.config.intro)
         formData.append('start_page', updateData.config.start_page)
+        for (let i=0; i<4; i++) {
+          formData.append(`sns_list[${i}].sns_name`, updateData.sns_list[i].sns_name)
+          formData.append(`sns_list[${i}].sns_url`, updateData.sns_list[i].sns_url)
+        }
 
         // for (let [key, value] of formData.entries()) {
         //   console.log(`${key} : ${value}`)
@@ -509,5 +523,30 @@ export default {
           })
         }
     },
+    fetchFollowers({ state, commit }) {
+      axios.get(SERVER.ROUTES.accounts.follower + String(state.authUser.user_id))
+        .then(res => {
+          console.log(res.data)
+          commit('SET_FOLLOWERS', res.data)
+        })
+    },
+    fetchFollowings({ state, commit }) {
+      axios.get(SERVER.ROUTES.accounts.following + String(state.authUser.user_id))
+        .then(res => {
+          commit('SET_FOLLOWINGS', res.data)
+        })
+    },
+    hituser(state,payload){
+      console.log(state)
+      console.log("유저히트!"+payload)
+      axios.put(SERVER.ROUTES.accounts.hituser+String(payload))
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        alert("실패!")
+        console.log(err)
+      })
+    }
   },
 }

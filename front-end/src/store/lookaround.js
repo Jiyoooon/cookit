@@ -20,9 +20,11 @@ export default {
       like_large:null,
       like_medium:null,
       like_small:null,
+      order:0,
       p:0,//무한 스크롤에서 설정
       query:null,// 서치바에서 설정
-      user:null,// 해당
+      user:null,
+      likeUser:null,// 해당
     },
     recipes:[],
     ingredients:null,//모든재료를 저장
@@ -46,17 +48,24 @@ export default {
         like_large:null,
         like_medium:null,
         like_small:null,
+        order:null,
         p:0,
         query:null,
         user:null,
+        likeUser:null,
       }
       state.recipes = []
     },
     setRecipequeryUserId(state,payload){
-      state.recipequery.user = payload
+      state.recipequery.user =  payload
     },
     setRecipequeryCategory(state,payload){
       state.recipequery.category = payload
+    },
+    setRecipequeryOrder(state,payload){
+      console.log(payload)
+      console.log(typeof(payload))
+      state.recipequery.order = payload
     },
     setRecipequery(state,payload){
       state.recipequery.query=payload.querydata
@@ -107,8 +116,7 @@ export default {
         }
       }
       state.recipequery.category = payload.category
-      // console.log("레시피쿼리 최종")
-      // console.log(state.recipequery)
+      state.recipequery.order = payload.order
     },
     setRecipes(state,recipes){
       state.recipes = [...state.recipes, ...recipes]

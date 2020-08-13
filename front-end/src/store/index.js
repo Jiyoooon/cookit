@@ -34,7 +34,7 @@ export default new Vuex.Store({
   },
   plugins: [
     createPersistedState({
-      paths: ['lookaround', 'myblog', 'recipes'],
+      paths: ['lookaround', 'myblog', 'recipes','storage'],
     })
   ]
 })

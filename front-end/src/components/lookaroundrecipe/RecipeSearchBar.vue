@@ -56,6 +56,7 @@
               />
               <!-- 추가할 재료 자동 완성 -->
               <v-list
+                autofocus
                 ref="Slist"
                 v-if="searchtextS && this.selecteditems.length"
                 style="position: absolute; margin-top: -10px; z-index: 10; width: 95.6%; overflow-y: scroll; height: auto; max-height: 300px"
@@ -128,6 +129,12 @@
         />
         </v-col>
       </v-row>
+      <!-- 레시피 정렬 -->
+      <v-row>
+          <span @click="ordering(1)">최신순</span>
+          <span @click="ordering(2)">조회순</span>
+          <span @click="ordering(3)">추천순</span>
+      </v-row>
     </b-container>
   </div>
 </template>
@@ -160,6 +167,7 @@ export default {
       searchtextS: "",
       searchtextE: "",
       selectedcategory: 0,
+      order: null, // 레시피 정렬
     };
   },
   components: {
@@ -172,6 +180,7 @@ export default {
         querydata: this.searchtextT,
         selectedarray: this.selected,
         category: this.selectedcategory,
+        order: this.order,
       });
     },
     blinkChip(index) {
@@ -214,10 +223,6 @@ export default {
         this.blinkChip(index);
       }
     },
-    focusMoveS(payload) {
-      alert("테스트!");
-      alert(payload);
-    },
     deleteSource(item) {
       this.selected.splice(
         this.selected.map((x) => x.ingredientdata.name).indexOf(item), 1);
@@ -241,8 +246,12 @@ export default {
     selectCategory(index) {
       this.selectedcategory = index;
     },
+    ordering(kind){
+        this.order = kind
+        this.searchRecipe();
+    },
     ...mapActions("lookaround", [ "setRecipequery", "getFilteredRecipes" ]),
-    ...mapMutations("lookaround", [ "initPage", "setRecipequeryCategory", "initRecipes", ]),
+    ...mapMutations("lookaround", [ "initPage", "setRecipequeryCategory", "initRecipes","setRecipequeryOrder" ]),
   },
   computed: {
     ...mapState("lookaround", ["ingredients", "recipequery"]),

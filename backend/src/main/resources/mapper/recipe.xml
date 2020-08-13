@@ -166,6 +166,7 @@
 		FROM Comments c
 		JOIN User u on c.comment_user = u.user_id
 		WHERE recipe_id = #{recipe_id}
+		ORDER BY create_date DESC
 	</select>
 	
 	<insert id = "addCommnet">
