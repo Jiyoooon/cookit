@@ -16,10 +16,10 @@
       <ingredient />
       <hr>
       <cookingstep />
-      <div  id= "button">
+      <div  id= "button" class="noprint">
             <b-icon icon="book" v-b-modal="'my-modal'" scale="1" v-b-tooltip.hover title="가로보기"></b-icon>
       </div>
-      <div @click="scrollToTop" id= "button-bottom">
+      <div @click="scrollToTop" id= "button-bottom" class="noprint">
             <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로" ></b-icon>
     </div>
       <!-- <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button> -->
