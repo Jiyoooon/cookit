@@ -325,16 +325,6 @@ export default {
           return (e.name || "").indexOf(val || "") > -1;
         });
       }
-
-
-    // 뺄 재료 자동 완성 리스트
-    searchtextE(val) {
-        if (val == "" || val == null) this.excludeditems = [];
-        else {
-            this.excludeditems = this.ingredients.filter((e) => {
-            return (e.name || "").indexOf(val || "") > -1;
-            });
-        }
     },
     selectedcategory() {
       this.setRecipequeryCategory(this.selectedcategory);
