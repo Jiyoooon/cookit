@@ -1,6 +1,6 @@
 <template>
   <div id="recipe">
-      <div v-if="authUser" data-html2canvas-ignore="true">
+      <!-- <div v-if="authUser" data-html2canvas-ignore="true"> -->
         <div v-if="authUser && checkdeleteauth" data-html2canvas-ignore="true">
         <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
         </div>
@@ -12,7 +12,6 @@
         <div>
             <button @click="doPrint">레시피 출력하기</button>
         </div>
-      </div>
       <recipe />
       <hr>
       <ingredient />
@@ -24,8 +23,8 @@
       <div @click="scrollToTop" id= "button-bottom" class="noprint">
             <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로" ></b-icon>
       </div>
-      <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button> -->
-    <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true"/> -->
+      <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button>
+    <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true"/>
     <commentList data-html2canvas-ignore="true"/>
         <!-- The modal -->
         <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
