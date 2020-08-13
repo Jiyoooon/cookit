@@ -126,7 +126,7 @@ export default {
         setThumbnail(e) {
 					const file = e.target.files;
 					if (file.length == 0) {
-            this.imageUrl = null
+            this.imageUrl = this.selectedRecipe.main_image
             return;
           }
           this.imageUrl = URL.createObjectURL(file[0])
@@ -143,6 +143,7 @@ export default {
         }
     },
     created() {
+      console.log(this.selectedRecipe)
         this.inputInitialValue()
     }
 }
