@@ -23,7 +23,7 @@
             <b-row>
               <b-col>
                 <b-form-file enctype="multipart/form-data" v-model="step.step_image_file" accept="image/*" placeholder="사진 추가"
-                  @change="setThumbnail(index)"></b-form-file>
+                  :id="index+''" @change="setThumbnail"></b-form-file>
               </b-col>
             </b-row>
             <b-row>
@@ -61,7 +61,7 @@ export default {
 	name: 'CookingStep',
 	data() {
 		return {
-			imageUrl: []
+			imageUrl: {},
 		}
 	},
 	computed: {
@@ -70,10 +70,18 @@ export default {
 	},
 	methods: {
 		...mapMutations('editor', ['addCookingStep', 'deleteCookingStep', 'SET_COOKINGSTEP']),
-		setThumbnail(e, index) {
+		setThumbnail(e) {
       console.log(e)
-			const file = e.target.files[0];
-			this.imageUrl[index] = URL.createObjectURL(file);
+      const file = e.target.files[0];
+      // console.log(file)
+      const index = Number(e.path[0].id);
+      console.log(index)
+      if (!file) {
+        this.imageUrl[index] = this.selectedRecipe.cookingStep[index].step_image
+        return
+      }
+      this.imageUrl[index] = URL.createObjectURL(file);
+      // console.log(this.imageUrl)
 		},
     },
     created() {
@@ -85,10 +93,19 @@ export default {
                 tip: this.selectedRecipe.cookingStep[i].tip,
                 step_image_file: null,
             }
-            this.imageUrl.push(this.selectedRecipe.cookingStep[i].step_image)
+            this.imageUrl[`${i}`] = this.selectedRecipe.cookingStep[i].step_image
             cookstep.push(step)
         }
+        console.log(this.imageUrl)
         this.SET_COOKINGSTEP(cookstep)
+    },
+    watch: {
+      imageUrl: {
+        deep: true,
+        handler() {
+
+        }
+      }
     }
 }
 </script>
