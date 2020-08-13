@@ -187,7 +187,6 @@ public class RecipeController {
 
 	@ApiOperation(value = "레시피 수정하기", notes = "레시피 추가한다.")
 	@PutMapping("token/revise") //// token
-//	@PutMapping("revise") //// token
 	public ResponseEntity<HashMap<String, Object>> reviseRecipe(@ModelAttribute("recipeData") RecipeDetail recipeData,
 			HttpServletRequest request) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -200,8 +199,7 @@ public class RecipeController {
 
 		Map<String, Object> claims = jwtService.get(token);
 		int uid = Integer.parseInt((String) claims.get("uid"));
-//		int uid = 31;
-//		recipeData.setRecipe_id(2738);
+
 		try {
 			if (recipeData == null) {
 				result = "fail";
@@ -213,10 +211,10 @@ public class RecipeController {
 				if(recipeservice.reviseRecipe(uid, recipeData, baseUrl) < 1) {
 					map.put("cause", "유저 아이디 불일치");
 					result = "fail";
+				} else {
+					result = "success";
 				}
 			}
-
-			result = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = "fail";

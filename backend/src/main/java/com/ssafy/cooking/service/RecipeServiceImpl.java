@@ -62,7 +62,13 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public List<CookingStep> getCookingSteps(int recipe_id) {
-		return recipeDao.getCookingSteps(recipe_id);
+		List<CookingStep> cookingSteps = recipeDao.getCookingSteps(recipe_id);
+		for (CookingStep cs : cookingSteps) {
+			if(cs.getDescription() != null) {
+				cs.setTime(Timer.getTimer(cs.getDescription()));
+			}
+		}
+		return cookingSteps;
 	}
 
 	@Override
@@ -111,7 +117,7 @@ public class RecipeServiceImpl implements RecipeService {
 		if (recipeDetail.getCookingStep() != null) {
 			for (int i = 0; i < recipeDetail.getCookingStep().size(); i++) {
 				CookingStep step = recipeDetail.getCookingStep().get(i);
-				step.setTime(Timer.getTimer(step.getDescription()));
+				
 				if (step.getStep_image_file() != null) {
 					try {
 						String stepImageName = imageName + Integer.toString(i);
@@ -167,7 +173,7 @@ public class RecipeServiceImpl implements RecipeService {
 			if (recipeData.getCookingStep() != null) {
 				for (int i = 0; i < recipeData.getCookingStep().size(); i++) {
 					CookingStep step = recipeData.getCookingStep().get(i);
-					step.setTime(Timer.getTimer(step.getDescription()));
+					
 					if (step.getStep_image_file() != null) {
 						try {
 							String stepImageName = imageName + Integer.toString(i);
