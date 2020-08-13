@@ -96,7 +96,7 @@ export default {
     created() {
       this.isliked = this.isLike
       // this.likenumber = this.recipe.likeNum
-    }
+    },
     // updated() {
     //   if (this.tf)
     //     this.isliked = this.isLike
