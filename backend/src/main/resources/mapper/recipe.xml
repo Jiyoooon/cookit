@@ -89,7 +89,6 @@
 	<delete id="deleteCookingSteps">
 		DELETE FROM Cooking_steps
 		WHERE 	recipe_id = #{recipe_id}
-			AND	steps > #{step}
 	</delete>
 	
 	<select id="getRecipes" resultType="Recipe">

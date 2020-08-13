@@ -43,6 +43,6 @@ public interface RecipeDao {
 	void setLike(int recipe_id, int uid);
 	int deleteLike(int recipe_id, int uid);
 	List<Integer> getLikeList(Integer recipe_id);
-	void deleteCookingSteps(int recipe_id, int step);
+	void deleteCookingSteps(int recipe_id);
 	void deleteIngredients(int recipe_id);
 }
