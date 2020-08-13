@@ -2,6 +2,8 @@ import router from '../router'
 import axios from 'axios'
 import SERVER from '../api/url.js'
 
+
+
 export default {
   flag: false,
   namespaced: true,
@@ -51,9 +53,10 @@ export default {
     GoMyBlog() {
       router.push({ name: 'MyBlogListView' })
     },
-    fetchMyRecipes({ rootState, commit, state }) {
+    fetchMyRecipes({ rootState, commit }, user) {
       let recipequery = rootState.lookaround.recipequery
-      recipequery.user = state.selecteduserinfo.nickname
+      // recipequery.user = state.selecteduserinfo.nickname
+      recipequery.user = user.user_id
       recipequery.p = null
       recipequery.likeUser = null
       const filter = {
@@ -64,20 +67,10 @@ export default {
         //   commit('SET_RECIPES',null)
         // })
         .then((res) => {
-          console.log(res.data)
           commit('SET_RECIPES', res.data)
+          // commit('SET_FLAG', true)
+          // console.log(state.flag)
         })
-        // .then(()=>{
-        //   if(state.flag == false){
-        //     router.push({name : 'Home'})
-        //     router.push({name : 'MyBlogListView'})
-        //     commit('SET_FLAG',true)
-        //   }
-        // })
-        // .catch((err) => {
-        //   console.err(err.response)
-        //   alert(err.response.data.cause)
-        // })
     },
     selectedRecipe({ commit }, recipe_id) {
       axios.get(SERVER.ROUTES.myrecipe.selectedrecipe + String(recipe_id))
@@ -108,7 +101,7 @@ export default {
         .then((res) => {
           commit('lookaround/initializing',null,{root:true})
           commit('SET_USERINFO', res.data.data)
-          commit('lookaround/setRecipequeryUserId',res.data.data.nickname,{root:true})
+          commit('lookaround/setRecipequeryUserId',res.data.data.user_id,{root:true})
           if (rootState.accounts.authUser.user_id == state.selecteduserinfo.user_id) {
             dispatch('GoMyBlog')
           } else {

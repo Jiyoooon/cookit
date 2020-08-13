@@ -18,6 +18,7 @@ import RecipeDetailView from '../views/recipeview/RecipeDetailView.vue'
 import store from '../store'
 
 
+
 Vue.use(VueRouter)
 
   const routes = [
@@ -152,7 +153,7 @@ router.beforeEach((to, from, next) => {
   const RequiredLoggedOutPages = ['Login', 'Signup', 'EmailAuthView', 'PasswordFindView']
   const RequiredAuthorized = ['Signup']
   const RequiredPasswordAuth = ['UserInfoView']
-  const BeforeUpdated = ['Logout', 'MyBlogListView', 'Login', 'Signup', 'EmailAuthView', 'PasswordFindView', 'LookAroundRecipeView']
+  const BeforeUpdated = ['Logout', 'MyBlogListView', 'Login', 'Signup', 'EmailAuthView', 'PasswordFindView', 'LookAroundRecipeView', 'Home']
 
   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
   const IsAuthorized = Vue.$cookies.isKey('user-email')
@@ -211,7 +212,7 @@ router.beforeEach((to, from, next) => {
   //       }
   //     }) 
   //   }    
-  console.log(store.state.accounts.updateTF)
+  
   if (!IsLoggedIn && LoggedInRequired) {
     next({ name: 'Login' })
   } else if (IsLoggedIn && LoggedOutRequired) {

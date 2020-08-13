@@ -170,12 +170,11 @@ export default {
         .then((res) => {
           if (res.data.result == 'success') {
             commit('SET_TOKEN', res.headers.token)
-            console.log(state)
             dispatch('fetchUser')
-            dispatch('myblog/fetchMyRecipes', null, { root: true })
-            dispatch('myblog/fetchLikeRecipes', null, { root: true })
             return new Promise(function() {
               window.setTimeout(function() {
+                dispatch('myblog/fetchMyRecipes', state.authUser.user_id, { root: true })
+                dispatch('myblog/fetchLikeRecipes', null, { root: true })
                 if (state.authUser.start_page) {
                   $("#myblog").addClass("active");
                   $("#browsing").removeClass("active");
@@ -304,7 +303,6 @@ export default {
     fetchUser({ state, getters, commit, dispatch}) {
       axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
-          console.log(res.data.data)
           commit('SET_USER', res.data.data)
           dispatch('storage/getfollowings',state.authUser.user_id,{root : true})
         })
@@ -313,7 +311,6 @@ export default {
         })
     },
     updateUser({ dispatch, state, commit }, updateData) {
-      console.log(updateData.valid.filesize)
       if (!updateData.valid.password) {
         this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
           title: 'Confirmation',
@@ -453,7 +450,7 @@ export default {
         alert(err.response)
       })
     },
-    signup({ commit, dispatch }, signupData) {
+    signup({ commit, dispatch, state }, signupData) {
       if (!signupData.valid.password) {
         this._vm.$root.$bvModal.msgBoxOk('비밀번호를 확인해주세요.', {
           title: 'Confirmation',
@@ -492,7 +489,7 @@ export default {
             if (res.data.result == 'success') {
               commit('SET_TOKEN', res.headers.token)
               dispatch('fetchUser')
-              dispatch('myblog/fetchMyRecipes', null, { root: true })
+              dispatch('myblog/fetchMyRecipes', state.authUser.user_id, { root: true })
               this._vm.$root.$bvModal.msgBoxOk('가입되었습니다.', {
                 title: 'Confirmation',
                 size: 'sm',
@@ -526,7 +523,6 @@ export default {
     fetchFollowers({ state, commit }) {
       axios.get(SERVER.ROUTES.accounts.follower + String(state.authUser.user_id))
         .then(res => {
-          console.log(res.data)
           commit('SET_FOLLOWERS', res.data)
         })
     },
@@ -537,8 +533,8 @@ export default {
         })
     },
     hituser(state,payload){
-      console.log(state)
-      console.log("유저히트!"+payload)
+      // console.log(state)
+      // console.log("유저히트!"+payload)
       axios.put(SERVER.ROUTES.accounts.hituser+String(payload))
       .then(res => {
         console.log(res)

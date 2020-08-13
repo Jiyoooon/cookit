@@ -112,7 +112,7 @@
 			AND r.recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
-			AND u.nickname = #{user}
+			AND recipe_user = #{user}
 		</if>
 		<if test="category != null and category != ''">
 			AND category_id = #{category}
@@ -288,12 +288,13 @@
 		WHERE 1 = 1
 		<if test="query != null and query != ''">
 			AND title LIKE CONCAT('%', #{query}, '%')
+			OR tag LIKE CONCAT('%', #{query}, '%')
 		</if>
 		<if test="id != null and id != '' and id != 0">
 			AND r.recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
-			AND u.nickname = #{user}
+			AND recipe_user = #{user}
 		</if>
 		<if test="category != null and category != ''">
 			AND category_id = #{category}
