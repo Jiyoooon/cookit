@@ -92,11 +92,12 @@
 	</delete>
 	
 	<select id="getRecipes" resultType="Recipe">
-		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
-		category_id, title, description, main_image, servings, cooking_time, level,
-		tag, r.hits, r.create_date, r.update_date, r.delete_date
+		SELECT r.recipe_id, r.recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
+		r.category_id, r.title, r.description, r.main_image, r.servings, r.cooking_time, r.level,
+		r.tag, r.hits, r.create_date, r.update_date, r.delete_date, count(c.comment_id) as comment_cnt
 		FROM Recipe r
 		JOIN User u on r.recipe_user = u.user_id
+		JOIN Comments c on r.recipe_id = c.recipe_id
 		<if test="order != null and order == 3">
         	LEFT JOIN Likes l USING(recipe_id)
 		</if>
@@ -108,7 +109,7 @@
 			AND title LIKE CONCAT('%', #{query}, '%')
 		</if>
 		<if test="id != null and id != '' and id != 0">
-			AND recipe_id = #{id}
+			AND r.recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
 			AND u.nickname = #{user}
@@ -210,9 +211,9 @@
 	</select>
 	
 	<select id="getRecipes2" resultType="Recipe">
-		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
-				category_id, title, description, main_image, servings, cooking_time, level,
-				tag, r.hits, r.create_date, r.update_date, r.delete_date, k.cnt
+		SELECT r.recipe_id, r.recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
+				r.category_id, r.title, r.description, r.main_image, r.servings, r.cooking_time, r.level,
+				r.tag, r.hits, r.create_date, r.update_date, r.delete_date, k.cnt, (select count(*) from Comments c where r.recipe_id = c.recipe_id) as comments
 		FROM Recipe r JOIN (
 			SELECT a.recipe_id, count(a.recipe_id) as cnt
 			FROM 
@@ -289,7 +290,7 @@
 			AND title LIKE CONCAT('%', #{query}, '%')
 		</if>
 		<if test="id != null and id != '' and id != 0">
-			AND recipe_id = #{id}
+			AND r.recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
 			AND u.nickname = #{user}

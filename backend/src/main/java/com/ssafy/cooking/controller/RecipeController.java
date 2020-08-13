@@ -80,8 +80,8 @@ public class RecipeController {
 			@RequestParam(value = "likeUser", required = false) Integer likeUser,
 			@ModelAttribute(value = "filter") Filter filter, HttpServletRequest request) throws Exception {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		System.out.println("query = " + query);
-		System.out.println("user = " + user);
+//		System.out.println("query = " + query);
+//		System.out.println("user = " + user);
 		return new ResponseEntity<List<Recipe>>(
 				recipeservice.getRecipes2(p, id, user, query, category, order, likeUser, filter, baseUrl),
 				HttpStatus.OK);

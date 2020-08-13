@@ -326,20 +326,14 @@ public class UserController {
     	map.put("result", result);
     	
     	String token = request.getHeader("Authorization").split(" ")[1];
+    	String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 
 		Map<String, Object> claims = jwtService.get(token);
 		String uid = (String)claims.get("uid");
 		try {
-			User user = userService.getUser(uid);
+			User user = userService.getUser(uid, baseUrl);
 			
 			user.setPassword("");
-			String imageName = user.getProfile_image();
-			String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
-			if(imageName != null && !imageName.equals("")) {
-				user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
-			}else {
-				user.setImage_url(baseUrl+"/images/profile/default_image.png");
-			}
 			map.put("data", user);
 			
 			return new ResponseEntity<HashMap<String, Object>>(map, status);
@@ -362,18 +356,14 @@ public class UserController {
     	
     	String result = "fail";
     	HttpStatus status = HttpStatus.ACCEPTED;
+    	String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
     	
 		try {
-			User user = userService.getUser(id);
+			User user = userService.getUser(id, baseUrl);
 			if(user == null) {
 				map.put("cause", "회원정보 없음");
 			}else {
 				user.setPassword("");
-				String imageName = user.getProfile_image();
-				if(imageName != null && !imageName.equals("")) {
-					String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
-					user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
-				}
 				result = "success";
 				map.put("data", user);
 			}
