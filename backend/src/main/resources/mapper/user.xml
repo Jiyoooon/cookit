@@ -56,7 +56,7 @@
 	</delete>
 	
 	<select id="getUser" resultType="User">
-		SELECT user_id, email, nickname, profile_image, intro, image_name, start_page, create_date
+		SELECT user_id, email, nickname, profile_image, intro, image_name, hits, start_page, create_date
 		FROM User
 		WHERE user_id = #{uid}
 	</select>
