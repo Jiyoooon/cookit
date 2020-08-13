@@ -19,6 +19,7 @@ axios.defaults.baseURL = 'http://i3a201.p.ssafy.io:8080/cooking-0.0.1-SNAPSHOT';
 
 export default new Vuex.Store({
   state: {
+    temp: 1
   },
   mutations: {
   },

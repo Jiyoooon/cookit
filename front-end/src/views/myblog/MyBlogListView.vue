@@ -72,7 +72,7 @@ export default {
         ...mapMutations('lookaround',['setRecipequeryUserId']),
         showMyRecipes() {
             this.SET_CURRENTSHOW(1)
-            this.fetchMyRecipes()
+            this.fetchMyRecipes(this.authUser)
             // this.SET_LIKERECIPES(null)
         },
         showLikeRecipes() {
@@ -95,16 +95,19 @@ export default {
     },
     created() {
         this.SET_USERINFO(this.authUser)
-        this.getUserInfo(this.selecteduserinfo.user_id)
+        this.getUserInfo(this.authUser.user_id)
+        console.log('!!!!')
+        // console.log(this.selecteduserinfo)
+        // this.fetchMyRecipes()
     },
     // watch: {
     //     myrecipes: {
     //         deep: true,
     //         handler() {
-
+                
     //         }
     //     }
-    // }
+    // },
 }
 </script>
 

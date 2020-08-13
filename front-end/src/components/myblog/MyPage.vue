@@ -1,6 +1,7 @@
 <template>
 <!-- <b-col lg-3> -->
   <div>
+
       <v-card
     :loading="loading"
     class="mx-auto my-12"
@@ -63,7 +64,7 @@
         active-class="deep-purple accent-4 white--text"
         column
       >
-        <v-chip><a :href="authUser.sns_list[0].sns_url" target=_blank><i class="fab fa-facebook-square"></i></a></v-chip>
+        <v-chip v-if="authUser.sns_list[0].sns_url"><a :href="authUser.sns_list[0].sns_url" target=_blank><i class="fab fa-facebook-square"></i></a></v-chip>
 
         <v-chip v-if="authUser.sns_list[1].sns_url"><a :href="authUser.sns_list[1].sns_url" target=_blank><i class="fab fa-instagram"></i></a></v-chip>
 

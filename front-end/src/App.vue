@@ -55,6 +55,7 @@ export default {
         // ...mapState([ 'me' ]),
         ...mapGetters('accounts', ['isLoggedIn']),
         ...mapState('accounts',['authUser']),
+        ...mapState('myblog', ['myrecipes'])
     },
     methods: {
         afterLeave() {
@@ -115,7 +116,7 @@ export default {
     },
     created(){
       this.getIngredients()
-    }
+    },
 }
 </script>
 

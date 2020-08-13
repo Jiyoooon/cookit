@@ -1,6 +1,5 @@
 <template>
   <div>
-      <button>asdfasdfasdf</button>
       <timervue/>
       <div v-if="checkdeleteauth">
       <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
@@ -93,7 +92,7 @@ export default {
         }
     },
     created() {
-        // this.fetchRecipe(),
+        this.fetchRecipe(this.$route.params.recipe_id),
         this.fetchRecipeUser()
         this.fetchComments()
     },
