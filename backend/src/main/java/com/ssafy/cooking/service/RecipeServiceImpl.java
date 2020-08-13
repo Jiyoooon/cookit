@@ -83,14 +83,16 @@ public class RecipeServiceImpl implements RecipeService {
 		else
 			imageName = Long.toString(System.currentTimeMillis());
 		
-		if(recipeDetail.getCooking_time() == null)
+		if(recipeDetail.getCooking_time() == null || recipeDetail.getCooking_time() == 0)
 			recipeDetail.setCooking_time(1);
-		if(recipeDetail.getLevel() == null)
+		if(recipeDetail.getLevel() == null || recipeDetail.getLevel() == 0)
 			recipeDetail.setLevel(1);
-		if(recipeDetail.getServings() == null)
+		if(recipeDetail.getServings() == null || recipeDetail.getServings() == 0)
 			recipeDetail.setServings(1);
 		if(recipeDetail.getTag() == null)
 			recipeDetail.setTag("");
+		if (recipeDetail.getCategory_id() == null || recipeDetail.getCategory_id() == 0)
+			recipeDetail.setCategory_id(8);
 		
 		if (recipeDetail.getMain_image_file() != null && !recipeDetail.getMain_image_file().isEmpty()) {
 			try {
