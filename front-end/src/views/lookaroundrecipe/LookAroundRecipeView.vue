@@ -10,9 +10,7 @@
                     </RecipeCard>
                 </v-flex>
             </v-layout>
-        <div @click="scrollToTop" id="button-bottom">
-            <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로"></b-icon>
-        </div>
+            <font-awesome-icon id="top-btn" @click="scrollToTop" :icon="['fas', 'angle-up']" />
         
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="0"
             style="text-align:center; font-size:0.9em; margin-top:3em;">
@@ -92,6 +90,35 @@ export default {
 .RecipeArray{
     margin: 0px auto;
 }
+
+#top-btn {
+    position: fixed;
+    right: 3.5%;
+    bottom: 1em;
+    background-color: white;
+    border-radius: 10%;
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+    font-size: 2.8rem;
+    width: 1em;
+    height: 1em;
+    padding: 2px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  #top-btn {
+    font-size: 2rem;
+    right: 2%;
+  }
+}
+
+@media (max-width: 496px) {
+  #top-btn {
+    bottom: 0.5em;
+  }
+}
+
 
 #button-bottom{
     font-size: 4rem;

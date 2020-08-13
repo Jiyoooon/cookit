@@ -254,11 +254,8 @@ export default {
       else {
         this.selecteditems = this.ingredients
           .sort(function (a, b) {
-            return a.name.length < b.name.length
-              ? -1
-              : a.name.length > b.name.length
-              ? 1
-              : 0;
+            return a.name.length < b.name.length ? -1
+              : a.name.length > b.name.length ? 1 : 0;
           })
           .filter((e) => {
             return (e.name || "").indexOf(val || "") > -1;
@@ -269,7 +266,12 @@ export default {
     searchtextE(val) {
       if (val == "" || val == null) this.excludeditems = [];
       else {
-        this.excludeditems = this.ingredients.filter((e) => {
+        this.excludeditems = this.ingredients
+          .sort(function (a, b) {
+            return a.name.length < b.name.length ? -1
+              : a.name.length > b.name.length ? 1 : 0;
+          })
+          .filter((e) => {
           return (e.name || "").indexOf(val || "") > -1;
         });
       }
