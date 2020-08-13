@@ -1,25 +1,30 @@
 <template>
     <div id="lookaround">
-        <RecipeSearchBar/>
+        <RecipeSearchBar :order="order"/>
+        
+        <!-- 레시피 정렬 -->
+        <div class="sort-list">
+          <div v-for="(item, index) in sort" @click="ordering(index + 1)" 
+          :class="(index+1==order)?'sort-item selected':'sort-item default'" :key="String(item)">
+          {{ item }}</div>
+        </div>
+
         <hr id="divider">
         <div class="RecipeArray">
         <v-container fluid grid-list-md >
             <v-layout row wrap >
-                <v-flex xs12 sm6 md4 lg3 xl2 v-for="recipeinfo in recipes" :key="recipeinfo.recipe_id" style="margin:auto%" >
+                <v-flex xs12 sm6 md4 lg3 xl2 v-for="(recipeinfo, index) in recipes" :key="index" style="margin:auto%" >
                     <RecipeCard :recipe="recipeinfo" >
                     </RecipeCard>
                 </v-flex>
             </v-layout>
-        <div @click="scrollToTop" id="button-bottom">
-            <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로"></b-icon>
-        </div>
+            <font-awesome-icon id="top-btn" @click="scrollToTop" :icon="['fas', 'angle-up']" />
         
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="0"
             style="text-align:center; font-size:0.9em; margin-top:3em;">
             <b-spinner v-if="numberofgetrecipes != 0" label="Spinning" ></b-spinner>
             <div v-if="numberofgetrecipes == 0">더 이상 불러올 레시피가 없어요. 다시 검색해볼까요?</div>
         </div>
-        
         <!-- <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
         </v-container>
         </div>
@@ -33,17 +38,25 @@ import RecipeSearchBar from "@/components/lookaroundrecipe/RecipeSearchBar.vue"
 import RecipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
 import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
-    data(){
-        return{
-            busy: false
-        }
-    },
+  data(){
+    return{
+      busy: false,
+            
+      // 레시피 정렬
+      sort: ['최신순', '조회순', '추천순'],
+      order: 1,
+      }
+  },
     components:{
         RecipeSearchBar,
         RecipeCard,
         InfiniteLoading,
     },
-    methods:{
+  methods:{
+    ordering(value){
+      this.order = value;
+      $route.meta.scrollToTop = true;
+    },
         setBusy(){
             this.busy = false
         },
@@ -77,6 +90,7 @@ export default {
 <style>
 #lookaround {
   width: 90%;
+  min-height: 200vh;
   display: block;
   margin: 0px auto;
   background-color: #fff;
@@ -89,9 +103,56 @@ export default {
   }
 }
 
+.sort-list {
+  display: block;
+  text-align: right;
+  margin-bottom: -0.5em;
+}
+
+.sort-item {
+  display: inline;
+  padding-right: 18px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.sort-item.selected {
+  font-weight: 700;
+  color: #53AAA1;
+}
+
 .RecipeArray{
     margin: 0px auto;
 }
+
+#top-btn {
+    position: fixed;
+    right: 3.5%;
+    bottom: 1em;
+    background-color: white;
+    border-radius: 10%;
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+    font-size: 2.8rem;
+    width: 1em;
+    height: 1em;
+    padding: 2px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  #top-btn {
+    font-size: 2rem;
+    right: 2%;
+  }
+}
+
+@media (max-width: 496px) {
+  #top-btn {
+    bottom: 0.5em;
+  }
+}
+
 
 #button-bottom{
     font-size: 4rem;

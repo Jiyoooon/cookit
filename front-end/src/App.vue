@@ -306,14 +306,14 @@ export default {
 #app-footer li {
   position: relative;
   display: inline-block;
-  padding: 12px;
+  padding: 2px 12px;
   white-space: nowrap;
   text-decoration: none;
   color: white;
 }
 
 #app-footer .copyright {
-  padding: 10px;
+  padding: 25px 0 15px 0;
 }
 
 #app-footer a {

@@ -136,12 +136,6 @@
         />
         </v-col>
       </v-row>
-      <!-- 레시피 정렬 -->
-      <v-row>
-          <span @click="ordering(1)">최신순</span>
-          <span @click="ordering(2)">조회순</span>
-          <span @click="ordering(3)">추천순</span>
-      </v-row>
     </b-container>
   </div>
 </template>
@@ -174,10 +168,12 @@ export default {
       searchtextS: "",
       searchtextE: "",
       selectedcategory: 0,
-      order: null, // 레시피 정렬
       focus1:null,
       focus2:null,
     };
+  },
+  props: {
+    order: Number,
   },
   components: {
     SelectedSource,
@@ -255,10 +251,6 @@ export default {
     selectCategory(index) {
       this.selectedcategory = index;
     },
-    ordering(kind){
-        this.order = kind
-        this.searchRecipe();
-    },
     // 추가
     focusevent1 (event) {
         switch (event.keyCode) {
@@ -306,25 +298,37 @@ export default {
   watch: {
     // 넣을 재료 자동 완성 리스트
     searchtextS(val) {
-        this.focus1 = null
-        if (val == "" || val == null) this.selecteditems = [];
-        else {
-            this.selecteditems = this.ingredients
-            .sort(function (a, b) {
-                return a.name.length < b.name.length
-                ? -1
-                : a.name.length > b.name.length
-                ? 1
-                : 0;
-            })
-            .filter((e) => {
-                return (e.name || "").indexOf(val || "") > -1;
-            });
-        }
+      this.focus1 = null
+      if (val == "" || val == null) this.selecteditems = [];
+      else {
+        this.selecteditems = this.ingredients
+          .sort(function (a, b) {
+            return a.name.length < b.name.length ? -1
+              : a.name.length > b.name.length ? 1 : 0;
+          })
+          .filter((e) => {
+            return (e.name || "").indexOf(val || "") > -1;
+          });
+      }
     },
     // 뺄 재료 자동 완성 리스트
     searchtextE(val) {
-        this.focus2 = null
+      this.focus2 = null
+      if (val == "" || val == null) this.excludeditems = [];
+      else {
+        this.excludeditems = this.ingredients
+          .sort(function (a, b) {
+            return a.name.length < b.name.length ? -1
+              : a.name.length > b.name.length ? 1 : 0;
+          })
+          .filter((e) => {
+          return (e.name || "").indexOf(val || "") > -1;
+        });
+      }
+
+
+    // 뺄 재료 자동 완성 리스트
+    searchtextE(val) {
         if (val == "" || val == null) this.excludeditems = [];
         else {
             this.excludeditems = this.ingredients.filter((e) => {
@@ -338,6 +342,9 @@ export default {
       this.initRecipes();
       this.getFilteredRecipes();
     },
+    order() {
+      this.searchRecipe();
+    }
   },
 };
 </script>
@@ -396,13 +403,11 @@ export default {
   font-weight:700;
   background-color: #53AAA1;
   color: white;
-  transition: all .2s ease-out;
 }
 
 @media (max-width: 772px) {
   .cate-item {
   cursor: pointer;
-  transition: all .2s ease-out;
   padding: 0px;
   }
 
@@ -410,8 +415,8 @@ export default {
   font-weight:700;
   background-color: transparent;
   color: #53AAA1;
-  transition: all .2s ease-out;
 }
+
 .cate-list::after {
   content:"";
 }
@@ -424,6 +429,7 @@ export default {
 .focus {
     background-color:#eee;
 }
+
 .focusdefault{
     background-color:white;
 }
