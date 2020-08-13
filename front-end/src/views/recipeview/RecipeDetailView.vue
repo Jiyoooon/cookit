@@ -1,6 +1,11 @@
 <template>
   <div>
+      <div v-if="checkdeleteauth">
+      <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
+      </div>
+      <div v-if="checkdeleteauth">
       <button @click="gorecipeupdate">고고</button>
+      </div>
       <recipe />
       <hr>
       <ingredient />
@@ -13,7 +18,8 @@
             <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로" ></b-icon>
     </div>
       <!-- <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button> -->
-
+    <commentCreate />
+    <commentList />
         <!-- The modal -->
         <b-modal size="xl" id="my-modal" title="쿠킹스텝">
             <b-carousel
@@ -46,6 +52,8 @@ import { mapState, mapActions } from 'vuex'
 import cookingstep from '../../components/recipeview/cookingstep.vue'
 import ingredient from '../../components/recipeview/ingredient.vue'
 import recipe from '../../components/recipeview/recipe.vue'
+import commentCreate from '../../components/recipeview/commentCreate.vue'
+import commentList from '../../components/recipeview/commentList.vue'
 
 export default {
     name: 'recipeDetailView',
@@ -53,23 +61,37 @@ export default {
         cookingstep,
         ingredient,
         recipe,
+        commentCreate,
+        commentList,
     },
     computed: {
-        ...mapState('recipes', ['selectedRecipe'])
+        ...mapState('recipes', ['selectedRecipe']),
+        ...mapState('accounts', ['authUser']),
+        checkdeleteauth() {
+            if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
+                return true
+            } else {
+                return false
+            }
+        },
     },
     methods: {
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
-        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser']),
+        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
+        ...mapActions('editor', ['deleteRecipe']),
         gorecipeupdate() {
           console.log('nnnn')
-          this.$router.push({ name: 'RecipeUpdateView'})
+          if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
+              this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
+          }
         }
     },
     created() {
         // this.fetchRecipe(),
         this.fetchRecipeUser()
+        this.fetchComments()
     },
 }
 </script>
@@ -80,7 +102,7 @@ export default {
         box-sizing: content-box;
         position: fixed;
         right: 5vw;
-        bottom: 18vh;
+        bottom: 20vh;
         cursor: pointer;
     }
     #button-bottom{

@@ -38,8 +38,10 @@ public interface UserDao {
 	public int follow(String from, String to);
 	public int unfollow(String from, String to);
 	
-	public List<SNS> getLinkedSNS(String uid);
+	public List<SNS> getAllLinkedSNS(String uid);
+	public SNS getLinkedSNS(String uid, String name);
 	public int insertLinkedSNS(String uid, String name, String url);
 	public int updateLinkedSNS(String uid, String name, String url);
 	public int deleteLinkedSNS(String uid, String name);
+//	public void initialSNS(String uid, String[] snsList);
 }

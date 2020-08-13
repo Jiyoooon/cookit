@@ -64,8 +64,9 @@ import { mapActions, mapGetters } from 'vuex'
       userEmailValid() {
         if (this.userEmail == null || this.userEmail.length == 0) return null
         // 정규식으로 이메일 양식 확인
-        var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i
-        if (this.userEmail.match(regExp) == null) return false
+        var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])+[.]([a-zA-Z]){2,3}$/i
+        if(!regExp.test(this.userEmail)) return false
+        // if (this.userEmail.match(regExp) == null) return false
 
         // 이메일 중복 체크
         this.emailDupCheck(this.userEmail);

@@ -25,10 +25,10 @@ export default {
           flag: false,
           currentPage: 1,
           perPage: 6,
-          paginated_items: {},
+          paginated_items: [],
           currentPageIndex:0,
           nbPages:0,
-          recipes: null,
+         
         }
     },
     components: {
@@ -59,7 +59,6 @@ export default {
             this.changePaginateditems(this.nbPages, this.myrecipes.slice(i,i+this.perPage))
             this.increasenbpages()
           }
-          console.log("before moun : paging 완료")
           // console.log(this.paginated_items[this.currentPage-1])
           // return this.paginated_items[this.currentPage-1];
         },
@@ -68,8 +67,12 @@ export default {
       }
     },
     watch: {
-      myrecipes(){
-        console.log("마이레시피 변화!")
+      myrecipes: {
+        deep: true,
+        handler() {
+          this.currentPageItems();
+          this.totalRows();
+        }
       }
     },
     mounted() {
@@ -84,7 +87,9 @@ export default {
         // },1000);
     },
     created() {
-        this.fetchMyRecipes()
+      // this.fetchMyRecipes()
+      this.currentPageItems();
+      this.totalRows();
     },
 }
 </script>

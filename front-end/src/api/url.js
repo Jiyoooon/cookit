@@ -15,6 +15,11 @@ export default {
             checkkey: '/user/verification/check',
             requestkey: '/user/verification/send/',
             sendnewpassword: '/user/password/',
+            follow: '/user/token/follow/',
+            unfollow: '/user/token/unfollow/',
+            follower: '/user/followers/',
+            following: '/user/following/',
+            hituser: '/user/hits/'
         },
         info: {
             getuserinfo: '/user/',
@@ -24,7 +29,11 @@ export default {
             selectedrecipe: '/recipe/',
             fetchrecipesbytitle: '/recipe/title',
             recipesave: '/recipe/save',
-            recipelike: '/recipe/token/'
+            recipelike: '/recipe/token/',
+            commentcreate: '/recipe/token/',
+            fetchcomments: '/recipe/',
+            deletecomment: '/recipe/token/',
+            updatecomment: '/recipe/token/'
         },
         lookaroundrecipe:{
             getfilteredrecipes: '/recipe/recipes2',
@@ -35,7 +44,8 @@ export default {
         },
         editor: {
             saveRecipe: '/recipe/token/save',
-            updateRecipe: '/recipe/token/revise'
+            updateRecipe: '/recipe/token/revise',
+            deleteRecipe: '/recipe/token/'
         }
     }
 }

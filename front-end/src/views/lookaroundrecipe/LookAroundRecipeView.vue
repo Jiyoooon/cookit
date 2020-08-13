@@ -1,6 +1,6 @@
 <template>
-    <div id="list">
-        <RecipeSearchBar />
+    <div id="lookaround">
+        <RecipeSearchBar/>
         <div class="RecipeArray">
         <v-container fluid grid-list-md >
             <v-layout row wrap >
@@ -46,6 +46,7 @@ export default {
             this.busy = false
         },
         loadMore (){
+            console.log("더 불러오기")
             this.busy = true;
             setTimeout(() => {
                 this.getFilteredRecipes()
@@ -58,7 +59,7 @@ export default {
         ...mapMutations('lookaround',['initializing']),
     },
     computed:{
-        ...mapState('lookaround',['recipes','numberofgetrecipes']),
+        ...mapState('lookaround',['recipes','numberofgetrecipes','ingredients']),
     },
     updated(){
         if(this.numberofgetrecipes != 0){//가져온 데이터수가 0이 아니면 동작
@@ -72,26 +73,31 @@ export default {
 </script>
 
 <style>
-    #button-bottom{
-        font-size: 4rem;
-        box-sizing: content-box;
-        position: fixed;
-        right: 5vw;
-        bottom: 10vh;
-        cursor: pointer;
-    }
-
-    .RecipeArray{
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-#list {
+#lookaround {
   width: 90%;
   display: block;
   margin: 0px auto;
   background-color: #fff;
   padding: 5em 1em 8em 1em;
+}
+
+@media (max-width: 496px) {
+  #lookaround {
+    width: 100%
+  }
+}
+
+.RecipeArray{
+    margin: 0px auto;
+}
+
+#button-bottom{
+    font-size: 4rem;
+    box-sizing: content-box;
+    position: fixed;
+    right: 5vw;
+    bottom: 10vh;
+    cursor: pointer;
 }
 
 </style>

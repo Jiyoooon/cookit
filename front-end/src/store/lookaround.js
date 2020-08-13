@@ -22,7 +22,8 @@ export default {
       like_small:null,
       p:0,//무한 스크롤에서 설정
       query:null,// 서치바에서 설정
-      user:null,// 해당
+      user:null,
+      likeUser:null,// 해당
     },
     recipes:[],
     ingredients:null,//모든재료를 저장
@@ -48,11 +49,15 @@ export default {
         p:0,
         query:null,
         user:null,
+        likeUser:null,
       }
       state.recipes = []
     },
     setRecipequeryUserId(state,payload){
       state.recipequery.user = payload
+    },
+    setRecipequeryCategory(state,payload){
+      state.recipequery.category = payload
     },
     setRecipequery(state,payload){
       state.recipequery.query=payload.querydata
@@ -102,6 +107,9 @@ export default {
           }
         }
       }
+      state.recipequery.category = payload.category
+      console.log("레시피쿼리 최종")
+      console.log(state.recipequery)
     },
     setRecipes(state,recipes){
       state.recipes = [...state.recipes, ...recipes]
@@ -111,10 +119,15 @@ export default {
     },
     setNumberOfGetRecipes(state,payload){
       state.numberofgetrecipes = payload
-      //alert("가져온 레시피 갯수 : " + payload)
     },
     setIngredients(state,payload){
       state.ingredients = payload
+    },
+    initRecipes(state){
+      state.recipes = []
+    },
+    initPage(state){
+      state.recipequery.p=0
     },
 
   },
@@ -138,6 +151,7 @@ export default {
       })
     },
     getFilteredRecipes({commit,state}){
+      console.log(state.recipequery)
       const filter = {
         params:state.recipequery
       }
