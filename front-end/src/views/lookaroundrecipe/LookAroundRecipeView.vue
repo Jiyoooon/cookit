@@ -1,11 +1,19 @@
 <template>
     <div id="lookaround">
-        <RecipeSearchBar/>
+        <RecipeSearchBar :order="order"/>
+        
+        <!-- 레시피 정렬 -->
+        <div class="sort-list">
+          <div v-for="(item, index) in sort" @click="ordering(index + 1)" 
+          :class="(index+1==order)?'sort-item selected':'sort-item default'" :key="String(item)">
+          {{ item }}</div>
+        </div>
+
         <hr id="divider">
         <div class="RecipeArray">
         <v-container fluid grid-list-md >
             <v-layout row wrap >
-                <v-flex xs12 sm6 md4 lg3 xl2 v-for="recipeinfo in recipes" :key="recipeinfo.recipe_id" style="margin:auto%" >
+                <v-flex xs12 sm6 md4 lg3 xl2 v-for="(recipeinfo, index) in recipes" :key="index" style="margin:auto%" >
                     <RecipeCard :recipe="recipeinfo" >
                     </RecipeCard>
                 </v-flex>
@@ -17,7 +25,6 @@
             <b-spinner v-if="numberofgetrecipes != 0" label="Spinning" ></b-spinner>
             <div v-if="numberofgetrecipes == 0">더 이상 불러올 레시피가 없어요. 다시 검색해볼까요?</div>
         </div>
-        
         <!-- <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
         </v-container>
         </div>
@@ -31,17 +38,25 @@ import RecipeSearchBar from "@/components/lookaroundrecipe/RecipeSearchBar.vue"
 import RecipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
 import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
-    data(){
-        return{
-            busy: false
-        }
-    },
+  data(){
+    return{
+      busy: false,
+            
+      // 레시피 정렬
+      sort: ['최신순', '조회순', '추천순'],
+      order: 1,
+      }
+  },
     components:{
         RecipeSearchBar,
         RecipeCard,
         InfiniteLoading,
     },
-    methods:{
+  methods:{
+    ordering(value){
+      this.order = value;
+      $route.meta.scrollToTop = true;
+    },
         setBusy(){
             this.busy = false
         },
@@ -75,6 +90,7 @@ export default {
 <style>
 #lookaround {
   width: 90%;
+  min-height: 200vh;
   display: block;
   margin: 0px auto;
   background-color: #fff;
@@ -85,6 +101,24 @@ export default {
   #lookaround {
     width: 100%
   }
+}
+
+.sort-list {
+  display: block;
+  text-align: right;
+  margin-bottom: -0.5em;
+}
+
+.sort-item {
+  display: inline;
+  padding-right: 18px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.sort-item.selected {
+  font-weight: 700;
+  color: #53AAA1;
 }
 
 .RecipeArray{
