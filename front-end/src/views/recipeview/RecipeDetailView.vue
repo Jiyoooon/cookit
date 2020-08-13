@@ -20,7 +20,7 @@
             <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로" ></b-icon>
     </div>
       <!-- <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button> -->
-    <commentCreate />
+    <commentCreate v-if="isLoggedIn"/>
     <commentList />
         <!-- The modal -->
         <b-modal size="xl" id="my-modal" title="쿠킹스텝">
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import cookingstep from '../../components/recipeview/cookingstep.vue'
 import ingredient from '../../components/recipeview/ingredient.vue'
 import recipe from '../../components/recipeview/recipe.vue'
@@ -69,6 +69,7 @@ export default {
     computed: {
         ...mapState('recipes', ['selectedRecipe']),
         ...mapState('accounts', ['authUser']),
+        ...mapGetters('accounts', ['isLoggedIn']),
         checkdeleteauth() {
             if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
                 return true
