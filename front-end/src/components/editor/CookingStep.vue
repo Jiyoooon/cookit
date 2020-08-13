@@ -33,7 +33,7 @@
             </b-row>
             <b-row>
               <b-col>
-                <img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" width="240px">
+                <b-img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" width="240px" />
                 <span v-else></span>
               </b-col>
             </b-row>

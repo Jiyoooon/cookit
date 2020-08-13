@@ -42,7 +42,111 @@ export default {
     ingrQuery: [],
   },
   getters: {
+    // 레시피 데이터 입력 여부, 글자수 등을 확인
+    // 유효하지 않을 경우 false 리턴, 유효하면 true 리턴
+    isValidRecipe(state) {
+      // [*] 제목이랑 카테고리 필수 & 글자수 제한
+      if(!state.recipe.title) {
+        alert("레시피 제목을 입력하세요.")
+        return false;
+      }
+      if (200 < state.recipe.title.length) {
+        alert("레시피 제목은 200자까지 가능합니다.")
+        return false;
+      }
+      if (state.recipe.description) {
+        if(500 < state.recipe.description.length) {
+          alert("레시피 소개말은 500자까지 가능합니다.")
+          return false;
+        }
+      }
+      if(!state.recipe.category_id) {
+        alert("카테고리를 입력하세요.")
+        return false;
+      }
 
+      // [*] 재료명 하나 이상 입력 필수
+      // 재료 이름만 있는건 가능하지만 양만 있으면 안됨
+      var ingrDone = false;
+      const ingredients = [...state.mainIngr, ...state.subIngr];
+      for (let i = 0; i < ingredients.length; i++) {
+        if(ingredients[i].name) {
+          ingrDone = true;
+        }
+        if (!ingredients[i].name && ingredients[i].quantity) {
+          alert("재료의 이름을 입력하세요.")
+          return false;
+        }
+        if (50 < ingredients[i].quantity) {
+          alert("재료량은 50자까지 가능합니다.")
+          return false;
+        }
+      }
+      if (!ingrDone) {
+        alert("재료를 입력하세요.")
+        return false;
+      }
+
+      // [*] 조리 과정 하나 이상 필수
+      // 조리 과정만 있는건 가능하지만 팁만 있거나 이미지만 있으면 안됨
+      var stepDone = false;
+      for (let i = 0; i < state.cookingStep.length; i++) {
+        if (state.cookingStep[i].description) {
+          stepDone = true;
+        }
+        if ((!state.cookingStep[i].description && state.cookingStep[i].tip)
+        || (!state.cookingStep[i].description && state.cookingStep[i].step_image_url)) {
+          alert("조리 과정을 입력하세요.")
+          return false;
+        }
+      }
+      if (!stepDone) {
+        alert("조리 과정을 한 개 이상 입력하세요.")
+        return false;
+      }
+      return true;
+    },
+    // state에 저장된 레시피 데이터를 바탕으로 formData를 리턴
+    getRecipeData(state) {
+      const ingredients = [...state.mainIngr, ...state.subIngr];
+
+      // [*] 레시피 formData 생성
+      // ingredient[2].key : value 이런 식으로 값이 들어감
+      const recipeData = new FormData();
+      for (let [key, value] of Object.entries(state.recipe)) {
+        if (key == "main_image_file" && value == null) continue;
+        // console.log(`recipe.${key}: ${value}`)
+        recipeData.append(key, value);
+      }
+      
+      for (let i = 0; i < ingredients.length; i++) {
+        if (ingredients[i].name == null && ingredients[i].quantity == null) continue;
+        for (let [key, value] of Object.entries(ingredients[i])) {
+          if(key == "valid") continue;
+          // console.log(`ingredients[${i}].${key}: ${value}`)
+          recipeData.append(`ingredients[${i}].${key}`, value)
+        }
+      }
+
+      for (let i = 0; i < state.cookingStep.length; i++) {
+        if (state.cookingStep[i].description == null && state.cookingStep[i].tip == null
+          && state.cookingStep[i].step_image_file == null) continue;
+        for (let [key, value] of Object.entries(state.cookingStep[i])) {
+          if (key == "step_image_file" && value == null) continue;
+          if (key == "step_image_url") continue;
+          // console.log(`cookingStep[${i}].${key}: ${value}`)
+          recipeData.append(`cookingStep[${i}].${key}`, value)
+        }
+      }
+      return recipeData;
+    },
+    // rootState에 저장된 유저 token을 포함한 header를 리턴
+    getHeader(state, getters, rootState) {
+      return { headers: {
+        'Authorization': `token ${rootState.accounts.authToken}`,
+        'Content-Type': 'multipart/form-data'
+      }};
+    },
   },
   mutations: {
     SET_RECIPE(state, data) {
@@ -114,99 +218,10 @@ export default {
         console.log(err);
       })
     },
-    onSubmitButton({state, rootState}) {
-      // [*] 제목이랑 카테고리 필수 & 글자수 제한
-      if(!state.recipe.title) {
-        alert("레시피 제목을 입력하세요.")
-        return;
-      }
-      if(!state.recipe.category_id) {
-        alert("카테고리를 입력하세요.")
-        return;
-      }
-      if (200 < state.recipe.title.length) {
-        alert("레시피 제목은 200자까지 가능합니다.")
-        return;
-      }
-      if (500 < state.recipe.description.length) {
-        alert("레시피 소개말은 500자까지 가능합니다.")
-        return;
-      }
-
-      // [*] 재료명 하나 이상 입력 필수
-      // 재료 이름만 있는건 가능하지만 양만 있으면 안됨
-      var ingrDone = false;
-      const ingredients = [...state.mainIngr, ...state.subIngr];
-      for (let i = 0; i < ingredients.length; i++) {
-        if(ingredients[i].name) {
-          ingrDone = true;
-        }
-        if (!ingredients[i].name && ingredients[i].quantity) {
-          alert("재료의 이름을 입력하세요.")
-          return;
-        }
-        if (50 < ingredients[i].quantity) {
-          alert("재료량은 50자까지 가능합니다.")
-        }
-      }
-      if (!ingrDone) {
-        alert("재료를 입력하세요.")
-        return;
-      }
-
-      // [*] 조리 과정 하나 이상 필수
-      // 조리 과정만 있는건 가능하지만 팁만 있거나 이미지만 있으면 안됨
-      var stepDone = false;
-      for (let i = 0; i < state.cookingStep.length; i++) {
-        if (state.cookingStep[i].description) {
-          stepDone = true;
-        }
-        if ((!state.cookingStep[i].description && state.cookingStep[i].tip)
-        || (!state.cookingStep[i].description && state.cookingStep[i].step_image_url)) {
-          alert("조리 과정을 입력하세요.")
-          return;
-        }
-      }
-      if (!stepDone) {
-        alert("조리 과정을 한 개 이상 입력하세요.")
-        return;
-      }
-
-      // [*] 레시피 formData 생성
-      // ingredient[2].key : value 이런 식으로 값이 들어감
-      const recipeData = new FormData();
-      for (let [key, value] of Object.entries(state.recipe)) {
-        if (key == "main_image_file" && value == null) continue;
-        // console.log(`recipe.${key}: ${value}`)
-        recipeData.append(key, value);
-      }
-      
-      for (let i = 0; i < ingredients.length; i++) {
-        if (ingredients[i].name == null && ingredients[i].quantity == null) continue;
-        for (let [key, value] of Object.entries(ingredients[i])) {
-          if(key == "valid") continue;
-          // console.log(`ingredients[${i}].${key}: ${value}`)
-          recipeData.append(`ingredients[${i}].${key}`, value)
-        }
-      }
-
-      for (let i = 0; i < state.cookingStep.length; i++) {
-        if (state.cookingStep[i].description == null && state.cookingStep[i].tip == null
-          && state.cookingStep[i].step_image_file == null) continue;
-        for (let [key, value] of Object.entries(state.cookingStep[i])) {
-          if (key == "step_image_file" && value == null) continue;
-          if (key == "step_image_url") continue;
-          // console.log(`cookingStep[${i}].${key}: ${value}`)
-          recipeData.append(`cookingStep[${i}].${key}`, value)
-        }
-      }
-
-      // [*] 헤더 설정
-      const headerConfig = { headers: {
-        'Authorization': `token ${rootState.accounts.authToken}`,
-        'Content-Type': 'multipart/form-data'
-      }}
-      
+    onSubmitButton({ getters }) {
+      if(!getters.isValidRecipe) return;
+      const recipeData = getters.getRecipeData;
+      const headerConfig = getters.getHeader;
       // [*] POST
       axios.post(SERVER.ROUTES.editor.saveRecipe, recipeData, headerConfig)
       .then((res) => {
@@ -218,39 +233,11 @@ export default {
         console.log(err)
       })
     },
-    onSubmitButtonforUpdate({state, rootState}) {
-      console.log('gkgkgkgkg')
-      console.log(state.recipe)
-      const recipeData = new FormData();
-      for (let [key, value] of Object.entries(state.recipe)) {
-        if (key == "main_image_file" && value == null) continue;
-        console.log(`recipe.${key}: ${value}`)
-        recipeData.append(key, value);
-      }
+    onSubmitButtonforUpdate({ getters }) {
+      if(!getters.isValidRecipe) return;
+      const recipeData = getters.getRecipeData;
+      const headerConfig = getters.getHeader;
       
-      const ingredients = [...state.mainIngr, ...state.subIngr];
-      for (let i = 0; i < ingredients.length; i++) {
-        if (ingredients[i].name == null && ingredients[i].quantity == null) continue;
-        for (let [key, value] of Object.entries(ingredients[i])) {
-          console.log(`ingredients[${i}].${key}: ${value}`)
-          recipeData.append(`ingredients[${i}].${key}`, value)
-        }
-      }
-
-      for (let i = 0; i < state.cookingStep.length; i++) {
-        if (state.cookingStep[i].description == null && state.cookingStep[i].tip == null
-          && state.cookingStep[i].step_image_file == null) continue;
-        for (let [key, value] of Object.entries(state.cookingStep[i])) {
-          if (key == "step_image_file" && value == null) continue;
-          console.log(`cookingStep[${i}].${key}: ${value}`)
-          recipeData.append(`cookingStep[${i}].${key}`, value)
-        }
-      }
-
-      const headerConfig = { headers: {
-        'Authorization': `token ${rootState['accounts/authToken']}`,
-        'Content-Type': 'multipart/form-data'
-      }}
       axios.put(SERVER.ROUTES.editor.updateRecipe, recipeData, headerConfig)
       .then((res) => {
         console.log(res)
@@ -260,7 +247,7 @@ export default {
         console.log(err)
       })
     },
-    deleteRecipe({ rootState }, recipe_id) {
+    deleteRecipe({ getters }, recipe_id) {
       this._vm.$root.$bvModal.msgBoxConfirm('한번 삭제된 데이터는 복구되지 않습니다.', {
         title: '정말로 삭제하시겠습니까?',
         size: 'md',
@@ -274,10 +261,7 @@ export default {
       })
         .then((ans) => {
           if (ans) {
-            const headerConfig = { headers: {
-              'Authorization': `token ${rootState.accounts.authToken}`,
-              'Content-Type': 'multipart/form-data'
-            }}
+            const headerConfig = getters.getHeader;
             axios.delete(SERVER.ROUTES.editor.deleteRecipe + String(recipe_id), headerConfig)
             .then(res => {
               console.log(res.data)
