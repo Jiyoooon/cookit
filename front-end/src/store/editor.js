@@ -115,28 +115,38 @@ export default {
       })
     },
     onSubmitButton({state, rootState}) {
-      // [1] 제목이랑 소개말은 필수
+      // [*] 제목이랑 카테고리 필수 & 글자수 제한
       if(!state.recipe.title) {
         alert("레시피 제목을 입력하세요.")
         return;
       }
-
-      if(!state.recipe.description) {
-        alert("레시피 소개말을 입력하세요.")
+      if(!state.recipe.category_id) {
+        alert("카테고리를 입력하세요.")
+        return;
+      }
+      if (200 < state.recipe.title.length) {
+        alert("레시피 제목은 200자까지 가능합니다.")
+        return;
+      }
+      if (500 < state.recipe.description.length) {
+        alert("레시피 소개말은 500자까지 가능합니다.")
         return;
       }
 
-      // [2] 재료 하나 이상 입력 필수
+      // [*] 재료명 하나 이상 입력 필수
       // 재료 이름만 있는건 가능하지만 양만 있으면 안됨
       var ingrDone = false;
       const ingredients = [...state.mainIngr, ...state.subIngr];
       for (let i = 0; i < ingredients.length; i++) {
-        if(ingredients[i].name && ingredients[i].quantity) {
+        if(ingredients[i].name) {
           ingrDone = true;
         }
         if (!ingredients[i].name && ingredients[i].quantity) {
           alert("재료의 이름을 입력하세요.")
           return;
+        }
+        if (50 < ingredients[i].quantity) {
+          alert("재료량은 50자까지 가능합니다.")
         }
       }
       if (!ingrDone) {
@@ -144,12 +154,17 @@ export default {
         return;
       }
 
-      // [3] 조리 과정 하나 이상 필수
+      // [*] 조리 과정 하나 이상 필수
+      // 조리 과정만 있는건 가능하지만 팁만 있거나 이미지만 있으면 안됨
       var stepDone = false;
       for (let i = 0; i < state.cookingStep.length; i++) {
         if (state.cookingStep[i].description) {
           stepDone = true;
-          break;
+        }
+        if ((!state.cookingStep[i].description && state.cookingStep[i].tip)
+        || (!state.cookingStep[i].description && state.cookingStep[i].step_image_url)) {
+          alert("조리 과정을 입력하세요.")
+          return;
         }
       }
       if (!stepDone) {
@@ -157,7 +172,7 @@ export default {
         return;
       }
 
-      // [4] 레시피 formData 생성
+      // [*] 레시피 formData 생성
       // ingredient[2].key : value 이런 식으로 값이 들어감
       const recipeData = new FormData();
       for (let [key, value] of Object.entries(state.recipe)) {
@@ -186,13 +201,13 @@ export default {
         }
       }
 
-      // [5] 헤더 설정
+      // [*] 헤더 설정
       const headerConfig = { headers: {
         'Authorization': `token ${rootState.accounts.authToken}`,
         'Content-Type': 'multipart/form-data'
       }}
       
-      // [6] POST
+      // [*] POST
       axios.post(SERVER.ROUTES.editor.saveRecipe, recipeData, headerConfig)
       .then((res) => {
         console.log(res)

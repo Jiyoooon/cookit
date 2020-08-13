@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper">
+  <div id="acc_wrapper">
     <h2>로그인</h2>
     <hr>
     <Login id='login-vue'/>
@@ -18,21 +18,4 @@ export default {
 </script>
 
 <style>
-#wrapper {
-  width: 690px;
-  display: block;
-  margin: 0px auto;
-  background-color: #fff;
-  padding: 5em 1em 8em 1em;
-}
-
-@media (max-width: 768px) {
-  #wrapper {
-    width: 90%;
-    display: block;
-    margin: 0px auto;
-    background-color: #fff;
-    padding: 5em 1em 8em 1em;
-  }
-}
 </style>

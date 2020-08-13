@@ -1,5 +1,6 @@
 package com.ssafy.cooking.service;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,10 +38,13 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, query, category, order, likeUser, filter);
 		for (Recipe r : recipes) {
-			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "") {
+			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "" 
+					|| (!new File("/var/lib/tomcat8/webapps/images/profile/"+r.getRecipe_user_profileImage()).exists())) {
 				r.setRecipe_user_profileImage(baseUrl + "/images/profile/default_image.png");
 			}
-			r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
+			else {
+				r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
+			}
 			r.setLike(recipeDao.getLikeList(r.getRecipe_id()));
 		}
 		return recipes;
@@ -247,10 +251,13 @@ public class RecipeServiceImpl implements RecipeService {
 		List<Recipe> recipes = recipeDao.getRecipes2(start, end, id, user, query, category, order, likeUser,
 				hate_large, hate_medium, hate_small, like_large, like_medium, like_small);
 		for (Recipe r : recipes) {
-			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "") {
+			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "" 
+					|| (!new File("/var/lib/tomcat8/webapps/images/profile/"+r.getRecipe_user_profileImage()).exists())) {
 				r.setRecipe_user_profileImage(baseUrl + "/images/profile/default_image.png");
 			}
-			r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
+			else {
+				r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
+			}
 			r.setLike(recipeDao.getLikeList(r.getRecipe_id()));
 		}
 		return recipes;

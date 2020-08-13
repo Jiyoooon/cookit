@@ -17,6 +17,7 @@ public class Recipe {
 	private Integer cooking_time; //시간
 	private Integer level; //시간
 	private Integer hits; //조회
+	private Integer comments; //댓글 개수
 	private String tag; //태그
 	private String create_date; //작성시간
 	private String update_date;
@@ -24,6 +25,14 @@ public class Recipe {
 	private Integer likeNum;
 	private List<Integer> like;
 	private MultipartFile main_image_file;
+	
+	
+	public Integer getComments() {
+		return comments;
+	}
+	public void setComments(Integer comments) {
+		this.comments = comments;
+	}
 	public Integer getRecipe_id() {
 		return recipe_id;
 	}
@@ -145,7 +154,9 @@ public class Recipe {
 				+ recipe_user_name + ", recipe_user_profileImage=" + recipe_user_profileImage + ", category_id="
 				+ category_id + ", title=" + title + ", description=" + description + ", main_image=" + main_image
 				+ ", servings=" + servings + ", cooking_time=" + cooking_time + ", level=" + level + ", hits=" + hits
-				+ ", tag=" + tag + ", create_date=" + create_date + ", update_date=" + update_date + ", delete_date="
-				+ delete_date + ", like=" + like + ", main_image_file=" + main_image_file + "]";
+				+ ", comment_cnt=" + comments + ", tag=" + tag + ", create_date=" + create_date + ", update_date="
+				+ update_date + ", delete_date=" + delete_date + ", likeNum=" + likeNum + ", like=" + like
+				+ ", main_image_file=" + main_image_file + "]";
 	}
+	
 }

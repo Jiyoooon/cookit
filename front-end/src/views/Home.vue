@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper">
+  <div id="home_wrapper">
       <h1>Welcome to Home</h1>
       <hr>
       <div v-if="!isLoggedIn" class="inform">
@@ -44,8 +44,18 @@ export default {
 </script>
 
 <style>
-  /* #image {
-    width: 10px;
-    height: 10px;
-  } */
+
+#home_wrapper {
+  width: 690px;
+  display: block;
+  margin: 0px auto;
+  background-color: #fff;
+  padding: 5em 1em 8em 1em;
+}
+
+@media (max-width: 768px) {
+  #home_wrapper {
+    width: 90%;
+  }
+}
 </style>

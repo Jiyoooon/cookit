@@ -20,6 +20,7 @@ export default {
       like_large:null,
       like_medium:null,
       like_small:null,
+      order:0,
       p:0,//무한 스크롤에서 설정
       query:null,// 서치바에서 설정
       user:null,
@@ -27,6 +28,7 @@ export default {
     },
     recipes:[],
     ingredients:null,//모든재료를 저장
+    ingrName: [],
   },
   getters: {
   },
@@ -46,6 +48,7 @@ export default {
         like_large:null,
         like_medium:null,
         like_small:null,
+        order:null,
         p:0,
         query:null,
         user:null,
@@ -54,10 +57,15 @@ export default {
       state.recipes = []
     },
     setRecipequeryUserId(state,payload){
-      state.recipequery.user = payload
+      state.recipequery.user =  payload
     },
     setRecipequeryCategory(state,payload){
       state.recipequery.category = payload
+    },
+    setRecipequeryOrder(state,payload){
+      console.log(payload)
+      console.log(typeof(payload))
+      state.recipequery.order = payload
     },
     setRecipequery(state,payload){
       state.recipequery.query=payload.querydata
@@ -108,8 +116,7 @@ export default {
         }
       }
       state.recipequery.category = payload.category
-      console.log("레시피쿼리 최종")
-      console.log(state.recipequery)
+      state.recipequery.order = payload.order
     },
     setRecipes(state,recipes){
       state.recipes = [...state.recipes, ...recipes]
@@ -123,6 +130,9 @@ export default {
     setIngredients(state,payload){
       state.ingredients = payload
     },
+    setIngrName(state, payload) {
+      state.ingrName = payload;
+    },
     initRecipes(state){
       state.recipes = []
     },
@@ -133,6 +143,13 @@ export default {
   },
 
   actions: {
+    loadIngrName({state, commit}) {
+      this.getIngredients();
+      commit('setIngrName', 
+      state.ingredients.sort(function(a, b) {
+        return a.length < b.length ? -1 : a.length > b.length ? 1 : 0;
+      }));
+    },
     setRecipequery({commit,dispatch},payload){
       commit('initializing')
       commit('setRecipequery',payload)
@@ -151,7 +168,7 @@ export default {
       })
     },
     getFilteredRecipes({commit,state}){
-      console.log(state.recipequery)
+      // console.log(state.recipequery)
       const filter = {
         params:state.recipequery
       }
@@ -168,7 +185,7 @@ export default {
     getIngredients({commit}){
       axios.get(SERVER.ROUTES.lookaroundrecipe.getingredients)
       .then((res) => {
-        commit('setIngredients',res.data)
+        commit('setIngredients', res.data)
       })
       .catch((err) => {
         alert(err)
