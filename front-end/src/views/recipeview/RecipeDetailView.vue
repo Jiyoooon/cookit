@@ -1,6 +1,6 @@
 <template>
   <div id="recipe">
-      <!-- <div v-if="authUser" data-html2canvas-ignore="true"> -->
+      <div v-if="authUser" data-html2canvas-ignore="true">
         <div v-if="authUser && checkdeleteauth" data-html2canvas-ignore="true">
         <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
         </div>
@@ -9,23 +9,31 @@
         </div>
       <!-- </div> -->
       <button data-html2canvas-ignore="true" @click="makePDF">PDF</button>
+        <div>
+            <button @click="doPrint">레시피 출력하기</button>
+        </div>
+      </div>
       <recipe />
       <hr>
       <ingredient />
       <hr>
       <cookingstep />
-      <div id="button" data-html2canvas-ignore="true">
+      <div id= "button" class="noprint">
             <b-icon icon="book" v-b-modal="'my-modal'" scale="1" v-b-tooltip.hover title="가로보기"></b-icon>
       </div>
-      <div @click="scrollToTop" id= "button-bottom" data-html2canvas-ignore="true">
+      <div @click="scrollToTop" id= "button-bottom" class="noprint">
             <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로" ></b-icon>
-    </div>
-      <!-- <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button> -->
-    <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true"/>
+      </div>
+      <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button> -->
+    <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true"/> -->
     <commentList data-html2canvas-ignore="true"/>
         <!-- The modal -->
-        <b-modal size="xl" id="my-modal" title="쿠킹스텝">
+        <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
+            <template v-slot:modal-title>
+                쿠킹스탭 <b-button @click="doSpeech" id="speechButton">음성인식 시작</b-button>
+            </template>
             <b-carousel
+            ref="recipeCarousel"
             id="carousel-fade"
             style="text-shadow: 1px 1px 2px #000"
             fade
@@ -35,7 +43,7 @@
             
             img-width=100
             img-height=100
-        >
+            >
             <b-carousel-slide
             v-for="cookingstep in selectedRecipe.cookingStep"
             :key="cookingstep.cooking_steps_id"
@@ -136,11 +144,79 @@ export default {
 
             );	
 		},      
+        doPrint(){
+           window.print();
+        },
+        startSpeaking() {
+            console.log("음성인식 start");
+            this.isSpeaking = true;
+            this.recognition.start();
+            document.getElementById("speechButton").textContent="음석인식 종료";
+        },
+        stopSpeaking(){
+            console.log("음성인식 stop");
+            this.isSpeaking = false;
+            this.recognition.stop();
+            document.getElementById("speechButton").textContent="음성인식 시작";
+        },
+        doSpeech(){
+            if(!this.isSpeaking){
+                this.startSpeaking();
+            } else {
+                this.stopSpeaking();
+            }
+        },
     },
     created() {
         this.fetchRecipe(this.$route.params.recipe_id),
         this.fetchRecipeUser()
         this.fetchComments()
+        
+        if (!('webkitSpeechRecognition' in window)) {
+            document.getElementById("speechButton").style.display = "none";
+        } else {
+            this.recognition = new window.webkitSpeechRecognition;
+
+            this.recognition.continuous = false;
+            this.recognition.lang = 'ko-KR';
+            this.recognition.interimResults = false;
+
+            this.recognition.onresult = (event) => {
+                var text = event.results[event.resultIndex][0].transcript;
+                console.log(text);
+                let next = ['다음', '앞으로', '넥스트'];
+                let prev = ['이전', '뒤로'];
+                let timer = ['타이머'];
+
+                var self = this;
+
+                next.forEach(function (item) {
+                    if(text.indexOf(item) != -1){
+                        self.$refs.recipeCarousel.next();
+                    }
+                })
+                prev.forEach(function (item) {
+                    if(text.indexOf(item) != -1){
+                        self.$refs.recipeCarousel.prev();
+                    }
+                })
+                timer.forEach(function (item) {
+                    if(text.indexOf(item) != -1){
+                        console.log("타이머 작동");
+                    }
+                })
+            };
+
+            this.recognition.onerror = (event) => {
+                console.log(`Error occurred in recognition: ${event.error}`);
+            };
+
+            this.recognition.onend = () => {
+                if(this.isSpeaking){
+                    this.recognition.start();
+                }
+            }
+        }
     },
 }
 </script>
@@ -161,5 +237,10 @@ export default {
         right: 5vw;
         bottom: 10vh;
         cursor: pointer;
+    }
+    @media print  {
+        .noprint {
+            display: none;
+        }  
     }
 </style>

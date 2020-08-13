@@ -83,14 +83,16 @@ public class RecipeServiceImpl implements RecipeService {
 		else
 			imageName = Long.toString(System.currentTimeMillis());
 		
-		if(recipeDetail.getCooking_time() == null)
+		if(recipeDetail.getCooking_time() == null || recipeDetail.getCooking_time() == 0)
 			recipeDetail.setCooking_time(1);
-		if(recipeDetail.getLevel() == null)
+		if(recipeDetail.getLevel() == null || recipeDetail.getLevel() == 0)
 			recipeDetail.setLevel(1);
-		if(recipeDetail.getServings() == null)
+		if(recipeDetail.getServings() == null || recipeDetail.getServings() == 0)
 			recipeDetail.setServings(1);
 		if(recipeDetail.getTag() == null)
 			recipeDetail.setTag("");
+		if (recipeDetail.getCategory_id() == null || recipeDetail.getCategory_id() == 0)
+			recipeDetail.setCategory_id(8);
 		
 		if (recipeDetail.getMain_image_file() != null && !recipeDetail.getMain_image_file().isEmpty()) {
 			try {
@@ -140,52 +142,53 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 	
 	@Override
-	public int reviseRecipe(RecipeDetail recipeData, String baseUrl) {
+	public int reviseRecipe(Integer uid, RecipeDetail recipeData, String baseUrl) {
+		String imageName;
+		if (recipeData.getRecipe_user() != null && recipeData.getRecipe_user() > 0)
+			imageName = recipeData.getRecipe_user() + Long.toString(System.currentTimeMillis());
+		else
+			imageName = Long.toString(System.currentTimeMillis());
+		
 		if (recipeData.getMain_image_file() != null && !recipeData.getMain_image_file().isEmpty()) {
 			try {
-				String saveFileName = recipeData.getRecipe_user() + Long.toString(System.currentTimeMillis());
-				writeFile(recipeData.getMain_image_file(), saveFileName, baseUrl);
+				writeFile(recipeData.getMain_image_file(), imageName, baseUrl);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		recipeDao.reviseRecipe(recipeData);
-		int recipe_id = recipeData.getRecipe_id();
-		if (recipeData.getCookingStep() != null) {
-			List<CookingStep> reviseCookSteps = new LinkedList<>();
-			List<CookingStep> addCookSteps = new LinkedList<>();
-			for (int i = 0; i < recipeData.getCookingStep().size(); i++) {
-				CookingStep step = recipeData.getCookingStep().get(i);
-				if(step.getCooking_steps_id() != null) {
-					reviseCookSteps.add(step);
-				} else {
-					addCookSteps.add(step);
-				}
-				step.setTime(Timer.getTimer(step.getDescription()));
-				if (step.getStep_image_file() != null) {
-					try {
-						String imageName = recipeData.getRecipe_user() + Long.toString(System.currentTimeMillis());
-						String stepImageName = imageName + Integer.toString(i);
-						writeFile(step.getStep_image_file(), stepImageName, baseUrl);
-						recipeData.getCookingStep().get(i)
-								.setStep_image(baseUrl + "/images/recipe/" + stepImageName + ".jpg");
-					} catch (IOException e) {
-						e.printStackTrace();
+		
+
+		
+		int result = recipeDao.reviseRecipe(uid, recipeData);
+		if(result > 0) {
+			int recipe_id = recipeData.getRecipe_id();
+			recipeDao.deleteCookingSteps(recipe_id);
+			
+			if (recipeData.getCookingStep() != null) {
+				for (int i = 0; i < recipeData.getCookingStep().size(); i++) {
+					CookingStep step = recipeData.getCookingStep().get(i);
+					step.setTime(Timer.getTimer(step.getDescription()));
+					if (step.getStep_image_file() != null) {
+						try {
+							String stepImageName = imageName + Integer.toString(i);
+							writeFile(step.getStep_image_file(), stepImageName, baseUrl);
+							recipeData.getCookingStep().get(i)
+									.setStep_image(baseUrl + "/images/recipe/" + stepImageName + ".jpg");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				}
+				recipeDao.addCookingsteps(recipe_id, recipeData.getCookingStep());
 			}
-			recipeDao.reviseCookingsteps(recipe_id, reviseCookSteps);
-			recipeDao.addCookingsteps(recipe_id, addCookSteps);
-			recipeDao.deleteCookingSteps(recipe_id, recipeData.getCookingStep().size());
+			
+			if (recipeData.getIngredients() != null) {
+				recipeDao.deleteIngredients(recipe_id);
+				recipeDao.addIngredients(recipe_id, recipeData.getIngredients());
+			}
 		}
 		
-		if (recipeData.getIngredients() != null) {
-			recipeDao.checkIngredients(recipe_id, recipeData.getIngredients());
-			recipeDao.deleteIngredients(recipe_id);
-			recipeDao.addIngredients(recipe_id, recipeData.getIngredients());
-		}
-		
-		return recipe_id;
+		return result;
 	}
 
 	@Override
