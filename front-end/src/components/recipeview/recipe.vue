@@ -23,7 +23,22 @@
       <b-row>
           <b-col lg-3 style="text-align:center">
             <b-img :src="recipeUser.image_url" rounded="circle" alt="Circle image" id="userimg"></b-img>
-            {{ selectedRecipe.recipe_user_name }}
+            {{ selectedRecipe.recipe_user_name }}<br>
+
+            <ul style="list-style:none;">
+              <!-- facebook -->
+              <li>
+                <div>
+                  <img @click="gofacebook" class="rounded" style="width:2em;" src="https://lh3.googleusercontent.com/proxy/dahn7bjEv7xTEHXJYUuZPw2FQ7_0UeteDU-JlxX8Z6azNskhsBsfVCvi0KNqZfGt-EXEDnO1_0nio4XlETrjOdLweArC5Ofq9UbT1H8jeLGttnpF-qd-AAQwmVflF8PxA7reb9iRwwaighvOzHxigRNugUu-SuJD90_LVBXcXCXaJQ2pAEPyg-xURiV2GDJIOCJABA">
+                </div>
+              </li>
+              <!-- kakao -->
+              <li>
+                <div @click="shareByKakao" id="kakao-btn">
+                  <img src="//developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png" />
+                </div>
+              </li>
+            </ul>
           </b-col>
           <b-col lg-9>
             <p class="triangle-border left" style="font-size:1.2rem">"{{ selectedRecipe.description }}"</p>
@@ -34,7 +49,7 @@
        <br>
   </b-container>
 </template>
-
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script>
 import { mapState } from 'vuex'
 export default {
@@ -43,17 +58,53 @@ export default {
         return{
             serving:['',"혼자","둘이서","3~4인","5인이상"],
             cooking_time:['',"15분이하","15~30분","30분~1시간","1~2시간","2시간이상"],
-            level:['','★☆☆☆☆','★★☆☆☆','★★★☆☆','★★★★☆','★★★★★']
+            level:['','★☆☆☆☆','★★☆☆☆','★★★☆☆','★★★★☆','★★★★★'],
+            facebookUrl: null,
+            curUrl: null
         }
     },
     computed: {
         ...mapState('recipes', ['selectedRecipe', 'recipeUser']),
     },
     methods: {
+      gofacebook(){
+        window.open(this.facebookUrl);
+      },
+      shareByKakao(){
+        Kakao.Link.sendDefault({
+          // container: '#kakao-link-btn',
+          objectType: 'feed',
+          content: {
+            title: this.selectedRecipe.title, 
+            description: this.selectedRecipe.description,
+            imageUrl:
+              this.selectedRecipe.main_image,
+            link: {
+              webUrl: this.curUrl,
+              androidExecParams: 'test',
+            },
+          },
+          social: {
+            likeCount: this.selectedRecipe.likeNum-0,
+            commentCount: this.selectedRecipe.comments-0,
+            viewCount: this.selectedRecipe.hits-0
+          },
+          buttons: [
+            {
+              title: '보러가기',
+              link: {
+                webUrl: this.curUrl,
+              },
+            }
+          ]
+        });
+      }
         // ...mapActions('recipes', ['fetchRecipeUser'])
-    },
-    created() {
+    }, 
+    created() { 
         // this.fetchRecipeUser()
+        this.facebookUrl = "https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent('http://i3a201.p.ssafy.io/recipe/'+this.selectedRecipe.recipe_id);
+        this.curUrl = "http://i3a201.p.ssafy.io/recipe/"+this.selectedRecipe.recipe_id;
     }
 }
 </script>

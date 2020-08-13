@@ -108,7 +108,23 @@ Vue.use(VueRouter)
     path: '/recipe/:recipe_id',
     name: 'SelectedRecipe',
     component: RecipeDetailView,
-    meta: { scrollToTop: true }
+    meta: { 
+      scrollToTop: true,
+      metaTags: [
+        {
+          property: 'og:title',
+          content: 'COOKIT!!!!!'
+        },
+        {
+          property: 'og:description',
+          content: '쿠킷 레시피 공유하기'
+        },
+        {
+          property: 'og:image',
+          content: 'http://i3a201.p.ssafy.io:8080/images/logo/logo.png'
+        }
+      ]
+    }
   },
 ]
 
