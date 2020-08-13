@@ -133,7 +133,7 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	private void writeFile(MultipartFile multipartFile, String saveFileName, String baseUrl) throws IOException {
-		String saveDir = baseUrl + "/images/recipe/";
+		String saveDir = "/var/lib/tomcat8/webapps/images/recipe/";
 		FileOutputStream fos = new FileOutputStream(saveDir + saveFileName + ".jpg");
 		fos.write(multipartFile.getBytes());
 		fos.close();

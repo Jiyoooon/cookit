@@ -112,7 +112,7 @@
 			AND r.recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
-			AND u.nickname = #{user}
+			AND recipe_user = #{user}
 		</if>
 		<if test="category != null and category != ''">
 			AND category_id = #{category}
@@ -293,7 +293,7 @@
 			AND r.recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
-			AND u.nickname = #{user}
+			AND recipe_user = #{user}
 		</if>
 		<if test="category != null and category != ''">
 			AND category_id = #{category}
