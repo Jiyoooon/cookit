@@ -9,7 +9,6 @@
         <timeroverlay/>
         
 
-      <!-- <b-button id="button" v-b-modal="'my-modal'" class="noprint">가로보기</b-button> -->
       <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" />
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 

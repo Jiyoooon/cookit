@@ -10,7 +10,7 @@
 						main_image, servings, cooking_time, level, tag
 					) VALUES (
 						#{recipe_user}, #{category_id}, #{title}, #{description},
-						#{main_image}, #{servings}, #{cooking_time}, #{level}, #{tag}
+						#{main_image}, #{servings}, #{cooking_time}, #{level}, #{tagString}
 					)
 			<selectKey keyProperty="recipe_id" resultType="Integer">
 			SELECT LAST_INSERT_ID()
@@ -62,7 +62,7 @@
 			, servings = #{recipeData.servings}
 			, cooking_time = #{recipeData.cooking_time}
 			, level = #{recipeData.level}
-			, tag = #{recipeData.tag}
+			, tag = #{recipeData.tagString}
 		WHERE recipe_id = #{recipeData.recipe_id}
 		AND recipe_user = #{uid}
 	</update>
