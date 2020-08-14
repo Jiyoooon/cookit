@@ -41,7 +41,6 @@ public interface UserDao {
 	public List<SNS> getAllLinkedSNS(String uid);
 	public SNS getLinkedSNS(String uid, String name);
 	public int insertLinkedSNS(String uid, String name, String url);
-	public int updateLinkedSNS(String uid, String name, String url);
 	public int deleteLinkedSNS(String uid, String name);
 //	public void initialSNS(String uid, String[] snsList);
 }

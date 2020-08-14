@@ -1,19 +1,13 @@
 <template>
+  <div id="detail-view">
+      <button data-html2canvas-ignore="true" @click="makePDF">PDF</button>
+      <div><button @click="doPrint">레시피 출력하기</button></div>
 
+      <recipe class="view-container"/>
+      <ingredient class="view-container"/>
+      <cooking-step class="view-container"/>
 
-    <div style="width:100%; height:100%">
-            
-        <div v-if="checkdeleteauth">
-            <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
-        </div>
-        <div v-if="checkdeleteauth">
-            <button @click="gorecipeupdate">고고</button>
-        </div>
-        <recipe />
-        <hr>
-        <ingredient />
-        <hr>
-        <cookingstep />
+        <!-- Floating Button -->
         <v-overlay :value="this.overlay" >
             <div style="cursor:pointer; width:100%; height:100%" @click="overlay = false; console.log('꺼져랏') ">
                 <v-btn
@@ -27,26 +21,27 @@
                 </div>
             </div>
         </v-overlay>
-        <div class="text-center">
+
+        <div id = "button1">
             <v-btn
-            id = "button1"
             @click="setTimerValue('00:04'); (overlay = !overlay);"
             >
             3초
             </v-btn>
-        </div>    
-      <div id = "button2" @click="setTimerValue('00:21')">
-        20초
-      </div>
-      <div id= "button" class="noprint">
-            <b-icon icon="book" v-b-modal="'my-modal'" scale="1" v-b-tooltip.hover title="가로보기"></b-icon>
-      </div>
-      <div @click="scrollToTop" id= "button-bottom" class="noprint">
-            <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로" ></b-icon>
-      </div>
-      <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button>
-        <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true"/>
-        <commentList data-html2canvas-ignore="true"/>
+            <v-btn
+            @click="setTimerValue('00:11'); (overlay = !overlay);"
+            >
+            10초
+            </v-btn>
+        </div>
+
+      <!-- <b-button id="button" v-b-modal="'my-modal'" class="noprint">가로보기</b-button> -->
+      <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
+
+    <!-- 댓글 -->
+    <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true"/>
+    <commentList data-html2canvas-ignore="true"/>
+
         <!-- The modal -->
         <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
             <template v-slot:modal-title>
@@ -80,14 +75,14 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import cookingstep from '../../components/recipeview/cookingstep.vue'
-import ingredient from '../../components/recipeview/ingredient.vue'
-import recipe from '../../components/recipeview/recipe.vue'
-import commentCreate from '../../components/recipeview/commentCreate.vue'
-import commentList from '../../components/recipeview/commentList.vue'
-import timervue from "@/components/viewer/Timer.vue";
+import cookingStep from '@/components/viewer/CookingStep.vue'
+import ingredient from '@/components/viewer/Ingredient.vue'
+import recipe from '@/components/viewer/Recipe.vue'
+import commentCreate from '@/components/viewer/CommentCreate.vue'
+import commentList from '@/components/viewer/CommentList.vue'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf' 
+import timervue from '@/components/viewer/Timer.vue'
 
 export default {
     name: 'recipeDetailView',
@@ -99,7 +94,7 @@ export default {
         }
     },
     components: {
-        cookingstep,
+        cookingStep,
         ingredient,
         recipe,
         commentCreate,
@@ -269,6 +264,7 @@ export default {
         right: 5vw;
         bottom: 40vh;
         cursor: pointer;
+        z-index: 1;
     }
     #button2 {
         font-size: 4rem;
@@ -278,6 +274,53 @@ export default {
         bottom: 30vh;
         cursor: pointer;
     }
+
+#detail-view {
+  width: 900px;
+  display: block;
+  margin: 0px auto;
+  background-color: #fff;
+  padding: 5em 1em 8em 1em;
+}
+
+@media (max-width: 1225px) {
+  #detail-view {
+    width: 100%;
+  }
+}
+
+.view-container {
+  margin-bottom: 2em;
+}
+
+#top-btn {
+    position: fixed;
+    right: 3.5%;
+    bottom: 1em;
+    background-color: white;
+    border-radius: 10%;
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+    font-size: 2.8rem;
+    width: 1em;
+    height: 1em;
+    padding: 2px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  #top-btn {
+    font-size: 2rem;
+    right: 2%;
+  }
+}
+
+@media (max-width: 496px) {
+  #top-btn {
+    bottom: 0.5em;
+  }
+}
+
     #button {
         font-size: 4rem;
         box-sizing: content-box;

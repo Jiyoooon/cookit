@@ -66,6 +66,7 @@ export default {
           $("#browsing").removeClass("active");
         },
         mainLogoClick() {
+          console.log($("#myblog"));
           this.removeActiveClass();
           this.GoHome();
         },

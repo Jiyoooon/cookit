@@ -639,26 +639,6 @@ public class UserController {
    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
    	}
     
-    //sns계정 수정
-    @ApiOperation(value = "sns계정 수정", notes = "회원정보에 sns계정 정보 수정")
-    @PutMapping("/token/sns")
-    public ResponseEntity<HashMap<String, Object>> updateLinkedSNS(HttpServletRequest request
-    														, @RequestParam(value = "sns_name", required = true) String name
-    														, @RequestParam(value = "sns_url", required = true) String url) throws Exception {
-    	String token = request.getHeader("Authorization").split(" ")[1];
-    	Map<String, Object> claims = jwtService.get(token);
-    	
-    	String uid = (String) claims.get("uid");
-    	
-    	HashMap<String, Object> map = new HashMap<String, Object>();
-    	
-    	if(userService.reviseLinkedSNS(uid, name, url) > 0) {
-    		map.put("result", "success");
-    	}else map.put("result", "fail");
-    	
-   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
-   	}
-    
     //sns계정 삭제
     @ApiOperation(value = "sns계정 삭제", notes = "회원정보에 sns계정 정보를 삭제")
     @DeleteMapping("/token/sns")
@@ -677,5 +657,4 @@ public class UserController {
     	
    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
    	}
-    
 }

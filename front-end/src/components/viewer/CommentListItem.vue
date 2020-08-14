@@ -15,7 +15,7 @@ import commentUpdate from './CommentUpdate.vue'
 import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
-    name: 'commentListItem',
+    name: 'CommentListItem',
     props: {
         comment: Object,
     },
