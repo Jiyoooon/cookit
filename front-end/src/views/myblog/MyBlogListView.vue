@@ -1,24 +1,15 @@
 <template>
 <div id="list">
-    <!-- <b-button @click="showMyRecipes">내포스팅</b-button>
-    <b-button @click="showLikeRecipes">좋아요글</b-button> -->
-    <b-tabs content-class="mt-3" align="center">
-        <b-tab @click="showMyRecipes" title="Post" active></b-tab>
-        <b-tab @click="showLikeRecipes" title="Likes"></b-tab>
-        <!--
-        <b-tab @click="showFollowers" title="Followers"></b-tab>
-        <b-tab @click="showFollowings" title="Followings"></b-tab>
-        -->
-    </b-tabs>
-    <!-- <b-button @click="showMyRecipes">Post</b-button>
-    <b-button @click="showLikeRecipes">Likes</b-button>
-    <b-button @click="showFollowers">Followers</b-button>
-    <b-button @click="showFollowings">Followings</b-button> -->
-<b-tabs content-class="mt-3" align="center">
-  <b-contanier>
-      <b-row v-if="currentshow < 3">
+      <div class="sort-list">
+          <div v-for="(item, index) in sort" @click="ordering(index + 1)" 
+          :class="(index+1==order)?'sort-item selected':'sort-item default'" :key="String(item)">
+          {{ item }}</div>
+        </div>
+        <hr id="divider">
+      <div>
         <SearchBar id="searchbar" />
-      </b-row>
+      </div>
+  <b-contanier>
       <b-row>
         <b-col lg="3">
             <MyPage id="mypage" />
@@ -26,15 +17,13 @@
         <b-col lg="9">
             <MyRecipeList v-if="currentshow==1" />
             <LikeRecipeList v-if="currentshow==2"/>
-            <FollowerList v-if="currentshow==3" />
-            <FollowingList v-if="currentshow==4" />
+            <SearchRecipeList v-if="currentshow==3" />
         </b-col>
         <!-- <b-col v-if="currentshow==2" lg="9">
             <LikeRecipeList />
         </b-col> -->
       </b-row>
   </b-contanier>
-</b-tabs>
 </div>
 </template>
 
@@ -43,8 +32,6 @@ import SearchBar from '../../components/myblog/SerachBar.vue'
 import MyPage from '../../components/myblog/MyPage.vue'
 import MyRecipeList from '../../components/myblog/MyRecipeList.vue'
 import LikeRecipeList from '../../components/myblog/LikeRecipeList.vue'
-import FollowerList from '../../components/myblog/FollowerList.vue'
-import FollowingList from '../../components/myblog/FollowingList.vue'
 import { mapActions, mapState, mapMutations } from 'vuex'
 // import recipeVue from '../../components/recipeview/recipe.vue'
 
@@ -53,6 +40,8 @@ export default {
     data() {
         return {
             recipelen:null,
+            sort: ['내포스트', '좋아요글'],
+            order: 1
         }
     },
     components: {
@@ -60,11 +49,9 @@ export default {
         MyPage,
         MyRecipeList,
         LikeRecipeList,
-        FollowerList,
-        FollowingList,
     },
     computed: {
-        ...mapState('myblog', ['myrecipes','selectedRecipe', 'selecteduserinfo', 'likerecipes', 'currentshow']),
+        ...mapState('myblog', ['myrecipes','selectedRecipe', 'selecteduserinfo', 'likerecipes', 'currentshow', 'searchrecipes']),
         ...mapState('accounts', ['authUser'])
     },
     methods: {
@@ -72,6 +59,11 @@ export default {
         ...mapActions('accounts', ['fetchFollowers', 'fetchFollowings']),
         ...mapMutations('myblog', ['SET_USERINFO', 'SET_RECIPES', 'SET_LIKERECIPES', 'SET_CURRENTSHOW']),
         ...mapMutations('lookaround',['setRecipequeryUserId']),
+        ordering(value) {
+            this.order = value
+            if (value == 1) this.showMyRecipes()
+            else this.showLikeRecipes()
+        },
         showMyRecipes() {
             this.SET_CURRENTSHOW(1)
             this.fetchMyRecipes(this.authUser)

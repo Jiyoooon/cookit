@@ -1,7 +1,6 @@
 <template>
 <!-- <b-col lg-3> -->
   <div>
-    {{ selecteduserinfo }}
       <v-card
     :loading="loading"
     class="mx-auto my-12"
