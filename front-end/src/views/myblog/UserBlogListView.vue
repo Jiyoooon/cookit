@@ -42,12 +42,12 @@ export default {
         ... mapMutations('myblog', ['SET_USERINFO'])
     },
     created() {
-        console.log(this.selecteduserinfo)
+        // console.log(this.selecteduserinfo)
         this.SET_USERINFO({//들어가는 블로그의 유저정보
             user_id: this.$route.params.user_id,
         },)
         this.getUserInfo(this.$route.params.user_id)
-        console.log('?????????')
+        // console.log('?????????')
         // this.fetchMyRecipes(this.selecteduserinfo) 
     },
 

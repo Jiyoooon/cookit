@@ -9,7 +9,7 @@
 
     <hr style="margin: 0.5em 0">
 
-    <b-row align-v="center">
+    <b-row align-v="center" data-html2canvas-ignore="true">
       <!-- 유저 아이콘, 별명, 작성일 -->
       <b-col cols="8" class="text-left ml-3 mr-n3">
         <b-img :src="recipeUser.image_url" rounded="circle" thumbnail id="user_profile"/>
@@ -31,7 +31,7 @@
     <b-row><b-col></b-col></b-row>
 
     <!-- 레시피 메인 사진 -->
-    <b-row>
+    <b-row data-html2canvas-ignore="true">
       <b-col>
         <b-img :src="selectedRecipe.main_image"
         style="max-width: 90%; max-height: 80vh;"/>

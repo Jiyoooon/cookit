@@ -29,9 +29,6 @@ export default {
             deep: true,
         }
     },
-    created() {
-        console.log(this.comments);
-    }
 }
 </script>
 

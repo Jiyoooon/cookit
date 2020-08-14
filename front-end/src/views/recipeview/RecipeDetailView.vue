@@ -5,7 +5,10 @@
       <ingredient class="view-container"/>
       <cooking-step class="view-container"/>
 
-    <!-- Floating Button -->
+        <!-- 타이머 -->
+        <timeroverlay/>
+        
+
       <!-- <b-button id="button" v-b-modal="'my-modal'" class="noprint">가로보기</b-button> -->
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 
@@ -51,16 +54,19 @@ import share from '@/components/viewer/Share.vue'
 import ingredient from '@/components/viewer/Ingredient.vue'
 import cookingStep from '@/components/viewer/CookingStep.vue'
 import commentList from '@/components/viewer/CommentList.vue'
+import timeroverlay from '@/components/viewer/TimerOverlay.vue'
 import commentCreate from '@/components/viewer/CommentCreate.vue'
 
 export default {
     name: 'recipeDetailView',
+    
     components: {
         recipe,
         ingredient,
         cookingStep,
         share,
         commentList,
+        timeroverlay,
         commentCreate,
     },
     computed: {
@@ -79,14 +85,14 @@ export default {
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
-        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
-        ...mapActions('editor', ['deleteRecipe']),
         gorecipeupdate() {
           console.log('nnnn')
           if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
               this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
           }
         },
+        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
+        ...mapActions('editor', ['deleteRecipe']),
         startSpeaking() {
             console.log("음성인식 start");
             this.isSpeaking = true;
@@ -234,6 +240,13 @@ export default {
         right: 5vw;
         bottom: 10vh;
         cursor: pointer;
+    }
+    .timerpos {
+        background-color: #eee;
+        z-index: 1;
+        position: absolute;
+        width: 100%;
+        height: 100%;
     }
     @media print  {
         .noprint {
