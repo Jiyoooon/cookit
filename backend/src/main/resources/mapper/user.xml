@@ -217,18 +217,9 @@
 				values(#{uid}, #{name}, #{url})
 	</insert>
 	
-	<update id="updateLinkedSNS" parameterType="string">
-		UPDATE	Linked_sns
-				set sns_name = #{name},
-					sns_url = #{url}
-		WHERE sns_user = #{uid}
-	</update>
-	
 	<delete id="deleteLinkedSNS" parameterType="string">
 		DELETE 	FROM Linked_sns
-		WHERE 	1 = 1
-				AND sns_user = #{uid}
-				AND sns_name = #{name}
+		WHERE 	sns_user = #{uid}
 	</delete>
 	
 	

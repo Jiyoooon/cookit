@@ -1,17 +1,17 @@
 <template>
   <div>
       <ul >
-          <commentListItem v-for="comment in comments" :key="comment.comment_id" :comment="comment"/>
+          <CommentListItem v-for="comment in comments" :key="comment.comment_id" :comment="comment"/>
       </ul>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import CommentListItem from './CommentListItem.vue'
+import commentListItem from './CommentListItem.vue'
 
 export default {
-    name: 'commentList',
+    name: 'CommentList',
     data() {
         return {
             // recipecomments: null,
@@ -20,7 +20,7 @@ export default {
     },
     components: {
         // commentUpdate,
-        CommentListItem,
+        commentListItem,
     },
     computed: {
         ...mapState('recipes', ['comments', 'selectedRecipe']),

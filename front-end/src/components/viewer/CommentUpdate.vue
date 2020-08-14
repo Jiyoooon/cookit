@@ -10,7 +10,7 @@
 import { mapMutations, mapActions } from 'vuex'
 
 export default {
-    name: 'commentUpdate',
+    name: 'CommentUpdate',
     props: {
         comment: Object
     },

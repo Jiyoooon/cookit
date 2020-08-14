@@ -2,7 +2,7 @@
   <div>
       <hr>
       <b-form-input v-model="commentData.description"></b-form-input>
-      <b-button @click="createComment(commentData)">작성</b-button>
+      <div class="inline-block-btn btn-style1" @click="createComment(commentData)">작성</div>
   </div>
 </template>
 

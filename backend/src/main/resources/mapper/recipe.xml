@@ -43,12 +43,11 @@
 	</insert>
 	<insert id = "addCookingsteps">
 		INSERT INTO Cooking_steps(
-						recipe_id, steps, description, tip, 
-						step_image, time
+						recipe_id, steps, description, tip, step_image
 					) VALUES
 					<foreach collection="cookingSteps" item="step" separator=",">
 					(
-						#{recipe_id}, #{step.steps}, #{step.description}, #{step.tip}, #{step.step_image}, #{step.time}
+						#{recipe_id}, #{step.steps}, #{step.description}, #{step.tip}, #{step.step_image}
 					)
 					</foreach>
 					
@@ -75,7 +74,6 @@
 		, description = #{step.description}
 		, tip = #{step.tip}
 		, step_image = #{step.step_image}
-		, time = #{step.time}
 		, update_date = now()
 		WHERE cooking_steps_id = #{step.cooking_steps_id}
 		</foreach>
@@ -151,7 +149,7 @@
 	<select id="getCookingSteps" resultType="CookingStep">
 		SELECT cooking_steps_id, recipe_id, 
 		steps, description, tip, step_image,
-		create_date, update_date, time
+		create_date, update_date
 		FROM Cooking_steps
 		WHERE recipe_id = #{recipe_id}
 	</select>

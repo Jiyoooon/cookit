@@ -1,6 +1,6 @@
 <template>
   <div id="editor">
-    <div class="container">
+    <div class="editor-container">
       <h2>레시피 정보</h2>
       <hr>
       <recipeInfo></recipeInfo>
@@ -101,7 +101,7 @@ export default {
   background-color: #fff;
   padding: 5em 1em 8em 1em;
 }
-.container {
+.editor-container {
   margin-bottom: 2em
 }
 

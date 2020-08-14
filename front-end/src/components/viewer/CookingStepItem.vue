@@ -1,22 +1,27 @@
 <template>
-  <b-container>
-  <!-- <div style="border:1px solid black"> -->
+  <b-container style="margin-bottom: 10px;">
+    <!-- Step + 숫자 -->
     <b-row>
-            <b-col cols='2' style="margin:auto">
-        <div rounded="circle" class="stepcircle rounded-circle text-center lighten-2 align-center justify-center ma-3">
-          <span style="margin:auto;font-size:3rem">{{  cookingstep.steps }}</span>
-        </div>
+      <b-col class="text-left mr-3 ml-3">
+        <h4 style="font-weight:650; color:#53AAA1">
+          <font-awesome-icon :icon="['fas', 'caret-right']" style="color: #53AAA1; margin-right: 0.8em;"/>
+           Step. {{ cookingstep.steps }} 
+          <font-awesome-icon :icon="['fas', 'caret-left']" style="color: #53AAA1; margin-left: 0.8em;"/>
+        </h4>
       </b-col>
+    </b-row>
 
-      <b-col cols='7' style="margin:auto">
-        <img :src="cookingstep.step_image" alt="" class="stepimage rounded-lg">
-      </b-col>
-
-      <b-col cols='3' style="margin:auto;font-size:1.5rem">
-        <div class="description">
-      <!-- {{ cookingstep.time }} -->
+    <b-row>
+      <b-col sm="7">
         {{ cookingstep.description }}
-        </div>
+      </b-col>
+      <b-col v-if="cookingstep.step_image" sm="5">
+        <b-img :src="cookingstep.step_image" class="rounded-lg" style="max-width: 100%; max-height:380px;"/>
+      </b-col>
+    </b-row>
+    <b-row v-if="cookingstep.tip">
+      <b-col class="text-left">
+        💡 {{ cookingstep.tip }}
       </b-col>
     </b-row>
   </b-container>
@@ -24,7 +29,7 @@
 
 <script>
 export default {
-    name: 'cookingstepitem,',
+    name: 'CookingStepItem,',
     props: {
         cookingstep: Object,
     },
@@ -33,37 +38,4 @@ export default {
 </script>
 
 <style>
-  .stepcircle{
-    background-color:grey;
-    margin:auto;
-    width: 64px;
-    height: 64px;
-    line-height: 1.1;
-  }
-  .description{
-    margin: auto;
-    align-content: center;
-    align-self: center;
-    line-height: 1.5;
-  }
-  .stepimage{
-    display: block;
-    max-width: 70%;
-    max-height: 100%;
-  }
-  .triangle-border {
-  position:relative;
-  padding:15px;
-  margin:1em 0 3em;
-  border:5px solid #5a8f00;
-  color:#333;
-  background:#fff;
-  /* css3 */
-  -webkit-border-radius:10px;
-  -moz-border-radius:10px;
-  border-radius:10px;
-}
-.triangle-border.left {
-  margin-left:30px;
-}
 </style>

@@ -9,10 +9,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Timer {
-	public static String getTimer(String description) {
+	private static String origin;
+	public static List<int[]> getTimer(String input) {
 		List<int[]> timer = new LinkedList<>();
 
-		description = description.replaceAll(" ", "");
+		origin = input;
+		String description = origin.replaceAll(" ", "");
 
 		int length = description.length();
 		boolean[] visit = new boolean[length];
@@ -72,7 +74,7 @@ public class Timer {
 			array[size++] = temp[1];
 		}
 
-		return Arrays.toString(array);
+		return timer;
 	}
 
 	private static String match(String regex1, String regex2, String input, List<int[]> timer, int m1, int m2,
@@ -89,10 +91,12 @@ public class Timer {
 
 				int time = (convert(regex1, input, matcher.start(), m1, false)
 						+ convert(regex2, input, matcher.end(), m2, true)) / 2;
-				timer.add(new int[] { matcher.start(), time });
+				char[] value = new char[matcher.end() - matcher.start()];
 				for (int i = matcher.start(); i < matcher.end(); i++) {
 					visit[i] = true;
+					value[i - matcher.start()] = input.charAt(i);
 				}
+				timer.add(changeOrigin(matcher.start(), value, time));
 			}
 
 			matcher = Pattern.compile(regex1 + "에서" + regex2).matcher(input);
@@ -105,10 +109,12 @@ public class Timer {
 
 				int time = (convert(regex1, input, matcher.start(), m1, false)
 						+ convert(regex2, input, matcher.end(), m2, true)) / 2;
-				timer.add(new int[] { matcher.start(), time });
+				char[] value = new char[matcher.end() - matcher.start()];
 				for (int i = matcher.start(); i < matcher.end(); i++) {
 					visit[i] = true;
+					value[i - matcher.start()] = input.charAt(i);
 				}
+				timer.add(changeOrigin(matcher.start(), value, time));
 			}
 			if (t) {
 				matcher = Pattern.compile(regex1 + regex2).matcher(input);
@@ -121,10 +127,12 @@ public class Timer {
 
 					int time = (convert(regex1, input, matcher.start(), m1, false)
 							+ convert(regex2, input, matcher.end(), m2, true));
-					timer.add(new int[] { matcher.start(), time });
+					char[] value = new char[matcher.end() - matcher.start()];
 					for (int i = matcher.start(); i < matcher.end(); i++) {
 						visit[i] = true;
+						value[i - matcher.start()] = input.charAt(i);
 					}
+					timer.add(changeOrigin(matcher.start(), value, time));
 				}
 			}
 		} else {
@@ -137,10 +145,12 @@ public class Timer {
 				}
 
 				int time = convert(regex1, input, matcher.start(), m1, false);
-				timer.add(new int[] { matcher.start(), time });
+				char[] value = new char[matcher.end() - matcher.start()];
 				for (int i = matcher.start(); i < matcher.end(); i++) {
 					visit[i] = true;
+					value[i - matcher.start()] = input.charAt(i);
 				}
+				timer.add(changeOrigin(matcher.start(), value, time));
 			}
 		}
 
@@ -167,5 +177,27 @@ public class Timer {
 		} else {
 			return Integer.parseInt(input.substring(start, start + 3).replaceAll("[^0-9]", "")) * mul;
 		}
+	}
+	
+	private static int[] changeOrigin(int v, char[] value, int time) {
+		int start, end;
+		for (int i = v; i < origin.length(); i++) {
+			start = i;
+			for (int j = 0; j < value.length && i < origin.length(); j++) {
+				while(origin.charAt(i) == ' ' && i < origin.length()) {
+					i++;
+				}
+				
+				if(origin.charAt(i) != value[j]){
+					break;
+				} else if(j == value.length - 1){
+					end = i;
+					return new int[]{start + 1, end + 1, time};
+				} else {
+					i++;
+				}
+			}
+		}
+		return new int[]{0, 0, 0};
 	}
 }
