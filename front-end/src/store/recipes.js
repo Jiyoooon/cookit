@@ -29,7 +29,6 @@ export default {
       state.comments = comments
     },
     SET_SELECTEDCOMMENT(state, id) {
-      console.log("바꾸는 id:" + id + " 기존 id:" + state.selectedcomment.id)
       state.selectedcomment.id = id
     }
   },
