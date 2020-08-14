@@ -1,74 +1,73 @@
 <template >
-    <div style="width:100vmax; height: 1000vmax; cursor:pointer">
-        <div class="timer" @keydown.esc="this.$emit('set-timerstate',-1)">
-        <div class="timer--clock">
-            <div class="minutes-group clock-display-grp">
-                <div class="first number-grp">
-                    <div class="number-grp-wrp">
-                    <div class="num num-0"><p>0</p></div>
-                    <div class="num num-1"><p>1</p></div>
-                    <div class="num num-2"><p>2</p></div>
-                    <div class="num num-3"><p>3</p></div>
-                    <div class="num num-4"><p>4</p></div>
-                    <div class="num num-5"><p>5</p></div>
-                    <div class="num num-6"><p>6</p></div>
-                    <div class="num num-7"><p>7</p></div>
-                    <div class="num num-8"><p>8</p></div>
-                    <div class="num num-9"><p>9</p></div>
+    <div>
+        <div class="timer">
+            <div class="timer--clock">
+                <div class="minutes-group clock-display-grp">
+                    <div class="first number-grp">
+                        <div class="number-grp-wrp">
+                        <div class="num num-0"><p>0</p></div>
+                        <div class="num num-1"><p>1</p></div>
+                        <div class="num num-2"><p>2</p></div>
+                        <div class="num num-3"><p>3</p></div>
+                        <div class="num num-4"><p>4</p></div>
+                        <div class="num num-5"><p>5</p></div>
+                        <div class="num num-6"><p>6</p></div>
+                        <div class="num num-7"><p>7</p></div>
+                        <div class="num num-8"><p>8</p></div>
+                        <div class="num num-9"><p>9</p></div>
+                        </div>
+                    </div>
+                    <div class="second number-grp">
+                        <div class="number-grp-wrp">
+                        <div class="num num-0"><p>0</p></div>
+                        <div class="num num-1"><p>1</p></div>
+                        <div class="num num-2"><p>2</p></div>
+                        <div class="num num-3"><p>3</p></div>
+                        <div class="num num-4"><p>4</p></div>
+                        <div class="num num-5"><p>5</p></div>
+                        <div class="num num-6"><p>6</p></div>
+                        <div class="num num-7"><p>7</p></div>
+                        <div class="num num-8"><p>8</p></div>
+                        <div class="num num-9"><p>9</p></div>
+                        </div>
                     </div>
                 </div>
-                <div class="second number-grp">
-                    <div class="number-grp-wrp">
-                    <div class="num num-0"><p>0</p></div>
-                    <div class="num num-1"><p>1</p></div>
-                    <div class="num num-2"><p>2</p></div>
-                    <div class="num num-3"><p>3</p></div>
-                    <div class="num num-4"><p>4</p></div>
-                    <div class="num num-5"><p>5</p></div>
-                    <div class="num num-6"><p>6</p></div>
-                    <div class="num num-7"><p>7</p></div>
-                    <div class="num num-8"><p>8</p></div>
-                    <div class="num num-9"><p>9</p></div>
+                <div class="clock-separator"><p>:</p></div>
+                <div class="seconds-group clock-display-grp">
+                    <div class="first number-grp">
+                        <div class="number-grp-wrp">
+                        <div class="num num-0"><p>0</p></div>
+                        <div class="num num-1"><p>1</p></div>
+                        <div class="num num-2"><p>2</p></div>
+                        <div class="num num-3"><p>3</p></div>
+                        <div class="num num-4"><p>4</p></div>
+                        <div class="num num-5"><p>5</p></div>
+                        <div class="num num-6"><p>6</p></div>
+                        <div class="num num-7"><p>7</p></div>
+                        <div class="num num-8"><p>8</p></div>
+                        <div class="num num-9"><p>9</p></div>
+                        </div>
+                    </div>
+                    <div class="second number-grp">
+                        <div class="number-grp-wrp">
+                        <div class="num num-0"><p>0</p></div>
+                        <div class="num num-1"><p>1</p></div>
+                        <div class="num num-2"><p>2</p></div>
+                        <div class="num num-3"><p>3</p></div>
+                        <div class="num num-4"><p>4</p></div>
+                        <div class="num num-5"><p>5</p></div>
+                        <div class="num num-6"><p>6</p></div>
+                        <div class="num num-7"><p>7</p></div>
+                        <div class="num num-8"><p>8</p></div>
+                        <div class="num num-9"><p>9</p></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="clock-separator"><p>:</p></div>
-            <div class="seconds-group clock-display-grp">
-                <div class="first number-grp">
-                    <div class="number-grp-wrp">
-                    <div class="num num-0"><p>0</p></div>
-                    <div class="num num-1"><p>1</p></div>
-                    <div class="num num-2"><p>2</p></div>
-                    <div class="num num-3"><p>3</p></div>
-                    <div class="num num-4"><p>4</p></div>
-                    <div class="num num-5"><p>5</p></div>
-                    <div class="num num-6"><p>6</p></div>
-                    <div class="num num-7"><p>7</p></div>
-                    <div class="num num-8"><p>8</p></div>
-                    <div class="num num-9"><p>9</p></div>
-                    </div>
-                </div>
-                <div class="second number-grp">
-                    <div class="number-grp-wrp">
-                    <div class="num num-0"><p>0</p></div>
-                    <div class="num num-1"><p>1</p></div>
-                    <div class="num num-2"><p>2</p></div>
-                    <div class="num num-3"><p>3</p></div>
-                    <div class="num num-4"><p>4</p></div>
-                    <div class="num num-5"><p>5</p></div>
-                    <div class="num num-6"><p>6</p></div>
-                    <div class="num num-7"><p>7</p></div>
-                    <div class="num num-8"><p>8</p></div>
-                    <div class="num num-9"><p>9</p></div>
-                    </div>
-                </div>
             </div>
-        </div>
-        </div>
-        <div class="reload">
-        <h2>THE END</h2>
-        <button @click="restart">restart</button>
-        </div>
+            <div class="reload">
+                <span><strong> END</strong></span>
+            </div>
     </div>
 </template>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
@@ -143,7 +142,6 @@ export default {
         },
 
         animateNum (group, arrayValue) {
-            console.log(- group.find('.num-' + arrayValue).offsetTop)
             TweenMax.killTweensOf(group.find('.number-grp-wrp'));
             TweenMax.to(group.find('.number-grp-wrp'), 1, {
                 y: - group.find('.num-' + arrayValue)[0].offsetTop
@@ -152,15 +150,13 @@ export default {
         },
         countdownFinished() {
             console.log("종료")
+            // 카운트다운이 종료되면 실행되는 함수
+            // css변화를 여기에 주면됨
             setTimeout(() => {
                 TweenMax.set(this.reloadBtn, { scale: 0.8, display: 'block' });
                 TweenMax.to(this.timerEl, 1, { opacity: 0.2 });
                 TweenMax.to(this.reloadBtn, 0.5, { scale: 1, opacity: 1 }); 
             }, 1000)
-        },
-        restart(){
-            this.t = "00:03"
-            this.initTimer()
         },
         initTimer(){
             this.reloadBtn = $(".reload")
@@ -181,17 +177,12 @@ export default {
             setTimeout(this.updateTimer, 1000)
         },
     },
-    computed: {
-        
-    },
-    watch:{
-    },
-    mounted() {
-        console.log("만들어짐!!!!") 
+    mounted() { 
         this.initTimer(this.t); 
-        
     },
-    updated() {
+    destroyed() {
+        console.log("디스트로이!!")
+        //this.initTimer(this.t = "00:01")
     },
 }
 </script>
@@ -210,12 +201,6 @@ export default {
     }
     .timer * {
         cursor: default;
-    }
-    .timer h3 {
-        width: 100%;
-        font-size: 26px;
-        letter-spacing: 4px;
-        text-align: center;
     }
     .timer--clock {
         width: 100%;
@@ -248,7 +233,7 @@ export default {
         width: auto;
         display: table;
         font-size: 205px;
-        line-height: 150px;
+        line-height: 130px;
         font-weight: bold;
     }
     .timer--clock .clock-separator {
@@ -261,7 +246,7 @@ export default {
         width: auto;
         display: table;
         font-size: 205px;
-        line-height: 150px;
+        line-height: 90px;
         font-weight: bold;
     }
     .timer h4 {
@@ -273,10 +258,11 @@ export default {
         float: left;
     }
     .reload {
+        text-align: center;
         width: 125px;
         height: 14px;
         position: absolute;
-        bottom: 50vh;
+        top: 10vh;
         left: 50%;
         margin-left: -62.5px;
         opacity: 0;

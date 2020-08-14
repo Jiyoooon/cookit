@@ -7,33 +7,9 @@
       <ingredient class="view-container"/>
       <cooking-step class="view-container"/>
 
-        <!-- Floating Button -->
-        <v-overlay :value="this.overlay" >
-            <div style="cursor:pointer; width:100%; height:100%" @click="overlay = false; console.log('꺼져랏') ">
-                <v-btn
-                    icon
-                    id="button1"
-                >
-                <v-icon>mdi-close</v-icon>
-                </v-btn>
-                <div class="timerpos" v-if="timerstate != -1">
-                    <timervue @set-timerstate ="setTimerState" :t="timervalue"/>
-                </div>
-            </div>
-        </v-overlay>
-
-        <div id = "button1">
-            <v-btn
-            @click="setTimerValue('00:04'); (overlay = !overlay);"
-            >
-            3초
-            </v-btn>
-            <v-btn
-            @click="setTimerValue('00:11'); (overlay = !overlay);"
-            >
-            10초
-            </v-btn>
-        </div>
+        <!-- 타이머 -->
+        <timeroverlay/>
+        
 
       <!-- <b-button id="button" v-b-modal="'my-modal'" class="noprint">가로보기</b-button> -->
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
@@ -82,24 +58,18 @@ import commentCreate from '@/components/viewer/CommentCreate.vue'
 import commentList from '@/components/viewer/CommentList.vue'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf' 
-import timervue from '@/components/viewer/Timer.vue'
+import timeroverlay from '@/components/viewer/TimerOverlay.vue'
 
 export default {
     name: 'recipeDetailView',
-    data(){
-        return{
-            timervalue: "99:00",
-            timerstate:-1,
-            overlay:false,
-        }
-    },
+    
     components: {
         cookingStep,
         ingredient,
         recipe,
         commentCreate,
         commentList,
-        timervue,
+        timeroverlay,
     },
     computed: {
         ...mapState('recipes', ['selectedRecipe']),
@@ -116,17 +86,6 @@ export default {
     methods: {
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
-        },
-        setTimerValue(t){
-            console.log("타이머값을" + "00:00" + "로")
-            this.timervalue = t
-            this.setTimerState(1)
-            console.log(this.timervalue)
-        },
-        setTimerState(s){
-            console.log(s)
-            this.timerstate = s
-            console.log(this.timerstate)
         },
         gorecipeupdate() {
           console.log('nnnn')
@@ -257,24 +216,6 @@ export default {
 </script>
 
 <style>
-    #button1 {
-        font-size: 4rem;
-        box-sizing: content-box;
-        position: fixed;
-        right: 5vw;
-        bottom: 40vh;
-        cursor: pointer;
-        z-index: 1;
-    }
-    #button2 {
-        font-size: 4rem;
-        box-sizing: content-box;
-        position: fixed;
-        right: 5vw;
-        bottom: 30vh;
-        cursor: pointer;
-    }
-
 #detail-view {
   width: 900px;
   display: block;
