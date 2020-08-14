@@ -98,7 +98,7 @@ export default {
     created() {
         this.SET_USERINFO(this.authUser)
         this.getUserInfo(this.authUser.user_id)
-        console.log('!!!!')
+        // console.log('!!!!내블로그!!!!')
         // console.log(this.selecteduserinfo)
         // this.fetchMyRecipes()
     },
