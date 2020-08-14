@@ -5,7 +5,7 @@
         <b-col lg="8">
           <b-container fluid="xs" id="basicInfo-container">
             <b-row align-v="center">
-              <b-col md="2">제목</b-col>
+              <b-col md="2">제목<span style="color:red;">*</span></b-col>
               <b-col md="10">
                 <b-form-input type="text" v-model="recipe.title" required></b-form-input>
               </b-col>
@@ -17,7 +17,7 @@
               </b-col>
             </b-row>
             <b-row align-v="center">
-              <b-col md="2">카테고리</b-col>
+              <b-col md="2">카테고리<span style="color:red;">*</span></b-col>
               <b-col md="3">
                 <b-form-select v-model="recipe.category_id" :options="categoryOpt" required></b-form-select>
               </b-col>
@@ -64,7 +64,7 @@
             </b-row>
             <b-row>
               <b-col>
-                <img v-if="recipe.main_image_file!=null" :src="imageUrl" height="200px">
+                <b-img v-if="recipe.main_image_file!=null" :src="imageUrl" height="200px" />
                 <span v-else></span>
               </b-col>
             </b-row>

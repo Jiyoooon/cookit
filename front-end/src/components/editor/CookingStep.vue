@@ -33,7 +33,7 @@
             </b-row>
             <b-row>
               <b-col>
-                <img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" width="240px">
+                <b-img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" width="240px" />
                 <span v-else></span>
               </b-col>
             </b-row>
@@ -78,6 +78,7 @@ export default {
 			if(!file) return;
 			console.log(e)
 			const index = Number(e.path[0].id);
+			console.log(e.path[0])
 			this.cookingStep[index].step_image_url = URL.createObjectURL(file);
 		},
 	},
