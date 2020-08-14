@@ -37,6 +37,10 @@ export default {
                 // console.log('!!!!!!!!!!!!')
             }
         }
+    },
+    created() {
+        console.log('!!!!')
+        console.log(this.comments)
     }
 }
 </script>

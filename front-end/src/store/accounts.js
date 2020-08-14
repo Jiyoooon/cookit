@@ -394,22 +394,8 @@ export default {
       .then((res) => {
         if(res.data.result == 'success') {
           cookies.set('password-check', 1)
-          this._vm.$root.$bvModal.msgBoxOk('확인되었습니다.', {
-            title: 'Confirmation',
-            size: 'sm',
-            buttonSize: 'sm',
-            okVariant: 'success',
-            headerClass: 'p-2 border-bottom-0',
-            footerClass: 'p-2 border-top-0',
-            centered: true
-          })
-          .then((ans) => {
-            if (ans) {
-              dispatch('GoUserInfo')
-            }
-            cookies.remove('password-check')
-          })
           dispatch('GoUserInfo')
+          cookies.remove('password-check')
         } else {
           alert("비밀번호가 일치하지 않습니다.")
         }

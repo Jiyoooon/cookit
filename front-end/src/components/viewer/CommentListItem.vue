@@ -11,7 +11,6 @@
 
 <script>
 import commentUpdate from './CommentUpdate.vue'
-
 import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
@@ -29,7 +28,7 @@ export default {
     methods: {
         ...mapActions('recipes', ['fetchComments', 'deleteComment']),
         ...mapMutations('recipes', ['SET_SELECTEDCOMMENT'])
-    }
+    },
 }
 </script>
 
