@@ -76,11 +76,6 @@
 
     <!-- SNS -->
     <b-row>
-        <b-col cols="1"></b-col>
-          <b-col lg-3 style="text-align:center">
-            <b-img :src="recipeUser.image_url" rounded="circle" alt="Circle image" id="userimg"></b-img>
-            {{ selectedRecipe.recipe_user_name }}<br>
-
             <ul style="list-style:none;">
               <!-- facebook -->
               <li>
@@ -95,7 +90,6 @@
                 </div>
               </li>
             </ul>
-          </b-col>
     </b-row>
        <br>
   </b-container>

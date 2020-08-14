@@ -1,26 +1,17 @@
 <template>
   <div id="detail-view">
-      <recipe class="view-container"/>
-      <ingredient class="view-container"/>
-      <cooking-step class="view-container"/>
-
       <button data-html2canvas-ignore="true" @click="makePDF">PDF</button>
       <div><button @click="doPrint">레시피 출력하기</button></div>
 
-      <recipe />
-      <hr>
-      <ingredient />
-      <hr>
-      <cookingstep />
+      <recipe class="view-container"/>
+      <ingredient class="view-container"/>
+      <cooking-step class="view-container"/>
 
     <!-- Floating Button -->
       <!-- <b-button id="button" v-b-modal="'my-modal'" class="noprint">가로보기</b-button> -->
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 
     <!-- 댓글 -->
-    <commentCreate />
-    <commentList />
-
     <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true"/>
     <commentList data-html2canvas-ignore="true"/>
 
