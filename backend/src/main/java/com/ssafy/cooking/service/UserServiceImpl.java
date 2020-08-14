@@ -98,14 +98,10 @@ public class UserServiceImpl implements UserService{
 		
 		if(userDao.reviseUser(user) > 0) {
 			List<SNS> snsList = user.getSns_list();
+			userDao.deleteLinkedSNS(Integer.toString(user.getUser_id()), null);
 			for(SNS sns : snsList) {
-				SNS ori = userDao.getLinkedSNS(Integer.toString(user.getUser_id()), sns.getSns_name());
-				if(ori == null) {//새로 추가
+				if(sns.getSns_name() != null && sns.getSns_name() != "") {
 					userDao.insertLinkedSNS(Integer.toString(user.getUser_id()), sns.getSns_name(), sns.getSns_url());
-				}else {
-					if(!ori.getSns_url().equals(sns.getSns_url())) {//수정
-						userDao.updateLinkedSNS(Integer.toString(user.getUser_id()), sns.getSns_name(), sns.getSns_url());
-					}
 				}
 			}
 			return 1;
@@ -309,10 +305,6 @@ public class UserServiceImpl implements UserService{
 	public int unfollow(String from_user, String to_user) {
 		return userDao.unfollow(from_user, to_user);
 	}
-
-	
-	
-	
 	
 	@Override
 	public List<SNS> getLinkedSNS(String uid) {
@@ -324,17 +316,9 @@ public class UserServiceImpl implements UserService{
 		return userDao.insertLinkedSNS(uid, name, url);
 	}
 
-	@Override
-	public int reviseLinkedSNS(String uid, String name, String url) {
-		return userDao.updateLinkedSNS(uid, name, url);
-	}
 
 	@Override
 	public int removeLinkedSNS(String uid, String name) {
 		return userDao.deleteLinkedSNS(uid, name);
 	}
-
-
-	
-
 }
