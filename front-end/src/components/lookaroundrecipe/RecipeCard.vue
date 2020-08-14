@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="card-container">
         <!-- Post-->
         <div class="post-module">
             <!-- Thumbnail-->
@@ -216,14 +216,14 @@ export default {
   right: 0.3em;
 }
 
-.container {
+.card-container {
   width: 100%;
   height: 340px;
   margin: 0 auto;
 }
 
-.container:before,
-.container:after {
+.card-container:before,
+.card-container:after {
   content: '';
   display: block;
   clear: both;
