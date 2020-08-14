@@ -10,6 +10,7 @@
         
 
       <!-- <b-button id="button" v-b-modal="'my-modal'" class="noprint">가로보기</b-button> -->
+      <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" />
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 
     <!-- 댓글 -->
@@ -167,7 +168,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #detail-view {
   width: 90%;
   min-height: 200vh;
@@ -197,25 +198,48 @@ export default {
   }
 }
 
-#top-btn {
+#read-btn {
     position: fixed;
+    bottom: 2.5em;
     right: 3.5%;
-    bottom: 1em;
     background-color: white;
     border-radius: 10%;
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
-    font-size: 2.8rem;
-    width: 1em;
-    height: 1em;
+    font-size: 2.5rem;
+    width: 45px;
+    height: 45px;
     padding: 2px;
     z-index: 10;
     cursor: pointer;
 }
 
+#top-btn {
+    position: fixed;
+    bottom: 1em;
+    right: 3.5%;
+    background-color: white;
+    border-radius: 10%;
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+    font-size: 2.8rem;
+    width: 45px;
+    height: 45px;
+    padding: 2px;
+    z-index: 10;
+    cursor: pointer;
+    font-size: 2.8rem;
+}
+
 @media (max-width: 768px) {
   #top-btn {
     font-size: 2rem;
-    right: 2%;
+    width: 30px;
+    height: 30px;
+  }
+  #read-btn {
+    font-size: 2rem;
+    width: 30px;
+    height: 30px;
+    bottom: 2.2em;
   }
 }
 
@@ -223,24 +247,11 @@ export default {
   #top-btn {
     bottom: 0.5em;
   }
+  #read-btn {
+    bottom: 1.7em;
+  }
 }
 
-    #button {
-        font-size: 4rem;
-        box-sizing: content-box;
-        position: fixed;
-        right: 5vw;
-        bottom: 20vh;
-        cursor: pointer;
-    }
-    #button-bottom{
-        font-size: 4rem;
-        box-sizing: content-box;
-        position: fixed;
-        right: 5vw;
-        bottom: 10vh;
-        cursor: pointer;
-    }
     .timerpos {
         background-color: #eee;
         z-index: 1;
