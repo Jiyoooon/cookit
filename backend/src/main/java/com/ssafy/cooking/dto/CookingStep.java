@@ -1,5 +1,7 @@
 package com.ssafy.cooking.dto;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class CookingStep {
@@ -11,7 +13,7 @@ public class CookingStep {
 	private String step_image;
 	private String create_date;
 	private String update_date;
-	private String time;
+	private List<int[]> time;
 	private MultipartFile step_image_file;
 	public Integer getCooking_steps_id() {
 		return cooking_steps_id;
@@ -67,12 +69,10 @@ public class CookingStep {
 	public void setUpdate_date(String update_date) {
 		this.update_date = update_date;
 	}
-	public String getTime() {
+	public List<int[]> getTime() {
 		return time;
 	}
-	public void setTime(String time) {
+	public void setTime(List<int[]> time) {
 		this.time = time;
 	}
-	
-
 }
