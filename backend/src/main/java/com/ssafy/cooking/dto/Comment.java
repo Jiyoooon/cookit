@@ -4,6 +4,7 @@ public class Comment {
 	private int comment_id;
 	private int comment_user_id;
 	private String comment_user_name;
+	private String comment_user_profileImage;//작성자 사진
 	private int recipe_id;
 	private String description;
 	private String create_date; //작성시간
@@ -57,5 +58,12 @@ public class Comment {
 	public void setDelete_date(String delete_date) {
 		this.delete_date = delete_date;
 	}
+	public String getComment_user_profileImage() {
+		return comment_user_profileImage;
+	}
+	public void setComment_user_profileImage(String comment_user_profileImage) {
+		this.comment_user_profileImage = comment_user_profileImage;
+	}
+	
 	
 }

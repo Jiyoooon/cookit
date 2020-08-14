@@ -1,5 +1,6 @@
 package com.ssafy.cooking.dto;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class RecipeDetail extends Recipe {
@@ -22,11 +23,16 @@ public class RecipeDetail extends Recipe {
 		setCooking_time(recipe.getCooking_time());
 		setLevel(recipe.getLevel());
 		setHits(recipe.getHits());
-		setTag(recipe.getTag());
 		setCreate_date(recipe.getCreate_date());
 		setUpdate_date(recipe.getUpdate_date());
 		setDelete_date(recipe.getDelete_date());
 		setLike(recipe.getLike());
+	
+		if(recipe.getTagString().length() > 2) {
+			setTag(recipe.getTagString().split(","));
+		}
+		
+		setTagString(Arrays.toString(getTag()));
 	}
 
 	public List<Ingredient> getIngredients() {
