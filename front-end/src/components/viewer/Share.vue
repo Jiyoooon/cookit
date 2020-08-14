@@ -120,8 +120,8 @@ export default {
             pdf.addImage(imgData, 'png', 0, position, pageWidth, imgHeight, undefined, 'slow')
             let heightLeft = imgHeight //페이징 처리를 위해 남은 페이지 높이 세팅.
             heightLeft -= pageHeight
-            while (heightLeft >= 0) {
-              position = heightLeft - (imgHeight * 0.97)
+            while (heightLeft >= pageHeight) {
+              position = heightLeft - imgHeight
               pdf.addPage();
               pdf.addImage(imgData, 'png', 0, position, pageWidth, imgHeight)
               heightLeft -= pageHeight

@@ -49,15 +49,6 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-<<<<<<< HEAD
-import cookingstep from '../../components/viewer/CookingStep.vue'
-import ingredient from '../../components/viewer/Ingredient.vue'
-import recipe from '../../components/viewer/Recipe.vue'
-import commentCreate from '../../components/viewer/CommentCreate.vue'
-import commentList from '../../components/viewer/CommentList.vue'
-import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf' 
-=======
 import recipe from '@/components/viewer/Recipe.vue'
 import share from '@/components/viewer/Share.vue'
 import ingredient from '@/components/viewer/Ingredient.vue'
@@ -65,7 +56,6 @@ import cookingStep from '@/components/viewer/CookingStep.vue'
 import commentList from '@/components/viewer/CommentList.vue'
 import timeroverlay from '@/components/viewer/TimerOverlay.vue'
 import commentCreate from '@/components/viewer/CommentCreate.vue'
->>>>>>> develop
 
 export default {
     name: 'recipeDetailView',

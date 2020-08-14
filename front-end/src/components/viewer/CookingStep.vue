@@ -15,11 +15,7 @@
   </div>
 </template>
 <script>
-<<<<<<< HEAD
-import cookingstepitem from './CookingStepItem.vue'
-=======
 import cookingStepItem from '@/components/viewer/CookingStepItem.vue'
->>>>>>> develop
 import { mapState } from 'vuex'
 
 export default {
