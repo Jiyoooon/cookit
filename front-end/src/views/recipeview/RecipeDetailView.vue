@@ -1,13 +1,14 @@
 <template>
   <div id="detail-view">
-      <button data-html2canvas-ignore="true" @click="makePDF">PDF</button>
-      <div><button @click="doPrint">레시피 출력하기</button></div>
-
       <recipe class="view-container"/>
+      <share :selectedRecipe="selectedRecipe" class="view-container" data-html2canvas-ignore="true" />
       <ingredient class="view-container"/>
       <cooking-step class="view-container"/>
 
-    <!-- Floating Button -->
+        <!-- 타이머 -->
+        <timeroverlay/>
+        
+
       <!-- <b-button id="button" v-b-modal="'my-modal'" class="noprint">가로보기</b-button> -->
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 
@@ -15,13 +16,12 @@
     <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true"/>
     <commentList data-html2canvas-ignore="true"/>
 
-    
-        <!-- The modal -->
-        <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
-            <template v-slot:modal-title>
-                쿠킹스탭 <b-button @click="doSpeech" id="speechButton">음성인식 시작</b-button>
-            </template>
-            <b-carousel
+    <!-- The modal -->
+    <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
+        <template v-slot:modal-title>
+            쿠킹스탭 <b-button @click="doSpeech" id="speechButton">음성인식 시작</b-button>
+        </template>
+        <b-carousel
             ref="recipeCarousel"
             id="carousel-fade"
             style="text-shadow: 1px 1px 2px #000"
@@ -33,15 +33,15 @@
             img-width=100
             img-height=100
             >
-            <b-carousel-slide
+        <b-carousel-slide
             v-for="cookingstep in selectedRecipe.cookingStep"
             :key="cookingstep.cooking_steps_id"
             :caption="(String)(cookingstep.steps)"
             :img-src="cookingstep.step_image"
             style="height:70vh"
-            
-            text="ddd"
-            ><h1>{{ cookingstep.description }}</h1></b-carousel-slide>
+            text="ddd">
+            <h1>{{ cookingstep.description }}</h1>
+        </b-carousel-slide>
             </b-carousel>
         </b-modal>
   </div>
@@ -49,22 +49,25 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import cookingStep from '@/components/viewer/CookingStep.vue'
-import ingredient from '@/components/viewer/Ingredient.vue'
 import recipe from '@/components/viewer/Recipe.vue'
-import commentCreate from '@/components/viewer/CommentCreate.vue'
+import share from '@/components/viewer/Share.vue'
+import ingredient from '@/components/viewer/Ingredient.vue'
+import cookingStep from '@/components/viewer/CookingStep.vue'
 import commentList from '@/components/viewer/CommentList.vue'
-import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf' 
+import timeroverlay from '@/components/viewer/TimerOverlay.vue'
+import commentCreate from '@/components/viewer/CommentCreate.vue'
 
 export default {
     name: 'recipeDetailView',
+    
     components: {
-        cookingStep,
-        ingredient,
         recipe,
-        commentCreate,
+        ingredient,
+        cookingStep,
+        share,
         commentList,
+        timeroverlay,
+        commentCreate,
     },
     computed: {
         ...mapState('recipes', ['selectedRecipe']),
@@ -82,60 +85,14 @@ export default {
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
-        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
-        ...mapActions('editor', ['deleteRecipe']),
         gorecipeupdate() {
           console.log('nnnn')
           if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
               this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
           }
         },
-        makePDF () {
-            window.html2canvas = html2canvas //Vue.js 특성상 window 객체에 직접 할당해야한다.
-            // let that = this
-            let pdf = new jsPDF('p', 'mm', 'a4')
-            window.scrollTo(0, 0);
-            let canvas = pdf.canvas
-            const pageWidth = 210 //캔버스 너비 mm
-            const pageHeight = 295 //캔버스 높이 mm
-            canvas.width = pageWidth
-
-            let ele = document.querySelector('#recipe')
-            let width = ele.offsetWidth // 셀렉트한 요소의 px 너비
-            let height = ele.offsetHeight // 셀렉트한 요소의 px 높이
-            let imgHeight = pageWidth * height/width // 이미지 높이값 px to mm 변환
-
-            if(!ele){
-                console.warn('recipe is not exist.')
-                return false
-            }
-            html2canvas(ele).then(function(canvas) {
-                let position = 0
-                const imgData = canvas.toDataURL('image/png')
-
-                return new Promise(function() {
-                    window.setTimeout(function() {
-                        pdf.addImage(imgData, 'png', 0, position, pageWidth, imgHeight, undefined, 'slow')
-                        let heightLeft = imgHeight //페이징 처리를 위해 남은 페이지 높이 세팅.
-                        heightLeft -= pageHeight
-                        while (heightLeft >= 0) {
-                        position = heightLeft - (imgHeight * 0.97)
-                        pdf.addPage();
-                        pdf.addImage(imgData, 'png', 0, position, pageWidth, imgHeight)
-                        heightLeft -= pageHeight
-                        }
-                        console.log(pdf)
-                        pdf.save('cookit-recipe'.toLowerCase() +'.pdf')
-                    })
-                })
-                //Paging 처리
-            },
-
-            );	
-		},      
-        doPrint(){
-           window.print();
-        },
+        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
+        ...mapActions('editor', ['deleteRecipe']),
         startSpeaking() {
             console.log("음성인식 start");
             this.isSpeaking = true;
@@ -211,7 +168,6 @@ export default {
 </script>
 
 <style>
-
 #detail-view {
   width: 900px;
   display: block;
@@ -273,6 +229,13 @@ export default {
         right: 5vw;
         bottom: 10vh;
         cursor: pointer;
+    }
+    .timerpos {
+        background-color: #eee;
+        z-index: 1;
+        position: absolute;
+        width: 100%;
+        height: 100%;
     }
     @media print  {
         .noprint {

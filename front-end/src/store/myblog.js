@@ -106,11 +106,22 @@ export default {
             dispatch('GoMyBlog')
           } else {
             router.push({ name: 'UserBlogListView', params: { user_id: user_id }})
+            // location.reload()
           }
         })
         .catch((err) => {
           console.err(err.response)
         })
+    },
+    getUserInfo2({dispatch,rootState},user_id){
+      if (rootState.accounts.authUser.user_id == user_id) {
+        dispatch('GoMyBlog')
+      } else {
+        router.push({ name: 'UserBlogListView', params: { user_id: user_id }})
+        location.reload()
+        console.log(router)
+        console.log(location)
+      }
     },
   },
 }
