@@ -5,8 +5,10 @@
     <b-tabs content-class="mt-3" align="center">
         <b-tab @click="showMyRecipes" title="Post" active></b-tab>
         <b-tab @click="showLikeRecipes" title="Likes"></b-tab>
+        <!--
         <b-tab @click="showFollowers" title="Followers"></b-tab>
         <b-tab @click="showFollowings" title="Followings"></b-tab>
+        -->
     </b-tabs>
     <!-- <b-button @click="showMyRecipes">Post</b-button>
     <b-button @click="showLikeRecipes">Likes</b-button>
@@ -96,7 +98,7 @@ export default {
     created() {
         this.SET_USERINFO(this.authUser)
         this.getUserInfo(this.authUser.user_id)
-        console.log('!!!!')
+        // console.log('!!!!내블로그!!!!')
         // console.log(this.selecteduserinfo)
         // this.fetchMyRecipes()
     },
