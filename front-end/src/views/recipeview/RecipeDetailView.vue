@@ -5,10 +5,6 @@
       <ingredient class="view-container"/>
       <cooking-step class="view-container"/>
 
-        <!-- 타이머 -->
-        <timeroverlay/>
-        
-
       <!-- <b-button id="button" v-b-modal="'my-modal'" class="noprint">가로보기</b-button> -->
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 
@@ -54,7 +50,6 @@ import share from '@/components/viewer/Share.vue'
 import ingredient from '@/components/viewer/Ingredient.vue'
 import cookingStep from '@/components/viewer/CookingStep.vue'
 import commentList from '@/components/viewer/CommentList.vue'
-import timeroverlay from '@/components/viewer/TimerOverlay.vue'
 import commentCreate from '@/components/viewer/CommentCreate.vue'
 
 export default {
@@ -66,7 +61,6 @@ export default {
         cookingStep,
         share,
         commentList,
-        timeroverlay,
         commentCreate,
     },
     computed: {
