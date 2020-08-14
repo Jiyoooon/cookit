@@ -78,6 +78,7 @@ export default {
 			if(!file) return;
 			console.log(e)
 			const index = Number(e.path[0].id);
+			console.log(e.path[0])
 			this.cookingStep[index].step_image_url = URL.createObjectURL(file);
 		},
 	},

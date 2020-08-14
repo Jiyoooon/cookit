@@ -43,12 +43,11 @@
 	</insert>
 	<insert id = "addCookingsteps">
 		INSERT INTO Cooking_steps(
-						recipe_id, steps, description, tip, 
-						step_image, time
+						recipe_id, steps, description, tip, step_image
 					) VALUES
 					<foreach collection="cookingSteps" item="step" separator=",">
 					(
-						#{recipe_id}, #{step.steps}, #{step.description}, #{step.tip}, #{step.step_image}, #{step.time}
+						#{recipe_id}, #{step.steps}, #{step.description}, #{step.tip}, #{step.step_image}
 					)
 					</foreach>
 					
@@ -56,25 +55,25 @@
 
 	<update id="reviseRecipe">
 		UPDATE Recipe
-		SET category_id = #{category_id}
-			, title = #{category_id}
-			, description = #{description}
-			, servings = #{servings}
-			, cooking_time = #{cooking_time}
-			, level = #{level}
-			, tag = #{tag}
-			, update_date = now()
-		WHERE recipe_id = #{recipe_id}
+		SET update_date = now()
+			, category_id = #{recipeData.category_id}
+			, title = #{recipeData.title}
+			, description = #{recipeData.description}
+			, servings = #{recipeData.servings}
+			, cooking_time = #{recipeData.cooking_time}
+			, level = #{recipeData.level}
+			, tag = #{recipeData.tag}
+		WHERE recipe_id = #{recipeData.recipe_id}
+		AND recipe_user = #{uid}
 	</update>
 
 	<update id="reviseCookingsteps">
-		<foreach collection="cookingSteps" item="step" separator=",">
+		<foreach collection="cookingStep" item="step" separator=",">
 		UPDATE Cooking_steps
 		SET steps = #{step.steps}
 		, description = #{step.description}
 		, tip = #{step.tip}
 		, step_image = #{step.step_image}
-		, time = #{step.time}
 		, update_date = now()
 		WHERE cooking_steps_id = #{step.cooking_steps_id}
 		</foreach>
@@ -82,13 +81,12 @@
 
 	<delete id="deleteIngredients">
 		DELETE FROM Ingredient
-		WEHRE 	recipe_id = #{recipe_id}
+		WHERE 	recipe_id = #{recipe_id}
 	</delete>
 
 	<delete id="deleteCookingSteps">
 		DELETE FROM Cooking_steps
-		WEHRE 	recipe_id = #{recipe_id}
-			AND	steps > #{step}
+		WHERE 	recipe_id = #{recipe_id}
 	</delete>
 	
 	<select id="getRecipes" resultType="Recipe">
@@ -106,7 +104,8 @@
 		</if>
 		WHERE 1 = 1
 		<if test="query != null and query != ''">
-			AND title LIKE CONCAT('%', #{query}, '%')
+			AND (title LIKE CONCAT('%', #{query}, '%')
+			OR tag LIKE CONCAT('%', #{query}, '%'))
 		</if>
 		<if test="id != null and id != '' and id != 0">
 			AND r.recipe_id = #{id}
@@ -150,7 +149,7 @@
 	<select id="getCookingSteps" resultType="CookingStep">
 		SELECT cooking_steps_id, recipe_id, 
 		steps, description, tip, step_image,
-		create_date, update_date, time
+		create_date, update_date
 		FROM Cooking_steps
 		WHERE recipe_id = #{recipe_id}
 	</select>
@@ -287,8 +286,8 @@
 		</if>
 		WHERE 1 = 1
 		<if test="query != null and query != ''">
-			AND title LIKE CONCAT('%', #{query}, '%')
-			OR tag LIKE CONCAT('%', #{query}, '%')
+			AND (title LIKE CONCAT('%', #{query}, '%')
+			OR tag LIKE CONCAT('%', #{query}, '%'))
 		</if>
 		<if test="id != null and id != '' and id != 0">
 			AND r.recipe_id = #{id}

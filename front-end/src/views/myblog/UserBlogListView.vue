@@ -44,13 +44,6 @@ export default {
     created() {
         console.log(this.selecteduserinfo)
         this.SET_USERINFO({//들어가는 블로그의 유저정보
-            email: null,
-            hits: null,
-            image_name: null,
-            image_url: null,
-            nickname: null,
-            password: null,
-            start_page: null,
             user_id: this.$route.params.user_id,
         },)
         this.getUserInfo(this.$route.params.user_id)
