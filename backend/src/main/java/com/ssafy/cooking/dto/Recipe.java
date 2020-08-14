@@ -1,5 +1,6 @@
 package com.ssafy.cooking.dto;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +27,6 @@ public class Recipe {
 	private Integer likeNum;
 	private List<Integer> like;
 	private MultipartFile main_image_file;
-	
 	
 	public Integer getComments() {
 		return comments;
@@ -162,8 +162,8 @@ public class Recipe {
 				+ recipe_user_name + ", recipe_user_profileImage=" + recipe_user_profileImage + ", category_id="
 				+ category_id + ", title=" + title + ", description=" + description + ", main_image=" + main_image
 				+ ", servings=" + servings + ", cooking_time=" + cooking_time + ", level=" + level + ", hits=" + hits
-				+ ", comments=" + comments + ", tag=" + tag + ", tagString=" + tagString + ", create_date="
-				+ create_date + ", update_date=" + update_date + ", delete_date=" + delete_date + ", likeNum=" + likeNum
-				+ ", like=" + like + ", main_image_file=" + main_image_file + "]";
+				+ ", comments=" + comments + ", tag=" + Arrays.toString(tag) + ", tagString=" + tagString
+				+ ", create_date=" + create_date + ", update_date=" + update_date + ", delete_date=" + delete_date
+				+ ", likeNum=" + likeNum + ", like=" + like + ", main_image_file=" + main_image_file + "]";
 	}
 }

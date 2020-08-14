@@ -27,12 +27,18 @@ public class RecipeDetail extends Recipe {
 		setUpdate_date(recipe.getUpdate_date());
 		setDelete_date(recipe.getDelete_date());
 		setLike(recipe.getLike());
+		setTag(recipe.getTag());
 	
-		if(recipe.getTagString().length() > 2) {
-			setTag(recipe.getTagString().split(","));
-		}
-		
-		setTagString(Arrays.toString(getTag()));
+//		if(recipe.getTag().length() > 2) {
+//			setTagString((recipe.getTag().split(",")));
+//			String tag = "[ ";
+//			for (String t : getTagString()) {
+//				tag += '"' + t + '"' + ',' + ' ';
+//			}
+//		}
+//		
+//		
+//		setTag(Arrays.toString(getTagString()));
 	}
 
 	public List<Ingredient> getIngredients() {
