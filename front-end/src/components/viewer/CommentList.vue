@@ -8,7 +8,7 @@
 
 <script>
 import { mapState } from 'vuex'
-// import CommentListItem from './CommentListItem.vue'
+import CommentListItem from './CommentListItem.vue'
 
 export default {
     name: 'commentList',
@@ -20,7 +20,7 @@ export default {
     },
     components: {
         // commentUpdate,
-        // CommentListItem,
+        CommentListItem,
     },
     computed: {
         ...mapState('recipes', ['comments', 'selectedRecipe']),
@@ -37,6 +37,10 @@ export default {
                 // console.log('!!!!!!!!!!!!')
             }
         }
+    },
+    created() {
+        console.log('!!!!')
+        console.log(this.comments)
     }
 }
 </script>
