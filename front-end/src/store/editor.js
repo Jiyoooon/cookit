@@ -1,6 +1,6 @@
 import axios from 'axios'
 import SERVER from '@/api/url.js'
-import router from '../router'
+import router from '@/router'
 
 export default {
   namespaced: true,
@@ -114,7 +114,7 @@ export default {
       // ingredient[2].key : value 이런 식으로 값이 들어감
       const recipeData = new FormData();
       for (let [key, value] of Object.entries(state.recipe)) {
-        if (key == "main_image_file" && value == null) continue;
+        if (!value) continue;
         // console.log(`recipe.${key}: ${value}`)
         recipeData.append(key, value);
       }
@@ -123,6 +123,7 @@ export default {
         if (ingredients[i].name == null && ingredients[i].quantity == null) continue;
         for (let [key, value] of Object.entries(ingredients[i])) {
           if(key == "valid") continue;
+          if (!value) continue;
           // console.log(`ingredients[${i}].${key}: ${value}`)
           recipeData.append(`ingredients[${i}].${key}`, value)
         }
@@ -132,7 +133,7 @@ export default {
         if (state.cookingStep[i].description == null && state.cookingStep[i].tip == null
           && state.cookingStep[i].step_image_file == null) continue;
         for (let [key, value] of Object.entries(state.cookingStep[i])) {
-          if (key == "step_image_file" && value == null) continue;
+          if (!value) continue;
           if (key == "step_image_url") continue;
           // console.log(`cookingStep[${i}].${key}: ${value}`)
           recipeData.append(`cookingStep[${i}].${key}`, value)
@@ -226,7 +227,9 @@ export default {
       axios.post(SERVER.ROUTES.editor.saveRecipe, recipeData, headerConfig)
       .then((res) => {
         console.log(res)
-        router.push({ name: 'MyBlogListView'})
+        return new Promise(() => {
+          router.push({ name: 'MyBlogListView'})
+        })
         // 레시피 화면으로 redirect 필요
       })
       .catch((err) => {
@@ -236,12 +239,15 @@ export default {
     onSubmitButtonforUpdate({ getters }) {
       if(!getters.isValidRecipe) return;
       const recipeData = getters.getRecipeData;
+      const recipeId = router.history.current.params.recipe_id;
+      recipeData.append('recipe_id', `${recipeId}`)
       const headerConfig = getters.getHeader;
-      
       axios.put(SERVER.ROUTES.editor.updateRecipe, recipeData, headerConfig)
       .then((res) => {
         console.log(res)
-        // 레시피 화면으로 redirect 필요
+        return new Promise(() => {
+          router.push({ name: 'SelectedRecipe', recipe_id: recipeId })
+        })
       })
       .catch((err) => {
         console.log(err)
