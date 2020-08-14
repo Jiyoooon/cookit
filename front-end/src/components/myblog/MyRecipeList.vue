@@ -53,7 +53,7 @@ export default {
           this.flag = true
         }
       },
-      currentPageItems() {//문제의 원인은 얘다/
+      currentPageItems(){
           let lengthAll =this.myrecipes.length;
           for (let i = 0; i < lengthAll; i = i + this.perPage) {
             this.changePaginateditems(this.nbPages, this.myrecipes.slice(i,i+this.perPage))
@@ -64,7 +64,7 @@ export default {
         },
         totalRows() {
             return this.myrecipes.length
-      }
+        }
     },
     watch: {
       myrecipes: {
@@ -72,6 +72,8 @@ export default {
         handler() {
           this.currentPageItems();
           this.totalRows();
+          console.log("myrecipes 목록 새로 가져옴 => 페이징 처리함")
+          console.log(this.myrecipes)
           // this.$router.go(this.$router.currentRoute)
           // this.$router.go(0)
           // location.reload()
@@ -97,15 +99,8 @@ export default {
       // this.SET_FLAG(false)
       // console.log(this.flag)
     },
-    updated() {
-      // this.currentPageItems();
-      // this.totalRows();
-      // for(var i = 0; i < this.nbPages; i++) console.log(this.paginated_items[i]);
-        // setTimeout(() => {
-        //     this.fortest()
-        // },1000);
-    },
     created() {
+      console.log("레시피목록 가져오기 created")
       this.fetchMyRecipes(this.selecteduserinfo)
       // this.SET_FLAG(false)
       // console.log(this.flag)
