@@ -13,7 +13,8 @@
 
     <b-row>
       <b-col sm="7">
-        {{ cookingstep.description }}
+        <timeDescription :description='cookingstep.description' :time='cookingstep.time' :number='cookingstep.steps'/>
+
       </b-col>
       <b-col v-if="cookingstep.step_image" sm="5" data-html2canvas-ignore="true">
         <b-img :src="cookingstep.step_image" class="rounded-lg" style="max-width: 100%; max-height:380px;"/>
@@ -28,11 +29,15 @@
 </template>
 
 <script>
+import timeDescription from '@/components/viewer/TimeDescription.vue'
 export default {
     name: 'CookingStepItem,',
     props: {
         cookingstep: Object,
     },
+    components:{
+      timeDescription,
+    }
 
 }
 </script>
