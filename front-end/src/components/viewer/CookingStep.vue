@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import cookingstepitem from './cookingstepitem.vue'
+import cookingstepitem from './CookingStepItem.vue'
 import { mapState } from 'vuex'
 
 export default {

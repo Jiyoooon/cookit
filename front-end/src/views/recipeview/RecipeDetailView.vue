@@ -59,11 +59,11 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import cookingstep from '../../components/recipeview/cookingstep.vue'
-import ingredient from '../../components/recipeview/ingredient.vue'
-import recipe from '../../components/recipeview/recipe.vue'
-import commentCreate from '../../components/recipeview/commentCreate.vue'
-import commentList from '../../components/recipeview/commentList.vue'
+import cookingstep from '../../components/viewer/CookingStep.vue'
+import ingredient from '../../components/viewer/Ingredient.vue'
+import recipe from '../../components/viewer/Recipe.vue'
+import commentCreate from '../../components/viewer/CommentCreate.vue'
+import commentList from '../../components/viewer/CommentList.vue'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf' 
 
