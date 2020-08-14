@@ -70,8 +70,13 @@ export default {
       myrecipes: {
         deep: true,
         handler() {
-          this.currentPageItems();
-          this.totalRows();
+          console.log('??????????????????')
+          this.paginated_items = []
+          let lengthAll =this.myrecipes.length;
+          for (let i = 0; i < lengthAll; i = i + this.perPage) {
+            this.paginated_items[i] = this.myrecipes.slice(i,i+this.perPage)
+            this.nbPages++
+          }
           console.log("myrecipes 목록 새로 가져옴 => 페이징 처리함")
           console.log(this.myrecipes)
           // this.$router.go(this.$router.currentRoute)
