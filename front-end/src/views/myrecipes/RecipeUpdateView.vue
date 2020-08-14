@@ -23,11 +23,11 @@
       <CookingStepforUpdate />
     </div>
     <div>
-      <b-container>
+      <b-container fluid>
         <b-row>
           <b-col sm="3"></b-col>
-          <b-col sm="3"><b-button variant="primary" @click="onSubmitButtonforUpdate" block>완료</b-button></b-col>
-          <b-col sm="3"><b-button variant="danger" block>취소</b-button></b-col>
+          <b-col sm="3"><div class="block-btn btn-style1" @click="onSubmitButtonforUpdate" block>완료</div></b-col>
+          <b-col sm="3"><div class="block-btn btn-style4">취소</div></b-col>
           <b-col sm="3"></b-col>
         </b-row>
       </b-container>
