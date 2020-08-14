@@ -34,7 +34,7 @@ public interface RecipeService {
 
 	public String[] getSmallIngredients();
 
-	public int reviseRecipe(RecipeDetail recipeData, String baseUrl);
+	public int reviseRecipe(Integer uid, RecipeDetail recipeData, String baseUrl);
 
 	public int setLike(int recipe_id, int uid);
 }

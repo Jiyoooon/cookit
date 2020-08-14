@@ -2,7 +2,7 @@
   <li>
       <span v-if="!(selectedcomment.id == comment.comment_id)">{{ comment.description }} | 작성자 : {{ comment.comment_user_name }}</span>
       <commentUpdate v-if="selectedcomment.id == comment.comment_id" :comment="comment"/>
-      <span v-if="authUser.user_id == comment.comment_user_id">
+      <span v-if="(authUser) && (authUser.user_id == comment.comment_user_id)">
           <b-button v-if="!(selectedcomment.id == comment.comment_id)" @click="deleteComment(comment.comment_id)">삭제</b-button>
           <b-button v-if="!(selectedcomment.id == comment.comment_id)" @click="SET_SELECTEDCOMMENT(comment.comment_id)">수정</b-button>
       </span>
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import commentUpdate from './commentUpdate.vue'
+import commentUpdate from './CommentUpdate.vue'
 
 import { mapState, mapActions, mapMutations } from 'vuex'
 

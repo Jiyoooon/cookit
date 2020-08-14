@@ -1,42 +1,42 @@
 <template>
   <div>
-    <b-container fluid="lg">
+    <b-container fluid>
       <b-row>
-        <b-col sm="8">
-          <b-container fluid="lg" id="basicInfo-container">
+        <b-col lg="8">
+          <b-container fluid="xs" id="basicInfo-container">
             <b-row align-v="center">
-              <b-col sm="2">제목</b-col>
-              <b-col sm="10">
+              <b-col md="2">제목<span style="color:red;">*</span></b-col>
+              <b-col md="10">
                 <b-form-input type="text" v-model="recipe.title" required></b-form-input>
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="2">소개말</b-col>
-              <b-col sm="10">
+              <b-col md="2">소개말</b-col>
+              <b-col md="10">
                 <b-form-textarea type="textarea" v-model="recipe.description" required></b-form-textarea>
               </b-col>
             </b-row>
             <b-row align-v="center">
-              <b-col sm="2">카테고리</b-col>
-              <b-col sm="3">
+              <b-col md="2">카테고리<span style="color:red;">*</span></b-col>
+              <b-col md="3">
                 <b-form-select v-model="recipe.category_id" :options="categoryOpt" required></b-form-select>
               </b-col>
             </b-row>
             <b-row align-v="center">
-              <b-col sm="2">정보</b-col>
-              <b-col sm="3">
+              <b-col md="2">정보</b-col>
+              <b-col md="3">
                 <b-form-select v-model="recipe.servings" :options="servingOpt" required></b-form-select>
               </b-col>
-              <b-col sm="3">
+              <b-col md="3">
                 <b-form-select v-model="recipe.cooking_time" :options="timeOpt" required></b-form-select>
               </b-col>
-              <b-col sm="3">
+              <b-col md="3">
                 <b-form-select v-model="recipe.level" :options="levelOpt" required></b-form-select>
               </b-col>
-              <b-col sm="1"></b-col>
+              <b-col md="1"></b-col>
             </b-row>
 						<b-row align-v="center">
-							<b-col sm="2">태그</b-col>
+							<b-col md="2">태그</b-col>
 							<b-col>
 								<b-form-tags 
 								input-id="tags-remove-on-delete"
@@ -54,7 +54,7 @@
 						</b-row>
           </b-container>
         </b-col>
-        <b-col sm="4">
+        <b-col lg="4">
           <b-container fluid="lg">
             <b-row>
               <b-col>
@@ -64,7 +64,7 @@
             </b-row>
             <b-row>
               <b-col>
-                <img v-if="imageUrl!=null" :src="imageUrl" height="200px">
+                <b-img v-if="recipe.main_image_file!=null" :src="imageUrl" height="200px" />
                 <span v-else></span>
               </b-col>
             </b-row>
@@ -126,7 +126,7 @@ export default {
         setThumbnail(e) {
 					const file = e.target.files;
 					if (file.length == 0) {
-            this.imageUrl = null
+            this.imageUrl = this.selectedRecipe.main_image
             return;
           }
           this.imageUrl = URL.createObjectURL(file[0])
@@ -140,10 +140,10 @@ export default {
             this.recipe.level = this.selectedRecipe.level
             this.recipe.tag = this.selectedRecipe.tag
             this.imageUrl = this.selectedRecipe.main_image
-
         }
     },
     created() {
+      console.log(this.selectedRecipe)
         this.inputInitialValue()
     }
 }

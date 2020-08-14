@@ -10,7 +10,7 @@
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'commentCreate',
+    name: 'CommentCreate',
     data() {
         return {
             commentData: {

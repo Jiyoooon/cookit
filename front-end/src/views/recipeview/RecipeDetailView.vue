@@ -1,4 +1,6 @@
 <template>
+
+
     <div style="width:100%; height:100%">
             
         <div v-if="checkdeleteauth">
@@ -25,30 +27,33 @@
                 </div>
             </div>
         </v-overlay>
-    
-    <div class="text-center">
-        <v-btn
-        id = "button1"
-        @click="setTimerValue('00:04'); (overlay = !overlay);"
-        >
-        3초
-        </v-btn>
-    </div>    
+        <div class="text-center">
+            <v-btn
+            id = "button1"
+            @click="setTimerValue('00:04'); (overlay = !overlay);"
+            >
+            3초
+            </v-btn>
+        </div>    
       <div id = "button2" @click="setTimerValue('00:21')">
         20초
       </div>
-      <div  id= "button">
+      <div id= "button" class="noprint">
             <b-icon icon="book" v-b-modal="'my-modal'" scale="1" v-b-tooltip.hover title="가로보기"></b-icon>
       </div>
-      <div @click="scrollToTop" id= "button-bottom">
+      <div @click="scrollToTop" id= "button-bottom" class="noprint">
             <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로" ></b-icon>
-    </div>
-      <!-- <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button> -->
-    <commentCreate />
-    <commentList />
+      </div>
+      <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button>
+        <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true"/>
+        <commentList data-html2canvas-ignore="true"/>
         <!-- The modal -->
-        <b-modal size="xl" id="my-modal" title="쿠킹스텝">
+        <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
+            <template v-slot:modal-title>
+                쿠킹스탭 <b-button @click="doSpeech" id="speechButton">음성인식 시작</b-button>
+            </template>
             <b-carousel
+            ref="recipeCarousel"
             id="carousel-fade"
             style="text-shadow: 1px 1px 2px #000"
             fade
@@ -58,7 +63,7 @@
             
             img-width=100
             img-height=100
-        >
+            >
             <b-carousel-slide
             v-for="cookingstep in selectedRecipe.cookingStep"
             :key="cookingstep.cooking_steps_id"
@@ -74,13 +79,15 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import cookingstep from '../../components/recipeview/cookingstep.vue'
 import ingredient from '../../components/recipeview/ingredient.vue'
 import recipe from '../../components/recipeview/recipe.vue'
 import commentCreate from '../../components/recipeview/commentCreate.vue'
 import commentList from '../../components/recipeview/commentList.vue'
-import timervue from "@/components/recipeview/Timer.vue";
+import timervue from "@/components/viewer/Timer.vue";
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf' 
 
 export default {
     name: 'recipeDetailView',
@@ -102,6 +109,7 @@ export default {
     computed: {
         ...mapState('recipes', ['selectedRecipe']),
         ...mapState('accounts', ['authUser']),
+        ...mapGetters('accounts', ['isLoggedIn']),
         checkdeleteauth() {
             if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
                 return true
@@ -133,11 +141,122 @@ export default {
         },
         ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
         ...mapActions('editor', ['deleteRecipe']),
+        makePDF () {
+            window.html2canvas = html2canvas //Vue.js 특성상 window 객체에 직접 할당해야한다.
+            // let that = this
+            let pdf = new jsPDF('p', 'mm', 'a4')
+            window.scrollTo(0, 0);
+            let canvas = pdf.canvas
+            const pageWidth = 210 //캔버스 너비 mm
+            const pageHeight = 295 //캔버스 높이 mm
+            canvas.width = pageWidth
+
+            let ele = document.querySelector('#recipe')
+            let width = ele.offsetWidth // 셀렉트한 요소의 px 너비
+            let height = ele.offsetHeight // 셀렉트한 요소의 px 높이
+            let imgHeight = pageWidth * height/width // 이미지 높이값 px to mm 변환
+
+            if(!ele){
+                console.warn('recipe is not exist.')
+                return false
+            }
+            html2canvas(ele).then(function(canvas) {
+                let position = 0
+                const imgData = canvas.toDataURL('image/png')
+
+                return new Promise(function() {
+                    window.setTimeout(function() {
+                        pdf.addImage(imgData, 'png', 0, position, pageWidth, imgHeight, undefined, 'slow')
+                        let heightLeft = imgHeight //페이징 처리를 위해 남은 페이지 높이 세팅.
+                        heightLeft -= pageHeight
+                        while (heightLeft >= 0) {
+                        position = heightLeft - (imgHeight * 0.97)
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'png', 0, position, pageWidth, imgHeight)
+                        heightLeft -= pageHeight
+                        }
+                        console.log(pdf)
+                        pdf.save('cookit-recipe'.toLowerCase() +'.pdf')
+                    })
+                })
+                //Paging 처리
+            },
+
+            );	
+		},      
+        doPrint(){
+           window.print();
+        },
+        startSpeaking() {
+            console.log("음성인식 start");
+            this.isSpeaking = true;
+            this.recognition.start();
+            document.getElementById("speechButton").textContent="음석인식 종료";
+        },
+        stopSpeaking(){
+            console.log("음성인식 stop");
+            this.isSpeaking = false;
+            this.recognition.stop();
+            document.getElementById("speechButton").textContent="음성인식 시작";
+        },
+        doSpeech(){
+            if(!this.isSpeaking){
+                this.startSpeaking();
+            } else {
+                this.stopSpeaking();
+            }
+        },
     },
     created() {
         this.fetchRecipe(this.$route.params.recipe_id),
         this.fetchRecipeUser()
         this.fetchComments()
+        
+        if (!('webkitSpeechRecognition' in window)) {
+            document.getElementById("speechButton").style.display = "none";
+        } else {
+            this.recognition = new window.webkitSpeechRecognition;
+
+            this.recognition.continuous = false;
+            this.recognition.lang = 'ko-KR';
+            this.recognition.interimResults = false;
+
+            this.recognition.onresult = (event) => {
+                var text = event.results[event.resultIndex][0].transcript;
+                console.log(text);
+                let next = ['다음', '앞으로', '넥스트'];
+                let prev = ['이전', '뒤로'];
+                let timer = ['타이머'];
+
+                var self = this;
+
+                next.forEach(function (item) {
+                    if(text.indexOf(item) != -1){
+                        self.$refs.recipeCarousel.next();
+                    }
+                })
+                prev.forEach(function (item) {
+                    if(text.indexOf(item) != -1){
+                        self.$refs.recipeCarousel.prev();
+                    }
+                })
+                timer.forEach(function (item) {
+                    if(text.indexOf(item) != -1){
+                        console.log("타이머 작동");
+                    }
+                })
+            };
+
+            this.recognition.onerror = (event) => {
+                console.log(`Error occurred in recognition: ${event.error}`);
+            };
+
+            this.recognition.onend = () => {
+                if(this.isSpeaking){
+                    this.recognition.start();
+                }
+            }
+        }
     },
 }
 </script>
@@ -181,5 +300,10 @@ export default {
         position: absolute;
         width: 100%;
         height: 100%;
+    }
+    @media print  {
+        .noprint {
+            display: none;
+        }  
     }
 </style>

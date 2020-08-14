@@ -208,16 +208,15 @@ public class RecipeController {
 				map.put("cause", "레시피 title 없음");
 				result = "fail";
 			} else {
-				if (uid == recipeData.getRecipe_user()) {
-					recipeservice.reviseRecipe(recipeData, baseUrl);
-				} else {
+				if(recipeservice.reviseRecipe(uid, recipeData, baseUrl) < 1) {
 					map.put("cause", "유저 아이디 불일치");
 					result = "fail";
+				} else {
+					result = "success";
 				}
 			}
-
-			result = "success";
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = "fail";
 			map.put("cause", "서버 오류");
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
