@@ -1,25 +1,16 @@
 <template>
-  <div>
-      <div v-if="authUser">
-        <div v-if="checkdeleteauth">
-        <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
-        </div>
-        <div v-if="checkdeleteauth">
-        <button @click="gorecipeupdate">고고</button>
-        </div>
-      </div>
-      <recipe />
-      <hr>
-      <ingredient />
-      <hr>
-      <cookingstep />
-      <div  id= "button">
+  <div id="detail-view">
+      <recipe class="view-container"/>
+      <ingredient class="view-container"/>
+      <cooking-step class="view-container"/>
+      <!-- <div  id= "button">
             <b-icon icon="book" v-b-modal="'my-modal'" scale="1" v-b-tooltip.hover title="가로보기"></b-icon>
       </div>
       <div @click="scrollToTop" id= "button-bottom">
             <b-icon icon="arrow-up-circle" scale="1" v-b-tooltip.hover title="가장위로" ></b-icon>
-    </div>
+    </div> -->
       <!-- <b-button id="button" v-b-modal="'my-modal'">가로보기</b-button> -->
+      <font-awesome-icon id="top-btn" @click="scrollToTop" :icon="['fas', 'angle-up']" />
     <commentCreate />
     <commentList />
         <!-- The modal -->
@@ -51,16 +42,16 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import cookingstep from '../../components/recipeview/cookingstep.vue'
-import ingredient from '../../components/recipeview/ingredient.vue'
-import recipe from '../../components/recipeview/recipe.vue'
-import commentCreate from '../../components/recipeview/commentCreate.vue'
-import commentList from '../../components/recipeview/commentList.vue'
+import cookingStep from '@/components/viewer/CookingStep.vue'
+import ingredient from '@/components/viewer/Ingredient.vue'
+import recipe from '@/components/viewer/Recipe.vue'
+import commentCreate from '@/components/viewer/CommentCreate.vue'
+import commentList from '@/components/viewer/CommentList.vue'
 
 export default {
     name: 'recipeDetailView',
     components: {
-        cookingstep,
+        cookingStep,
         ingredient,
         recipe,
         commentCreate,
@@ -68,27 +59,12 @@ export default {
     },
     computed: {
         ...mapState('recipes', ['selectedRecipe']),
-        ...mapState('accounts', ['authUser']),
-        checkdeleteauth() {
-            if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
-                return true
-            } else {
-                return false
-            }
-        },
     },
     methods: {
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
         ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
-        ...mapActions('editor', ['deleteRecipe']),
-        gorecipeupdate() {
-          console.log('nnnn')
-          if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
-              this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
-          }
-        }
     },
     created() {
         this.fetchRecipe(this.$route.params.recipe_id),
@@ -99,6 +75,53 @@ export default {
 </script>
 
 <style>
+
+#detail-view {
+  width: 900px;
+  display: block;
+  margin: 0px auto;
+  background-color: #fff;
+  padding: 5em 1em 8em 1em;
+}
+
+@media (max-width: 1225px) {
+  #detail-view {
+    width: 100%;
+  }
+}
+
+.view-container {
+  margin-bottom: 2em;
+}
+
+#top-btn {
+    position: fixed;
+    right: 3.5%;
+    bottom: 1em;
+    background-color: white;
+    border-radius: 10%;
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+    font-size: 2.8rem;
+    width: 1em;
+    height: 1em;
+    padding: 2px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  #top-btn {
+    font-size: 2rem;
+    right: 2%;
+  }
+}
+
+@media (max-width: 496px) {
+  #top-btn {
+    bottom: 0.5em;
+  }
+}
+
     #button {
         font-size: 4rem;
         box-sizing: content-box;
