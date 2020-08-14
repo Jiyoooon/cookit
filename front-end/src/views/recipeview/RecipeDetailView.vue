@@ -10,8 +10,8 @@
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 
     <!-- 댓글 -->
-    <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true"/>
-    <commentList data-html2canvas-ignore="true"/>
+    <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true" class="view-container"/>
+    <commentList data-html2canvas-ignore="true" class="view-container"/>
 
     <!-- The modal -->
     <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
@@ -162,23 +162,33 @@ export default {
 </script>
 
 <style>
-
 #detail-view {
-  width: 900px;
+  width: 90%;
+  min-height: 200vh;
   display: block;
   margin: 0px auto;
   background-color: #fff;
-  padding: 5em 1em 8em 1em;
+  padding: 4em 1em 8em 1em;
 }
 
-@media (max-width: 1225px) {
+@media (max-width: 496px) {
   #detail-view {
-    width: 100%;
+    width: 100%
   }
 }
 
 .view-container {
+  width: 900px;
+  display: block;
+  margin: 0px auto;
+  background-color: #fff;
   margin-bottom: 2em;
+}
+
+@media (max-width: 1225px) {
+  .view-container {
+    width: 100%;
+  }
 }
 
 #top-btn {

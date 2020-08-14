@@ -77,9 +77,9 @@ export default {
           },
         },
         social: {
-          likeCount: this.selectedRecipe.likeNum-0,
+          viewCount: this.selectedRecipe.hits-0,
           commentCount: this.selectedRecipe.comments-0,
-          viewCount: this.selectedRecipe.hits-0
+          likeCount: this.selectedRecipe.likeNum-0,
         },
         buttons: [
           {
