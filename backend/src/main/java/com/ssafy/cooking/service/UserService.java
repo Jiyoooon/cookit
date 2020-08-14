@@ -43,6 +43,5 @@ public interface UserService {
 	
 	public List<SNS> getLinkedSNS(String uid);
 	public int addLinkedSNS(String uid, String name, String url);
-	public int reviseLinkedSNS(String uid, String name, String url);
 	public int removeLinkedSNS(String uid, String name);
 }
