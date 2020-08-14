@@ -252,8 +252,10 @@ public class RecipeController {
 	// 레시피별 댓글 정보
 	@ApiOperation(value = "레시피 댓글 가져오기", notes = "레시피 id값으로 레시피 댓글 정보를 가져온다.")
 	@GetMapping("{recipe_id}/comments")
-	public ResponseEntity<List<Comment>> getCommets(@PathVariable("recipe_id") int recipe_id) throws Exception {
-		return new ResponseEntity<List<Comment>>(recipeservice.getComments(recipe_id), HttpStatus.OK);
+	public ResponseEntity<List<Comment>> getCommets(@PathVariable("recipe_id") int recipe_id, HttpServletRequest request) throws Exception {
+
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		return new ResponseEntity<List<Comment>>(recipeservice.getComments(recipe_id, baseUrl), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "레시피 댓글 수정하기", notes = "댓글 id값으로 댓글 정보를 수정한다.")

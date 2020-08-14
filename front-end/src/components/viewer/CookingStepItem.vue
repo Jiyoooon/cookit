@@ -15,7 +15,7 @@
       <b-col sm="7">
         {{ cookingstep.description }}
       </b-col>
-      <b-col v-if="cookingstep.step_image" sm="5">
+      <b-col v-if="cookingstep.step_image" sm="5" data-html2canvas-ignore="true">
         <b-img :src="cookingstep.step_image" class="rounded-lg" style="max-width: 100%; max-height:380px;"/>
       </b-col>
     </b-row>

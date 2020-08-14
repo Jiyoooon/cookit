@@ -16,7 +16,7 @@ public interface RecipeService {
 	public List<Ingredient> getIngredients(int recipe_id);
 	public List<CookingStep> getCookingSteps(int recipe_id);
 	public void upHits(int recipe_id);
-	public List<Comment> getComments(int recipe_id);
+	public List<Comment> getComments(int recipe_id, String baseUrl);
 
 	public int addCommnet(int recipe_id, Comment comment);
 

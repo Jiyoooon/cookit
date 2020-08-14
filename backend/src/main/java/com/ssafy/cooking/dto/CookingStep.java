@@ -75,4 +75,11 @@ public class CookingStep {
 	public void setTime(List<int[]> time) {
 		this.time = time;
 	}
+	@Override
+	public String toString() {
+		return "CookingStep [cooking_steps_id=" + cooking_steps_id + ", recipe_id=" + recipe_id + ", steps=" + steps
+				+ ", description=" + description + ", tip=" + tip + ", step_image=" + step_image + ", create_date="
+				+ create_date + ", update_date=" + update_date + ", time=" + time + ", step_image_file="
+				+ step_image_file + "]";
+	}
 }
