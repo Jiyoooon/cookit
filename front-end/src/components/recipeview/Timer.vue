@@ -1,6 +1,6 @@
-<template>
-    <div>
-        <div class="timer">
+<template >
+    <div style="width:100vmax; height: 1000vmax; cursor:pointer">
+        <div class="timer" @keydown.esc="this.$emit('set-timerstate',-1)">
         <div class="timer--clock">
             <div class="minutes-group clock-display-grp">
                 <div class="first number-grp">
@@ -67,26 +67,136 @@
         </div>
         <div class="reload">
         <h2>THE END</h2>
+        <button @click="restart">restart</button>
         </div>
     </div>
 </template>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
 <script>
+import { TweenMax, TweenLite, Expo} from "gsap/all"
+import $ from "jquery"
+TweenLite.defaultEase = Expo.easeOut;
 export default {
     name:'Timer',
     data(){
         return {
+            
+            self : this,
+            reloadBtn : $(".reload"),
+            timerEl : $(".timer"),
+            minutesGroupEl : null,
+            secondsGroupEl : null,
+            minutesGroup : {
+                firstNum: null,
+                secondNum: null
+            },
+            secondsGroup : {
+                firstNum: null,
+                secondNum: null
+            },
 
+            time : {
+                min: 0,
+                sec: 0,
+            },
+            timeNumbers:0,
         }
+    },
+    props:{
+        t : String,
     },
     methods:{
         
-    }
+
+        updateTimer() {
+
+            var timestr;
+            var date = new Date();
+
+            date.setHours(0);
+            date.setMinutes(this.time.min);
+            date.setSeconds(this.time.sec);
+
+            var newDate = new Date(date.valueOf() - 1000);
+            var temp = newDate.toTimeString().split(" ");
+            var tempsplit = temp[0].split(':');
+
+            this.time.min = tempsplit[1];
+            this.time.sec = tempsplit[2];
+
+            timestr = this.time.min + this.time.sec;
+            this.timeNumbers = timestr.split('');
+            this.updateTimerDisplay(this.timeNumbers);
+
+            if(timestr === '0000')
+                this.countdownFinished();
+
+            if(timestr != '0000')
+                setTimeout(this.updateTimer, 1000);
+        },
+        updateTimerDisplay(arr) {
+            console.log("째깍")
+            this.animateNum(this.minutesGroup.firstNum, arr[0]);
+            this.animateNum(this.minutesGroup.secondNum, arr[1]);
+            this.animateNum(this.secondsGroup.firstNum, arr[2]);
+            this.animateNum(this.secondsGroup.secondNum, arr[3]);
+        },
+
+        animateNum (group, arrayValue) {
+            console.log(- group.find('.num-' + arrayValue).offsetTop)
+            TweenMax.killTweensOf(group.find('.number-grp-wrp'));
+            TweenMax.to(group.find('.number-grp-wrp'), 1, {
+                y: - group.find('.num-' + arrayValue)[0].offsetTop
+            });
+
+        },
+        countdownFinished() {
+            console.log("종료")
+            setTimeout(() => {
+                TweenMax.set(this.reloadBtn, { scale: 0.8, display: 'block' });
+                TweenMax.to(this.timerEl, 1, { opacity: 0.2 });
+                TweenMax.to(this.reloadBtn, 0.5, { scale: 1, opacity: 1 }); 
+            }, 1000)
+        },
+        restart(){
+            this.t = "00:03"
+            this.initTimer()
+        },
+        initTimer(){
+            this.reloadBtn = $(".reload")
+            this.timerEl = $('.timer')
+            this.minutesGroupEl = $('.timer').find('.minutes-group')
+            this.secondsGroupEl = $('.timer').find('.seconds-group')
+            this.minutesGroup.firstNum = $('.timer').find('.minutes-group').find('.first')
+            
+            this.minutesGroup.secondNum = $('.timer').find('.minutes-group').find('.second')
+
+            this.secondsGroup.firstNum = $('.timer').find('.seconds-group').find('.first')
+            this.secondsGroup.secondNum = $('.timer').find('.seconds-group').find('.second')
+
+            this.time.min =this.t.split(':')[0]
+            console.log(this.time.min)
+            this.time.sec =this.t.split(':')[1]
+            console.log(this.time.sec)
+            setTimeout(this.updateTimer, 1000)
+        },
+    },
+    computed: {
+        
+    },
+    watch:{
+    },
+    mounted() {
+        console.log("만들어짐!!!!") 
+        this.initTimer(this.t); 
+        
+    },
+    updated() {
+    },
 }
 </script>
 
 <style scoped>
-    /*================= * TIMER *=================*/
     .timer {
         width: 550px;
         height: 248px;
@@ -96,7 +206,7 @@ export default {
         left: 50%;
         margin-left: -275px;
         margin-top: -124px;
-        color: white;
+        color: black;
     }
     .timer * {
         cursor: default;
@@ -191,5 +301,9 @@ export default {
         font-size: 12px;
         float: left;
         line-height: 11px;
+    }
+
+    .testbtn{
+        z-index: 0;
     }
 </style>

@@ -1,17 +1,42 @@
 <template>
-  <div>
-      <timervue/>
-      <div v-if="checkdeleteauth">
-      <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
+    <div style="width:100%; height:100%">
+            
+        <div v-if="checkdeleteauth">
+            <button @click="deleteRecipe(selectedRecipe.recipe_id)">삭제삭제</button>
+        </div>
+        <div v-if="checkdeleteauth">
+            <button @click="gorecipeupdate">고고</button>
+        </div>
+        <recipe />
+        <hr>
+        <ingredient />
+        <hr>
+        <cookingstep />
+        <v-overlay :value="this.overlay" >
+            <div style="cursor:pointer; width:100%; height:100%" @click="overlay = false; console.log('꺼져랏') ">
+                <v-btn
+                    icon
+                    id="button1"
+                >
+                <v-icon>mdi-close</v-icon>
+                </v-btn>
+                <div class="timerpos" v-if="timerstate != -1">
+                    <timervue @set-timerstate ="setTimerState" :t="timervalue"/>
+                </div>
+            </div>
+        </v-overlay>
+    
+    <div class="text-center">
+        <v-btn
+        id = "button1"
+        @click="setTimerValue('00:04'); (overlay = !overlay);"
+        >
+        3초
+        </v-btn>
+    </div>    
+      <div id = "button2" @click="setTimerValue('00:21')">
+        20초
       </div>
-      <div v-if="checkdeleteauth">
-      <button @click="gorecipeupdate">고고</button>
-      </div>
-      <recipe />
-      <hr>
-      <ingredient />
-      <hr>
-      <cookingstep />
       <div  id= "button">
             <b-icon icon="book" v-b-modal="'my-modal'" scale="1" v-b-tooltip.hover title="가로보기"></b-icon>
       </div>
@@ -59,6 +84,13 @@ import timervue from "@/components/recipeview/Timer.vue";
 
 export default {
     name: 'recipeDetailView',
+    data(){
+        return{
+            timervalue: "99:00",
+            timerstate:-1,
+            overlay:false,
+        }
+    },
     components: {
         cookingstep,
         ingredient,
@@ -82,14 +114,25 @@ export default {
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
-        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
-        ...mapActions('editor', ['deleteRecipe']),
+        setTimerValue(t){
+            console.log("타이머값을" + "00:00" + "로")
+            this.timervalue = t
+            this.setTimerState(1)
+            console.log(this.timervalue)
+        },
+        setTimerState(s){
+            console.log(s)
+            this.timerstate = s
+            console.log(this.timerstate)
+        },
         gorecipeupdate() {
           console.log('nnnn')
           if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
               this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
           }
-        }
+        },
+        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
+        ...mapActions('editor', ['deleteRecipe']),
     },
     created() {
         this.fetchRecipe(this.$route.params.recipe_id),
@@ -100,6 +143,22 @@ export default {
 </script>
 
 <style>
+    #button1 {
+        font-size: 4rem;
+        box-sizing: content-box;
+        position: fixed;
+        right: 5vw;
+        bottom: 40vh;
+        cursor: pointer;
+    }
+    #button2 {
+        font-size: 4rem;
+        box-sizing: content-box;
+        position: fixed;
+        right: 5vw;
+        bottom: 30vh;
+        cursor: pointer;
+    }
     #button {
         font-size: 4rem;
         box-sizing: content-box;
@@ -115,5 +174,12 @@ export default {
         right: 5vw;
         bottom: 10vh;
         cursor: pointer;
+    }
+    .timerpos {
+        background-color: #eee;
+        z-index: 1;
+        position: absolute;
+        width: 100%;
+        height: 100%;
     }
 </style>
