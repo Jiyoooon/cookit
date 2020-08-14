@@ -70,10 +70,17 @@ export default {
       myrecipes: {
         deep: true,
         handler() {
-          this.currentPageItems();
-          this.totalRows();
-          console.log("myrecipes 목록 새로 가져옴 => 페이징 처리함")
-          console.log(this.myrecipes)
+          console.log('??????????????????')
+          this.paginated_items = []
+          let lengthAll =this.myrecipes.length;
+          console.log(lengthAll)
+          for (let i = 0; i < lengthAll; i = i + this.perPage) {
+            this.paginated_items[this.nbPages] = this.myrecipes.slice(i,i+this.perPage)
+            this.nbPages++
+          }
+          console.log(this.paginated_items)
+          // console.log("myrecipes 목록 새로 가져옴 => 페이징 처리함")
+          // console.log(this.myrecipes)
           // this.$router.go(this.$router.currentRoute)
           // this.$router.go(0)
           // location.reload()
@@ -87,20 +94,20 @@ export default {
       //     console.log(this.myrecipes[0].recipe_user_name)
       //   }
       // },
-      paginated_items: {
-        deep:true,
-        handler() {
-          this.currentPageItems();
-          this.totalRows();
-        }
-      }
+      // paginated_items: {
+      //   deep:true,
+      //   handler() {
+      //     this.currentPageItems();
+      //     this.totalRows();
+      //   }
+      // }
     },
     mounted() {
       // this.SET_FLAG(false)
       // console.log(this.flag)
     },
     created() {
-      console.log("레시피목록 가져오기 created")
+      // console.log("레시피목록 가져오기 created")
       this.fetchMyRecipes(this.selecteduserinfo)
       // this.SET_FLAG(false)
       // console.log(this.flag)

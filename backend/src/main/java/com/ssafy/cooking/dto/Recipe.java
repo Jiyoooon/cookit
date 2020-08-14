@@ -1,5 +1,6 @@
 package com.ssafy.cooking.dto;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -18,14 +19,14 @@ public class Recipe {
 	private Integer level; //시간
 	private Integer hits; //조회
 	private Integer comments; //댓글 개수
-	private String tag; //태그
+	private String[] tag; //태그
+	private String tagString; //태그
 	private String create_date; //작성시간
 	private String update_date;
 	private String delete_date;
 	private Integer likeNum;
 	private List<Integer> like;
 	private MultipartFile main_image_file;
-	
 	
 	public Integer getComments() {
 		return comments;
@@ -99,10 +100,10 @@ public class Recipe {
 	public void setHits(Integer hits) {
 		this.hits = hits;
 	}
-	public String getTag() {
+	public String[] getTag() {
 		return tag;
 	}
-	public void setTag(String tag) {
+	public void setTag(String[] tag) {
 		this.tag = tag;
 	}
 	public String getCreate_date() {
@@ -148,15 +149,21 @@ public class Recipe {
 	public void setLikeNum(Integer likeNum) {
 		this.likeNum = likeNum;
 	}
+	public String getTagString() {
+		return tagString;
+	}
+	public void setTagString(String tagString) {
+		this.tagString = tagString;
+	}
+	
 	@Override
 	public String toString() {
 		return "Recipe [recipe_id=" + recipe_id + ", recipe_user=" + recipe_user + ", recipe_user_name="
 				+ recipe_user_name + ", recipe_user_profileImage=" + recipe_user_profileImage + ", category_id="
 				+ category_id + ", title=" + title + ", description=" + description + ", main_image=" + main_image
 				+ ", servings=" + servings + ", cooking_time=" + cooking_time + ", level=" + level + ", hits=" + hits
-				+ ", comment_cnt=" + comments + ", tag=" + tag + ", create_date=" + create_date + ", update_date="
-				+ update_date + ", delete_date=" + delete_date + ", likeNum=" + likeNum + ", like=" + like
-				+ ", main_image_file=" + main_image_file + "]";
+				+ ", comments=" + comments + ", tag=" + Arrays.toString(tag) + ", tagString=" + tagString
+				+ ", create_date=" + create_date + ", update_date=" + update_date + ", delete_date=" + delete_date
+				+ ", likeNum=" + likeNum + ", like=" + like + ", main_image_file=" + main_image_file + "]";
 	}
-	
 }

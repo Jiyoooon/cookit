@@ -46,6 +46,7 @@ public class RecipeServiceImpl implements RecipeService {
 				r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
 			}
 			r.setLike(recipeDao.getLikeList(r.getRecipe_id()));
+			r.setTag(r.getTagString().split(","));
 		}
 		return recipes;
 	}
@@ -72,8 +73,18 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public List<Comment> getComments(int recipe_id) {
-		return recipeDao.getCommnets(recipe_id);
+	public List<Comment> getComments(int recipe_id, String baseUrl) {
+		List<Comment> comments = recipeDao.getCommnets(recipe_id);
+		for (Comment r : comments) {
+			if (r.getComment_user_profileImage() == null || r.getComment_user_profileImage() == ""
+					|| (!new File("/var/lib/tomcat8/webapps/images/profile/" + r.getComment_user_profileImage())
+							.exists())) {
+				r.setComment_user_profileImage(baseUrl + "/images/profile/default_image.png");
+			} else {
+				r.setComment_user_profileImage(baseUrl + "/images/profile/" + r.getComment_user_profileImage());
+			}
+		}
+		return comments;
 	}
 
 	@Override
@@ -95,10 +106,11 @@ public class RecipeServiceImpl implements RecipeService {
 			recipeDetail.setLevel(1);
 		if(recipeDetail.getServings() == null || recipeDetail.getServings() == 0)
 			recipeDetail.setServings(1);
-		if(recipeDetail.getTag() == null)
-			recipeDetail.setTag("");
+
 		if (recipeDetail.getCategory_id() == null || recipeDetail.getCategory_id() == 0)
 			recipeDetail.setCategory_id(8);
+		
+		recipeDetail.setTagString(Arrays.toString(recipeDetail.getTag()).substring(1, Arrays.toString(recipeDetail.getTag()).length()-1));
 		
 		if (recipeDetail.getMain_image_file() != null && !recipeDetail.getMain_image_file().isEmpty()) {
 			try {
@@ -162,8 +174,8 @@ public class RecipeServiceImpl implements RecipeService {
 				e.printStackTrace();
 			}
 		}
-		
 
+		recipeData.setTagString(Arrays.toString(recipeData.getTag()).substring(1, Arrays.toString(recipeData.getTag()).length()-1));
 		
 		int result = recipeDao.reviseRecipe(uid, recipeData);
 		if(result > 0) {
@@ -268,6 +280,7 @@ public class RecipeServiceImpl implements RecipeService {
 				r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
 			}
 			r.setLike(recipeDao.getLikeList(r.getRecipe_id()));
+			r.setTag(r.getTagString().split(","));
 		}
 		return recipes;
 	}

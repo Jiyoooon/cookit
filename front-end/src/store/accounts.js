@@ -173,7 +173,7 @@ export default {
             dispatch('fetchUser')
             return new Promise(function() {
               window.setTimeout(function() {
-                dispatch('myblog/fetchMyRecipes', state.authUser.user_id, { root: true })
+                dispatch('myblog/fetchMyRecipes', state.authUser, { root: true })
                 dispatch('myblog/fetchLikeRecipes', null, { root: true })
                 if (state.authUser.start_page) {
                   $("#myblog").addClass("active");
@@ -394,22 +394,8 @@ export default {
       .then((res) => {
         if(res.data.result == 'success') {
           cookies.set('password-check', 1)
-          this._vm.$root.$bvModal.msgBoxOk('확인되었습니다.', {
-            title: 'Confirmation',
-            size: 'sm',
-            buttonSize: 'sm',
-            okVariant: 'success',
-            headerClass: 'p-2 border-bottom-0',
-            footerClass: 'p-2 border-top-0',
-            centered: true
-          })
-          .then((ans) => {
-            if (ans) {
-              dispatch('GoUserInfo')
-            }
-            cookies.remove('password-check')
-          })
           dispatch('GoUserInfo')
+          cookies.remove('password-check')
         } else {
           alert("비밀번호가 일치하지 않습니다.")
         }
@@ -450,7 +436,7 @@ export default {
         alert(err.response)
       })
     },
-    signup({ commit, dispatch, state }, signupData) {
+    signup({ commit, dispatch }, signupData) {
       if (!signupData.valid.password) {
         this._vm.$root.$bvModal.msgBoxOk('비밀번호를 확인해주세요.', {
           title: 'Confirmation',
@@ -489,7 +475,7 @@ export default {
             if (res.data.result == 'success') {
               commit('SET_TOKEN', res.headers.token)
               dispatch('fetchUser')
-              dispatch('myblog/fetchMyRecipes', state.authUser.user_id, { root: true })
+              // dispatch('myblog/fetchMyRecipes', state.authUser, { root: true })
               this._vm.$root.$bvModal.msgBoxOk('가입되었습니다.', {
                 title: 'Confirmation',
                 size: 'sm',
@@ -500,7 +486,7 @@ export default {
                 centered: true
               })
                 .then(() => {
-                  router.push({ name: 'LookAroundRecipeView'})
+                  router.push({ name: 'Home'})
                 })
             } else {
               this._vm.$root.$bvModal.msgBoxOk('이미지 파일이 올바르지 않습니다.', {

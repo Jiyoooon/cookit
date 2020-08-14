@@ -10,7 +10,7 @@
 						main_image, servings, cooking_time, level, tag
 					) VALUES (
 						#{recipe_user}, #{category_id}, #{title}, #{description},
-						#{main_image}, #{servings}, #{cooking_time}, #{level}, #{tag}
+						#{main_image}, #{servings}, #{cooking_time}, #{level}, #{tagString}
 					)
 			<selectKey keyProperty="recipe_id" resultType="Integer">
 			SELECT LAST_INSERT_ID()
@@ -62,7 +62,7 @@
 			, servings = #{recipeData.servings}
 			, cooking_time = #{recipeData.cooking_time}
 			, level = #{recipeData.level}
-			, tag = #{recipeData.tag}
+			, tag = #{recipeData.tagString}
 		WHERE recipe_id = #{recipeData.recipe_id}
 		AND recipe_user = #{uid}
 	</update>
@@ -92,7 +92,7 @@
 	<select id="getRecipes" resultType="Recipe">
 		SELECT r.recipe_id, r.recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
 		r.category_id, r.title, r.description, r.main_image, r.servings, r.cooking_time, r.level,
-		r.tag, r.hits, r.create_date, r.update_date, r.delete_date, count(c.comment_id) as comment_cnt
+		r.tag as tagString, r.hits, r.create_date, r.update_date, r.delete_date, count(c.comment_id) as comment_cnt
 		FROM Recipe r
 		JOIN User u on r.recipe_user = u.user_id
 		JOIN Comments c on r.recipe_id = c.recipe_id
@@ -161,7 +161,7 @@
 	
 	<select id="getCommnets" resultType="Comment">
 		SELECT comment_id, comment_user as comment_user_id, u.nickname as comment_user_name,
-		recipe_id, c.description, 
+		recipe_id, c.description, u.profile_image as comment_user_profileImage,
 		c.create_date, c.update_date, c.delete_date
 		FROM Comments c
 		JOIN User u on c.comment_user = u.user_id
@@ -212,7 +212,7 @@
 	<select id="getRecipes2" resultType="Recipe">
 		SELECT r.recipe_id, r.recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
 				r.category_id, r.title, r.description, r.main_image, r.servings, r.cooking_time, r.level,
-				r.tag, r.hits, r.create_date, r.update_date, r.delete_date, k.cnt, (select count(*) from Comments c where r.recipe_id = c.recipe_id) as comments
+				r.tag as tagString, r.hits, r.create_date, r.update_date, r.delete_date, k.cnt, (select count(*) from Comments c where r.recipe_id = c.recipe_id) as comments
 		FROM Recipe r JOIN (
 			SELECT a.recipe_id, count(a.recipe_id) as cnt
 			FROM 
