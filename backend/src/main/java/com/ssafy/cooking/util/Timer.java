@@ -1,6 +1,5 @@
 package com.ssafy.cooking.util;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -34,15 +33,15 @@ public class Timer {
 		match("[0-9]", "[0-9][0-9]초", description, timer, 1, 1, visit, false);
 		match("[0-9]", "[0-9]초", description, timer, 1, 1, visit, false);
 		match("[0-9][0-9]초", "[0-9]분", description, timer, 1, 60, visit, false);
-		match("[0-9][0-9]분", "[0-9]시간", description, timer, 60, 3600, visit, false);
-		match("[0-9]시간", "[0-9]시간[0-9][0-9]분", description, timer, 3600, 3600, visit, false);
-		match("[0-9][0-9]시간", "[0-9][0-9]시간", description, timer, 3600, 3600, visit, false);
-		match("[0-9][0-9]", "[0-9][0-9]시간", description, timer, 3600, 3600, visit, false);
-		match("[0-9]", "[0-9][0-9]시간", description, timer, 3600, 3600, visit, false);
-		match("[0-9][0-9]", "[0-9]시간", description, timer, 60, 3600, visit, false);
-		match("[0-9]", "[0-9]시간", description, timer, 3600, 3600, visit, false);
+//		match("[0-9][0-9]분", "[0-9]시간", description, timer, 60, 3600, visit, false);
+//		match("[0-9]시간", "[0-9]시간[0-9][0-9]분", description, timer, 3600, 3600, visit, false);
+//		match("[0-9][0-9]시간", "[0-9][0-9]시간", description, timer, 3600, 3600, visit, false);
+//		match("[0-9][0-9]", "[0-9][0-9]시간", description, timer, 3600, 3600, visit, false);
+//		match("[0-9]", "[0-9][0-9]시간", description, timer, 3600, 3600, visit, false);
+//		match("[0-9][0-9]", "[0-9]시간", description, timer, 60, 3600, visit, false);
+//		match("[0-9]", "[0-9]시간", description, timer, 3600, 3600, visit, false);
 
-		match("[0-9]시간", "[0-9][0-9]분", description, timer, 3600, 60, visit, true);
+//		match("[0-9]시간", "[0-9][0-9]분", description, timer, 3600, 60, visit, true);
 		match("[0-9]분", "[0-9][0-9]초", description, timer, 60, 1, visit, true);
 		match("[0-9][0-9][0-9]분", null, description, timer, 60, 0, visit, false);
 		match("[0-9][0-9]분", null, description, timer, 60, 0, visit, false);
@@ -56,8 +55,8 @@ public class Timer {
 		match("[0-9][0-9][0-9]여초", null, description, timer, 1, 0, visit, false);
 		match("[0-9][0-9]여초", null, description, timer, 1, 0, visit, false);
 		match("[0-9]여초", null, description, timer, 1, 0, visit, false);
-		match("[0-9][0-9]시간", null, description, timer, 3600, 0, visit, false);
-		match("[0-9]시간", null, description, timer, 3600, 0, visit, false);
+//		match("[0-9][0-9]시간", null, description, timer, 3600, 0, visit, false);
+//		match("[0-9]시간", null, description, timer, 3600, 0, visit, false);
 
 		Collections.sort(timer, new Comparator<int[]>() {
 			@Override
@@ -192,6 +191,7 @@ public class Timer {
 					break;
 				} else if(j == value.length - 1){
 					end = i;
+					if(time >= 3600) time = 3599;
 					return new int[]{start, end + 1, time};
 				} else {
 					i++;

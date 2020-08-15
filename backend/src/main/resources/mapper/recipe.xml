@@ -63,7 +63,9 @@
 			, cooking_time = #{recipeData.cooking_time}
 			, level = #{recipeData.level}
 			, tag = #{recipeData.tagString}
+			<if test="recipeData.main_image != null and recipeData.main_image != ''">
 			, main_image = #{recipeData.main_image}
+			</if>
 		WHERE recipe_id = #{recipeData.recipe_id}
 		AND recipe_user = #{uid}
 	</update>
