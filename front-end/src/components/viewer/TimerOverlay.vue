@@ -1,30 +1,17 @@
 <template>
 <div>
-  <v-overlay :value="this.overlay" >
+  <v-overlay :value="this.overlay1" >
             <div>
                 <v-btn
                     icon
                     id="button2"
-                    @click="overlay = !overlay"
+                    @click="clickX"
                 >
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
-                <timervue :t="timervalue" :key="NaN"/>
+                <timervue :t="timervalue1" :key="NaN"/>
             </div>
         </v-overlay>
-
-        <div id = "button1">
-            <v-btn
-            @click="setTimerValue('00:04'); (overlay = !overlay);"
-            >
-            3초
-            </v-btn>
-            <v-btn
-            @click="setTimerValue('00:11'); (overlay = !overlay);"
-            >
-            10초
-            </v-btn>
-        </div>
 </div>
 </template>
 
@@ -39,6 +26,10 @@ export default {
             overlay:false,
         }
     },
+    props:{
+        timervalue1:String,
+        overlay1:Boolean,
+    },
     components:{
         timervue,
     },
@@ -46,21 +37,16 @@ export default {
         setTimerValue(t){//설정하고 싶은 시간을 mm:ss로 넣어준다.
             this.timervalue = t
         },
+        clickX(){
+            this.overlay1 = false
+            this.$emit('set-timer-overlay',false)
+            //this.$emit('delete-source',this.Sourceinfo.ingredientdata.name)
+        }
     },
 }
 </script>
 
 <style>
-    /* 테스트용 버튼 css */
-    button#button1 {
-        font-size: 4rem;
-        box-sizing: content-box;
-        position: fixed;
-        right: 5vw;
-        bottom: 40vh;
-        cursor: pointer;
-        z-index: 1;
-    }
     #button2 {
         font-size: 4rem;
         box-sizing: content-box;

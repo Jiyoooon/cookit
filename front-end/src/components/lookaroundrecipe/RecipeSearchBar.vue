@@ -108,7 +108,7 @@
                 <v-list-item
                   v-for="(excludeditem,index) in excludeditems"
                   :class="(index == focus2)? 'focus':'focus-default' "
-                  @click="selectSource(excludeditem)"
+                  @click="excludedSource(excludeditem)"
                   onmouseover="this.style.backgroundColor='#eee'"
                   onmouseout="this.style.backgroundColor='white'"
                   :key="index"
