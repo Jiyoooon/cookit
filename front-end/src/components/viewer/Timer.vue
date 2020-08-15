@@ -134,7 +134,7 @@ export default {
                 setTimeout(this.updateTimer, 1000);
         },
         updateTimerDisplay(arr) {
-            console.log("째깍")
+            //console.log("째깍")
             this.animateNum(this.minutesGroup.firstNum, arr[0]);
             this.animateNum(this.minutesGroup.secondNum, arr[1]);
             this.animateNum(this.secondsGroup.firstNum, arr[2]);
@@ -149,7 +149,7 @@ export default {
 
         },
         countdownFinished() {
-            console.log("종료")
+            //console.log("종료")
             // 카운트다운이 종료되면 실행되는 함수
             // css변화를 여기에 주면됨
             setTimeout(() => {
@@ -171,18 +171,12 @@ export default {
             this.secondsGroup.secondNum = $('.timer').find('.seconds-group').find('.second')
 
             this.time.min =this.t.split(':')[0]
-            console.log(this.time.min)
             this.time.sec =this.t.split(':')[1]
-            console.log(this.time.sec)
             setTimeout(this.updateTimer, 1000)
         },
     },
     mounted() { 
         this.initTimer(this.t); 
-    },
-    destroyed() {
-        console.log("디스트로이!!")
-        //this.initTimer(this.t = "00:01")
     },
 }
 </script>
