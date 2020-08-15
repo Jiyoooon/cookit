@@ -1,34 +1,34 @@
 <template>
   <div id="editor">
-    <div class="container">
+    <div class="editor-container">
       <h2>레시피 정보</h2>
       <hr>
-      <RecipeInfoforUpdate />
+      <recipe-info-for-update />
     </div>
-    <div class="container">
+    <div class="editor-container">
       <h2>재료</h2>
       <hr>
-      <b-container fluid="lg">
+      <b-container fluid>
         <b-row>
           <b-col class="mt-3">주재료</b-col>
-          <b-col sm="5"><IngredientforUpdate :ingredients="mainIngr" :essential=1 /></b-col>
+          <b-col sm="5"><ingredient-for-update :ingredients="mainIngr" :essential=1 /></b-col>
           <b-col class="mt-3">부재료</b-col>
-          <b-col sm="5"><IngredientforUpdate :ingredients="subIngr" :essential=0 /></b-col>
+          <b-col sm="5"><ingredient-for-update :ingredients="subIngr" :essential=0 /></b-col>
         </b-row>
       </b-container>
     </div>
-    <div class="container">
+    <div class="editor-container">
       <h2>조리 과정</h2>
       <hr>
-      <CookingStepforUpdate />
+      <cooking-step-for-update />
     </div>
     <div>
       <b-container fluid>
         <b-row>
-          <b-col sm="3"></b-col>
-          <b-col sm="3"><div class="block-btn btn-style1" @click="onSubmitButtonforUpdate" block>완료</div></b-col>
-          <b-col sm="3"><div class="block-btn btn-style4">취소</div></b-col>
-          <b-col sm="3"></b-col>
+          <b-col sm="3" lg="4"></b-col>
+          <b-col sm="3" lg="2"><div class="block-btn btn-style1" @click="onSubmitButtonforUpdate" block>완료</div></b-col>
+          <b-col sm="3" lg="2"><div class="block-btn btn-style4">취소</div></b-col>
+          <b-col sm="3" lg="4"></b-col>
         </b-row>
       </b-container>
     </div>
@@ -36,15 +36,15 @@
 </template>
 
 <script>
-import RecipeInfoforUpdate from '@/components/editor/RecipeInfoforUpdate.vue'
-import IngredientforUpdate from '@/components/editor/IngredientforUpdate.vue'
-import CookingStepforUpdate from '@/components/editor/CookingStepforUpdate.vue'
+import recipeInfoForUpdate from '@/components/editor/RecipeInfoforUpdate.vue'
+import ingredientForUpdate from '@/components/editor/IngredientforUpdate.vue'
+import cookingStepForUpdate from '@/components/editor/CookingStepforUpdate.vue'
 import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
     name: 'RecipeUpdateView',
     components: {
-      RecipeInfoforUpdate, IngredientforUpdate, CookingStepforUpdate
+      recipeInfoForUpdate, ingredientForUpdate, cookingStepForUpdate
     },
     computed: {
       ...mapState('editor', ['mainIngr', 'subIngr']),
@@ -76,4 +76,22 @@ export default {
 </script>
 
 <style>
+
+#editor {
+  width: 90%;
+  display: block;
+  margin: 0px auto;
+  background-color: #fff;
+  padding: 5em 1em 8em 1em;
+}
+
+.editor-container {
+  margin-bottom: 2em
+}
+
+@media (max-width: 496px) {
+  #editor {
+    width: 100%;
+  }
+}
 </style>

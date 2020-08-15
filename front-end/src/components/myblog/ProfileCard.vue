@@ -200,7 +200,7 @@ export default {
 .card {
 	width: 100%;
   max-width: 320px;
-  min-width: 246px;
+  min-width: 255px;
 	background: #fff;
 	box-shadow: 0 10px 7px -5px rgba(0, 0, 0, .4);
   margin-bottom: 2em;
@@ -354,7 +354,7 @@ export default {
 }
 
 .card footer a {
-	padding: 0 1rem;
+	padding: 0 0.85rem;
   margin-top: 1em;
   height: 100%;
   font-size: 1.5em;

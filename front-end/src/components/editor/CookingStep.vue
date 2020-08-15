@@ -33,23 +33,12 @@
             </b-row>
             <b-row>
               <b-col>
-                <b-img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" width="240px" />
+                <b-img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" style="max-width:100%" />
                 <span v-else></span>
               </b-col>
             </b-row>
           </b-container>
         </b-col>
-				<!-- <b-col lg="1">
-					<b-container fluid="lg">
-						<b-row>
-							<b-col>
-								<div style="display:block; text-align:right;">
-									<b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer;" @click="deleteCookingStep(index)"></b-icon>
-								</div>
-							</b-col>
-						</b-row>
-					</b-container>
-				</b-col> -->
       </b-row>
 			<b-row>
 				<b-col sm="4"></b-col>

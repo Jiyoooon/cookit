@@ -28,7 +28,7 @@
             </b-row>
             <b-row>
               <b-col>
-                <img v-if="imageUrl[index]!=null" :src="imageUrl[index]" height="180px">
+                <b-img v-if="imageUrl[index]!=null" :src="imageUrl[index]" height="180px" style="max-width:100%"/>
                 <span v-else></span>
               </b-col>
             </b-row>
