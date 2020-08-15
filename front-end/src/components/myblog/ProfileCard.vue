@@ -75,12 +75,12 @@
 
       <!-- SNS -->
       <footer>
-        <span v-for="(sns, index) in sns_name_list" :key="index">
+        <i v-for="(sns, index) in sns_name_list" :key="index">
           <a v-if="sns_url_list[index]" :href="sns_url_list[index]" target='_blank'>
-            <font-awesome-icon :icon="['fab', sns+'-square']" :id="sns"/>
+            <font-awesome-icon :icon="['fab', sns+'-square']" :id="sns" class="sns-abled"/>
           </a>
           <a v-else style="cursor: default"><font-awesome-icon :icon="['fab', sns+'-square']" :id="sns" class="sns-disabled"/></a>
-        </span>
+        </i>
       </footer>
     </div>
   </v-app>
@@ -347,7 +347,7 @@ export default {
 
 .card footer {
 	position: relative;
-	padding: 1rem;
+	padding: 1.2rem;
   height: 70px;
 	background-color: #eee;
 	text-align: center;
@@ -355,6 +355,7 @@ export default {
 
 .card footer a {
 	padding: 0 1rem;
+  margin-top: 1em;
   height: 100%;
   font-size: 1.5em;
 	color: black;
@@ -365,20 +366,24 @@ export default {
 	transition: color 0.4s;
 }
 
-.card footer .facebook {
+.card footer #facebook {
 	color: #395794;
 }
 
-.card footer .youtube {
+.card footer #youtube {
 	color: #c4302b;
 }
 
-.card footer .instagram {
+.card footer #instagram {
 	color: #ED5078;
 }
 
-.card footer .twitter {
+.card footer #twitter {
 	color: #00acee;
+}
+
+.card footer .sns-abled:hover {
+  background-color: #fff;
 }
 
 .card footer .sns-disabled {
