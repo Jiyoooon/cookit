@@ -17,7 +17,9 @@
 
       </b-col>
       <b-col v-if="cookingstep.step_image" sm="5" data-html2canvas-ignore="true">
+        <viewer style="overflow:hidden;">
         <b-img :src="cookingstep.step_image" class="rounded-lg" style="max-width: 100%; max-height:380px;"/>
+        </viewer>
       </b-col>
     </b-row>
     <b-row v-if="cookingstep.tip">

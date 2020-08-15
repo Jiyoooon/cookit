@@ -33,8 +33,10 @@
     <!-- 레시피 메인 사진 -->
     <b-row data-html2canvas-ignore="true">
       <b-col>
+        <viewer>
         <b-img :src="selectedRecipe.main_image"
         style="max-width: 90%; max-height: 80vh;"/>
+        </viewer>
       </b-col>
     </b-row>
 
@@ -78,6 +80,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+
 export default {
     name: 'recipe',
     data(){
