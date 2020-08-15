@@ -36,10 +36,9 @@
 
     <!-- SNS -->
     <footer>
-      <a href=""><font-awesome-icon :icon="['fab', 'youtube-square']" class="youtube"/></a>
-      <a href=""><font-awesome-icon :icon="['fab', 'instagram-square']" class="instagram"/></a>
-      <a href=""><font-awesome-icon :icon="['fab', 'twitter-square']" class="twitter"/></a>
-      <a href=""><font-awesome-icon :icon="['fab', 'facebook-square']" class="facebook"/></a>
+      <a v-for="(sns, index) in sns_name_list" :href="sns_url_list[index]" :key="index">
+        <font-awesome-icon :icon="['fab', sns+'-square']" :class="sns"/>
+      </a>
     </footer>
   </div>
 </template>
@@ -62,11 +61,12 @@ export default {
         userfollowers:null,
         userfollowings:null,
         follower: false,
-        following: false
+        following: false,
+        sns_name_list: [ 'youtube', 'instagram', 'twitter', 'facebook' ],
+        sns_url_list: [ '', '', '', '' ],
       }
     },
     computed: {
-      
       ...mapState('accounts', ['authUser']),
       ...mapState('storage',['myfollowings','followings','followers','myfollowers']),
       ...mapState('myblog',['selecteduserinfo'])
@@ -131,6 +131,24 @@ export default {
       
       this.getfollowings(this.selecteduserinfo.user_id)
       this.getfollowers(this.selecteduserinfo.user_id)
+
+
+      // SNS url 만들기
+      // 0: 유튜브 1: 인스타그램 2: 트위터 3: 페이스북
+      for (let item in this.selecteduserinfo.sns_list) {
+        if (item.sns_name == 'youtube') {
+          this.sns_url_list[0] = item.sns_url;
+        }
+        else if (item.sns_name == 'instagram') {
+          this.sns_url_list[1] = item.sns_url;
+        }
+        else if (item.sns_name == 'twitter') {
+          this.sns_url_list[2] = item.sns_url;
+        }
+        else if (item.sns_name == 'facebook') {
+          this.sns_url_list[3] = item.sns_url;
+        }
+      }
     },
 }
 </script>
@@ -324,7 +342,7 @@ body {
 }
 
 .card footer .instagram {
-	color: #ED2554;
+	color: #ED5078;
 }
 
 .card footer .twitter {
