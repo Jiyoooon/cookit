@@ -70,7 +70,7 @@ export default {
           this.paginated_items = []
           let lengthAll =this.likerecipes.length;
           for (let i = 0; i < lengthAll; i = i + this.perPage) {
-            this.paginated_items[i] = this.likerecipes.slice(i,i+this.perPage)
+            this.paginated_items.push(this.likerecipes.slice(i,i+this.perPage))
             this.nbPages++
           }
         }
