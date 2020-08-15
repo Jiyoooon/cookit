@@ -180,17 +180,12 @@ public class RecipeServiceImpl implements RecipeService {
 		int result = recipeDao.reviseRecipe(uid, recipeData);
 		if(result > 0) {
 			int recipe_id = recipeData.getRecipe_id();
-//			recipeDao.deleteCookingSteps(recipe_id);
 			
 			if (recipeData.getCookingStep() != null) {
 				for (int i = 0; i < recipeData.getCookingStep().size(); i++) {
 					CookingStep step = recipeData.getCookingStep().get(i);
 
-					
-					if(step.getStep_image() != null && step.getStep_image() != "") {
-						//이미지 경로가 있는 경우에는 수정만 한다.
-						//recipeDao.
-					} else if (step.getStep_image_file() != null) {
+					if (step.getStep_image_file() != null) {
 						try {
 							String stepImageName = imageName + Integer.toString(i);
 							writeFile(step.getStep_image_file(), stepImageName, baseUrl);
@@ -201,12 +196,12 @@ public class RecipeServiceImpl implements RecipeService {
 						}
 					}
 				}
-				System.out.println(recipe_id);
+
 				for (CookingStep s : recipeData.getCookingStep()) {
-					System.out.println(s);
+					recipeDao.reviseCookingsteps(recipe_id, s);
 				}
-//				recipeDao.addCookingsteps(recipe_id, recipeData.getCookingStep());
-				recipeDao.reviseCookingsteps(recipe_id, recipeData.getCookingStep());
+				recipeDao.deleteCookingSteps(recipe_id, recipeData.getCookingStep().size());
+				
 			}
 			
 			if (recipeData.getIngredients() != null) {
