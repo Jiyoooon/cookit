@@ -75,9 +75,12 @@
 
       <!-- SNS -->
       <footer>
-        <a v-for="(sns, index) in sns_name_list" :href="sns_url_list[index]" :key="index">
-          <font-awesome-icon :icon="['fab', sns+'-square']" :class="sns"/>
-        </a>
+        <span v-for="(sns, index) in sns_name_list" :key="index">
+          <a v-if="sns_url_list[index]" :href="sns_url_list[index]" target='_blank'>
+            <font-awesome-icon :icon="['fab', sns+'-square']" :id="sns"/>
+          </a>
+          <a v-else style="cursor: default"><font-awesome-icon :icon="['fab', sns+'-square']" :id="sns" class="sns-disabled"/></a>
+        </span>
       </footer>
     </div>
   </v-app>
@@ -172,9 +175,10 @@ export default {
       this.getfollowings(this.selecteduserinfo.user_id)
       this.getfollowers(this.selecteduserinfo.user_id)
 
+      console.log(this.selecteduserinfo.sns_list);
       // SNS url 만들기
       // 0: 유튜브 1: 인스타그램 2: 트위터 3: 페이스북
-      for (let item in this.selecteduserinfo.sns_list) {
+      for (let item of this.selecteduserinfo.sns_list) {
         if (item.sns_name == 'youtube') this.sns_url_list[0] = item.sns_url;
         else if (item.sns_name == 'instagram') this.sns_url_list[1] = item.sns_url;
         else if (item.sns_name == 'twitter') this.sns_url_list[2] = item.sns_url;
@@ -381,6 +385,10 @@ export default {
 	color: #00acee;
 }
 
+.card footer .sns-disabled {
+  opacity: 25%;
+  pointer-events: none;
+}
 
 .card footer::before {
 	content: '';
