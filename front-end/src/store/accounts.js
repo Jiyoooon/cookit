@@ -222,7 +222,7 @@ export default {
           cookies.remove('auth-user')
           cookies.remove('user-email')
           router.push({ name: 'Login'})
-          alert("!!!!")
+          alert(err.response)
         })
     },
 
@@ -320,7 +320,7 @@ export default {
       })
       .catch(err => {
         console.log(err.response)
-        alert('!!!!!!')
+        alert(err.response)
        })
     },
     fetchUser({ state, getters, commit, dispatch}) {
@@ -433,6 +433,7 @@ export default {
             window.addEventListener('keypress', function(event) {
               if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
             })
+          console.log(this)
           this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
             title: 'Confirmation',
             size: 'sm',
@@ -585,7 +586,7 @@ export default {
         console.log(res)
       })
       .catch(err => {
-        alert("실패!")
+        alert(err.response)
         console.log(err)
       })
     }
