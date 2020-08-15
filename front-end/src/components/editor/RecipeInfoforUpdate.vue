@@ -130,7 +130,6 @@ export default {
             return;
           }
           
-          console.log("1111");
           this.imageUrl = URL.createObjectURL(file[0])
         },
         inputInitialValue() {
@@ -142,8 +141,6 @@ export default {
             this.recipe.level = this.selectedRecipe.level
             this.recipe.tag = this.selectedRecipe.tag
             this.imageUrl = this.selectedRecipe.main_image
-            console.log(this.imageUrl);
-            console.log(this.recipe.main_image_file);
         }
     },
     created() {
