@@ -269,6 +269,10 @@ export default {
       })
     },
     deleteRecipe({ getters }, recipe_id) {
+      let that = this
+      window.addEventListener('keypress', function(event) {
+        if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+      })
       this._vm.$root.$bvModal.msgBoxConfirm('한번 삭제된 데이터는 복구되지 않습니다.', {
         title: '정말로 삭제하시겠습니까?',
         size: 'md',
@@ -278,7 +282,8 @@ export default {
         cancelTitle: 'NO',
         footerClass: 'p-2',
         hideHeaderClose: false,
-        centered: true
+        centered: true,
+        id: 'modal'
       })
         .then((ans) => {
           if (ans) {
