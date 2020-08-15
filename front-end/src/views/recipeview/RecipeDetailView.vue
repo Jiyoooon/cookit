@@ -228,23 +228,23 @@ export default {
 @media (max-width: 768px) {
   #top-btn {
     font-size: 2rem;
-    width: 35px;
-    height: 35px;
+    width: 34px;
+    height: 34px;
   }
   #read-btn {
     font-size: 2rem;
-    width: 35px;
-    height: 35px;
-    bottom: 2.4em;
+    width: 34px;
+    height: 34px;
+    bottom: 2.3em;
   }
 }
 
 @media (max-width: 496px) {
   #top-btn {
-    bottom: 1.6em;
+    bottom: 1.4em;
   }
   #read-btn {
-    bottom: 3em;
+    bottom: 2.8em;
   }
 }
 
