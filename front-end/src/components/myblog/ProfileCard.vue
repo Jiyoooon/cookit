@@ -1,0 +1,353 @@
+<template>
+  <div class="card">
+    <header>
+
+      <!-- 프로필 이미지 -->
+      <div class="avatar">
+        <img :src="selecteduserinfo.image_url" alt=""/>
+      </div>
+    </header>
+
+    <!-- 유저 닉네임 & 소개말 -->
+    <h3>{{ selecteduserinfo.nickname }}</h3>
+    <div class="desc">
+      {{ selecteduserinfo.intro }}
+    </div>
+
+    <!-- 버튼 -->
+    <div class="block-btn btn-style2 blog-btn">버튼</div>
+
+    <!-- 조회수, 팔로워, 팔로잉 -->
+    <div class="stats">
+      <div class="stat">
+        <span class="label">조회수</span>
+        <span class="value">{{ selecteduserinfo.hits }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">팔로워</span>
+        <span class="value">{{ userfollowers }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">팔로잉</span>
+        <span class="value">{{ userfollowings }}</span>
+      </div>
+      <div class="clear"></div>
+    </div>
+
+    <!-- SNS -->
+    <footer>
+      <a href=""><font-awesome-icon :icon="['fab', 'youtube-square']" class="youtube"/></a>
+      <a href=""><font-awesome-icon :icon="['fab', 'instagram-square']" class="instagram"/></a>
+      <a href=""><font-awesome-icon :icon="['fab', 'twitter-square']" class="twitter"/></a>
+      <a href=""><font-awesome-icon :icon="['fab', 'facebook-square']" class="facebook"/></a>
+    </footer>
+  </div>
+</template>
+
+<script>
+import { mapState,mapActions} from 'vuex'
+// import followerList from '@/components/myblog/FollowerList.vue'
+// import followingList from '@components/myblog/FollowingList.vue'
+
+export default {
+    name: 'ProfileCard',
+    components:{
+      // followerList,
+      // followingList
+    },
+    data(){
+      return{
+        loading:true,
+        fstate:null,
+        userfollowers:null,
+        userfollowings:null,
+        follower: false,
+        following: false
+      }
+    },
+    computed: {
+      
+      ...mapState('accounts', ['authUser']),
+      ...mapState('storage',['myfollowings','followings','followers','myfollowers']),
+      ...mapState('myblog',['selecteduserinfo'])
+    },
+    methods: {
+      setfstate(){
+        if(this.myfollowings.findIndex(x => x.user_id === this.selecteduserinfo.user_id)<0)
+          this.fstate = false
+        else
+          this.fstate = true
+      },
+      setfollowers(){
+        this.userfollowers = this.followers.length
+      },
+      setfollowings(){
+        this.userfollowings = this.followings.length
+      },
+      clickfollow(){
+        this.follow(this.selecteduserinfo.user_id)
+        console.log(this.myfollowings)
+      },
+      clickunfollow(){
+        this.unfollow(this.selecteduserinfo.user_id)
+      },
+      rerendering(){
+        this.$router.go(0)
+      },
+      getfollowersagain(){
+        console.log("팔로워 다시가져오기");
+        this.getfollowers(this.selecteduserinfo.user_id);
+        console.log(this.followers);
+      },
+      ...mapActions('accounts',['GoRecipeCreate','hituser']),
+      ...mapActions('storage',['follow','unfollow','getfollowings','getfollowers']),
+    },
+    watch: {
+      myfollowings:{
+        handler(){
+          this.setfstate()
+        }
+      },
+      followers:{
+        handler(){
+          this.setfollowers()
+        }
+      },
+      followings:{
+        handler(){
+          this.setfollowings()
+        }
+      }
+    },
+    updated(){
+      this.setfstate()
+    },
+    created() {
+      console.log("myfollower")
+      console.log(this.myfollowings)
+      console.log("mypage created");
+      if(this.selecteduserinfo.user_id !== this.authUser.user_id)
+        this.hituser(this.selecteduserinfo.user_id)
+      
+      this.getfollowings(this.selecteduserinfo.user_id)
+      this.getfollowers(this.selecteduserinfo.user_id)
+    },
+}
+</script>
+
+<style scoped>
+/*** VARS ***/
+/*** GENERAL STYLES ***/
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Dosis', sans-serif;
+  background: #c5cae9;
+  text-align: center;
+}
+
+.card {
+	width: 100%;
+	background: #fff;
+	box-shadow: 0 10px 7px -5px rgba(0, 0, 0, .4);
+}
+
+ .card header {
+	position: relative;
+	width: 100%;
+	height: 60px;
+	background-color: #53AAA1;
+}
+
+.card header::before, .card header::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: inherit;
+}
+
+.card header::before {
+  background-color: #53AAA1;
+	-webkit-transform: skewY(-8deg);
+	-moz-transform: skewY(-8deg);
+	-ms-transform: skewY(-8deg);
+	-o-transform: skewY(-8deg);
+	transform: skewY(-8deg);
+	-webkit-transform-origin: 100% 100%;
+	-moz-transform-origin: 100% 100%;
+	-ms-transform-origin: 100% 100%;
+	-o-transform-origin: 100% 100%;
+	transform-origin: 100% 100%;
+}
+
+.card header::after {
+  background-color: #53AAA1;
+	-webkit-transform: skewY(8deg);
+	-moz-transform: skewY(8deg);
+	-ms-transform: skewY(8deg);
+	-o-transform: skewY(8deg);
+	transform: skewY(8deg);
+	-webkit-transform-origin: 0 100%;
+	-moz-transform-origin: 0 100%;
+	-ms-transform-origin: 0 100%;
+	-o-transform-origin: 0 100%;
+	transform-origin: 0 100%;
+}
+
+.card header .avatar {
+  position: absolute;
+	left: 50%;
+	top: 30px;
+	margin-left: -50px;
+	z-index: 5;
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	overflow: hidden;
+	background: #ccc;
+	border: 3px solid #fff;
+}
+
+.card header .avatar img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	width: 100px;
+	height: auto;
+}
+
+.card h3 {
+	position: relative;
+	margin: 80px 0 30px;
+  font-weight: 650;
+	text-align: center;
+}
+
+.card h3::after {
+	content: '';
+	position: absolute;
+	bottom: -15px;
+	left: 50%;
+	margin-left: -15px;
+	width: 30px;
+	height: 1px;
+	background: #000;
+}
+
+.card .desc {
+	padding: 0 1rem 2rem;
+	text-align: center;
+	line-height: 1.5;
+	color: #777;
+}
+
+.blog-btn {
+  margin: 0 3em 2.5em 3em;
+}
+
+.card .stats {
+	width: 100%;
+	max-width: 100%;
+	margin: 0 auto 2rem;
+}
+
+.card .stats div {
+	display: block;
+	width: 33.333333%;
+	float: left;
+	text-align: center;
+	color: #53AAA1;
+}
+
+.stat {
+  box-sizing: border-box;
+  width: calc(100% / 3);
+  float: left;
+  text-align: center;
+  border-left: 1px solid lightgray;
+}
+
+.stat .label{
+  display: block;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #95989A;
+}
+
+.stat .value{
+  display: block;
+  font-weight: 700;
+  font-size:20px;
+  margin-top: 5px;
+}
+
+.card footer {
+	position: relative;
+	padding: 1rem;
+  height: 70px;
+	background-color: #eee;
+	text-align: center;
+}
+
+.card footer a {
+	padding: 0 1rem;
+  height: 100%;
+  font-size: 1.5em;
+	color: black;
+	-webkit-transition: color 0.4s;
+	-moz-transition: color 0.4s;
+	-ms-transition: color 0.4s;
+	-o-transition: color 0.4s;
+	transition: color 0.4s;
+}
+
+.card footer .facebook {
+	color: #395794;
+}
+
+.card footer .youtube {
+	color: #c4302b;
+}
+
+.card footer .instagram {
+	color: #ED2554;
+}
+
+.card footer .twitter {
+	color: #00acee;
+}
+
+
+.card footer::before {
+	content: '';
+	position: absolute;
+	top: -27px;
+	left: 50%;
+	margin-left: -15px;
+	border: 15px solid transparent;
+	border-bottom-color: #eee;
+}
+
+/*** RESPONSIVE ***/
+@media only screen and (max-width: 810px) {
+	.card {
+		float: none;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+</style>
