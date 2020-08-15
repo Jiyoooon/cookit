@@ -12,7 +12,7 @@
     <b-row align-v="center" data-html2canvas-ignore="true">
       <!-- 유저 아이콘, 별명, 작성일 -->
       <b-col cols="8" class="text-left ml-3 mr-n3">
-        <b-img :src="recipeUser.image_url" rounded="circle" thumbnail id="user_profile"/>
+        <b-img :src="recipeUser.image_url" rounded="circle" thumbnail id="user_profile" @click="gouserblog" style="cursor:pointer"/>
         <div style="display: inline; position: absolute; padding: 5px 10px">
           <h5>{{ selectedRecipe.recipe_user_name }}</h5>
           <div style="font-size: 0.8em; color: lightgray;">{{ selectedRecipe.create_date }}</div>
@@ -100,10 +100,18 @@ export default {
     },
     methods: {
       ...mapActions('editor', ['deleteRecipe']),
+      ...mapActions('myblog',['getUserInfo']),
       gorecipeupdate() {
         if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
           this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
         }
+      },
+      gouserblog(){
+        // this.getUserInfo(this.selectedRecipe.recipe_user)
+        if (this.authUser.user_id == this.selectedRecipe.recipe_user)
+          this.$router.push({ name: 'MyBlogListView'})
+        else
+          this.$router.push({ name: 'UserBlogListView', params: { user_id: this.selectedRecipe.recipe_user } })
       },
       // ...mapActions('recipes', ['fetchRecipeUser'])
     },

@@ -3,7 +3,7 @@
     <b-row align-v="center">
       <!-- 유저 아이콘, 별명, 작성일 -->
       <b-col cols="8" class="text-left ml-3 mr-n3">
-        <b-img :src="comment.comment_user_profileImage" rounded="circle" thumbnail id="user_profile"/>
+        <b-img :src="comment.comment_user_profileImage" rounded="circle" thumbnail id="user_profile" @click="gouserblog" style="cursor:pointer"/>
         <div style="display: inline-block; position: absolute; padding: 2px 10px 0px 10px; margin-bottom: 0px; width: 100%;">
           <strong>{{ comment.comment_user_name }}</strong>
           <span style="font-size: 0.8em; color: lightgray; margin-left: 10px;">{{ comment.create_date }}</span>
@@ -54,6 +54,14 @@ export default {
         ...mapState('recipes', ['selectedcomment'])
     },
     methods: {
+        gouserblog(){
+          // this.getUserInfo(this.comment.comment_user_id)
+          if (this.authUser.user_id == this.comment.comment_user_id)
+            this.$router.push({ name: 'MyBlogListView'})
+          else
+            this.$router.push({ name: 'UserBlogListView', params: { user_id: this.comment.comment_user_id } })
+        },
+        ...mapActions('myblog',['getUserInfo']),
         ...mapActions('recipes', ['fetchComments', 'deleteComment', 'updateComment']),
         ...mapMutations('recipes', ['SET_SELECTEDCOMMENT']),
     },
