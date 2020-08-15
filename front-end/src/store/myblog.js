@@ -21,6 +21,7 @@ export default {
       password: null,
       start_page: null,
       user_id: null,
+      sns_list: null
     },
   },
 

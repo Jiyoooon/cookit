@@ -200,11 +200,23 @@
 	
 	
 	<select id="getAllLinkedSNS" parameterType="string" resultType="SNS">
-		SELECT sns_user, sns_name, sns_url, create_date
-		FROM Linked_sns
-		WHERE sns_user = #{uid}
+		SELECT ls.sns_user, ls.sns_url, ls.create_date, s.sns_name
+		FROM Linked_sns ls
+		LEFT JOIN SNS s using(sns_id) 
+		WHERE ls.sns_user = #{uid}
+		ORDER BY sns_id
 	</select>
 	
+	<insert id="insertLinkedSNS" parameterType="string">
+		INSERT into Linked_sns(sns_user, sns_url, sns_id)
+						VALUES(#{uid}, #{url}, (SELECT sns_id FROM SNS WHERE sns_name = #{name}))
+	</insert>
+	
+	<select id="getAllSNS" resultType="SNS">
+		SELECT sns_name FROM SNS
+	</select>
+	
+	<!-- xx -->
 	<select id="getLinkedSNS" parameterType="string" resultType="SNS">
 		SELECT sns_user, sns_name, sns_url
 		FROM Linked_sns
@@ -212,10 +224,6 @@
 				and sns_name = #{name}
 	</select>
 	
-	<insert id="insertLinkedSNS" parameterType="string">
-		INSERT 	into Linked_sns(sns_user, sns_name, sns_url)
-				values(#{uid}, #{name}, #{url})
-	</insert>
 	
 	<delete id="deleteLinkedSNS" parameterType="string">
 		DELETE 	FROM Linked_sns
