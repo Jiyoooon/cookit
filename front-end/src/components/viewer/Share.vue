@@ -73,6 +73,7 @@ export default {
           imageUrl: this.selectedRecipe.main_image,
           link: {
           webUrl: this.currUrl,
+          mobileWebUrl: this.currUrl,
           androidExecParams: 'test',
           },
         },
@@ -86,6 +87,7 @@ export default {
             title: '보러가기',
             link: {
               webUrl: this.currUrl,
+              mobileWebUrl: this.currUrl,
             },
           }
         ]
