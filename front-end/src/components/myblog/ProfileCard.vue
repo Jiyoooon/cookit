@@ -1,6 +1,6 @@
 <template>
-  <div class="card">
-    <v-app id="inspire">
+  <v-app id="inspire">
+    <div class="card">
       <header>
         <!-- 프로필 이미지 -->
         <div class="avatar">
@@ -75,12 +75,12 @@
 
       <!-- SNS -->
       <footer>
-        <a v-for="(sns, index) in sns_name_list" :href="sns_url_list[index]" target="_blank" :key="index">
+        <a v-for="(sns, index) in sns_name_list" :href="sns_url_list[index]" :key="index">
           <font-awesome-icon :icon="['fab', sns+'-square']" :class="sns"/>
         </a>
       </footer>
-    </v-app>
-  </div>
+    </div>
+  </v-app>
 </template>
 
 <script>
@@ -102,8 +102,8 @@ export default {
         userfollowings:null,
         follower: false,
         following: false,
-        sns_name_list: [],
-        sns_url_list: [],
+        sns_name_list: [ 'youtube', 'instagram', 'twitter', 'facebook' ],
+        sns_url_list: [ '', '', '', '' ],
       }
     },
     computed: {
@@ -173,18 +173,18 @@ export default {
       this.getfollowers(this.selecteduserinfo.user_id)
 
       // SNS url 만들기
-      // 0: 페이스북 1: 인스타그램 2: 트위터 3: 유튜브
-      for (let item of this.selecteduserinfo.sns_list) {
-        this.sns_name_list.push(item.sns_name);
-        this.sns_url_list.push(item.sns_url);
+      // 0: 유튜브 1: 인스타그램 2: 트위터 3: 페이스북
+      for (let item in this.selecteduserinfo.sns_list) {
+        if (item.sns_name == 'youtube') this.sns_url_list[0] = item.sns_url;
+        else if (item.sns_name == 'instagram') this.sns_url_list[1] = item.sns_url;
+        else if (item.sns_name == 'twitter') this.sns_url_list[2] = item.sns_url;
+        else if (item.sns_name == 'facebook') this.sns_url_list[3] = item.sns_url;
       }
-      // console.log("sns_url_list!!")
-      // console.log(this.sns_url_list)
     },
 }
 </script>
 
-<style scoped>
+<style>
 /*** VARS ***/
 /*** GENERAL STYLES ***/
 * {
@@ -193,16 +193,17 @@ export default {
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Dosis', sans-serif;
-  background: #c5cae9;
-  text-align: center;
+.v-application--wrap {
+  min-height: 0px !important;
 }
 
 .card {
 	width: 100%;
+  max-width: 320px;
+  min-width: 246px;
 	background: #fff;
 	box-shadow: 0 10px 7px -5px rgba(0, 0, 0, .4);
+  margin-bottom: 2em;
 }
 
  .card header {
