@@ -200,7 +200,7 @@ export default {
 .card {
 	width: 100%;
   max-width: 320px;
-  min-width: 255px;
+  min-width: 258px;
 	background: #fff;
 	box-shadow: 0 10px 7px -5px rgba(0, 0, 0, .4);
   margin-bottom: 2em;
@@ -364,6 +364,7 @@ export default {
 	-ms-transition: color 0.4s;
 	-o-transition: color 0.4s;
 	transition: color 0.4s;
+  z-index: 5;
 }
 
 .card footer #facebook {
