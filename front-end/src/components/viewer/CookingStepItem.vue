@@ -13,7 +13,7 @@
 
     <b-row>
       <b-col sm="7">
-        <timeDescription :description='cookingstep.description' :time='cookingstep.time' :number='cookingstep.steps'/>
+        <timeDescription :description='cookingstep.description' :time='cookingstep.time' :number="'main-des-'+cookingstep.steps"/>
 
       </b-col>
       <b-col v-if="cookingstep.step_image" sm="5" data-html2canvas-ignore="true">

@@ -64,7 +64,7 @@
             </b-row>
             <b-row>
               <b-col>
-                <b-img v-if="recipe.main_image_file!=null" :src="imageUrl" height="200px" />
+                <b-img v-if="this.imageUrl!=null" :src="imageUrl" height="200px" />
                 <span v-else></span>
               </b-col>
             </b-row>
@@ -129,6 +129,7 @@ export default {
             this.imageUrl = this.selectedRecipe.main_image
             return;
           }
+          
           this.imageUrl = URL.createObjectURL(file[0])
         },
         inputInitialValue() {

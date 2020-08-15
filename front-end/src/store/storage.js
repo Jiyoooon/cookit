@@ -10,24 +10,30 @@ export default {//로컬스토리지에 저장할 필요가 있는 정보들은 
       followers:[],
     },
     mutations: {
-      SET_FOLLOWERS(state, payload){
-        if(payload.user == payload.Me){
-          state.myfollowers = payload.array
+      SET_FOLLOWERS(state, payload){//다른 사람
+        // if(payload.user == payload.Me){
+        //   state.myfollowers = payload.array
+        //   state.followers = payload.array
+        // }
+        // else {
           state.followers = payload.array
-        }
-        else {
-          state.followers = payload.array
-        }
+        // }
       },
-      SET_FOLLOWINGS(state, payload){
-        if(payload.user == payload.Me){
-          state.myfollowings = payload.array
+      SET_FOLLOWINGS(state, payload){//다른 사람
+        // if(payload.user == payload.Me){
+        //   state.myfollowings = payload.array
+        //   state.followings = payload.array
+        // }
+        // else {
           state.followings = payload.array
-        }
-        else {
-          state.followings = payload.array
-        }
+        // }
       },
+      SET_MYFOLLOWERS(state, payload){//내팔로워
+        state.myfollowers = payload.array;
+      },
+      SET_MYFOLLOWINGS(state, payload){//내팔로잉
+        state.myfollowings = payload.array;
+      }
     },
   
     actions: {
@@ -51,6 +57,26 @@ export default {//로컬스토리지에 저장할 필요가 있는 정보들은 
         })
       },
 
+      getmyfollowings({commit,rootState},user){
+        axios.get(SERVER.ROUTES.accounts.following + String(user))
+        .then(res => {
+          commit('SET_MYFOLLOWINGS',{ user : user, array : res.data, Me : rootState.accounts.authUser.user_id})
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      },
+
+      getmyfollowers({commit,rootState},user){
+        axios.get(SERVER.ROUTES.accounts.follower + String(user))
+        .then(res => {
+          commit('SET_MYFOLLOWERS',{user : user, array : res.data, Me : rootState.accounts.authUser.user_id})
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      },
+
       follow({rootState,rootGetters,dispatch},payload){
         const targetid = {
           id : String(payload) 
@@ -58,7 +84,8 @@ export default {//로컬스토리지에 저장할 필요가 있는 정보들은 
         
         axios.post(SERVER.ROUTES.accounts.follow+String(payload),targetid,rootGetters['accounts/config'])
           .then(() => {
-            dispatch('getfollowings',rootState.accounts.authUser.user_id)
+            dispatch('getfollowers',String(payload))
+            dispatch('getmyfollowings',rootState.accounts.authUser.user_id)
           })
           .catch((err) => {
             console.log(err)
@@ -76,7 +103,8 @@ export default {//로컬스토리지에 저장할 필요가 있는 정보들은 
         }
         axios.delete(SERVER.ROUTES.accounts.unfollow+String(payload),headerConfig)
           .then(() => {
-            dispatch('getfollowings',rootState.accounts.authUser.user_id)
+            dispatch('getfollowers',String(payload))
+            dispatch('getmyfollowings',rootState.accounts.authUser.user_id)
           })
           .catch((err) => {
             console.log(err)
