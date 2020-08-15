@@ -7,17 +7,17 @@
         </div>
         <hr id="divider">
       <div>
-        <SearchBar id="searchbar" />
+        <search-bar id="searchbar" />
       </div>
   <b-contanier>
       <b-row>
         <b-col lg="3">
-            <MyPage id="mypage" />
+            <profile-card id="profild-card" />
         </b-col>
         <b-col lg="9">
-            <MyRecipeList v-if="currentshow==1" />
-            <LikeRecipeList v-if="currentshow==2"/>
-            <SearchRecipeList v-if="currentshow==3" />
+            <my-recipe-list v-if="currentshow==1" />
+            <like-recipe-list v-if="currentshow==2"/>
+            <search-recipe-list v-if="currentshow==3" />
         </b-col>
         <!-- <b-col v-if="currentshow==2" lg="9">
             <LikeRecipeList />
@@ -28,27 +28,29 @@
 </template>
 
 <script>
-import SearchBar from '../../components/myblog/SerachBar.vue'
-import MyPage from '../../components/myblog/MyPage.vue'
-import MyRecipeList from '../../components/myblog/MyRecipeList.vue'
-import LikeRecipeList from '../../components/myblog/LikeRecipeList.vue'
+import searchBar from '@/components/myblog/SerachBar.vue'
+import profileCard from '@/components/myblog/ProfileCard.vue'
+// import myPage from '@/components/myblog/MyPage.vue'
+import myRecipeList from '@/components/myblog/MyRecipeList.vue'
+import likeRecipeList from '@/components/myblog/LikeRecipeList.vue'
 import { mapActions, mapState, mapMutations } from 'vuex'
-// import recipeVue from '../../components/recipeview/recipe.vue'
+// import recipeVue from '@/components/recipeview/recipe.vue'
 
 export default {
     name: 'MyBlogListView',
     data() {
         return {
             recipelen:null,
-            sort: ['내포스트', '좋아요글'],
+            sort: ['내가 쓴 글', '좋아요'],
             order: 1
         }
     },
     components: {
-        SearchBar,
-        MyPage,
-        MyRecipeList,
-        LikeRecipeList,
+        searchBar,
+        profileCard,
+        // myPage,
+        myRecipeList,
+        likeRecipeList,
     },
     computed: {
         ...mapState('myblog', ['myrecipes','selectedRecipe', 'selecteduserinfo', 'likerecipes', 'currentshow', 'searchrecipes']),
@@ -112,7 +114,7 @@ export default {
         margin-right: auto;
         margin-top: 10px;
     }
-    #mypage {
+    #profile-card {
         float:left;
         width: 20vw;
         margin-left: 20px;

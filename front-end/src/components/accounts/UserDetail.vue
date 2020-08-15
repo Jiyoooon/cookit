@@ -1,18 +1,16 @@
 <template>
   <div id="userinfo">
     <b-container fluid="lg" id="userinfo-container">
-    <!-- <b-row align-v="center">
-      <b-col sm="3">아이디</b-col>
-      <b-col sm="9">
-        user.username
-      </b-col>
-    </b-row> -->
     <b-row align-v="center">
+
+      <!-- 이메일 -->
       <b-col sm="3">이메일</b-col>
       <b-col sm="9">
         {{ authUser.email }}
       </b-col>
     </b-row>
+
+    <!-- 비밀번호 -->
     <b-row align-v="center">
       <b-col sm="3"><label for="input-none">비밀번호</label></b-col>
       <b-col sm="9">
@@ -29,6 +27,8 @@
           비밀번호가 다릅니다.</b-form-invalid-feedback>
       </b-col>
     </b-row>
+
+    <!-- 닉네임 -->
     <b-row>
       <b-col sm="3" class="mt-2">닉네임</b-col>
       <b-col sm="6">
@@ -50,6 +50,8 @@
           <div v-else class="block-btn btn-style1" @click='nicknameCheck(updateData.config.nickname)'>중복 확인</div>
         </b-col>
     </b-row>
+
+    <!-- 프로필 사진 -->
     <b-row align-v="center">
       <b-col sm="3">프로필 사진</b-col>
       <b-col sm="6">
@@ -72,30 +74,41 @@
         <img :src="imageURL2" height="100px">
       </b-col>
     </b-row>
+
+    <!-- 소개말 -->
     <b-row>
       <b-col sm="3" class="mt-2">소개글</b-col>
       <b-col sm="9"><b-form-textarea
        v-model="updateData.config.intro" id="textarea" rows="3" max-rows="6"></b-form-textarea>
       </b-col>
     </b-row>
-    <b-row v-for="(sns, index) in updateData.sns_list" :key="index">
-      <b-col sm="3">{{ sns.sns_name }} : </b-col>
-      <b-col sm="9">
-        <b-form-input v-model="updateData.sns_list[index].sns_url" placeholder="https://www.example.com"></b-form-input>
-      </b-col>
-    </b-row>
+
+    <!-- 메인화면 선택 -->
     <b-row align-v="center">
       <b-col sm="3">메인화면 선택</b-col>
       <b-col sm="9">
-        <b-form-radio-group v-model="updateData.config.start_page" :options="options" name="radio-options-slots">
-          <!-- <b-form-radio value="true">내 블로그</b-form-radio>
-          <b-form-radio value="false">둘러보기</b-form-radio> -->
-        </b-form-radio-group>
+        <b-form-radio-group v-model="updateData.config.start_page" :options="options" name="radio-options-slots"/>
       </b-col>
     </b-row>
-    <b-row>
-      <b-col></b-col>
+
+    <b-row><b-col></b-col></b-row>
+
+    <b-row align-v="center">
+      <b-col class="text-center"><h6 style="color:#53AAA1; font-weight: 650;">SNS</h6></b-col>
     </b-row>
+
+    <!-- SNS -->
+    <b-row v-for="(sns, index) in updateData.sns_list" :key="index" align-v="center">
+      <b-col cols="3"><font-awesome-icon :icon="['fab', sns.sns_name.toLowerCase()+'-square' ]"
+      :id="sns.sns_name.toLowerCase()"/> {{ sns.sns_name }}</b-col>
+      <b-col cols="9">
+        <b-form-input v-model="updateData.sns_list[index].sns_url" :placeholder="sns_base[index]"></b-form-input>
+      </b-col>
+    </b-row>
+
+    <b-row><b-col></b-col></b-row>
+
+    <!-- 마지막 버튼 -->
     <b-row align-v="center" align-h="center">
       <b-col sm="2"></b-col>
       <b-col sm="4">
@@ -135,12 +148,15 @@ export default {
             start_page: false,
           },
           sns_list: [
-            { sns_name: 'facebook', sns_url: ''},
-            { sns_name: 'instagram', sns_url: ''},
-            { sns_name: 'twitter', sns_url: ''},
-            { sns_name: 'youtube', sns_url: ''},
+            { sns_name: 'Youtube', sns_url: ''},
+            { sns_name: 'Instagram', sns_url: ''},
+            { sns_name: 'Twitter', sns_url: ''},
+            { sns_name: 'Facebook', sns_url: ''},
           ]
         },
+        sns_base: [
+          'http://www.youtube.com/', 'https://www.instagram.com/', 'https://twitter.com/', 'https://www.facebook.com'
+        ],
         file:null,
         passwordAgain: null,
         options: [
@@ -322,5 +338,35 @@ export default {
 <style>
 .custom-file-input:lang(en) ~ .custom-file-label::after {
   content: '파일찾기';
+}
+
+#facebook {
+	color: #395794;
+  font-size: 1.2em;
+  margin-right: 2px;
+}
+
+#youtube {
+	color: #c4302b;
+  font-size: 1.2em;
+  margin-right: 2px;
+}
+
+#instagram {
+	color: #ED5078;
+  font-size: 1.2em;
+  margin-right: 2px;
+}
+
+#twitter {
+	color: #00acee;
+  font-size: 1.2em;
+  margin-right: 2px;
+}
+
+@media (max-width: 496px) {
+  #facebook, #youtube, #instagram, #twitter {
+    display: none;
+  }
 }
 </style>
