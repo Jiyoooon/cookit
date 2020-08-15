@@ -72,7 +72,7 @@ export default {
 		...mapState('editor', ['cookingStep'])
 	},
 	methods: {
-		...mapMutations('editor', ['addCookingStep', 'deleteCookingStep']),
+		...mapMutations('editor', ['addCookingStep', 'deleteCookingStep', 'SET_UPDATETF']),
 		setThumbnail(e) {
 			const file = e.target.files[0];
 			if(!file) return;
@@ -82,6 +82,14 @@ export default {
 			this.cookingStep[index].step_image_url = URL.createObjectURL(file);
 		},
 	},
+	watch: {
+		cookingStep: {
+			deep: true,
+			handler() {
+				this.SET_UPDATETF(true)
+			}
+		}
+	}
 }
 </script>
 

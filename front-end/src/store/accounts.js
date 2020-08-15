@@ -76,7 +76,8 @@ export default {
         cancelTitle: 'NO',
         footerClass: 'p-2',
         hideHeaderClose: false,
-        centered: true
+        centered: true,
+        id: 'modal'
       })
         .then((ans) => {
           if (ans) {
@@ -189,6 +190,10 @@ export default {
             })
             // dispatch('GoHome')
           } else {
+            let that = this
+            window.addEventListener('keypress', function(event) {
+              if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+            })
             this._vm.$root.$bvModal.msgBoxOk('이메일과 비밀번호를 확인하여 주십시오.', {
               title: 'Confirmation',
               size: 'sm',
@@ -196,7 +201,8 @@ export default {
               okVariant: 'danger',
               headerClass: 'p-2 border-bottom-0',
               footerClass: 'p-2 border-top-0',
-              centered: true
+              centered: true,
+              id: 'modal'
             })
           }
         })
@@ -245,6 +251,10 @@ export default {
     emailAuthCodeSend({ commit }, email) {
       axios.get(SERVER.ROUTES.accounts.requestkey + String(email))
       .then(res => {
+        let that = this
+            window.addEventListener('keypress', function(event) {
+              if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+            })
         if(res.data.result == 'success') {
           commit('SET_EMAIL', email)
           this._vm.$root.$bvModal.msgBoxOk('인증 코드가 발송되었습니다.', {
@@ -254,7 +264,8 @@ export default {
             okVariant: 'success',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
           })
         } else {
           this._vm.$root.$bvModal.msgBoxOk('인증 코드 발송에 실패하였습니다.', {
@@ -264,7 +275,8 @@ export default {
             okVariant: 'danger',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
           })
         }
       })
@@ -283,6 +295,10 @@ export default {
       .then(res => {
         if (res.data.result == 'success') dispatch('GoSignup')
         else if (res.data.result == 'fail') {
+          let that = this
+            window.addEventListener('keypress', function(event) {
+              if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+            })
           this._vm.$root.$bvModal.msgBoxOk('코드가 맞지 않습니다.', {
             title: 'Confirmation',
             size: 'sm',
@@ -290,7 +306,8 @@ export default {
             okVariant: 'danger',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
           })
           commit('SET_EMAIL', null)
         }
@@ -311,6 +328,10 @@ export default {
         })
     },
     updateUser({ dispatch, state, commit }, updateData) {
+      let that = this
+      window.addEventListener('keypress', function(event) {
+        if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+      })
       if (!updateData.valid.password) {
         this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
           title: 'Confirmation',
@@ -319,7 +340,8 @@ export default {
           okVariant: 'danger',
           headerClass: 'p-2 border-bottom-0',
           footerClass: 'p-2 border-top-0',
-          centered: true
+          centered: true,
+          id: 'modal'
         })
       } else if (!updateData.valid.nickname) {
         this._vm.$root.$bvModal.msgBoxOk('닉네임 중복체크를 해주세요.', {
@@ -329,7 +351,8 @@ export default {
           okVariant: 'danger',
           headerClass: 'p-2 border-bottom-0',
           footerClass: 'p-2 border-top-0',
-          centered: true
+          centered: true,
+          id: 'modal'
         })
       } else if (updateData.valid.filesize > 10000000) {
         this._vm.$root.$bvModal.msgBoxOk('이미지 크기가 너무 큽니다.', {
@@ -339,7 +362,8 @@ export default {
           okVariant: 'danger',
           headerClass: 'p-2 border-bottom-0',
           footerClass: 'p-2 border-top-0',
-          centered: true
+          centered: true,
+          id: 'modal'
         })
       } else {
         const formData = new FormData()
@@ -377,7 +401,8 @@ export default {
                 okVariant: 'success',
                 headerClass: 'p-2 border-bottom-0',
                 footerClass: 'p-2 border-top-0',
-                centered: true
+                centered: true,
+                id: 'modal'
               })
             dispatch('fetchUser')
             commit('SET_UPDATETF', false)
@@ -397,7 +422,21 @@ export default {
           dispatch('GoUserInfo')
           cookies.remove('password-check')
         } else {
-          alert("비밀번호가 일치하지 않습니다.")
+          // alert("비밀번호가 일치하지 않습니다.")
+          let that = this
+            window.addEventListener('keypress', function(event) {
+              if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+            })
+          this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true,
+            id: 'modal'
+          })
         }
       })
       .catch((err) => {
@@ -408,6 +447,10 @@ export default {
     sendNewPassword({ dispatch }, email) {
       axios.get(SERVER.ROUTES.accounts.sendnewpassword + String(email))
       .then((res) => {
+        let that = this
+            window.addEventListener('keypress', function(event) {
+              if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+            })
         if(res.data.result == 'success'){
           this._vm.$root.$bvModal.msgBoxOk('새 비밀번호가 전송되었습니다', {
             title: 'Confirmation',
@@ -416,7 +459,8 @@ export default {
             okVariant: 'success',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
           }) 
           dispatch('GoLogin')
         } else {
@@ -427,7 +471,8 @@ export default {
             okVariant: 'danger',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
           }) 
         }
       })
@@ -437,6 +482,10 @@ export default {
       })
     },
     signup({ commit, dispatch }, signupData) {
+      let that = this
+            window.addEventListener('keypress', function(event) {
+              if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+            })
       if (!signupData.valid.password) {
         this._vm.$root.$bvModal.msgBoxOk('비밀번호를 확인해주세요.', {
           title: 'Confirmation',
@@ -445,7 +494,8 @@ export default {
           okVariant: 'danger',
           headerClass: 'p-2 border-bottom-0',
           footerClass: 'p-2 border-top-0',
-          centered: true
+          centered: true,
+          id: 'modal'
         })
       } else if (!signupData.valid.nickname) {
         this._vm.$root.$bvModal.msgBoxOk('닉네임 중복체크를 해주세요.', {
@@ -455,7 +505,8 @@ export default {
           okVariant: 'danger',
           headerClass: 'p-2 border-bottom-0',
           footerClass: 'p-2 border-top-0',
-          centered: true
+          centered: true,
+          id: 'modal'
         })
       } else {
         
@@ -483,7 +534,8 @@ export default {
                 okVariant: 'success',
                 headerClass: 'p-2 border-bottom-0',
                 footerClass: 'p-2 border-top-0',
-                centered: true
+                centered: true,
+                id: 'modal'
               })
                 .then(() => {
                   router.push({ name: 'Home'})
@@ -496,7 +548,8 @@ export default {
                 okVariant: 'danger',
                 headerClass: 'p-2 border-bottom-0',
                 footerClass: 'p-2 border-top-0',
-                centered: true
+                centered: true,
+                id: 'modal'
               })
             }
           })

@@ -69,7 +69,7 @@ export default {
         ...mapState('recipes', ['selectedRecipe']),
 	},
 	methods: {
-		...mapMutations('editor', ['addCookingStep', 'deleteCookingStep', 'SET_COOKINGSTEP']),
+		...mapMutations('editor', ['addCookingStep', 'deleteCookingStep', 'SET_COOKINGSTEP', 'SET_UPDATETF']),
 		setThumbnail(e) {
       console.log(e)
       const file = e.target.files[0];
@@ -104,6 +104,21 @@ export default {
         deep: true,
         handler() {
 
+        }
+      },
+      cookingStep: {
+        deep: true,
+        handler() {
+          for (let i=0; i < this.cookingStep.length; i++) {
+            if (!(this.cookingStep[i].description == this.selectedRecipe.cookingStep[i].description) ||
+            !(this.cookingStep[i].tips == this.selectedRecipe.cookingStep[i].tips) ||
+            !(this.cookingStep[i].step_image_file == this.selectedRecipe.cookingStep[i].step_image_file)
+            ) {
+              console.log(this.cookingStep)
+              console.log(this.selectedRecipe.cookingStep)
+              this.SET_UPDATETF(true)
+          }
+          }
         }
       }
     }

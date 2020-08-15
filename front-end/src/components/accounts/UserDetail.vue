@@ -231,6 +231,10 @@ export default {
       nicknameCheck(nickname) {
         axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
+          let that = this
+          window.addEventListener('keypress', function(event) {
+            if (event.keyCode == 13) that.$bvModal.hide('modal')
+          })
           if (res.data.result == 'success') {
             this.updateData.valid.nickname = true
             this.$bvModal.msgBoxOk('확인되었습니다.', {
@@ -240,7 +244,8 @@ export default {
             okVariant: 'success',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
             })
           } else {
             this.updateData.valid.nickname = false
@@ -251,7 +256,8 @@ export default {
             okVariant: 'danger',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
             })
           }
         })
@@ -311,11 +317,12 @@ export default {
       this.checkPasswordValidValue()
       this.checkInitialNickname()
       // this.SET_UPDATETF(true)
-      console.log(this.updateTF)
+      // console.log(this.updateTF)
     },
     created() {
       this.insertInitialValue()
       this.checkInitialNickname()
+      // console.log(this.updateTF)
     },
     watch: {
       updateData: {
@@ -326,9 +333,9 @@ export default {
           !(this.updateData.config.profile == this.authUser.profile) ||
           !(this.updateData.config.image_name == this.authUser.image_name) ||
           !(this.updateData.config.start_page == this.authUser.start_page)
-          )
+          ) {
             this.SET_UPDATETF(true)
-            console.log('??????????')
+          }
         }
       }
     },

@@ -94,13 +94,13 @@ export default {
       //     console.log(this.myrecipes[0].recipe_user_name)
       //   }
       // },
-      // paginated_items: {
-      //   deep:true,
-      //   handler() {
-      //     this.currentPageItems();
-      //     this.totalRows();
-      //   }
-      // }
+      paginated_items: {
+        deep:true,
+        handler() {
+          // this.currentPageItems();
+          // this.totalRows();
+        }
+      }
     },
     mounted() {
       // this.SET_FLAG(false)
@@ -108,6 +108,7 @@ export default {
     },
     created() {
       // console.log("레시피목록 가져오기 created")
+      console.log(this.selecteduserinfo)
       this.fetchMyRecipes(this.selecteduserinfo)
       // this.SET_FLAG(false)
       // console.log(this.flag)
