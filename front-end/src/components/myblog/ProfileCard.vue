@@ -170,8 +170,11 @@ body {
 
 .card {
 	width: 100%;
+  max-width: 320px;
+  min-width: 246px;
 	background: #fff;
 	box-shadow: 0 10px 7px -5px rgba(0, 0, 0, .4);
+  margin-bottom: 2em;
 }
 
  .card header {

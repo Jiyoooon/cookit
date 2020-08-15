@@ -1,25 +1,25 @@
 <template>
-  <div id="list">
-  <b-contanier>
+  <div id="blog-view">
+    <b-container fluid>
       <b-row>
-        <SearchBar id="searchbar" />
-      </b-row>
-      <b-row>
-        <b-col lg="3">
-            <MyPage id="mypage" />
+        <b-col pr-6 lg="3" md="4" sm="5">
+          <profile-card id="profild-card" />
         </b-col>
-        <b-col lg="9">
-            <MyRecipeList />
+        <b-col lg="9" md="8" sm="7">
+          <div>
+          <blog-search-bar id="blog-searchbar" />
+          </div>
+          <my-recipe-list/>
         </b-col>
       </b-row>
-  </b-contanier>
+    </b-container>
 </div>
 </template>
 
 <script>
-import SearchBar from '../../components/myblog/SerachBar.vue'
-import MyPage from '../../components/myblog/MyPage.vue'
-import MyRecipeList from '../../components/myblog/MyRecipeList.vue'
+import blogSearchBar from '@/components/myblog/BlogSearchBar.vue'
+import profileCard from '@/components/myblog/ProfileCard.vue'
+import myRecipeList from '@/components/myblog/MyRecipeList.vue'
 import { mapActions, mapState, mapMutations } from 'vuex'
 
 export default {
@@ -29,9 +29,9 @@ export default {
         }
     },
     components: {
-        SearchBar,
-        MyPage,
-        MyRecipeList,
+        blogSearchBar,
+        profileCard,
+        myRecipeList,
     },
     computed: {
          ...mapState('myblog', ['myrecipes','selectedRecipe', 'selecteduserinfo']),
