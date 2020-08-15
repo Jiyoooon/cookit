@@ -39,10 +39,10 @@ public interface RecipeDao {
 	String[] getSmallIngredientsArray();
 	void updateTime(Integer cooking_steps_id, String time);
 	int reviseRecipe(Integer uid, RecipeDetail recipeData);
-	void reviseCookingsteps(int recipe_id, List<CookingStep> cookingStep);
+	void reviseCookingsteps(int recipe_id, CookingStep step);
 	void setLike(int recipe_id, int uid);
 	int deleteLike(int recipe_id, int uid);
 	List<Integer> getLikeList(Integer recipe_id);
-	void deleteCookingSteps(int recipe_id);
+	void deleteCookingSteps(int recipe_id, int size);
 	void deleteIngredients(int recipe_id);
 }

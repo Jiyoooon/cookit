@@ -1,59 +1,98 @@
 <template>
-  <div class="card">
-    <header>
+  <v-app id="inspire">
+    <div class="card">
+      <header>
+        <!-- 프로필 이미지 -->
+        <div class="avatar">
+          <img :src="selecteduserinfo.image_url" alt=""/>
+        </div>
+      </header>
 
-      <!-- 프로필 이미지 -->
-      <div class="avatar">
-        <img :src="selecteduserinfo.image_url" alt=""/>
+      <!-- 유저 닉네임 & 소개말 -->
+      <h3>{{ selecteduserinfo.nickname }}</h3>
+      <div class="desc">
+        {{ selecteduserinfo.intro }}
       </div>
-    </header>
 
-    <!-- 유저 닉네임 & 소개말 -->
-    <h3>{{ selecteduserinfo.nickname }}</h3>
-    <div class="desc">
-      {{ selecteduserinfo.intro }}
+      <!-- 버튼 -->
+      <div  class="block-btn btn-style2 blog-btn" 
+            v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate && (this.authUser != null)"
+            @click="clickfollow">
+        팔로우
+      </div>
+     
+      <div  class="block-btn btn-style2 blog-btn" 
+            v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate && (this.authUser != null)"
+            @click="clickunfollow">
+        언팔로우
+      </div>
+      <div  class="block-btn btn-style2 blog-btn" 
+            v-if="this.authUser.user_id === this.selecteduserinfo.user_id"
+            @click="GoRecipeCreate">
+        글쓰기
+      </div>
+
+      <!-- 조회수, 팔로워, 팔로잉 -->
+      <div class="stats">
+        <div class="stat">
+          <span class="label">조회수</span>
+          <span class="value">{{ selecteduserinfo.hits }}</span>
+        </div>
+        <div class="stat">
+          <span class="label">팔로워</span>
+          <v-dialog v-model="follower" scrollable max-width="300px">
+            <template v-slot:activator="{ on, attrs }">
+              <span class="value" @click="getfollowers(selecteduserinfo.user_id)" v-bind="attrs" v-on="on">{{ userfollowers }}</span>
+            </template>
+            <v-card>
+              <v-card-title>팔로워</v-card-title>
+              <v-divider></v-divider>
+              <v-card-text style="height: 300px;">
+                <followerList></followerList>
+              </v-card-text>
+              <v-divider></v-divider>
+            </v-card>
+          </v-dialog>
+        </div>
+        <div class="stat">
+          <span class="label">팔로잉</span>
+          <v-dialog v-model="following" scrollable max-width="300px">
+            <template v-slot:activator="{ on, attrs }">
+              <span class="value" @click="getfollowings(selecteduserinfo.user_id)" v-bind="attrs" v-on="on">{{ userfollowings }}</span>
+            </template>
+            <v-card>
+              <v-card-title>팔로잉</v-card-title>
+              <v-divider></v-divider>
+              <v-card-text style="height: 300px;">
+                <followingList></followingList>
+              </v-card-text>
+              <v-divider></v-divider>
+            </v-card>
+          </v-dialog>
+        </div>
+        <div class="clear"></div>
+      </div>
+
+      <!-- SNS -->
+      <footer>
+        <a v-for="(sns, index) in sns_name_list" :href="sns_url_list[index]" :key="index">
+          <font-awesome-icon :icon="['fab', sns+'-square']" :class="sns"/>
+        </a>
+      </footer>
     </div>
-
-    <!-- 버튼 -->
-    <div class="block-btn btn-style2 blog-btn">버튼</div>
-
-    <!-- 조회수, 팔로워, 팔로잉 -->
-    <div class="stats">
-      <div class="stat">
-        <span class="label">조회수</span>
-        <span class="value">{{ selecteduserinfo.hits }}</span>
-      </div>
-      <div class="stat">
-        <span class="label">팔로워</span>
-        <span class="value">{{ userfollowers }}</span>
-      </div>
-      <div class="stat">
-        <span class="label">팔로잉</span>
-        <span class="value">{{ userfollowings }}</span>
-      </div>
-      <div class="clear"></div>
-    </div>
-
-    <!-- SNS -->
-    <footer>
-      <a href=""><font-awesome-icon :icon="['fab', 'youtube-square']" class="youtube"/></a>
-      <a href=""><font-awesome-icon :icon="['fab', 'instagram-square']" class="instagram"/></a>
-      <a href=""><font-awesome-icon :icon="['fab', 'twitter-square']" class="twitter"/></a>
-      <a href=""><font-awesome-icon :icon="['fab', 'facebook-square']" class="facebook"/></a>
-    </footer>
-  </div>
+  </v-app>
 </template>
 
 <script>
-import { mapState,mapActions} from 'vuex'
-// import followerList from '@/components/myblog/FollowerList.vue'
-// import followingList from '@components/myblog/FollowingList.vue'
+import { mapState,mapActions } from 'vuex'
+import followerList from '@/components/myblog/FollowerList.vue'
+import followingList from '@/components/myblog/FollowingList.vue'
 
 export default {
     name: 'ProfileCard',
     components:{
-      // followerList,
-      // followingList
+      followerList,
+      followingList
     },
     data(){
       return{
@@ -62,11 +101,12 @@ export default {
         userfollowers:null,
         userfollowings:null,
         follower: false,
-        following: false
+        following: false,
+        sns_name_list: [ 'youtube', 'instagram', 'twitter', 'facebook' ],
+        sns_url_list: [ '', '', '', '' ],
       }
     },
     computed: {
-      
       ...mapState('accounts', ['authUser']),
       ...mapState('storage',['myfollowings','followings','followers','myfollowers']),
       ...mapState('myblog',['selecteduserinfo'])
@@ -131,11 +171,20 @@ export default {
       
       this.getfollowings(this.selecteduserinfo.user_id)
       this.getfollowers(this.selecteduserinfo.user_id)
+
+      // SNS url 만들기
+      // 0: 유튜브 1: 인스타그램 2: 트위터 3: 페이스북
+      for (let item in this.selecteduserinfo.sns_list) {
+        if (item.sns_name == 'youtube') this.sns_url_list[0] = item.sns_url;
+        else if (item.sns_name == 'instagram') this.sns_url_list[1] = item.sns_url;
+        else if (item.sns_name == 'twitter') this.sns_url_list[2] = item.sns_url;
+        else if (item.sns_name == 'facebook') this.sns_url_list[3] = item.sns_url;
+      }
     },
 }
 </script>
 
-<style scoped>
+<style>
 /*** VARS ***/
 /*** GENERAL STYLES ***/
 * {
@@ -144,16 +193,17 @@ export default {
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Dosis', sans-serif;
-  background: #c5cae9;
-  text-align: center;
+.v-application--wrap {
+  min-height: 0px !important;
 }
 
 .card {
 	width: 100%;
+  max-width: 320px;
+  min-width: 246px;
 	background: #fff;
 	box-shadow: 0 10px 7px -5px rgba(0, 0, 0, .4);
+  margin-bottom: 2em;
 }
 
  .card header {
@@ -324,7 +374,7 @@ body {
 }
 
 .card footer .instagram {
-	color: #ED2554;
+	color: #ED5078;
 }
 
 .card footer .twitter {

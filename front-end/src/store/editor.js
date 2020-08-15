@@ -77,7 +77,7 @@ export default {
           alert("재료의 이름을 입력하세요.")
           return false;
         }
-        if (50 < ingredients[i].quantity.length) {
+        if (ingredients[i].quantity && 50 < ingredients[i].quantity.length) {
           alert("재료량은 50자까지 가능합니다.")
           return false;
         }
@@ -99,11 +99,11 @@ export default {
           alert("조리 과정을 입력하세요.")
           return false;
         }
-        if (500 < state.cookingStep[i].description.length) {
+        if (state.cookingStep[i].description && 500 < state.cookingStep[i].description.length) {
           alert("조리과정 설명은 500자까지 가능합니다.")
           return false;
         }
-        if (500 < state.cookingStep[i].tip.length) {
+        if (state.cookingStep[i].tip && 500 < state.cookingStep[i].tip.length) {
           alert("팁은 500자까지 가능합니다.")
           return false;
         }

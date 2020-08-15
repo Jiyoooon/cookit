@@ -63,20 +63,34 @@
 			, cooking_time = #{recipeData.cooking_time}
 			, level = #{recipeData.level}
 			, tag = #{recipeData.tagString}
+			<if test="recipeData.main_image != null and recipeData.main_image != ''">
+			, main_image = #{recipeData.main_image}
+			</if>
 		WHERE recipe_id = #{recipeData.recipe_id}
 		AND recipe_user = #{uid}
 	</update>
 
 	<update id="reviseCookingsteps">
-		<foreach collection="cookingStep" item="step" separator=",">
-		UPDATE Cooking_steps
-		SET steps = #{step.steps}
-		, description = #{step.description}
-		, tip = #{step.tip}
-		, step_image = #{step.step_image}
-		, update_date = now()
-		WHERE cooking_steps_id = #{step.cooking_steps_id}
-		</foreach>
+		INSERT INTO Cooking_steps (
+			recipe_id
+			, steps
+			, description
+			, tip
+			, step_image
+		) VALUES (
+			#{recipe_id}
+			, #{step.steps}
+			, #{step.description}
+			, #{step.tip}
+			, #{step.step_image}
+		)
+		ON DUPLICATE KEY UPDATE
+			description = #{step.description}
+			, tip = #{step.tip}
+			<if test="step.step_image != null and step.step_image != ''">
+			, step_image = #{step.step_image}
+			</if>
+			, update_date = now()
 	</update>
 
 	<delete id="deleteIngredients">
@@ -86,7 +100,7 @@
 
 	<delete id="deleteCookingSteps">
 		DELETE FROM Cooking_steps
-		WHERE 	recipe_id = #{recipe_id}
+		WHERE 	recipe_id = #{recipe_id} AND steps > #{size}
 	</delete>
 	
 	<select id="getRecipes" resultType="Recipe">
@@ -100,7 +114,14 @@
         	LEFT JOIN Likes l USING(recipe_id)
 		</if>
 		<if test="likeUser != null and likeUser != ''">
-        	JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+			<choose>
+			<when test="user != null and user != ''">
+        		LEFT JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</when>
+			<otherwise>
+        		JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</otherwise>
+        	</choose>
 		</if>
 		WHERE 1 = 1
 		<if test="query != null and query != ''">
@@ -111,7 +132,14 @@
 			AND r.recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
-			AND recipe_user = #{user}
+			<choose>
+				<when test="likeUser != null and likeUser != ''">
+					AND (l.like_user IS NOT NULL OR recipe_user = #{user})
+				</when>
+				<otherwise>
+					AND recipe_user = #{user}
+				</otherwise>
+			</choose>
 		</if>
 		<if test="category != null and category != ''">
 			AND category_id = #{category}
@@ -242,7 +270,7 @@
 	                    </if>
 	                </when>
 	                <otherwise>
-	                	SELECT DISTINCT recipe_id FROM Ingredient
+	                	SELECT DISTINCT recipe_id FROM Recipe
 	                </otherwise>
                 </choose>
 				) as a
@@ -282,7 +310,14 @@
         	LEFT JOIN Likes l USING (recipe_id)
 		</if>
 		<if test="likeUser != null and likeUser != ''">
-        	JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+			<choose>
+			<when test="user != null and user != ''">
+        		LEFT JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</when>
+			<otherwise>
+        		JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</otherwise>
+        	</choose>
 		</if>
 		WHERE 1 = 1
 		<if test="query != null and query != ''">
@@ -293,7 +328,14 @@
 			AND r.recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
-			AND recipe_user = #{user}
+			<choose>
+				<when test="likeUser != null and likeUser != ''">
+					AND (l.like_user IS NOT NULL OR recipe_user = #{user})
+				</when>
+				<otherwise>
+					AND recipe_user = #{user}
+				</otherwise>
+			</choose>
 		</if>
 		<if test="category != null and category != ''">
 			AND category_id = #{category}
