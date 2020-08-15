@@ -192,7 +192,7 @@ public class Timer {
 					break;
 				} else if(j == value.length - 1){
 					end = i;
-					return new int[]{start + 1, end + 1, time};
+					return new int[]{start, end + 1, time};
 				} else {
 					i++;
 				}

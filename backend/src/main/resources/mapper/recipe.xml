@@ -63,19 +63,31 @@
 			, cooking_time = #{recipeData.cooking_time}
 			, level = #{recipeData.level}
 			, tag = #{recipeData.tagString}
+			, main_image = #{recipeData.main_image}
 		WHERE recipe_id = #{recipeData.recipe_id}
 		AND recipe_user = #{uid}
 	</update>
 
 	<update id="reviseCookingsteps">
-		<foreach collection="cookingStep" item="step" separator=",">
-		UPDATE Cooking_steps
-		SET steps = #{step.steps}
-		, description = #{step.description}
-		, tip = #{step.tip}
-		, step_image = #{step.step_image}
-		, update_date = now()
-		WHERE cooking_steps_id = #{step.cooking_steps_id}
+		<foreach collection="cookingStep" item="step" separator=";">
+		INSERT INTO Cooking_steps (
+			recipe_id
+			, steps
+			, description
+			, tip
+			, step_image
+		) VALUES (
+			#{recipe_id}
+			, #{step.steps}
+			, #{step.description}
+			, #{step.tip}
+			, #{step.step_image}
+		)
+		ON DUPLICATE KEY UPDATE
+			description = #{step.description}
+			, tip = #{step.tip}
+			, step_image = #{step.step_image}
+			, update_date = now()
 		</foreach>
 	</update>
 
