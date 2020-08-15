@@ -388,7 +388,7 @@ export default {
 }
 
 .card footer .sns-disabled {
-  opacity: 25% !important;
+  fill-opacity: 0.25 !important;
   pointer-events: none;
 }
 
