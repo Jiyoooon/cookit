@@ -1,6 +1,6 @@
 <template>
 <div>
-  <v-overlay :value="this.overlay1" >
+  <v-overlay :value="this.overlay" >
             <div>
                 <v-btn
                     icon
@@ -9,7 +9,7 @@
                 >
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
-                <timervue :t="timervalue1" :key="NaN"/>
+                <timervue :t="timervalue" :key="NaN"/>
             </div>
         </v-overlay>
 </div>
@@ -20,15 +20,9 @@
 import timervue from '@/components/viewer/Timer.vue'
 export default {
     name: 'timerOverlay',
-    data(){
-        return{
-            timervalue: "44:44",
-            overlay:false,
-        }
-    },
     props:{
-        timervalue1:String,
-        overlay1:Boolean,
+        timervalue:String,
+        overlay:Boolean,
     },
     components:{
         timervue,
@@ -37,11 +31,14 @@ export default {
         setTimerValue(t){//설정하고 싶은 시간을 mm:ss로 넣어준다.
             this.timervalue = t
         },
+        setoverlay(tf){
+            this.overlay = tf
+        },
         clickX(){
-            this.overlay1 = false
+            this.overlay = false
             this.$emit('set-timer-overlay',false)
             //this.$emit('delete-source',this.Sourceinfo.ingredientdata.name)
-        }
+        },
     },
 }
 </script>

@@ -5,10 +5,9 @@
       <ingredient class="view-container"/>
       <cooking-step class="view-container"/>
 
-        <!-- 타이머 -->
-        <timeroverlay/>
-
-      <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" />
+        <!-- 버튼 -->
+        
+      <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" @click="setModalState(true)"/>
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 
     <!-- 댓글 -->
@@ -17,10 +16,12 @@
 
     <!-- The modal -->
     <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
+        <timeroverlay :timervalue= timestring :overlay = overlay @set-timer-overlay="setTimerOverlay"/>
         <template v-slot:modal-title>
             쿠킹스탭 <b-button @click="doSpeech" id="speechButton">음성인식 시작</b-button>
         </template>
         <b-carousel
+            v-model="slide"
             ref="recipeCarousel"
             id="carousel-fade"
             style="text-shadow: 1px 1px 2px #000"
@@ -33,13 +34,15 @@
             img-height=100
             >
         <b-carousel-slide
+            :id="'slide-'+cookingstep.steps"
             v-for="cookingstep in selectedRecipe.cookingStep"
             :key="cookingstep.cooking_steps_id"
             :caption="(String)(cookingstep.steps)"
             :img-src="cookingstep.step_image"
             style="height:70vh"
-            text="ddd">
-            <h1>{{ cookingstep.description }}</h1>
+            >
+            <!-- modal-des클래스에 스타일 적용시키면 될듯 -->
+            <timeDescription class="modal-des" :description='cookingstep.description' :time='cookingstep.time' :number="'sub-des-' + cookingstep.steps"/>
         </b-carousel-slide>
             </b-carousel>
         </b-modal>
@@ -54,10 +57,20 @@ import ingredient from '@/components/viewer/Ingredient.vue'
 import cookingStep from '@/components/viewer/CookingStep.vue'
 import commentList from '@/components/viewer/CommentList.vue'
 import commentCreate from '@/components/viewer/CommentCreate.vue'
-
+import timeroverlay from '@/components/viewer/TimerOverlay.vue'
+import timeDescription from '@/components/viewer/TimeDescription.vue'
 export default {
     name: 'recipeDetailView',
-    
+    data(){
+        return{
+            slide:0,
+            timestring:'00:30',
+            overlay:false,
+            isSpeaking:false,
+            modalState:false,
+            timenum:0,
+        }
+    },
     components: {
         recipe,
         ingredient,
@@ -65,6 +78,8 @@ export default {
         share,
         commentList,
         commentCreate,
+        timeroverlay,
+        timeDescription,
     },
     computed: {
         ...mapState('recipes', ['selectedRecipe']),
@@ -78,7 +93,23 @@ export default {
             }
         },
     },
+    watch: {
+        slide:{
+            handler(){
+                
+            }
+        }
+    },
     methods: {
+        setModalState(state){
+            if(state == true){
+                if(this.overlay == true){
+                    this.setTimerOverlay = false
+                }
+            }
+            this.modalState = state
+        },
+        
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
@@ -94,7 +125,7 @@ export default {
             console.log("음성인식 start");
             this.isSpeaking = true;
             this.recognition.start();
-            document.getElementById("speechButton").textContent="음석인식 종료";
+            document.getElementById("speechButton").textContent="음성인식 종료";
         },
         stopSpeaking(){
             console.log("음성인식 stop");
@@ -108,6 +139,16 @@ export default {
             } else {
                 this.stopSpeaking();
             }
+        },
+        setTimerOverlay(s){
+            this.overlay = s
+        },
+        transTime(t){
+            let mm,ss
+            mm = parseInt(t / 60)
+            ss = t%60+1
+            this.timestring = mm+":"+ss
+            this.setTimerOverlay(true)
         },
     },
     created() {
@@ -127,25 +168,67 @@ export default {
             this.recognition.onresult = (event) => {
                 var text = event.results[event.resultIndex][0].transcript;
                 console.log(text);
-                let next = ['다음', '앞으로', '넥스트'];
-                let prev = ['이전', '뒤로'];
+                let next = ['다음','형','황','방','항'
+                            , '앞으로'
+                            , '넥스트'];
+                let prev = ['이전'
+                            , '뒤로','위로','귀로','디로'
+                            ,];
                 let timer = ['타이머'];
+                let timerclose = ['종료','닫기'];
 
                 var self = this;
 
                 next.forEach(function (item) {
                     if(text.indexOf(item) != -1){
-                        self.$refs.recipeCarousel.next();
+                        if(self.overlay==false){
+                            self.$refs.recipeCarousel.next();
+                        }
+                        else{
+                            //console.log("타이머다음")
+                            self.setTimerOverlay(false)
+                            let maxtime = self.selectedRecipe.cookingStep[self.slide].time.length-1
+                            self.timenum++
+                            self.timenum = (self.timenum < maxtime)? self.timenum : maxtime
+                            self.transTime(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
+                            //console.log(self.timenum)
+                        }
                     }
                 })
                 prev.forEach(function (item) {
                     if(text.indexOf(item) != -1){
-                        self.$refs.recipeCarousel.prev();
+                        if(self.overlay==false){
+                            self.$refs.recipeCarousel.prev();
+                        }
+                        else{
+                            //console.log("타이머이전")
+                            self.setTimerOverlay(false)
+                            let mintime = 0
+                            self.timenum--
+                            self.timenum = (self.timenum > mintime)? self.timenum : mintime
+                            self.transTime(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
+                        }
                     }
                 })
                 timer.forEach(function (item) {
                     if(text.indexOf(item) != -1){
-                        console.log("타이머 작동");
+                        //console.log("타이머 작동");
+                        if(self.selectedRecipe.cookingStep[self.slide].time.length){
+                            self.timenum = 0
+                            self.transTime(self.selectedRecipe.cookingStep[self.slide].time[0][2])
+                        }
+                        // self.setTimerOverlay(true)
+                    }
+                })
+                timerclose.forEach(function (item) {
+                    if(text.indexOf(item) != -1){
+                        if(self.overlay == true){
+                            //console.log("타이머 종료");
+                            self.setTimerOverlay(false)
+                        }
+                        else{
+                            console.log("타이머 동작중이아님")
+                        }
                     }
                 })
             };
@@ -160,6 +243,9 @@ export default {
                 }
             }
         }
+    },
+    beforeDestroy() {
+        this.stopSpeaking()
     },
 }
 </script>
@@ -228,23 +314,23 @@ export default {
 @media (max-width: 768px) {
   #top-btn {
     font-size: 2rem;
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
   }
   #read-btn {
     font-size: 2rem;
-    width: 35px;
-    height: 35px;
-    bottom: 2.4em;
+    width: 30px;
+    height: 30px;
+    bottom: 2.2em;
   }
 }
 
 @media (max-width: 496px) {
   #top-btn {
-    bottom: 1.6em;
+    bottom: 1em;
   }
   #read-btn {
-    bottom: 3em;
+    bottom: 2.2em;
   }
 }
 
@@ -259,5 +345,9 @@ export default {
         .noprint {
             display: none;
         }  
+    }
+    /* 모달에있는 글에 적용할 css */
+    .modal-des{
+
     }
 </style>
