@@ -175,7 +175,6 @@ export default {
       axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes,filter)
       .then((res) => {
         commit('initializing')
-        commit('myblog/SET_SEARCHRECIPE', null, { root: true })
         if (current == 2) {
           commit('myblog/SET_LIKERECIPES', res.data, { root: true })
         } else {

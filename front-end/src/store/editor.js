@@ -5,6 +5,7 @@ import router from '@/router'
 export default {
   namespaced: true,
   state: {
+    updateTF: false,
     recipe: {
       title: null,
       description: null,

@@ -215,6 +215,10 @@ export default {
       nicknameCheck(nickname) {
         axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
+          let that = this
+          window.addEventListener('keypress', function(event) {
+            if (event.keyCode == 13) that.$bvModal.hide('modal')
+          })
           if (res.data.result == 'success') {
             this.updateData.valid.nickname = true
             this.$bvModal.msgBoxOk('확인되었습니다.', {
@@ -224,7 +228,8 @@ export default {
             okVariant: 'success',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
             })
           } else {
             this.updateData.valid.nickname = false
@@ -235,7 +240,8 @@ export default {
             okVariant: 'danger',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
             })
           }
         })

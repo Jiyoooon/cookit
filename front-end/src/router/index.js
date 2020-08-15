@@ -169,7 +169,8 @@ router.beforeEach((to, from, next) => {
   const RequiredLoggedOutPages = ['Login', 'Signup', 'EmailAuthView', 'PasswordFindView']
   const RequiredAuthorized = ['Signup']
   const RequiredPasswordAuth = ['UserInfoView']
-  const BeforeUpdated = ['Logout', 'MyBlogListView', 'Login', 'Signup', 'EmailAuthView', 'PasswordFindView', 'LookAroundRecipeView', 'Home']
+  const BeforeUpdated = ['Logout', 'MyBlogListView', 'Login', 'Signup', 'EmailAuthView', 'PasswordFindView', 
+  'LookAroundRecipeView', 'Home', 'RecipeCreateView', 'RecipeUpdateView', 'UserBlogListView', 'SelectedRecipe',]
 
   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
   const IsAuthorized = Vue.$cookies.isKey('user-email')
@@ -238,6 +239,9 @@ router.beforeEach((to, from, next) => {
   } else if (!IsPasswordAuth && AuthPasswordRequired) {
     next({ name: 'PasswordAuthView' })
   } else if (FromUserInfo && FromUserInfoTo && store.state.accounts.updateTF) {
+      window.addEventListener('keypress', function(event) {
+        if (event.keyCode == 13) store._vm.$root.$bvModal.hide('modal')
+      })
     store._vm.$root.$bvModal.msgBoxConfirm('수정한 내용이 저장되지 않습니다.', {
       title: '정말로 나가시겠습니까?',
       size: 'md',
@@ -247,7 +251,8 @@ router.beforeEach((to, from, next) => {
       cancelTitle: 'NO',
       footerClass: 'p-2',
       hideHeaderClose: false,
-      centered: true
+      centered: true,
+      id: 'modal'
     })
       .then((ans) => {
         if (ans) {
