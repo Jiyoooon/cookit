@@ -112,7 +112,14 @@
         	LEFT JOIN Likes l USING(recipe_id)
 		</if>
 		<if test="likeUser != null and likeUser != ''">
-        	JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+			<choose>
+			<when test="user != null and user != ''">
+        		LEFT JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</when>
+			<otherwise>
+        		JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</otherwise>
+        	</choose>
 		</if>
 		WHERE 1 = 1
 		<if test="query != null and query != ''">
@@ -123,7 +130,14 @@
 			AND r.recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
-			AND recipe_user = #{user}
+			<choose>
+				<when test="likeUser != null and likeUser != ''">
+					AND (l.like_user IS NOT NULL OR recipe_user = #{user})
+				</when>
+				<otherwise>
+					AND recipe_user = #{user}
+				</otherwise>
+			</choose>
 		</if>
 		<if test="category != null and category != ''">
 			AND category_id = #{category}
@@ -254,7 +268,7 @@
 	                    </if>
 	                </when>
 	                <otherwise>
-	                	SELECT DISTINCT recipe_id FROM Ingredient
+	                	SELECT DISTINCT recipe_id FROM Recipe
 	                </otherwise>
                 </choose>
 				) as a
@@ -294,7 +308,14 @@
         	LEFT JOIN Likes l USING (recipe_id)
 		</if>
 		<if test="likeUser != null and likeUser != ''">
-        	JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+			<choose>
+			<when test="user != null and user != ''">
+        		LEFT JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</when>
+			<otherwise>
+        		JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</otherwise>
+        	</choose>
 		</if>
 		WHERE 1 = 1
 		<if test="query != null and query != ''">
@@ -305,7 +326,14 @@
 			AND r.recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
-			AND recipe_user = #{user}
+			<choose>
+				<when test="likeUser != null and likeUser != ''">
+					AND (l.like_user IS NOT NULL OR recipe_user = #{user})
+				</when>
+				<otherwise>
+					AND recipe_user = #{user}
+				</otherwise>
+			</choose>
 		</if>
 		<if test="category != null and category != ''">
 			AND category_id = #{category}
