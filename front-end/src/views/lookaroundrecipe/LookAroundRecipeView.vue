@@ -144,14 +144,14 @@ export default {
 @media (max-width: 768px) {
   #top-btn {
     font-size: 2rem;
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
   }
 }
 
 @media (max-width: 496px) {
   #top-btn {
-    bottom: 1.2em;
+    bottom: 1.6em;
   }
 }
 
