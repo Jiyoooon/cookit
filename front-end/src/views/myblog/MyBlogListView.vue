@@ -13,7 +13,7 @@
           </div>
           <hr id="divider">
           <div>
-          <blog-search-bar id="blog-searchbar" />
+          <blog-search-bar id="blog-searchbar" :is_changed="currentshow"/>
           </div>
           <my-recipe-list v-if="currentshow==1" />
           <like-recipe-list v-if="currentshow==2"/>
@@ -36,7 +36,7 @@ export default {
     name: 'MyBlogListView',
     data() {
         return {
-            recipelen:null,
+            // recipelen:null,
             sort: ['내가 쓴 글', '좋아요'],
             order: 1
         }
@@ -82,9 +82,9 @@ export default {
             this.fetchFollowings()
         }
     },
-    updated() {
-        this.recipelen = this.selectedRecipe.length
-    },
+    // updated() {
+    //     this.recipelen = this.selectedRecipe.length
+    // },
     created() {
         this.SET_USERINFO(this.authUser)
         this.getUserInfo(this.authUser.user_id)

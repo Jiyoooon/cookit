@@ -1,27 +1,15 @@
 <template>
-<!-- <div>
+  <div>
     <router-view :key="$route.fullPath"/>
-    <b-row> 
-        <my-recipe-list-item :recipe="recipe" 
-        :key="recipe.recipe_id" v-for="recipe in paginated_items[currentPage-1]" id="my-recipes" /> 
-    </b-row>
+      <v-container fluid grid-list-md >
+        <v-layout row wrap >
+          <v-flex sm12 md6 lg4 xl3 v-for="recipe in paginated_items[currentPage-1]" :key="recipe.recipe_id" style="margin:auto%" >
+            <my-recipe-list-item :recipe="recipe"></my-recipe-list-item>
+          </v-flex>
+        </v-layout>
+      </v-container>
     <b-row>
-        <b-pagination id="pagination" :total-rows="totalRows()" :per-page="perPage" v-model="currentPage" class="my-0" />
-    </b-row>
-    <div :key="flag"></div>
-</div> -->
-
-<div>
-  <router-view :key="$route.fullPath"/>
-    <v-container fluid grid-list-md >
-      <v-layout row wrap >
-        <v-flex sm12 md6 lg4 xl3 v-for="recipe in paginated_items[currentPage-1]" :key="recipe.recipe_id" style="margin:auto%" >
-          <my-recipe-list-item :recipe="recipe"></my-recipe-list-item>
-        </v-flex>
-      </v-layout>
-    </v-container>
-    <b-row>
-        <b-pagination id="pagination" :total-rows="totalRows()" :per-page="perPage" v-model="currentPage" class="my-0" />
+      <b-pagination id="pagination" :total-rows="totalRows()" :per-page="perPage" v-model="currentPage" class="my-0" />
     </b-row>
     <div :key="flag"></div>
   </div>
@@ -85,15 +73,12 @@ export default {
       myrecipes: {
         deep: true,
         handler() {
-          console.log('??????????????????')
           this.paginated_items = []
           let lengthAll =this.myrecipes.length;
-          console.log(lengthAll)
           for (let i = 0; i < lengthAll; i = i + this.perPage) {
             this.paginated_items.push(this.myrecipes.slice(i,i+this.perPage))
             this.nbPages++
           }
-          console.log(this.paginated_items)
           // console.log("myrecipes 목록 새로 가져옴 => 페이징 처리함")
           // console.log(this.myrecipes)
           // this.$router.go(this.$router.currentRoute)

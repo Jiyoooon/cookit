@@ -29,6 +29,9 @@ import { mapActions, mapState } from 'vuex'
         searchtext:'',
       }
     },
+    props: {
+        is_changed: Number
+    },
     methods: {
         searchRecipe(){//버튼을 눌렀을때,
             console.log(this.searchtext)
@@ -46,6 +49,11 @@ import { mapActions, mapState } from 'vuex'
         ...mapState('lookaround',['ingredients']),
         ...mapState('myblog', ['currentshow'])
     },
+    watch: {
+        is_changed() {
+            this.searchtext = '';
+        }
+    }
   }
 </script>
     

@@ -166,16 +166,12 @@ export default {
       this.setfstate()
     },
     created() {
-      console.log("myfollower")
-      console.log(this.myfollowings)
-      console.log("mypage created");
       if(this.selecteduserinfo.user_id !== this.authUser.user_id)
         this.hituser(this.selecteduserinfo.user_id)
       
       this.getfollowings(this.selecteduserinfo.user_id)
       this.getfollowers(this.selecteduserinfo.user_id)
 
-      console.log(this.selecteduserinfo.sns_list);
       // SNS url 만들기
       // 0: 유튜브 1: 인스타그램 2: 트위터 3: 페이스북
       for (let item of this.selecteduserinfo.sns_list) {
