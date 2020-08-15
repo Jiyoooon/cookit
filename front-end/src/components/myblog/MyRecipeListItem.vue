@@ -8,11 +8,11 @@
                   <b-img class="user_profile" :src='recipe.recipe_user_profileImage' onerror="this.src='http://i3a201.p.ssafy.io:8080/images/profile/default_image.png'"
                   style="cursor:pointer;" rounded="circle" thumbnail></b-img>
                 </div>
-                  <b-img :v-if="recipe.main_image" class="main_image" @click="fetchRecipe(recipe.recipe_id)" :src='recipe.main_image' style="cursor:pointer" center/>
+                  <b-img :v-if="recipe.main_image" class="main_image" @click="goRecipe(recipe)" :src='recipe.main_image' style="cursor:pointer" center/>
               </div>
             <!-- Post Content-->
             <div class="post-content">
-              <div @click="fetchRecipe(recipe.recipe_id)" style="cursor:pointer">
+              <div @click="goRecipe(recipe)" style="cursor:pointer">
                 <h6 class="title">{{ recipe.title }}</h6>
                 <p class="description">{{ recipe.description }}</p>
               </div>
@@ -66,7 +66,7 @@ export default {
       },
     },
     methods:{
-        ...mapActions('recipes', ['fetchRecipe', 'recipeLike']),
+        ...mapActions('recipes', ['goRecipe', 'recipeLike']),
          likefunction(recipe_id) {
           this.recipeLike(recipe_id)
           if (this.isliked && this.isLoggedIn) {
