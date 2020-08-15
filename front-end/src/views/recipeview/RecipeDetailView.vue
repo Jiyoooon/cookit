@@ -7,14 +7,13 @@
 
         <!-- 타이머 -->
         <timeroverlay/>
-        
 
-      <!-- <b-button id="button" v-b-modal="'my-modal'" class="noprint">가로보기</b-button> -->
+      <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" />
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 
     <!-- 댓글 -->
-    <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true"/>
-    <commentList data-html2canvas-ignore="true"/>
+    <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true" class="view-container"/>
+    <commentList data-html2canvas-ignore="true" class="view-container"/>
 
     <!-- The modal -->
     <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
@@ -54,7 +53,6 @@ import share from '@/components/viewer/Share.vue'
 import ingredient from '@/components/viewer/Ingredient.vue'
 import cookingStep from '@/components/viewer/CookingStep.vue'
 import commentList from '@/components/viewer/CommentList.vue'
-import timeroverlay from '@/components/viewer/TimerOverlay.vue'
 import commentCreate from '@/components/viewer/CommentCreate.vue'
 
 export default {
@@ -66,7 +64,6 @@ export default {
         cookingStep,
         share,
         commentList,
-        timeroverlay,
         commentCreate,
     },
     computed: {
@@ -167,69 +164,90 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #detail-view {
-  width: 900px;
+  width: 90%;
+  min-height: 200vh;
   display: block;
   margin: 0px auto;
   background-color: #fff;
-  padding: 5em 1em 8em 1em;
+  padding: 4em 1em 8em 1em;
 }
 
-@media (max-width: 1225px) {
+@media (max-width: 496px) {
   #detail-view {
-    width: 100%;
+    width: 100%
   }
 }
 
 .view-container {
+  width: 900px;
+  display: block;
+  margin: 0px auto;
+  background-color: #fff;
   margin-bottom: 2em;
 }
 
-#top-btn {
+@media (max-width: 1225px) {
+  .view-container {
+    width: 100%;
+  }
+}
+
+#read-btn {
     position: fixed;
+    bottom: 2.5em;
     right: 3.5%;
-    bottom: 1em;
     background-color: white;
     border-radius: 10%;
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
-    font-size: 2.8rem;
-    width: 1em;
-    height: 1em;
+    font-size: 2.5rem;
+    width: 45px;
+    height: 45px;
     padding: 2px;
     z-index: 10;
     cursor: pointer;
 }
 
+#top-btn {
+    position: fixed;
+    bottom: 1em;
+    right: 3.5%;
+    background-color: white;
+    border-radius: 10%;
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+    font-size: 2.8rem;
+    width: 45px;
+    height: 45px;
+    padding: 2px;
+    z-index: 10;
+    cursor: pointer;
+    font-size: 2.8rem;
+}
+
 @media (max-width: 768px) {
   #top-btn {
     font-size: 2rem;
-    right: 2%;
+    width: 34px;
+    height: 34px;
+  }
+  #read-btn {
+    font-size: 2rem;
+    width: 34px;
+    height: 34px;
+    bottom: 2.3em;
   }
 }
 
 @media (max-width: 496px) {
   #top-btn {
-    bottom: 0.5em;
+    bottom: 1.4em;
+  }
+  #read-btn {
+    bottom: 2.8em;
   }
 }
 
-    #button {
-        font-size: 4rem;
-        box-sizing: content-box;
-        position: fixed;
-        right: 5vw;
-        bottom: 20vh;
-        cursor: pointer;
-    }
-    #button-bottom{
-        font-size: 4rem;
-        box-sizing: content-box;
-        position: fixed;
-        right: 5vw;
-        bottom: 10vh;
-        cursor: pointer;
-    }
     .timerpos {
         background-color: #eee;
         z-index: 1;

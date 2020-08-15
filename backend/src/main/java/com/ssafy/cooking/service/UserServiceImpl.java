@@ -52,11 +52,13 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	
+	
+	//////////////////////////////////////////////////////
 	@Override
 	@Transactional
 	public User getUser(String uid, String baseUrl) {
 		User user = userDao.getUser(uid);
-		user.setSns_list(userDao.getAllLinkedSNS(uid));
+		
 		String fileFullPath = "/var/lib/tomcat8/webapps/images/profile/"+user.getProfile_image();
 		
 		if(!new File(fileFullPath).exists()) {
@@ -66,6 +68,20 @@ public class UserServiceImpl implements UserService{
 			user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
 		}
 		
+		List<SNS> existSNS = userDao.getAllSNS();
+		List<SNS> linkedSNS = userDao.getAllLinkedSNS(uid);
+		
+		int len = linkedSNS.size();
+		for(int i = 0, idx = 0; i < existSNS.size() || idx < len; i++) {
+			String curr = existSNS.get(i).getSns_name();
+			String u = linkedSNS.get(idx).getSns_name();
+			
+			if(curr.equals(u)) {
+				existSNS.get(i).setSns_url(linkedSNS.get(idx++).getSns_url());
+			}
+		}
+		
+		user.setSns_list(existSNS);
 		return user;
 	}
 	
@@ -98,7 +114,7 @@ public class UserServiceImpl implements UserService{
 		
 		if(userDao.reviseUser(user) > 0) {
 			List<SNS> snsList = user.getSns_list();
-			userDao.deleteLinkedSNS(Integer.toString(user.getUser_id()), null);
+			userDao.deleteLinkedSNS(Integer.toString(user.getUser_id()));
 			for(SNS sns : snsList) {
 				if(sns.getSns_name() != null && sns.getSns_name() != "") {
 					userDao.insertLinkedSNS(Integer.toString(user.getUser_id()), sns.getSns_name(), sns.getSns_url());
@@ -314,11 +330,5 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int addLinkedSNS(String uid, String name, String url) {
 		return userDao.insertLinkedSNS(uid, name, url);
-	}
-
-
-	@Override
-	public int removeLinkedSNS(String uid, String name) {
-		return userDao.deleteLinkedSNS(uid, name);
 	}
 }

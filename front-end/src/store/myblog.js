@@ -54,6 +54,7 @@ export default {
       router.push({ name: 'MyBlogListView' })
     },
     fetchMyRecipes({ rootState, commit }, user) {
+      commit('lookaround/initializing',null,{root:true})
       let recipequery = rootState.lookaround.recipequery
       // recipequery.user = state.selecteduserinfo.nickname
       recipequery.user = user.user_id

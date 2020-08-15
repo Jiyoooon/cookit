@@ -639,22 +639,22 @@ public class UserController {
    		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
    	}
     
-    //sns계정 삭제
-    @ApiOperation(value = "sns계정 삭제", notes = "회원정보에 sns계정 정보를 삭제")
-    @DeleteMapping("/token/sns")
-    public ResponseEntity<HashMap<String, Object>> deleteLinkedSNS(HttpServletRequest request
-    														, @RequestParam(value = "sns_name", required = true) String name) throws Exception {
-    	String token = request.getHeader("Authorization").split(" ")[1];
-    	Map<String, Object> claims = jwtService.get(token);
-    	
-    	String uid = (String) claims.get("uid");
-    	
-    	HashMap<String, Object> map = new HashMap<String, Object>();
-    	
-    	if(userService.removeLinkedSNS(uid, name) > 0) {
-    		map.put("result", "success");
-    	}else map.put("result", "fail");
-    	
-   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
-   	}
+//    //sns계정 삭제
+//    @ApiOperation(value = "sns계정 삭제", notes = "회원정보에 sns계정 정보를 삭제")
+//    @DeleteMapping("/token/sns")
+//    public ResponseEntity<HashMap<String, Object>> deleteLinkedSNS(HttpServletRequest request
+//    														, @RequestParam(value = "sns_name", required = true) String name) throws Exception {
+//    	String token = request.getHeader("Authorization").split(" ")[1];
+//    	Map<String, Object> claims = jwtService.get(token);
+//    	
+//    	String uid = (String) claims.get("uid");
+//    	
+//    	HashMap<String, Object> map = new HashMap<String, Object>();
+//    	
+//    	if(userService.removeLinkedSNS(uid, name) > 0) {
+//    		map.put("result", "success");
+//    	}else map.put("result", "fail");
+//    	
+//   		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+//   	}
 }

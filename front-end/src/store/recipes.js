@@ -54,6 +54,7 @@ export default {
       })
     },
     createComment({ state, rootGetters, dispatch }, commentData) {
+      if(!commentData.description) return;
       axios.post(SERVER.ROUTES.myrecipe.commentcreate + String(state.selectedRecipe.recipe_id) + '/comments', commentData, rootGetters['accounts/config'])
       .then(res => {
         console.log(res.data)

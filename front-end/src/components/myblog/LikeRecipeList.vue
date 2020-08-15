@@ -67,8 +67,12 @@ export default {
       likerecipes: {
         deep: true,
         handler() {
-          this.currentPageItems();
-          this.totalRows();
+          this.paginated_items = []
+          let lengthAll =this.likerecipes.length;
+          for (let i = 0; i < lengthAll; i = i + this.perPage) {
+            this.paginated_items[i] = this.likerecipes.slice(i,i+this.perPage)
+            this.nbPages++
+          }
         }
       },
       paginated_items: {
