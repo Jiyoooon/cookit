@@ -1,34 +1,30 @@
 <template>
-<div id="list">
-      <div class="sort-list">
-          <div v-for="(item, index) in sort" @click="ordering(index + 1)" 
-          :class="(index+1==order)?'sort-item selected':'sort-item default'" :key="String(item)">
-          {{ item }}</div>
-        </div>
-        <hr id="divider">
-      <div>
-        <search-bar id="searchbar" />
-      </div>
-  <b-contanier>
+  <div id="blog-view">
+    <b-container fluid>
       <b-row>
-        <b-col lg="3">
-            <profile-card id="profild-card" />
+        <b-col pr-6 lg="3" md="4" sm="5">
+          <profile-card id="profild-card" />
         </b-col>
-        <b-col lg="9">
-            <my-recipe-list v-if="currentshow==1" />
-            <like-recipe-list v-if="currentshow==2"/>
-            <search-recipe-list v-if="currentshow==3" />
+        <b-col lg="9" md="8" sm="7">
+          <div class="select-list">
+            <div v-for="(item, index) in sort" @click="ordering(index + 1)" 
+            :class="(index+1==order)?'select-item selected':'select-item default'" :key="String(item)">
+            {{ item }}</div>
+          </div>
+          <hr id="divider">
+          <div>
+          <blog-search-bar id="blog-searchbar" :is_changed="currentshow"/>
+          </div>
+          <my-recipe-list v-if="currentshow==1" />
+          <like-recipe-list v-if="currentshow==2"/>
         </b-col>
-        <!-- <b-col v-if="currentshow==2" lg="9">
-            <LikeRecipeList />
-        </b-col> -->
       </b-row>
-  </b-contanier>
-</div>
+    </b-container>
+  </div>
 </template>
 
 <script>
-import searchBar from '@/components/myblog/SerachBar.vue'
+import blogSearchBar from '@/components/myblog/BlogSearchBar.vue'
 import profileCard from '@/components/myblog/ProfileCard.vue'
 // import myPage from '@/components/myblog/MyPage.vue'
 import myRecipeList from '@/components/myblog/MyRecipeList.vue'
@@ -40,13 +36,13 @@ export default {
     name: 'MyBlogListView',
     data() {
         return {
-            recipelen:null,
+            // recipelen:null,
             sort: ['내가 쓴 글', '좋아요'],
             order: 1
         }
     },
     components: {
-        searchBar,
+        blogSearchBar,
         profileCard,
         // myPage,
         myRecipeList,
@@ -86,9 +82,9 @@ export default {
             this.fetchFollowings()
         }
     },
-    updated() {
-        this.recipelen = this.selectedRecipe.length
-    },
+    // updated() {
+    //     this.recipelen = this.selectedRecipe.length
+    // },
     created() {
         this.SET_USERINFO(this.authUser)
         this.getUserInfo(this.authUser.user_id)
@@ -108,24 +104,41 @@ export default {
 </script>
 
 <style>
-    #searchbar {
-        width: 50vw;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 10px;
-    }
-    #profile-card {
-        float:left;
-        width: 20vw;
-        margin-left: 20px;
-        margin-right: 20px;
-    }
 
-#list {
-  width: 90%;
+#blog-view {
+  width: 95%;
   display: block;
   margin: 0px auto;
   background-color: #fff;
   padding: 5em 1em 8em 1em;
+}
+
+@media (max-width: 768px) {
+  #blog-view {
+    width: 100%
+  }
+}
+
+.select-list {
+  display: block;
+  text-align: right;
+  margin-bottom: -0.5em;
+  margin-top: 1em;
+}
+
+.select-item {
+  display: inline;
+  padding-right: 18px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.select-item.selected {
+  font-weight: 700;
+  color: #53AAA1;
+}
+
+#blog-searchbar {
+  margin: 1em 10%;
 }
 </style>

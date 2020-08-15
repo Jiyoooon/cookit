@@ -1,39 +1,8 @@
-<!--
-<template>
-  <div>
-    <div>
-        <b-input-group
-            v-for="size in ['sm']"
-            :key="size"
-            :size="size"
-            class="mb-3"
-            prepend="Label"
-        >
-            <b-form-input></b-form-input>
-            <b-input-group-append>
-            <b-button size="sm" text="Button" variant="success">Button</b-button>
-            </b-input-group-append>
-        </b-input-group>
-    </div>
-  </div>
-</template>
-
-<script>
-export default {
-    name: 'SearchBar',
-
-}
-</script>
-
-<style>
-
-</style>
--->
 <template>
     <div>
         <b-container >
            <b-row align-v="center">
-            <b-col sm="10">
+            <b-col md="9" sm="8" cols="8">
                 <b-form-input
                     type="text"
                     v-model="searchtext"
@@ -42,7 +11,7 @@ export default {
                     single-line
                 />
             </b-col>
-            <b-col sm="2">
+            <b-col md="3" sm="4" cols="4">
                 <div class="block-btn btn-style1" @click="searchRecipe">검색</div>
             </b-col>
             </b-row>
@@ -54,17 +23,19 @@ export default {
 <script>
 import { mapActions, mapState } from 'vuex'
   export default {
-    name: 'RecipeSearchBar',
+    name: 'BlogSearchBar',
     data () {
       return {
         searchtext:'',
       }
     },
+    props: {
+        is_changed: Number
+    },
     methods: {
         searchRecipe(){//버튼을 눌렀을때,
             console.log(this.searchtext)
             this.setRecipequery2({query:this.searchtext, current:this.currentshow})
-            this.searchtext=''
             setTimeout(() => {
                 // this.fortest()
             },1000);
@@ -78,6 +49,11 @@ import { mapActions, mapState } from 'vuex'
         ...mapState('lookaround',['ingredients']),
         ...mapState('myblog', ['currentshow'])
     },
+    watch: {
+        is_changed() {
+            this.searchtext = '';
+        }
+    }
   }
 </script>
     

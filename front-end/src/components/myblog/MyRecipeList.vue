@@ -1,20 +1,23 @@
 <template>
-<div>
+  <div>
     <router-view :key="$route.fullPath"/>
-    <b-row> 
-        <MyRecipeListItem :recipe="recipe" 
-        :key="recipe.recipe_id" v-for="recipe in paginated_items[currentPage-1]" id="my-recipes" /> 
-    </b-row>
+      <v-container fluid grid-list-md >
+        <v-layout row wrap >
+          <v-flex sm12 md6 lg4 xl3 v-for="recipe in paginated_items[currentPage-1]" :key="recipe.recipe_id" style="margin:auto%" >
+            <my-recipe-list-item :recipe="recipe"></my-recipe-list-item>
+          </v-flex>
+        </v-layout>
+      </v-container>
     <b-row>
-        <b-pagination id="pagination" :total-rows="totalRows()" :per-page="perPage" v-model="currentPage" class="my-0" />
+      <b-pagination id="pagination" :total-rows="totalRows()" :per-page="perPage" v-model="currentPage" class="my-0" />
     </b-row>
     <div :key="flag"></div>
-</div>
+  </div>
 </template>
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
-import MyRecipeListItem from './MyRecipeListItem.vue'
+import myRecipeListItem from '@/components/myblog/MyRecipeListItem.vue'
 
 export default {
     name: 'MyRecipeList',
@@ -32,7 +35,7 @@ export default {
         }
     },
     components: {
-        MyRecipeListItem
+        myRecipeListItem
     },
     computed: {
         ...mapState('myblog', ['myrecipes', 'selecteduserinfo', 'flag']),
@@ -70,15 +73,12 @@ export default {
       myrecipes: {
         deep: true,
         handler() {
-          console.log('??????????????????')
           this.paginated_items = []
           let lengthAll =this.myrecipes.length;
-          console.log(lengthAll)
           for (let i = 0; i < lengthAll; i = i + this.perPage) {
-            this.paginated_items[this.nbPages] = this.myrecipes.slice(i,i+this.perPage)
+            this.paginated_items.push(this.myrecipes.slice(i,i+this.perPage))
             this.nbPages++
           }
-          console.log(this.paginated_items)
           // console.log("myrecipes 목록 새로 가져옴 => 페이징 처리함")
           // console.log(this.myrecipes)
           // this.$router.go(this.$router.currentRoute)
@@ -94,13 +94,13 @@ export default {
       //     console.log(this.myrecipes[0].recipe_user_name)
       //   }
       // },
-      // paginated_items: {
-      //   deep:true,
-      //   handler() {
-      //     this.currentPageItems();
-      //     this.totalRows();
-      //   }
-      // }
+      paginated_items: {
+        deep:true,
+        handler() {
+          // this.currentPageItems();
+          // this.totalRows();
+        }
+      }
     },
     mounted() {
       // this.SET_FLAG(false)
@@ -108,6 +108,7 @@ export default {
     },
     created() {
       // console.log("레시피목록 가져오기 created")
+      console.log(this.selecteduserinfo)
       this.fetchMyRecipes(this.selecteduserinfo)
       // this.SET_FLAG(false)
       // console.log(this.flag)
@@ -116,18 +117,16 @@ export default {
 </script>
 
 <style>
-     #my-recipes:hover {
-        cursor: pointer;
-        color: orange;
-    }
-     #pagination {
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .page-item.active .page-link {
-    z-index: 3;
-    color: #fff;
-    background-color: grey !important;
-    border-color: lightgrey !important;
-    }
+
+#pagination {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: grey !important;
+  border-color: lightgrey !important;
+}
 </style>

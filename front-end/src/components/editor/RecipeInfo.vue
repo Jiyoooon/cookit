@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 export default {
 		name: 'RecipeInfo',
 		computed: {
@@ -122,11 +122,20 @@ export default {
       }
     },
     methods: {
+      ...mapMutations('editor', ['SET_UPDATETF']),
         setThumbnail(e) {
 					const file = e.target.files;
 					if (file.length == 0) return;
           this.imageUrl = URL.createObjectURL(file[0]);
         }
+    },
+    watch: {
+      recipe: {
+        deep: true,
+        handler() {
+          this.SET_UPDATETF(true)
+        }
+      }
     }
 }
 </script>

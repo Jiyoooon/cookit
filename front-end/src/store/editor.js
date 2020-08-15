@@ -5,6 +5,7 @@ import router from '@/router'
 export default {
   namespaced: true,
   state: {
+    updateTF: false,
     recipe: {
       title: null,
       description: null,
@@ -158,6 +159,9 @@ export default {
     },
   },
   mutations: {
+    SET_UPDATETF(state, data) {
+      state.updateTF = data
+    },
     SET_RECIPE(state, data) {
       state.recipe = data
     },
@@ -227,7 +231,7 @@ export default {
         console.log(err);
       })
     },
-    onSubmitButton({ getters }) {
+    onSubmitButton({ getters, commit }) {
       if(!getters.isValidRecipe) return;
       const recipeData = getters.getRecipeData;
       const headerConfig = getters.getHeader;
@@ -236,6 +240,7 @@ export default {
       .then((res) => {
         console.log(res)
         return new Promise(() => {
+          commit('SET_UPDATETF', false)
           router.push({ name: 'MyBlogListView'})
         })
         // 레시피 화면으로 redirect 필요
@@ -244,7 +249,7 @@ export default {
         console.log(err)
       })
     },
-    onSubmitButtonforUpdate({ getters }) {
+    onSubmitButtonforUpdate({ getters, commit }) {
       if(!getters.isValidRecipe) return;
       const recipeData = getters.getRecipeData;
       const recipeId = router.history.current.params.recipe_id;
@@ -254,7 +259,9 @@ export default {
       .then((res) => {
         console.log(res)
         return new Promise(() => {
+          commit('SET_UPDATETF', false)
           router.push({ name: 'SelectedRecipe', recipe_id: recipeId })
+          
         })
       })
       .catch((err) => {
@@ -262,6 +269,10 @@ export default {
       })
     },
     deleteRecipe({ getters }, recipe_id) {
+      let that = this
+      window.addEventListener('keypress', function(event) {
+        if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+      })
       this._vm.$root.$bvModal.msgBoxConfirm('한번 삭제된 데이터는 복구되지 않습니다.', {
         title: '정말로 삭제하시겠습니까?',
         size: 'md',
@@ -271,7 +282,8 @@ export default {
         cancelTitle: 'NO',
         footerClass: 'p-2',
         hideHeaderClose: false,
-        centered: true
+        centered: true,
+        id: 'modal'
       })
         .then((ans) => {
           if (ans) {

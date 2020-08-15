@@ -30,7 +30,7 @@ export default {
     },
     SET_SELECTEDCOMMENT(state, id) {
       state.selectedcomment.id = id
-    }
+    },
   },
 
   actions: {
