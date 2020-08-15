@@ -50,7 +50,7 @@ export default {
     ...mapState('editor', ['ingrQuery']),
   },
   methods: {
-    ...mapMutations('editor', ['addIngredient', 'deleteIngredient']),
+    ...mapMutations('editor', ['addIngredient', 'deleteIngredient', 'SET_UPDATETF']),
     ...mapActions('editor', ['loadIngredients']),
     autoComplete(index) {
       var currVal = this.ingredients[index].name;
@@ -73,6 +73,14 @@ export default {
       else {
         this.ingredients[index].name = "";
         this.ingredients[index].valid = false;
+      }
+    }
+  },
+  watch: {
+    ingredients: {
+      deep: true,
+      handler() {
+        this.SET_UPDATETF(true)
       }
     }
   }

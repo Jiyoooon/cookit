@@ -157,10 +157,13 @@ export default {
     },
     setRecipequery2({commit,state,rootState},payload){
       console.log(payload)
+      console.log(rootState.myblog.selecteduserinfo)
       commit('setRecipequery',payload)
       let trecipequery = state.recipequery
       const current = payload.current
-      if (payload.current == 2) {
+      if (rootState.myblog.selecteduserinfo) {
+        trecipequery.user = rootState.myblog.selecteduserinfo.user_id
+      } else if (payload.current == 2) {
         trecipequery.likeUser = rootState.myblog.selecteduserinfo.user_id
         trecipequery.user = null
       } else {
@@ -175,7 +178,6 @@ export default {
       axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes,filter)
       .then((res) => {
         commit('initializing')
-        commit('myblog/SET_SEARCHRECIPE', null, { root: true })
         if (current == 2) {
           commit('myblog/SET_LIKERECIPES', res.data, { root: true })
         } else {

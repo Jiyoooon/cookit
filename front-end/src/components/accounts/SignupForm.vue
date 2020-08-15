@@ -188,7 +188,10 @@ import cookies from 'vue-cookies'
       nicknameCheck(nickname) {
         axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
-          console.log(res)
+          let that = this
+          window.addEventListener('keypress', function(event) {
+              if (event.keyCode == 13) that.$bvModal.hide('modal')
+            })
           if (res.data.result == 'success') {
             this.signupData.valid.nickname = true
             this.$bvModal.msgBoxOk('확인되었습니다.', {
@@ -198,7 +201,8 @@ import cookies from 'vue-cookies'
             okVariant: 'success',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
             })
             this.signupData.valid.nickname = true
           } else {
@@ -209,7 +213,8 @@ import cookies from 'vue-cookies'
             okVariant: 'danger',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
             })
             this.signupData.valid.nickname = false
           }
