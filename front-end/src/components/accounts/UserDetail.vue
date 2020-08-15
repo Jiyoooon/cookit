@@ -301,11 +301,12 @@ export default {
       this.checkPasswordValidValue()
       this.checkInitialNickname()
       // this.SET_UPDATETF(true)
-      console.log(this.updateTF)
+      // console.log(this.updateTF)
     },
     created() {
       this.insertInitialValue()
       this.checkInitialNickname()
+      // console.log(this.updateTF)
     },
     watch: {
       updateData: {
@@ -316,9 +317,9 @@ export default {
           !(this.updateData.config.profile == this.authUser.profile) ||
           !(this.updateData.config.image_name == this.authUser.image_name) ||
           !(this.updateData.config.start_page == this.authUser.start_page)
-          )
+          ) {
             this.SET_UPDATETF(true)
-            console.log('??????????')
+          }
         }
       }
     },

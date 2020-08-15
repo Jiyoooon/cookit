@@ -151,6 +151,9 @@ export default {
     },
   },
   mutations: {
+    SET_UPDATETF(state, data) {
+      state.updateTF = data
+    },
     SET_RECIPE(state, data) {
       state.recipe = data
     },
@@ -220,7 +223,7 @@ export default {
         console.log(err);
       })
     },
-    onSubmitButton({ getters }) {
+    onSubmitButton({ getters, commit }) {
       if(!getters.isValidRecipe) return;
       const recipeData = getters.getRecipeData;
       const headerConfig = getters.getHeader;
@@ -229,6 +232,7 @@ export default {
       .then((res) => {
         console.log(res)
         return new Promise(() => {
+          commit('SET_UPDATETF', false)
           router.push({ name: 'MyBlogListView'})
         })
         // 레시피 화면으로 redirect 필요
@@ -237,7 +241,7 @@ export default {
         console.log(err)
       })
     },
-    onSubmitButtonforUpdate({ getters }) {
+    onSubmitButtonforUpdate({ getters, commit }) {
       if(!getters.isValidRecipe) return;
       const recipeData = getters.getRecipeData;
       const recipeId = router.history.current.params.recipe_id;
@@ -247,7 +251,9 @@ export default {
       .then((res) => {
         console.log(res)
         return new Promise(() => {
+          commit('SET_UPDATETF', false)
           router.push({ name: 'SelectedRecipe', recipe_id: recipeId })
+          
         })
       })
       .catch((err) => {

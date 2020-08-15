@@ -169,6 +169,7 @@ router.beforeEach((to, from, next) => {
   const RequiredLoggedOutPages = ['Login', 'Signup', 'EmailAuthView', 'PasswordFindView']
   const RequiredAuthorized = ['Signup']
   const RequiredPasswordAuth = ['UserInfoView']
+  const RecipeUpdate = ['RecipeUpdateView', 'RecipeCreateView']
   const BeforeUpdated = ['Logout', 'MyBlogListView', 'Login', 'Signup', 'EmailAuthView', 'PasswordFindView', 
   'LookAroundRecipeView', 'Home', 'RecipeCreateView', 'RecipeUpdateView', 'UserBlogListView', 'SelectedRecipe',]
 
@@ -183,6 +184,7 @@ router.beforeEach((to, from, next) => {
 
   const FromUserInfo = RequiredPasswordAuth.includes(from.name)
   const FromUserInfoTo = BeforeUpdated.includes(to.name)
+  const FromRecipeUpdate = RecipeUpdate.includes(from.name)
 
 
   // if (!IsLoggedIn && LoggedInRequired) {
@@ -261,9 +263,32 @@ router.beforeEach((to, from, next) => {
           next(false)
         }
       }) 
+  } else if (FromRecipeUpdate && FromUserInfoTo && store.state.editor.updateTF) {
+      window.addEventListener('keypress', function(event) {
+        if (event.keyCode == 13) store._vm.$root.$bvModal.hide('modal')
+      })
+    store._vm.$root.$bvModal.msgBoxConfirm('수정한 내용이 저장되지 않습니다.', {
+      title: '정말로 나가시겠습니까?',
+      size: 'md',
+      buttonSize: 'sm',
+      okVariant: 'danger',
+      okTitle: 'YES',
+      cancelTitle: 'NO',
+      footerClass: 'p-2',
+      hideHeaderClose: false,
+      centered: true,
+      id: 'modal'
+    })
+      .then((ans) => {
+        if (ans) {
+          next() 
+        } else {
+          next(false)
+        }
+      }) 
     } else {
       next()
-    }   
+    } 
 
 })
 

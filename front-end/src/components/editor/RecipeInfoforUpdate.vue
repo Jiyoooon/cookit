@@ -76,11 +76,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 export default {
 		name: 'RecipeInfo',
 		computed: {
-            ...mapState('editor', ['recipe']),
+            ...mapState('editor', ['recipe', 'updateTF']),
             ...mapState('recipes', ['selectedRecipe'])
 		},
     data() {
@@ -123,6 +123,7 @@ export default {
       }
     },
     methods: {
+      ...mapMutations('editor', ['SET_UPDATETF']),
         setThumbnail(e) {
 					const file = e.target.files;
 					if (file.length == 0) {
@@ -143,8 +144,26 @@ export default {
         }
     },
     created() {
-      console.log(this.selectedRecipe)
+      // console.log(this.selectedRecipe)
         this.inputInitialValue()
+        console.log(this.updateTF)
+    },
+    watch: {
+      recipe: {
+        deep: true,
+        handler() {
+          if (!(this.recipe.title == this.selectedRecipe.title) ||
+          !(this.recipe.description == this.selectedRecipe.description) ||
+          !(this.recipe.category_id == this.selectedRecipe.category_id) ||
+          !(this.recipe.servings == this.selectedRecipe.servings) ||
+          !(this.recipe.cooking_time == this.selectedRecipe.cooking_time) ||
+          !(this.recipe.level == this.selectedRecipe.level) ||
+          (this.recipe.tag.length) && !(this.recipe.tag == this.selectedRecipe.tag)
+          ) {
+            this.SET_UPDATETF(true)
+          }
+        }
+      }
     }
 }
 </script>
