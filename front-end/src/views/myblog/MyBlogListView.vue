@@ -1,6 +1,27 @@
 <template>
-<div id="list">
-      <div class="sort-list">
+    <div id="myblog-view">
+        <b-container fluid>
+            <b-row>
+                <b-col lg="3" md="6">
+                    <profile-card id="profild-card" />
+                </b-col>
+                <b-col lg="9" md="6">
+                    <div class="sort-list">
+          <div v-for="(item, index) in sort" @click="ordering(index + 1)" 
+          :class="(index+1==order)?'sort-item selected':'sort-item default'" :key="String(item)">
+          {{ item }}</div>
+        </div>
+        <hr id="divider">
+        <div>
+        <blog-search-bar id="blog-searchbar" />
+      </div>
+                    <my-recipe-list v-if="currentshow==1" />
+                    <like-recipe-list v-if="currentshow==2"/>
+                    <search-recipe-list v-if="currentshow==3" />
+                </b-col>
+            </b-row>
+        </b-container>
+      <!-- <div class="sort-list">
           <div v-for="(item, index) in sort" @click="ordering(index + 1)" 
           :class="(index+1==order)?'sort-item selected':'sort-item default'" :key="String(item)">
           {{ item }}</div>
@@ -19,16 +40,13 @@
             <like-recipe-list v-if="currentshow==2"/>
             <search-recipe-list v-if="currentshow==3" />
         </b-col>
-        <!-- <b-col v-if="currentshow==2" lg="9">
-            <LikeRecipeList />
-        </b-col> -->
       </b-row>
-  </b-contanier>
+  </b-contanier> -->
 </div>
 </template>
 
 <script>
-import searchBar from '@/components/myblog/SerachBar.vue'
+import blogSearchBar from '@/components/myblog/BlogSearchBar.vue'
 import profileCard from '@/components/myblog/ProfileCard.vue'
 // import myPage from '@/components/myblog/MyPage.vue'
 import myRecipeList from '@/components/myblog/MyRecipeList.vue'
@@ -46,7 +64,7 @@ export default {
         }
     },
     components: {
-        searchBar,
+        blogSearchBar,
         profileCard,
         // myPage,
         myRecipeList,
@@ -108,7 +126,22 @@ export default {
 </script>
 
 <style>
-    #searchbar {
+
+#myblog-view {
+  width: 90%;
+  display: block;
+  margin: 0px auto;
+  background-color: #fff;
+  padding: 5em 1em 8em 1em;
+}
+
+@media (max-width: 496px) {
+  #myblog-view {
+    width: 100%
+  }
+}
+
+#searchbar {
         width: 50vw;
         margin-left: auto;
         margin-right: auto;
@@ -121,11 +154,5 @@ export default {
         margin-right: 20px;
     }
 
-#list {
-  width: 90%;
-  display: block;
-  margin: 0px auto;
-  background-color: #fff;
-  padding: 5em 1em 8em 1em;
-}
+
 </style>

@@ -54,7 +54,7 @@ export default {
 <script>
 import { mapActions, mapState } from 'vuex'
   export default {
-    name: 'RecipeSearchBar',
+    name: 'BlogSearchBar',
     data () {
       return {
         searchtext:'',
