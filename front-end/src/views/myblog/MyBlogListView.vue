@@ -17,7 +17,6 @@
           </div>
           <my-recipe-list v-if="currentshow==1" />
           <like-recipe-list v-if="currentshow==2"/>
-          <search-recipe-list v-if="currentshow==3" />
         </b-col>
       </b-row>
     </b-container>

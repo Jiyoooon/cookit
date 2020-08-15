@@ -1,4 +1,16 @@
 <template>
+<!-- <div>
+    <router-view :key="$route.fullPath"/>
+    <b-row> 
+        <my-recipe-list-item :recipe="recipe" 
+        :key="recipe.recipe_id" v-for="recipe in paginated_items[currentPage-1]" id="my-recipes" /> 
+    </b-row>
+    <b-row>
+        <b-pagination id="pagination" :total-rows="totalRows()" :per-page="perPage" v-model="currentPage" class="my-0" />
+    </b-row>
+    <div :key="flag"></div>
+</div> -->
+
 <div>
   <router-view :key="$route.fullPath"/>
     <v-container fluid grid-list-md >
@@ -12,7 +24,7 @@
         <b-pagination id="pagination" :total-rows="totalRows()" :per-page="perPage" v-model="currentPage" class="my-0" />
     </b-row>
     <div :key="flag"></div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -78,7 +90,7 @@ export default {
           let lengthAll =this.myrecipes.length;
           console.log(lengthAll)
           for (let i = 0; i < lengthAll; i = i + this.perPage) {
-            this.paginated_items[this.nbPages] = this.myrecipes.slice(i,i+this.perPage)
+            this.paginated_items.push(this.myrecipes.slice(i,i+this.perPage))
             this.nbPages++
           }
           console.log(this.paginated_items)
