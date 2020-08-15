@@ -11,11 +11,10 @@
 
         <hr id="divider">
         <div class="RecipeArray">
-        <v-container fluid grid-list-md >
+        <v-container fluid grid-list-md>
             <v-layout row wrap >
-                <v-flex xs12 sm6 md4 lg3 xl2 v-for="(recipeinfo, index) in recipes" :key="index" style="margin:auto%" >
-                    <RecipeCard :recipe="recipeinfo" >
-                    </RecipeCard>
+                <v-flex xs12 sm6 md4 lg3 xl2 v-for="(recipeinfo, index) in recipes" :key="index" style="margin:auto%; padding:12px 12px;" >
+                    <recipe-card :recipe="recipeinfo" ></recipe-card>
                 </v-flex>
             </v-layout>
             <font-awesome-icon id="top-btn" @click="scrollToTop" :icon="['fas', 'angle-up']" />
@@ -35,7 +34,7 @@
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
 import RecipeSearchBar from "@/components/lookaroundrecipe/RecipeSearchBar.vue"
-import RecipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
+import recipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
 import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
   data(){
@@ -49,7 +48,7 @@ export default {
   },
     components:{
         RecipeSearchBar,
-        RecipeCard,
+        recipeCard,
         InfiniteLoading,
     },
   methods:{
@@ -154,15 +153,4 @@ export default {
     bottom: 1.6em;
   }
 }
-
-
-#button-bottom{
-    font-size: 4rem;
-    box-sizing: content-box;
-    position: fixed;
-    right: 5vw;
-    bottom: 10vh;
-    cursor: pointer;
-}
-
 </style>

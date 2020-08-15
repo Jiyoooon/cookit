@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,19 +172,19 @@ public class RecipeServiceImpl implements RecipeService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			recipeData.setMain_image(baseUrl + "/images/recipe/" + imageName + ".jpg");
 		}
-
+		
 		recipeData.setTagString(Arrays.toString(recipeData.getTag()).substring(1, Arrays.toString(recipeData.getTag()).length()-1));
 		
 		int result = recipeDao.reviseRecipe(uid, recipeData);
 		if(result > 0) {
 			int recipe_id = recipeData.getRecipe_id();
-			recipeDao.deleteCookingSteps(recipe_id);
 			
 			if (recipeData.getCookingStep() != null) {
 				for (int i = 0; i < recipeData.getCookingStep().size(); i++) {
 					CookingStep step = recipeData.getCookingStep().get(i);
-					
+
 					if (step.getStep_image_file() != null) {
 						try {
 							String stepImageName = imageName + Integer.toString(i);
@@ -197,7 +196,12 @@ public class RecipeServiceImpl implements RecipeService {
 						}
 					}
 				}
-				recipeDao.addCookingsteps(recipe_id, recipeData.getCookingStep());
+
+				for (CookingStep s : recipeData.getCookingStep()) {
+					recipeDao.reviseCookingsteps(recipe_id, s);
+				}
+				recipeDao.deleteCookingSteps(recipe_id, recipeData.getCookingStep().size());
+				
 			}
 			
 			if (recipeData.getIngredients() != null) {
@@ -261,13 +265,6 @@ public class RecipeServiceImpl implements RecipeService {
 		if(filter.getLike_large() 	!= null) like_large = Arrays.asList(filter.getLike_large().trim().split(","));
 		if(filter.getLike_medium()	!= null) like_medium = Arrays.asList(filter.getLike_medium().trim().split(","));
 		if(filter.getLike_small() 	!= null) like_small = Arrays.asList(filter.getLike_small().trim().split(","));
-		
-//		if(filter.getHate_large() 	!= null) System.out.println(hate_large+", "+hate_large.size());
-//		if(filter.getHate_medium() != null) System.out.println(hate_medium+", "+hate_medium.size());
-//		if(filter.getHate_small() != null) System.out.println(hate_small+", "+hate_small.size());
-//		if(filter.getLike_large() != null) System.out.println(like_large+", "+like_large.size());
-//		if(filter.getLike_medium() != null) System.out.println(like_medium+", "+like_medium.size());
-//		if(filter.getLike_small() != null) System.out.println(like_small+", "+like_small.size());
 		
 		List<Recipe> recipes = recipeDao.getRecipes2(start, end, id, user, query, category, order, likeUser,
 				hate_large, hate_medium, hate_small, like_large, like_medium, like_small);

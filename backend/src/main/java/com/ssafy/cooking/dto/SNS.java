@@ -3,8 +3,8 @@ package com.ssafy.cooking.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SNS {
-	@JsonIgnore
-	public static final String[] sns_list = {"facebook", "twitter", "instagram", "youtube", "naverblog"};
+//	@JsonIgnore
+//	public static final String[] sns_list = {"facebook", "twitter", "instagram", "youtube", "naverblog"};
 	private String sns_name;
 	private String sns_url;
 	public String getSns_name() {
