@@ -127,29 +127,31 @@ export default {
 
 #top-btn {
     position: fixed;
-    right: 3.5%;
     bottom: 1em;
+    right: 3.5%;
     background-color: white;
     border-radius: 10%;
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
     font-size: 2.8rem;
-    width: 1em;
-    height: 1em;
+    width: 45px;
+    height: 45px;
     padding: 2px;
     z-index: 10;
     cursor: pointer;
+    font-size: 2.8rem;
 }
 
 @media (max-width: 768px) {
   #top-btn {
     font-size: 2rem;
-    right: 2%;
+    width: 30px;
+    height: 30px;
   }
 }
 
 @media (max-width: 496px) {
   #top-btn {
-    bottom: 0.5em;
+    bottom: 1em;
   }
 }
 

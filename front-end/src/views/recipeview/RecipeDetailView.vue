@@ -241,10 +241,10 @@ export default {
 
 @media (max-width: 496px) {
   #top-btn {
-    bottom: 0.5em;
+    bottom: 1em;
   }
   #read-btn {
-    bottom: 1.7em;
+    bottom: 2.2em;
   }
 }
 
