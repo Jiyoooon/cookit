@@ -77,10 +77,10 @@
       <footer>
         <i v-for="(sns, index) in sns_name_list" :key="index">
           <a v-if="sns_url_list[index]" :href="sns_url_list[index]" target='_blank'>
-            <i :class="'fab fa-' + sns + '-square'" :id="sns" class="sns-abled" rel="mask-icon"></i>
+            <font-awesome-icon :icon="['fab', sns+'-square']" :class="sns+' sns-abled'"></font-awesome-icon>
           </a>
           <a v-else style="cursor: default">
-            <i :class="'fab fa-' + sns + '-square'" :id="sns" class="sns-disabled" rel="mask-icon"></i>
+            <font-awesome-icon :icon="['fab', sns+'-square']" :class="sns+' sns-disabled'"></font-awesome-icon>
           </a>
         </i>
       </footer>
@@ -353,7 +353,7 @@ export default {
 
 .card footer {
 	position: relative;
-	padding: 1.2rem;
+	padding: 0.9rem;
   height: 70px;
 	background-color: #eee;
 	text-align: center;
@@ -361,34 +361,30 @@ export default {
 
 .card footer a {
 	padding: 0 0.85rem;
-  margin-top: 1em;
   height: 100%;
-  font-size: 1.5em;
+  font-size: 30px;
 	color: black;
 	-webkit-transition: color 0.4s;
 	-moz-transition: color 0.4s;
 	-ms-transition: color 0.4s;
 	-o-transition: color 0.4s;
 	transition: color 0.4s;
-}
-
-.card footer i {
   z-index: 5;
 }
 
-.card footer #facebook {
+.card footer .facebook {
 	color: #395794;
 }
 
-.card footer #youtube {
+.card footer .youtube {
 	color: #c4302b;
 }
 
-.card footer #instagram {
+.card footer .instagram {
 	color: #ED5078;
 }
 
-.card footer #twitter {
+.card footer .twitter {
 	color: #00acee;
 }
 
@@ -397,7 +393,29 @@ export default {
 }
 
 .card footer .sns-disabled {
-  opacity: 0.25 !important;
+  /* Required for IE 5, 6, 7 */
+	/* ...or something to trigger hasLayout, like zoom: 1; */
+	zoom: 1;
+		
+	/* Theoretically for IE 8 & 9 (more valid) */	
+	/* ...but not required as filter works too */
+	/* should come BEFORE filter */
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+	
+	/* This works in IE 8 & 9 too */
+	/* ... but also 5, 6, 7 */
+	filter: alpha(opacity=25);
+	
+	/* Older than Firefox 0.9 */
+	-moz-opacity:0.25;
+	
+	/* Safari 1.x (pre WebKit!) */
+	-khtml-opacity: 0.25;
+    
+	/* Modern!
+	/* Firefox 0.9+, Safari 2?, Chrome any?
+	/* Opera 9+, IE 9+ */
+	opacity: 0.25;
   pointer-events: none;
 }
 
