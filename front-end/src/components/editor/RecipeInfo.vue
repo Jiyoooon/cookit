@@ -13,7 +13,7 @@
             <b-row>
               <b-col md="2" sm="3">소개말</b-col>
               <b-col md="10" sm="9">
-                <b-form-textarea type="textarea" v-model="recipe.description" required></b-form-textarea>
+                <b-form-textarea type="textarea" v-model="recipe.description"></b-form-textarea>
               </b-col>
             </b-row>
             <b-row align-v="center">

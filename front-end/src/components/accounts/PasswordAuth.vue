@@ -2,14 +2,14 @@
   <div>
     <b-container fluid="lg" id="userinfo-container">
     <b-row align-v="center">
-        <b-col sm="2"></b-col>
-      <b-col sm="6">
+        <b-col cols="12" sm="2"></b-col>
+      <b-col cols="8" sm="6">
         <b-form-input v-model='passwordData.password' type="password" @keyup.enter="passwordCheck(passwordData)" placeholder="비밀번호를 입력하세요."></b-form-input>
       </b-col>
-      <b-col sm="2">
+      <b-col cols="4" sm="2">
         <div class="block-btn btn-style1" @click="passwordCheck(passwordData)" block>확인</div>
       </b-col>
-      <b-col sm="2"></b-col>
+      <b-col cols="12" sm="2"></b-col>
     </b-row>
   </b-container>
   </div>

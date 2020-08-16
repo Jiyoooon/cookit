@@ -13,7 +13,7 @@
 						<b-row align-v="center">
 							<b-col sm="1">💡 Tip</b-col>
 							<b-col>
-								<b-form-textarea type="textarea" id="tip" rows="1" max-rows="2" v-model="step.tip" placeholder="팁이 있다면 알려주세요!" required no-resize></b-form-textarea>
+								<b-form-textarea type="textarea" id="tip" rows="1" max-rows="2" v-model="step.tip" class="form-control" placeholder="팁이 있다면 알려주세요!" required no-resize></b-form-textarea>
 							</b-col>
 						</b-row>
           </b-container>

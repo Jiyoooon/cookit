@@ -22,7 +22,7 @@
       </b-col>
 
       <b-col v-if="(selectedcomment.id == comment.comment_id)" cols="4" class="text-right mr-3 ml-n3">
-        <div class="text-btn" @click="updateComment(commentData)"> 수정 </div>
+        <div class="text-btn" @click="updateComment(commentData)"> 완료 </div>
         <div class="text-btn" @click="SET_SELECTEDCOMMENT(null)"> 취소 </div>
       </b-col>
     </b-row>

@@ -25,10 +25,10 @@
     <div>
       <b-container fluid>
         <b-row>
-          <b-col sm="3" lg="4"></b-col>
-          <b-col sm="3" lg="2"><div class="block-btn btn-style1" @click="onSubmitButton" block>완료</div></b-col>
-          <b-col sm="3" lg="2"><div class="block-btn btn-style4" @click="cancel">취소</div></b-col>
-          <b-col sm="3" lg="4"></b-col>
+          <b-col cols="2" sm="3" lg="4"></b-col>
+          <b-col cols="4" sm="3" lg="2"><div class="block-btn btn-style1" @click="onSubmitButton" block>완료</div></b-col>
+          <b-col cols="4" sm="3" lg="2"><div class="block-btn btn-style4" @click="cancel">취소</div></b-col>
+          <b-col cols="2" sm="3" lg="4"></b-col>
         </b-row>
       </b-container>
     </div>
