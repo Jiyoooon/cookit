@@ -366,6 +366,9 @@ export default {
 	-ms-transition: color 0.4s;
 	-o-transition: color 0.4s;
 	transition: color 0.4s;
+}
+
+.card footer i {
   z-index: 5;
 }
 
