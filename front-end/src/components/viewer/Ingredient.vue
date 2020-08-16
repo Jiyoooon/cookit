@@ -73,8 +73,9 @@ export default {
             }
         },
     },
-    mounted() {
+    created() {
         this.sortingredient()
+      console.log(this.essentialIngre)
     }
 }
 </script>

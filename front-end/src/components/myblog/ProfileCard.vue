@@ -77,7 +77,8 @@
       <footer>
         <i v-for="(sns, index) in sns_name_list" :key="index">
           <a v-if="sns_url_list[index]" :href="sns_url_list[index]" target='_blank'>
-            <font-awesome-icon :icon="['fab', sns+'-square']" :id="sns" class="sns-abled"/>
+            <font-awesome-icon :icon="['fab', sns+'-square']" :id="sns" class="sns-abled" rel="mask-icon"/>
+            <i class="fa fa-facebook-square" style="color: #395794;"></i>
           </a>
           <a v-else style="cursor: default"><font-awesome-icon :icon="['fab', sns+'-square']" :id="sns" class="sns-disabled"/></a>
         </i>
