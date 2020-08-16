@@ -47,10 +47,12 @@ export default {
             user_id: this.$route.params.user_id,
         },)
         this.getUserInfo(this.$route.params.user_id)
+        this.fetchMyRecipes(this.selecteduserinfo) 
+        
+        // console.log("userbloglistview created")
+        // console.log(this.myrecipes)
         // console.log('?????????')
-        // this.fetchMyRecipes(this.selecteduserinfo) 
     },
-
 }
 </script>
 

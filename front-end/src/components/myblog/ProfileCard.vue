@@ -16,18 +16,18 @@
 
       <!-- 버튼 -->
       <div  class="block-btn btn-style2 blog-btn" 
-            v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate && (this.authUser != null)"
+            v-if="(this.authUser != null) && (this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate"
             @click="clickfollow">
         팔로우
       </div>
      
       <div  class="block-btn btn-style2 blog-btn" 
-            v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate && (this.authUser != null)"
+            v-if="(this.authUser != null) && (this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate"
             @click="clickunfollow">
         언팔로우
       </div>
       <div  class="block-btn btn-style2 blog-btn" 
-            v-if="this.authUser.user_id === this.selecteduserinfo.user_id"
+            v-if="(this.authUser != null) && this.authUser.user_id === this.selecteduserinfo.user_id"
             @click="GoRecipeCreate">
         글쓰기
       </div>
@@ -163,14 +163,18 @@ export default {
       }
     },
     updated(){
+      console.log("profileCard updated!!")
       this.setfstate()
     },
     created() {
-      if(this.selecteduserinfo.user_id !== this.authUser.user_id)
+      if(this.authUser == null || this.selecteduserinfo.user_id !== this.authUser.user_id)
         this.hituser(this.selecteduserinfo.user_id)
       
       this.getfollowings(this.selecteduserinfo.user_id)
       this.getfollowers(this.selecteduserinfo.user_id)
+      console.log("팔로잉팔로워들!")
+      console.log(this.followers);
+      console.log(this.followings)
 
       // SNS url 만들기
       // 0: 유튜브 1: 인스타그램 2: 트위터 3: 페이스북

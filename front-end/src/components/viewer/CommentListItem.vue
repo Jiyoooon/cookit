@@ -56,7 +56,7 @@ export default {
     methods: {
         gouserblog(){
           // this.getUserInfo(this.comment.comment_user_id)
-          if (this.authUser.user_id == this.comment.comment_user_id)
+          if (this.authUser != null && this.authUser.user_id == this.comment.comment_user_id)
             this.$router.push({ name: 'MyBlogListView'})
           else
             this.$router.push({ name: 'UserBlogListView', params: { user_id: this.comment.comment_user_id } })

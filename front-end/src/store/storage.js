@@ -37,20 +37,22 @@ export default {//로컬스토리지에 저장할 필요가 있는 정보들은 
     },
   
     actions: {
-      getfollowings({commit,rootState},user){
+      getfollowings({commit},user){
+        // console.log("getfollowing!!!!")
         axios.get(SERVER.ROUTES.accounts.following + String(user))
         .then(res => {
-          commit('SET_FOLLOWINGS',{ user : user, array : res.data, Me : rootState.accounts.authUser.user_id})
+          commit('SET_FOLLOWINGS',{ user : user, array : res.data})
         })
         .catch((err) => {
           console.log(err)
         })
       },
 
-      getfollowers({commit,rootState},user){
+      getfollowers({commit},user){
+        // console.log("getfollower!!!!")
         axios.get(SERVER.ROUTES.accounts.follower + String(user))
         .then(res => {
-          commit('SET_FOLLOWERS',{user : user, array : res.data, Me : rootState.accounts.authUser.user_id})
+          commit('SET_FOLLOWERS',{user : user, array : res.data})
         })
         .catch((err) => {
           console.log(err)
@@ -58,6 +60,7 @@ export default {//로컬스토리지에 저장할 필요가 있는 정보들은 
       },
 
       getmyfollowings({commit,rootState},user){
+        if(rootState.accounts.authUser == null) return;
         axios.get(SERVER.ROUTES.accounts.following + String(user))
         .then(res => {
           commit('SET_MYFOLLOWINGS',{ user : user, array : res.data, Me : rootState.accounts.authUser.user_id})
@@ -68,6 +71,7 @@ export default {//로컬스토리지에 저장할 필요가 있는 정보들은 
       },
 
       getmyfollowers({commit,rootState},user){
+        if(rootState.accounts.authUser == null) return;
         axios.get(SERVER.ROUTES.accounts.follower + String(user))
         .then(res => {
           commit('SET_MYFOLLOWERS',{user : user, array : res.data, Me : rootState.accounts.authUser.user_id})

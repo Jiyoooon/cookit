@@ -61,7 +61,7 @@ export default {
       ...mapState('accounts', ['authUser']),
       ...mapGetters('accounts', ['isLoggedIn']),
       isLike() {
-        if (this.recipe.like.includes(this.authUser.user_id)) return true
+        if (this.authUser != null && this.recipe.like.includes(this.authUser.user_id)) return true
         else return false
       },
     },
@@ -79,7 +79,9 @@ export default {
         },
         gouserblog(){
           // this.getUserInfo(this.recipe.recipe_user)
-          if (this.authUser.user_id == this.recipe.recipe_user)
+          console.log("authUser!!")
+          console.log(this.authUser);
+          if (this.authUser != null && this.authUser.user_id == this.recipe.recipe_user)
             this.$router.push({ name: 'MyBlogListView'})
           else
             this.$router.push({ name: 'UserBlogListView', params: { user_id: this.recipe.recipe_user } })

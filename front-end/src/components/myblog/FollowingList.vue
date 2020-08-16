@@ -4,7 +4,7 @@
             <v-list-item
                 v-for="(f) in followings"
                 :key="f.user_id"
-                :inactive="inactive" @click="goFollowerBlog(f)">
+                :inactive="inactive" @click="goFollowingBlog(f)">
                 <FollowListItem :follow="f" />
             </v-list-item>
         </v-list-item-group>
@@ -31,7 +31,7 @@ export default {
         ...mapState('myblog',['selecteduserinfo'])
     },
     methods: {
-        goFollowerBlog(f){
+        goFollowingBlog(f){
             this.getUserInfo2(f.user_id)
             // this.SET_USERINFO({//들어가는 블로그의 유저정보
             //     user_id: this.$route.params.user_id,
@@ -41,7 +41,6 @@ export default {
             // this.$router.push({name: 'UserBlogListView', params:{user_id: f.user_id}})
         },
         ...mapActions('myblog',['getUserInfo2']),
-        ...mapActions('myblog', ['fetchMyRecipes'])
         // ...mapActions('storage',['getfollowings']),
         // ... mapMutations('myblog', ['SET_USERINFO'])
     },
