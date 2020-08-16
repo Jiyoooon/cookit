@@ -140,6 +140,10 @@ export default {
   user-select: none;
 }
 
+input::placeholder, b-form-input::placeholder, b-form-textarear::placeholder {
+  color: lightgray;
+}
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity .3s;
 }
