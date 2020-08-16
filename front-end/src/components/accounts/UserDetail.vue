@@ -102,7 +102,7 @@
       <b-col cols="3"><font-awesome-icon :icon="['fab', sns.sns_name.toLowerCase()+'-square' ]"
       :id="sns.sns_name.toLowerCase()"/> {{ sns.sns_name }}</b-col>
       <b-col cols="9">
-        <b-form-input v-model="updateData.sns_list[index].sns_url" :placeholder="sns_base[index]"></b-form-input>
+        <b-form-input v-model="updateData.sns_list[index].sns_url" :placeholder="sns_base[index]" class="form-control"></b-form-input>
       </b-col>
     </b-row>
 
