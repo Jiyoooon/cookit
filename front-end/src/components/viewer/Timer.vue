@@ -225,7 +225,7 @@ export default {
         width: auto;
         display: table;
         font-size: 205px;
-        line-height: 130px;
+        line-height: 160px;
         font-weight: bold;
     }
     .timer--clock .clock-separator {
@@ -238,7 +238,7 @@ export default {
         width: auto;
         display: table;
         font-size: 205px;
-        line-height: 90px;
+        line-height: 130px;
         font-weight: bold;
     }
     .timer h4 {
