@@ -35,7 +35,12 @@ public class RecipeServiceImpl implements RecipeService {
 			start = p;
 			end = 20;
 		}
-		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, query, category, order, likeUser, filter);
+		
+		String[] q = null;
+		if(query != null)
+			q = query.split("#|@|&| |-|/|!|%|^|(|)|_|=|~|`");
+		
+		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, q, category, order, likeUser, filter);
 		for (Recipe r : recipes) {
 			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "" 
 					|| (!new File("/var/lib/tomcat8/webapps/images/profile/"+r.getRecipe_user_profileImage()).exists())) {
@@ -266,7 +271,11 @@ public class RecipeServiceImpl implements RecipeService {
 		if(filter.getLike_medium()	!= null) like_medium = Arrays.asList(filter.getLike_medium().trim().split(","));
 		if(filter.getLike_small() 	!= null) like_small = Arrays.asList(filter.getLike_small().trim().split(","));
 		
-		List<Recipe> recipes = recipeDao.getRecipes2(start, end, id, user, query, category, order, likeUser,
+		String[] q = null;
+		if(query != null)
+			q = query.split("#|@|&| |-|/|!|%|^|(|)|_|=|~|`");
+		
+		List<Recipe> recipes = recipeDao.getRecipes2(start, end, id, user, q, category, order, likeUser,
 				hate_large, hate_medium, hate_small, like_large, like_medium, like_small);
 		for (Recipe r : recipes) {
 			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "" 

@@ -127,7 +127,7 @@ public class RecipeController {
 				if (recipeData.getCategory_id() == null || recipeData.getCategory_id() == 0) {
 					recipeData.setCategory_id(8);
 				}
-				recipeservice.addRecipe(recipeData, baseUrl);
+				map.put("recipe_id", recipeservice.addRecipe(recipeData, baseUrl));
 			}
 
 			result = "success";
