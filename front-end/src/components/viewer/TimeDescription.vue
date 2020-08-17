@@ -1,28 +1,24 @@
 <template>
   <div :id="number">
-      <timeroverlay :timervalue= timestring :overlay = overlay @set-timer-overlay="setTimerOverlay"/>
+
   </div>
 </template>
 
 <script>
 import $ from "jquery"
-import timeroverlay from '@/components/viewer/TimerOverlay.vue'
-
+import { mapState,mapMutations, mapActions } from 'vuex'
 export default {
     data(){
         return{ 
             formattedDescription:'',
-            timestring:'',
-            overlay:false,
+            timeString:'',
+            overlayState:false,
         }
     },
     props:{
         description:String,
         time:Array,// 시작위치, 끝 위치, 시간
         number: String,
-    },
-    components:{
-        timeroverlay, 
     },
     methods: {
         setString(){
@@ -42,24 +38,35 @@ export default {
             for(let i = 0 ; i < this.time.length;i++){
                 let self = this
                 $('#'+this.number+'-'+i).on('click', function(){
-                    self.transTime(self.time[i][2])
+                    self.startTimer(self.time[i][2])
                 })
             }
         },
-        transTime(t){
-            let mm,ss
-            mm = parseInt(t / 60)
-            ss = t%60+1
-            this.timestring = mm+":"+ss
-            this.setTimerOverlay(true)
+        setOverlayState(s){
+            this.overlayState = s
         },
-        setTimerOverlay(s){
-            this.overlay = s
-            
+         ...mapMutations('recipes',['SET_OVERLAY']),
+         ...mapActions('recipes',['startTimer'])
+    },
+    watch:{
+        timestring:{
+            handler(){
+                //console.log("timestring")
+                this.setOverlayState(true)
+            }
         },
+        overlayState:{
+            handler(){
+                this.SET_OVERLAY(this.overlayState)
+            }
+        }
+    },
+    computed: {
+        ...mapState('recipes',['timestring'])
     },
     mounted() {
         this.setString();
+        this.setOverlayState(false)
     },
 
 }
@@ -68,8 +75,7 @@ export default {
 <style>
 .timertext{
     font-weight: bold;
-    color: blue;
-    cursor:pointer;
+    color: #FFC79A;
+    cursor: pointer;
 }
-
 </style>

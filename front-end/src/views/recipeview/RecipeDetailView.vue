@@ -1,4 +1,5 @@
 <template>
+<v-app id="inspire">
   <div id="detail-view">
       <recipe class="view-container"/>
       <share :selectedRecipe="selectedRecipe" class="view-container" data-html2canvas-ignore="true" />
@@ -14,43 +15,55 @@
     <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true" class="view-container"/>
     <commentList data-html2canvas-ignore="true" class="view-container"/>
 
-    <!-- The modal -->
-    <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
-        <timeroverlay :timervalue= timestring :overlay = overlay @set-timer-overlay="setTimerOverlay"/>
-        <template v-slot:modal-title>
-            쿠킹스탭 <b-button @click="doSpeech" id="speechButton">음성인식 시작</b-button>
-        </template>
-        <b-carousel
-            v-model="slide"
-            ref="recipeCarousel"
-            id="carousel-fade"
-            style="text-shadow: 1px 1px 2px #000"
-            fade
-            indicators
-            controls
-            :interval="0"
-            
-            img-width=100
-            img-height=100
-            >
+    
+    <!-- 가장 상위에 타이머 오버레이를 둠 -->
+    <timeroverlay style="z-index:1050" />
+    
+    <!-- 읽기모드 모달 -->
+    <b-modal v-model="modalShow" size="lg" id="my-modal" class="no-drag" @hide="stopSpeaking" style="overflow: hidden;">
+
+      <!-- 모달 타이틀 + 음성인식 시작 버튼 -->
+      <template v-slot:modal-title class="no-drag">{{ selectedRecipe.title }}<b-button @click="doSpeech" id="speechButton">음성인식 시작</b-button></template>
+
+      <!-- b-carousel -->
+      <b-carousel
+        v-model="slide"
+        ref="recipeCarousel"
+        id="carousel-fade"
+        class="carousel-style no-drag"
+        indicators
+        controls
+        no-wrap
+        :interval="0"
+        
+        @sliding-start="onSlideStart"
+        @sliding-end="onSlideEnd"
+      >
+
         <b-carousel-slide
-            :id="'slide-'+cookingstep.steps"
-            v-for="cookingstep in selectedRecipe.cookingStep"
-            :key="cookingstep.cooking_steps_id"
-            :caption="(String)(cookingstep.steps)"
-            :img-src="cookingstep.step_image"
-            style="height:70vh"
-            >
-            <!-- modal-des클래스에 스타일 적용시키면 될듯 -->
-            <timeDescription class="modal-des" :description='cookingstep.description' :time='cookingstep.time' :number="'sub-des-' + cookingstep.steps"/>
+          :id="'slide-'+cookingstep.steps"
+          v-for="cookingstep in selectedRecipe.cookingStep"
+          :key="cookingstep.cooking_steps_id"
+          :caption="'Step. '+(String)(cookingstep.steps)"
+          :img-src="cookingstep.step_image"
+          class="no-drag"
+          style="max-height:70vh;"
+          >
+            <timeDescription class="read-mode" :description='cookingstep.description' :time='cookingstep.time' :number="'sub-des-' + cookingstep.steps"/>
         </b-carousel-slide>
-            </b-carousel>
-        </b-modal>
+      </b-carousel>
+
+      <!-- 닫기 버튼 -->
+      <template v-slot:modal-footer>
+        <b-button style="color:white;" class="float-right no-drag" @click="modalShow=false"> 닫기 </b-button>
+      </template>
+    </b-modal>
   </div>
+</v-app>
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import recipe from '@/components/viewer/Recipe.vue'
 import share from '@/components/viewer/Share.vue'
 import ingredient from '@/components/viewer/Ingredient.vue'
@@ -59,13 +72,14 @@ import commentList from '@/components/viewer/CommentList.vue'
 import commentCreate from '@/components/viewer/CommentCreate.vue'
 import timeroverlay from '@/components/viewer/TimerOverlay.vue'
 import timeDescription from '@/components/viewer/TimeDescription.vue'
+import $ from 'jquery'
+
 export default {
     name: 'recipeDetailView',
     data(){
         return{
+          modalShow:false,  // 모달이 열리면 true가 되고 false로 바꾸면 모달이 닫힘
             slide:0,
-            timestring:'00:30',
-            overlay:false,
             isSpeaking:false,
             modalState:false,
             timenum:0,
@@ -82,7 +96,7 @@ export default {
         timeDescription,
     },
     computed: {
-        ...mapState('recipes', ['selectedRecipe']),
+        ...mapState('recipes', ['selectedRecipe','overlay']),
         ...mapState('accounts', ['authUser']),
         ...mapGetters('accounts', ['isLoggedIn']),
         checkdeleteauth() {
@@ -93,22 +107,30 @@ export default {
             }
         },
     },
-    watch: {
-        slide:{
-            handler(){
-                
-            }
-        }
-    },
     methods: {
-        setModalState(state){
-            if(state == true){
-                if(this.overlay == true){
-                    this.setTimerOverlay = false
-                }
-            }
-            this.modalState = state
-        },
+      onSlideStart() {
+        this.sliding = true
+      },
+      onSlideEnd() {
+        this.sliding = false
+      },
+      setModalState(state){
+        // this.doSpeech(); // 읽기모드에서 음성인식 자동시작
+          if(state == true){
+            if(this.overlay == true){
+              this.setTimerOverlay = false
+              }
+          }
+        this.modalState = state
+
+        // 모달 창이 열릴 때 스크롤 없애기 & 부모창 스크롤 및 터치 방지
+        $('html, body').css({'overflow': 'hidden', 'height': '100%'}); // 모달팝업 중 html,body의 scroll을 hidden시킴
+        $('#my-modal').on('scroll touchmove mousewheel', function(event) { // 터치와 마우스휠 스크롤 방지
+          event.preventDefault();
+          event.stopPropagation();
+          return false;
+        });
+      },
         
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
@@ -119,8 +141,9 @@ export default {
               this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
           }
         },
-        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
+        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments','startTimer']),
         ...mapActions('editor', ['deleteRecipe']),
+        ...mapMutations('recipes',['SET_TIMER_INIT']),
         startSpeaking() {
             console.log("음성인식 start");
             this.isSpeaking = true;
@@ -132,6 +155,11 @@ export default {
             this.isSpeaking = false;
             this.recognition.stop();
             document.getElementById("speechButton").textContent="음성인식 시작";
+
+            
+          // 모달창 닫힐 때 부모창 상태 원상태로 돌리기
+          $('html, body').css({'overflow': 'inherit', 'height': '100%'}); // scroll hidden 해제
+          $('#my-modal').off('scroll touchmove mousewheel', () => {return true;}); // 터치 및 마우스휠 스크롤 가능
         },
         doSpeech(){
             if(!this.isSpeaking){
@@ -142,13 +170,6 @@ export default {
         },
         setTimerOverlay(s){
             this.overlay = s
-        },
-        transTime(t){
-            let mm,ss
-            mm = parseInt(t / 60)
-            ss = t%60+1
-            this.timestring = mm+":"+ss
-            this.setTimerOverlay(true)
         },
     },
     created() {
@@ -185,13 +206,10 @@ export default {
                             self.$refs.recipeCarousel.next();
                         }
                         else{
-                            //console.log("타이머다음")
-                            self.setTimerOverlay(false)
                             let maxtime = self.selectedRecipe.cookingStep[self.slide].time.length-1
                             self.timenum++
                             self.timenum = (self.timenum < maxtime)? self.timenum : maxtime
-                            self.transTime(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
-                            //console.log(self.timenum)
+                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
                         }
                     }
                 })
@@ -202,11 +220,10 @@ export default {
                         }
                         else{
                             //console.log("타이머이전")
-                            self.setTimerOverlay(false)
                             let mintime = 0
                             self.timenum--
                             self.timenum = (self.timenum > mintime)? self.timenum : mintime
-                            self.transTime(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
+                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
                         }
                     }
                 })
@@ -215,7 +232,7 @@ export default {
                         //console.log("타이머 작동");
                         if(self.selectedRecipe.cookingStep[self.slide].time.length){
                             self.timenum = 0
-                            self.transTime(self.selectedRecipe.cookingStep[self.slide].time[0][2])
+                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[0][2])
                         }
                         // self.setTimerOverlay(true)
                     }
@@ -223,8 +240,7 @@ export default {
                 timerclose.forEach(function (item) {
                     if(text.indexOf(item) != -1){
                         if(self.overlay == true){
-                            //console.log("타이머 종료");
-                            self.setTimerOverlay(false)
+                            self.SET_TIMER_INIT()
                         }
                         else{
                             console.log("타이머 동작중이아님")
@@ -243,6 +259,7 @@ export default {
                 }
             }
         }
+        this.SET_TIMER_INIT()
     },
     beforeDestroy() {
         this.stopSpeaking()
@@ -334,20 +351,38 @@ export default {
   }
 }
 
-    .timerpos {
-        background-color: #eee;
-        z-index: 1;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-    }
-    @media print  {
-        .noprint {
-            display: none;
-        }  
-    }
-    /* 모달에있는 글에 적용할 css */
-    .modal-des{
+.timerpos {
+  background-color: #eee;
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
 
-    }
+@media print  {
+  .noprint {
+    display: none;
+  }  
+}
+
+.no-drag {
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+/* 모달에있는 글에 적용할 css */
+.carousel-style {
+  font-size: 1.5em;
+  text-shadow: 1px 1px 2px black;
+}
+
+@media (max-width: 496px) {
+  .read-mode {
+    color: black;
+    text-shadow: 1px 1px 3px white;
+  }
+}
 </style>

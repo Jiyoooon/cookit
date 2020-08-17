@@ -105,8 +105,6 @@ export default {
           commit('SET_USERINFO', res.data.data)
           commit('lookaround/setRecipequeryUserId',res.data.data.user_id,{root:true})
 
-          console.log("선택 : "+state.selecteduserinfo.user_id);
-
           if (rootState.accounts.authUser != null && rootState.accounts.authUser.user_id == state.selecteduserinfo.user_id) {
             dispatch('GoMyBlog')
           } else {
@@ -124,8 +122,6 @@ export default {
       } else {
         router.push({ name: 'UserBlogListView', params: { user_id: user_id }})
         location.reload()
-        console.log(router)
-        console.log(location)
       }
     },
   },

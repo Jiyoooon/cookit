@@ -33,7 +33,7 @@
 <script>
 import timeDescription from '@/components/viewer/TimeDescription.vue'
 export default {
-    name: 'CookingStepItem,',
+    name: 'CookingStepItem',
     props: {
         cookingstep: Object,
     },

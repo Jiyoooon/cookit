@@ -1,11 +1,11 @@
 <template>
 <div>
-  <v-overlay :value="this.overlay" >
+  <v-overlay :value="this.overlayState" z-index=1070>
             <div>
                 <v-btn
                     icon
                     id="button2"
-                    @click="clickX"
+                    @click="clickX()"
                 >
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -18,11 +18,14 @@
 <script>
 
 import timervue from '@/components/viewer/Timer.vue'
+import { mapState, mapMutations } from 'vuex'
 export default {
     name: 'timerOverlay',
-    props:{
-        timervalue:String,
-        overlay:Boolean,
+    data(){
+        return{
+            timervalue:'',
+            overlayState:false,
+        }
     },
     components:{
         timervue,
@@ -31,14 +34,31 @@ export default {
         setTimerValue(t){//설정하고 싶은 시간을 mm:ss로 넣어준다.
             this.timervalue = t
         },
-        setoverlay(tf){
-            this.overlay = tf
+        setoverlay(){
+            this.overlayState = this.overlay
         },
         clickX(){
-            this.overlay = false
-            this.$emit('set-timer-overlay',false)
-            //this.$emit('delete-source',this.Sourceinfo.ingredientdata.name)
+            this.SET_TIMER_INIT()
+         },
+         ...mapMutations('recipes',['SET_OVERLAY','SET_TIMER_INIT'])
+    },
+    watch: {
+        overlay:{
+            handler(){
+                this.setoverlay()
+            },
+            deep:true,
         },
+        timestring:{
+            handler(){
+                if(this.timestring!=''){
+                this.setTimerValue(this.timestring)
+                this.SET_OVERLAY(true)}
+            }
+        },
+    },
+    computed: {
+        ...mapState('recipes',['overlay','timestring'])
     },
 }
 </script>
