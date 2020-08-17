@@ -354,7 +354,7 @@ export default {
         console.log(err)
       })
     },
-    onSubmitButtonforUpdate({ getters, commit }) {
+    onSubmitButtonforUpdate({ getters, commit, dispatch }) {
       if(!getters.isValidRecipe) return;
       const recipeData = getters.getRecipeData;
       const recipeId = router.history.current.params.recipe_id;
@@ -365,6 +365,7 @@ export default {
         console.log(res)
         return new Promise(() => {
           commit('SET_UPDATETF', false)
+          dispatch('recipes/fetchRecipe', recipeId, { root: true})
           router.push({ name: 'SelectedRecipe', recipe_id: recipeId })
           
         })
