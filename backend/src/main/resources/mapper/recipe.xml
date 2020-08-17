@@ -124,9 +124,13 @@
         	</choose>
 		</if>
 		WHERE 1 = 1
-		<if test="query != null and query != ''">
-			AND (title LIKE CONCAT('%', #{query}, '%')
-			OR tag LIKE CONCAT('%', #{query}, '%'))
+		<if test="query != null">
+			AND ( 
+			<foreach collection="query" item="q" separator="AND">
+				(title LIKE CONCAT('%', #{q}, '%')
+				OR tag LIKE CONCAT('%', #{q}, '%'))
+			</foreach>
+			)
 		</if>
 		<if test="id != null and id != '' and id != 0">
 			AND r.recipe_id = #{id}
@@ -320,9 +324,13 @@
         	</choose>
 		</if>
 		WHERE 1 = 1
-		<if test="query != null and query != ''">
-			AND (title LIKE CONCAT('%', #{query}, '%')
-			OR tag LIKE CONCAT('%', #{query}, '%'))
+		<if test="query != null">
+			AND ( 
+			<foreach collection="query" item="q" separator="AND">
+				(title LIKE CONCAT('%', #{q}, '%')
+				OR tag LIKE CONCAT('%', #{q}, '%'))
+			</foreach>
+			)
 		</if>
 		<if test="id != null and id != '' and id != 0">
 			AND r.recipe_id = #{id}
