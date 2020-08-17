@@ -159,7 +159,7 @@ export default {
             
           // 모달창 닫힐 때 부모창 상태 원상태로 돌리기
           $('html, body').css({'overflow': 'inherit', 'height': '100%'}); // scroll hidden 해제
-          $('#my-modal').off('scroll touchmove mousewheel'); // 터치 및 마우스휠 스크롤 가능
+          $('#my-modal').off('scroll touchmove mousewheel', () => {return true;}); // 터치 및 마우스휠 스크롤 가능
         },
         doSpeech(){
             if(!this.isSpeaking){
