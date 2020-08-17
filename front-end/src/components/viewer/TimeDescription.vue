@@ -25,6 +25,7 @@ export default {
             let start = 0
             let end = this.description.length
             if(this.time.length){
+                this.formattedDescription=''
                 for(let i = 0; i < this.time.length; i++){
                     this.formattedDescription += this.description.substring(start,this.time[i][0]) + "<span class='timertext' id = '" + this.number + "-" + i + "' >"
                     this.formattedDescription += this.description.substring(this.time[i][0],this.time[i][1]) + "</span>"
@@ -34,7 +35,7 @@ export default {
             }
             else
                 this.formattedDescription = this.description
-            $('#'+this.number).append(this.formattedDescription)
+            $('#'+this.number).html(this.formattedDescription)
             for(let i = 0 ; i < this.time.length;i++){
                 let self = this
                 $('#'+this.number+'-'+i).on('click', function(){
@@ -49,6 +50,11 @@ export default {
          ...mapActions('recipes',['startTimer'])
     },
     watch:{
+        description:{
+            handler(){
+                this.setString()
+            }
+        },
         timestring:{
             handler(){
                 //console.log("timestring")
@@ -63,6 +69,10 @@ export default {
     },
     computed: {
         ...mapState('recipes',['timestring'])
+    },
+    updated() {
+        this.setString();
+        this.setOverlayState(false)
     },
     mounted() {
         this.setString();
