@@ -83,7 +83,6 @@ export default {
             isSpeaking:false,
             modalState:false,
             timenum:0,
-            modalShow:true,
         }
     },
     components: {
