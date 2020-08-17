@@ -154,7 +154,9 @@ export default {
                 TweenMax.set(this.reloadBtn, { scale: 0.8, display: 'block' });
                 TweenMax.to(this.timerEl, 1, { opacity: 0.2 });
                 TweenMax.to(this.reloadBtn, 0.5, { scale: 1, opacity: 1 }); 
+                var audio = new Audio(require('@/assets/alarmsound.mp3')).play();
             }, 1000)
+
         },
         initTimer(){
             this.reloadBtn = $(".reload")
