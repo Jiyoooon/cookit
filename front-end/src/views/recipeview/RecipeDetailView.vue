@@ -55,7 +55,7 @@
 
       <!-- 닫기 버튼 -->
       <template v-slot:modal-footer>
-        <b-button style="color:white;" class="float-right no-drag" @click="modalShow=false"> 댣기 </b-button>
+        <b-button style="color:white;" class="float-right no-drag" @click="modalShow=false"> 닫기 </b-button>
       </template>
     </b-modal>
   </div>
