@@ -12,12 +12,9 @@ export default {
       id: null,
       tf: false,
     },
+    overlay:false,// 오버레이 띄울지 말지
+    timestring:"00:00"// 띄울 시간
   },
-
-  getters: {
-
-  },
-
   mutations: {
     SET_RECIPE(state, recipe) {
       state.selectedRecipe = recipe
@@ -31,9 +28,26 @@ export default {
     SET_SELECTEDCOMMENT(state, id) {
       state.selectedcomment.id = id
     },
+    // 타이머 관련 설정
+    SET_OVERLAY(state,payload){
+      state.overlay = payload
+    },
+    SET_TIMESTRING(state ,payload){
+        let mm,ss
+        mm = parseInt(payload / 60)
+        ss = payload%60+1
+        state.timestring = mm+":"+ss
+    },
+    SET_TIMER_INIT(state){
+      //console.log("타이머 초기화")
+      state.overlay = false
+      state.timestring = ''
+    }
   },
-
   actions: {
+    startTimer({commit},payload){
+      commit('SET_TIMESTRING',payload)
+    },
     fetchRecipe({ commit }, recipe_id) {
       axios.get(SERVER.ROUTES.recipeview.fetchrecipe + String(recipe_id))
         .then(res => {
