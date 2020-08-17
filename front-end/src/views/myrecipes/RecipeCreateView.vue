@@ -5,19 +5,19 @@
       <hr>
       <recipeInfo></recipeInfo>
     </div>
-    <div class="container">
+    <div class="editor-container">
       <h2>재료</h2>
       <hr>
       <b-container fluid>
         <b-row>
           <b-col class="mt-3">주재료</b-col>
-          <b-col lg="5"><ingredient :ingredients="mainIngr" :essential=1></ingredient></b-col>
+          <b-col md="5"><ingredient :ingredients="mainIngr" :essential=1></ingredient></b-col>
           <b-col class="mt-3">부재료</b-col>
-          <b-col lg="5"><ingredient :ingredients="subIngr" :essential=0></ingredient></b-col>
+          <b-col md="5"><ingredient :ingredients="subIngr" :essential=0></ingredient></b-col>
         </b-row>
       </b-container>
     </div>
-    <div class="container">
+    <div class="editor-container">
       <h2>조리 과정</h2>
       <hr>
       <cooking-step></cooking-step>
@@ -25,10 +25,10 @@
     <div>
       <b-container fluid>
         <b-row>
-          <b-col sm="3"></b-col>
-          <b-col sm="3"><div class="block-btn btn-style1" @click="onSubmitButton" block>완료</div></b-col>
-          <b-col sm="3"><div class="block-btn btn-style2" @click="cancel">취소</div></b-col>
-          <b-col sm="3"></b-col>
+          <b-col cols="2" sm="3" lg="4"></b-col>
+          <b-col cols="4" sm="3" lg="2"><div class="block-btn btn-style1" @click="onSubmitButton" block>완료</div></b-col>
+          <b-col cols="4" sm="3" lg="2"><div class="block-btn btn-style4" @click="cancel">취소</div></b-col>
+          <b-col cols="2" sm="3" lg="4"></b-col>
         </b-row>
       </b-container>
     </div>
@@ -53,7 +53,7 @@ export default {
       ...mapActions('editor', ['onSubmitButton']),
       ...mapMutations('editor', ['SET_RECIPE', 'SET_COOKINGSTEP', 'SET_MAININGR', 'SET_SUBINGR']),
       cancel() {
-        alert("레시피 작성을 취소하시겠습니까?")
+        // alert("레시피 작성을 취소하시겠습니까?")
         this.$router.push({name: 'MyBlogListView'})
       }
     },

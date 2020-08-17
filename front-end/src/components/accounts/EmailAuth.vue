@@ -2,8 +2,8 @@
   <div>
     <b-container fluid id ="userinfo-container">
       <b-row>
-        <b-col md="2" class="mt-2">이메일</b-col>
-        <b-col md="7">
+        <b-col sm="2" md="2" class="mt-2">이메일</b-col>
+        <b-col sm="6" md="7">
           <b-form-input 
             id="input-email" 
             v-model="userEmail"
@@ -16,30 +16,26 @@
             이미 가입된 이메일이거나, 형식이 잘못되었습니다.
           </b-form-invalid-feedback>
         </b-col>
-        <b-col md="3">
+        <b-col sm="4" md="3">
           <div class="block-btn btn-style3" v-if="!userEmailValid">인증번호 전송</div>
           <div class="block-btn btn-style1" v-else @click='emailAuthCodeSend(userEmail)' block>인증번호 전송</div>
         </b-col>
       </b-row>  
 
       <b-row align-v="center" align-h="center">
-        <b-col md="2">
+        <b-col sm="2" md="2" class="pr-n1">
           <label for="emailcode">인증코드</label>
         </b-col>
-        <b-col md="10">
+        <b-col sm="10" md="10">
           <b-form-input id="auth-code" aria-describedby="code-feedback" v-model="authCode"></b-form-input>
         </b-col>
       </b-row>
       <b-row><b-col></b-col></b-row>
-      <b-row align-v="center" align-h="center" >
-          <b-col cols="3"></b-col>
-          <b-col cols="3">
-            <div class="block-btn btn-style1" @click='emailAuthCodeCheck(authCode)' block>확인</div>
-          </b-col>
-          <b-col cols="3">
-            <div class="block-btn btn-style2" @click="$router.go(-1)" block>취소</div>
-          </b-col>
-          <b-col cols="3"></b-col>
+      <b-row align-v="center" align-h="center">
+        <b-col cols="2" sm="3"></b-col>
+        <b-col cols="4" sm="3"><div class="block-btn btn-style1"  @click='emailAuthCodeCheck(authCode)' block>확인</div></b-col>
+        <b-col cols="4" sm="3"><div class="block-btn btn-style2"  @click="$router.go(-1)" block>취소</div></b-col>
+        <b-col cols="2" sm="3"></b-col>
       </b-row>
     </b-container>
   </div>

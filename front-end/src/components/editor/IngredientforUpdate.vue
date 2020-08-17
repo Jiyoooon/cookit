@@ -33,7 +33,16 @@ export default {
     essential: Number
   },
   methods: {
-    ...mapMutations('editor', ['addIngredient', 'deleteIngredient']),
+    ...mapMutations('editor', ['addIngredient', 'deleteIngredient', 'SET_UPDATETF']),
+  },
+  watch: {
+    ingredients: {
+      deep: true,
+      handler() {
+        this.SET_UPDATETF(true)
+        console.log('fjlsdfjlsdjlfjaklsd')
+      }
+    }
   }
 }
 </script>

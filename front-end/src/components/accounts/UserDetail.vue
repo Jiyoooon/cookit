@@ -4,24 +4,24 @@
     <b-row align-v="center">
 
       <!-- 이메일 -->
-      <b-col sm="3">이메일</b-col>
-      <b-col sm="9">
+      <b-col cols="4" sm="3">아이디</b-col>
+      <b-col cols="8" sm="9">
         {{ authUser.email }}
       </b-col>
     </b-row>
 
     <!-- 비밀번호 -->
     <b-row align-v="center">
-      <b-col sm="3"><label for="input-none">비밀번호</label></b-col>
-      <b-col sm="9">
+      <b-col cols="4" sm="3"><label for="input-none">비밀번호</label></b-col>
+      <b-col cols="8" sm="9">
         <b-form-input type="password" placeholder="비밀번호 변경 시 입력하세요." aria-describedby="password-feedback" v-model="updateData.config.password" :state="passwordValid"></b-form-input>
         <b-form-invalid-feedback id="password-feedback">
           영문자와 숫자를 포함해 8글자 이상으로 입력하세요. </b-form-invalid-feedback>
       </b-col>
     </b-row>
     <b-row align-v="center">
-      <b-col sm="3">비밀번호 재입력</b-col>
-      <b-col sm="9">
+      <b-col cols="4" sm="3" style="font-size:0.92em;">비밀번호 재입력</b-col>
+      <b-col cols="8" sm="9">
         <b-form-input type="password" aria-describedby="password-again-feedback" v-model="updateData.passwordAgain" :state="passwordAgainValid"></b-form-input>
         <b-form-invalid-feedback id="password-again-feedback">
           비밀번호가 다릅니다.</b-form-invalid-feedback>
@@ -30,8 +30,8 @@
 
     <!-- 닉네임 -->
     <b-row>
-      <b-col sm="3" class="mt-2">닉네임</b-col>
-      <b-col sm="6">
+      <b-col cols="4" sm="3" class="mt-2">닉네임</b-col>
+      <b-col cols="8" sm="6">
         <b-form-input 
             id="input-userid" 
             v-model="updateData.config.nickname"
@@ -53,8 +53,8 @@
 
     <!-- 프로필 사진 -->
     <b-row align-v="center">
-      <b-col sm="3">프로필 사진</b-col>
-      <b-col sm="6">
+      <b-col cols="4" sm="3" style="padding-right:0">프로필 사진</b-col>
+      <b-col cols="8" sm="6">
         <b-form-file ref="file-input" v-model="updateData.config.profile" accept="image/*"
         :placeholder="updateData.config.image_name" @change="imageUpload"></b-form-file>
       </b-col>
@@ -102,7 +102,7 @@
       <b-col cols="3"><font-awesome-icon :icon="['fab', sns.sns_name.toLowerCase()+'-square' ]"
       :id="sns.sns_name.toLowerCase()"/> {{ sns.sns_name }}</b-col>
       <b-col cols="9">
-        <b-form-input v-model="updateData.sns_list[index].sns_url" :placeholder="sns_base[index]"></b-form-input>
+        <b-form-input v-model="updateData.sns_list[index].sns_url" :placeholder="sns_base[index]" class="form-control"></b-form-input>
       </b-col>
     </b-row>
 
@@ -110,14 +110,10 @@
 
     <!-- 마지막 버튼 -->
     <b-row align-v="center" align-h="center">
-      <b-col sm="2"></b-col>
-      <b-col sm="4">
-        <div class="block-btn btn-style1" @click="updateUser(updateData)" block>수정</div>
-      </b-col>
-      <b-col sm="4">
-        <div class="block-btn btn-style4" @click="DeleteUser" block>탈퇴</div>
-      </b-col>
-      <b-col sm="2"></b-col>
+      <b-col cols="2" sm="3"></b-col>
+      <b-col cols="4" sm="3"><div class="block-btn btn-style1" @click="updateUser(updateData)" block>수정</div></b-col>
+      <b-col cols="4" sm="3"><div class="block-btn btn-style4" @click="DeleteUser">탈퇴</div></b-col>
+      <b-col cols="2" sm="3"></b-col>
     </b-row>
   </b-container>
   </div>
@@ -231,6 +227,10 @@ export default {
       nicknameCheck(nickname) {
         axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
         .then((res) => {
+          let that = this
+          window.addEventListener('keypress', function(event) {
+            if (event.keyCode == 13) that.$bvModal.hide('modal')
+          })
           if (res.data.result == 'success') {
             this.updateData.valid.nickname = true
             this.$bvModal.msgBoxOk('확인되었습니다.', {
@@ -240,7 +240,8 @@ export default {
             okVariant: 'success',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
             })
           } else {
             this.updateData.valid.nickname = false
@@ -251,7 +252,8 @@ export default {
             okVariant: 'danger',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
-            centered: true
+            centered: true,
+            id: 'modal'
             })
           }
         })
@@ -311,11 +313,12 @@ export default {
       this.checkPasswordValidValue()
       this.checkInitialNickname()
       // this.SET_UPDATETF(true)
-      console.log(this.updateTF)
+      // console.log(this.updateTF)
     },
     created() {
       this.insertInitialValue()
       this.checkInitialNickname()
+      // console.log(this.updateTF)
     },
     watch: {
       updateData: {
@@ -326,9 +329,9 @@ export default {
           !(this.updateData.config.profile == this.authUser.profile) ||
           !(this.updateData.config.image_name == this.authUser.image_name) ||
           !(this.updateData.config.start_page == this.authUser.start_page)
-          )
+          ) {
             this.SET_UPDATETF(true)
-            console.log('??????????')
+          }
         }
       }
     },

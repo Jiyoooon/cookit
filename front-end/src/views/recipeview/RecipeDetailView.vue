@@ -67,14 +67,10 @@ export default {
     data(){
         return{
             slide:0,
-            overlay1:false,
             isSpeaking:false,
             modalState:false,
             timenum:0,
             modalShow:true,
-            // 음성인식
-            timeString:'',
-            overlayState:false,
         }
     },
     components: {
@@ -98,24 +94,6 @@ export default {
                 return false
             }
         },
-    },
-    watch: {
-        slide:{
-            handler(){
-                this.setTimerOverlay(false)
-            }
-        },
-        timestring:{
-            handler(){
-                console.log("timestring")
-                this.setOverlayState(true)
-            }
-        },
-        overlayState:{
-            handler(){
-                this.SET_OVERLAY(this.overlayState)
-            }
-        }
     },
     methods: {
         setModalState(state){

@@ -73,9 +73,9 @@ export default {
             }
         },
     },
-    mounted() {
-        this.sortingredient()
-    }
+    created() {
+      this.sortingredient()
+    },
 }
 </script>
 

@@ -13,7 +13,7 @@
 						<b-row align-v="center">
 							<b-col sm="1">💡 Tip</b-col>
 							<b-col>
-								<b-form-textarea type="textarea" id="tip" rows="1" max-rows="2" v-model="step.tip" placeholder="팁이 있다면 알려주세요!" required no-resize></b-form-textarea>
+								<b-form-textarea type="textarea" id="tip" rows="1" max-rows="2" v-model="step.tip" class="form-control" placeholder="팁이 있다면 알려주세요!" required no-resize></b-form-textarea>
 							</b-col>
 						</b-row>
           </b-container>
@@ -33,23 +33,12 @@
             </b-row>
             <b-row>
               <b-col>
-                <b-img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" width="240px" />
+                <b-img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" style="max-width:100%" />
                 <span v-else></span>
               </b-col>
             </b-row>
           </b-container>
         </b-col>
-				<!-- <b-col lg="1">
-					<b-container fluid="lg">
-						<b-row>
-							<b-col>
-								<div style="display:block; text-align:right;">
-									<b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer;" @click="deleteCookingStep(index)"></b-icon>
-								</div>
-							</b-col>
-						</b-row>
-					</b-container>
-				</b-col> -->
       </b-row>
 			<b-row>
 				<b-col sm="4"></b-col>
@@ -72,7 +61,7 @@ export default {
 		...mapState('editor', ['cookingStep'])
 	},
 	methods: {
-		...mapMutations('editor', ['addCookingStep', 'deleteCookingStep']),
+		...mapMutations('editor', ['addCookingStep', 'deleteCookingStep', 'SET_UPDATETF']),
 		setThumbnail(e) {
 			const file = e.target.files[0];
 			if(!file) return;
@@ -82,6 +71,14 @@ export default {
 			this.cookingStep[index].step_image_url = URL.createObjectURL(file);
 		},
 	},
+	watch: {
+		cookingStep: {
+			deep: true,
+			handler() {
+				this.SET_UPDATETF(true)
+			}
+		}
+	}
 }
 </script>
 

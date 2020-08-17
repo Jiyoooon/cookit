@@ -58,19 +58,4 @@ import { mapActions, mapState } from 'vuex'
 </script>
     
 <style>
-.contain{
-    display: inline;
-    margin: 0.5%;
-    padding: 0.5%;
-    text-align: center;
-    align-items: center;
-}
-
-.except{
-    display: inline;
-    background-color: #F51A1A;
-    border-radius: 10%;
-    margin: 0.5%;
-    padding: 0.5%;
-}
 </style>

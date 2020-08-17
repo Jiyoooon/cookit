@@ -2,10 +2,10 @@
   <div id="blog-view">
     <b-container fluid>
       <b-row>
-        <b-col pr-6 lg="3" md="4" sm="5">
+        <b-col pr-6 lg="3" md="4" sm="6">
           <profile-card id="profild-card" />
         </b-col>
-        <b-col lg="9" md="8" sm="7">
+        <b-col lg="9" md="8" sm="6">
           <div>
           <blog-search-bar id="blog-searchbar" />
           </div>
@@ -47,10 +47,12 @@ export default {
             user_id: this.$route.params.user_id,
         },)
         this.getUserInfo(this.$route.params.user_id)
+        this.fetchMyRecipes(this.selecteduserinfo) 
+        
+        // console.log("userbloglistview created")
+        // console.log(this.myrecipes)
         // console.log('?????????')
-        // this.fetchMyRecipes(this.selecteduserinfo) 
     },
-
 }
 </script>
 

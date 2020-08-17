@@ -1,10 +1,12 @@
 import axios from 'axios'
 import SERVER from '@/api/url.js'
 import router from '@/router'
+import store from './'
 
 export default {
   namespaced: true,
   state: {
+    updateTF: false,
     recipe: {
       title: null,
       description: null,
@@ -45,23 +47,64 @@ export default {
     // 레시피 데이터 입력 여부, 글자수 등을 확인
     // 유효하지 않을 경우 false 리턴, 유효하면 true 리턴
     isValidRecipe(state) {
+      let that = store
+      window.addEventListener('keypress', function(event) {
+        if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+      })
       // [*] 제목이랑 카테고리 필수 & 글자수 제한
+      console.log(store)
       if(!state.recipe.title) {
-        alert("레시피 제목을 입력하세요.")
+        store._vm.$root.$bvModal.msgBoxOk('레시피 제목을 입력하세요.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true,
+          id: 'modal'
+        })
         return false;
       }
       if (200 < state.recipe.title.length) {
-        alert("레시피 제목은 200자까지 가능합니다.")
+        store._vm.$root.$bvModal.msgBoxOk('레시피 제목은 200자까지 가능합니다.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true,
+          id: 'modal'
+        })
         return false;
       }
       if (state.recipe.description) {
         if(500 < state.recipe.description.length) {
-          alert("레시피 소개말은 500자까지 가능합니다.")
+          store._vm.$root.$bvModal.msgBoxOk('레시피 소개말은 500자까지 가능합니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true,
+            id: 'modal'
+          })
           return false;
         }
       }
       if(!state.recipe.category_id) {
-        alert("카테고리를 입력하세요.")
+        store._vm.$root.$bvModal.msgBoxOk('카테고리를 입력하세요.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true,
+          id: 'modal'
+        })
         return false;
       }
 
@@ -74,16 +117,43 @@ export default {
           ingrDone = true;
         }
         if (!ingredients[i].name && ingredients[i].quantity) {
-          alert("재료의 이름을 입력하세요.")
+          store._vm.$root.$bvModal.msgBoxOk('재료의 이름을 입력하세요.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true,
+            id: 'modal'
+          })
           return false;
         }
         if (ingredients[i].quantity && 50 < ingredients[i].quantity.length) {
-          alert("재료량은 50자까지 가능합니다.")
+          store._vm.$root.$bvModal.msgBoxOk('재료량은 50자까지 가능합니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true,
+            id: 'modal'
+          })
           return false;
         }
       }
       if (!ingrDone) {
-        alert("재료를 입력하세요.")
+        store._vm.$root.$bvModal.msgBoxOk('재료를 입력하세요.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true,
+          id: 'modal'
+        })
         return false;
       }
 
@@ -96,20 +166,56 @@ export default {
         }
         if ((!state.cookingStep[i].description && state.cookingStep[i].tip)
         || (!state.cookingStep[i].description && state.cookingStep[i].step_image_url)) {
-          alert("조리 과정을 입력하세요.")
+          store._vm.$root.$bvModal.msgBoxOk('조리 과정을 입력하세요.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true,
+            id: 'modal'
+          })
           return false;
         }
         if (state.cookingStep[i].description && 500 < state.cookingStep[i].description.length) {
-          alert("조리과정 설명은 500자까지 가능합니다.")
+          store._vm.$root.$bvModal.msgBoxOk('조리과정 설명은 500자까지 가능합니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true,
+            id: 'modal'
+          })
           return false;
         }
         if (state.cookingStep[i].tip && 500 < state.cookingStep[i].tip.length) {
-          alert("팁은 500자까지 가능합니다.")
+          store._vm.$root.$bvModal.msgBoxOk('팁은 500자까지 가능합니다.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true,
+            id: 'modal'
+          })
           return false;
         }
       }
       if (!stepDone) {
-        alert("조리 과정을 한 개 이상 입력하세요.")
+        store._vm.$root.$bvModal.msgBoxOk('조리 과정을 한 개 이상 입력하세요.', {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true,
+          id: 'modal'
+        })
         return false;
       }
       return true;
@@ -158,6 +264,9 @@ export default {
     },
   },
   mutations: {
+    SET_UPDATETF(state, data) {
+      state.updateTF = data
+    },
     SET_RECIPE(state, data) {
       state.recipe = data
     },
@@ -227,7 +336,7 @@ export default {
         console.log(err);
       })
     },
-    onSubmitButton({ getters }) {
+    onSubmitButton({ getters, commit }) {
       if(!getters.isValidRecipe) return;
       const recipeData = getters.getRecipeData;
       const headerConfig = getters.getHeader;
@@ -236,6 +345,7 @@ export default {
       .then((res) => {
         console.log(res)
         return new Promise(() => {
+          commit('SET_UPDATETF', false)
           router.push({ name: 'MyBlogListView'})
         })
         // 레시피 화면으로 redirect 필요
@@ -244,7 +354,7 @@ export default {
         console.log(err)
       })
     },
-    onSubmitButtonforUpdate({ getters }) {
+    onSubmitButtonforUpdate({ getters, commit, dispatch }) {
       if(!getters.isValidRecipe) return;
       const recipeData = getters.getRecipeData;
       const recipeId = router.history.current.params.recipe_id;
@@ -254,7 +364,10 @@ export default {
       .then((res) => {
         console.log(res)
         return new Promise(() => {
+          commit('SET_UPDATETF', false)
+          dispatch('recipes/fetchRecipe', recipeId, { root: true})
           router.push({ name: 'SelectedRecipe', recipe_id: recipeId })
+          
         })
       })
       .catch((err) => {
@@ -262,6 +375,10 @@ export default {
       })
     },
     deleteRecipe({ getters }, recipe_id) {
+      let that = this
+      window.addEventListener('keypress', function(event) {
+        if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+      })
       this._vm.$root.$bvModal.msgBoxConfirm('한번 삭제된 데이터는 복구되지 않습니다.', {
         title: '정말로 삭제하시겠습니까?',
         size: 'md',
@@ -271,7 +388,8 @@ export default {
         cancelTitle: 'NO',
         footerClass: 'p-2',
         hideHeaderClose: false,
-        centered: true
+        centered: true,
+        id: 'modal'
       })
         .then((ans) => {
           if (ans) {

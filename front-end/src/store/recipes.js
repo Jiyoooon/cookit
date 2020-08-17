@@ -48,11 +48,16 @@ export default {
     startTimer({commit},payload){
       commit('SET_TIMESTRING',payload)
     },
+    goRecipe({ dispatch },  recipe){
+      console.log(recipe)
+      // commit('SET_RECIPE', recipe)
+      dispatch('fetchRecipe', recipe.recipe_id)
+      router.push({ name: 'SelectedRecipe', params: { recipe_id: recipe.recipe_id }})
+    },
     fetchRecipe({ commit }, recipe_id) {
       axios.get(SERVER.ROUTES.recipeview.fetchrecipe + String(recipe_id))
         .then(res => {
           commit('SET_RECIPE', res.data)
-          router.push({ name: 'SelectedRecipe', params: { recipe_id: recipe_id }})
         })
     },
     fetchRecipeUser({ commit, state }) {

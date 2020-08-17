@@ -2,8 +2,8 @@
   <div>
     <b-container fluid>
       <b-row align-v="center">
-        <b-col md="2">이메일</b-col>
-        <b-col md="6">
+        <b-col sm="12" md="2">이메일</b-col>
+        <b-col sm="7" md="6">
           <b-form-input 
             id="input-email" 
             v-model="userEmail"
@@ -16,7 +16,7 @@
             이메일을 확인해주세요.
           </b-form-invalid-feedback>
         </b-col>
-        <b-col md="4">
+        <b-col sm="5" md="4">
           <div v-if="!userEmailValid" class="block-btn btn-style3">새 비밀번호 전송</div>
           <div v-else class="block-btn btn-style1" @click='sendNewPassword(userEmail)'>새 비밀번호 전송</div>
         </b-col>
