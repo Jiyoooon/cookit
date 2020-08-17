@@ -140,6 +140,12 @@ export default {
   user-select: none;
 }
 
+.form-control::-webkit-input-placeholder { color: lightgray !important; opacity: 1 !important; }  /* WebKit, Blink, Edge */
+.form-control:-moz-placeholder { color: lightgray !important; opacity: 1 !important; }  /* Mozilla Firefox 4 to 18 */
+.form-control::-moz-placeholder { color: lightgray !important; opacity: 1 !important; }  /* Mozilla Firefox 19+ */
+.form-control:-ms-input-placeholder { color: lightgray !important; opacity: 1 !important; }  /* Internet Explorer 10-11 */
+.form-control::-ms-input-placeholder { color: lightgray !important; opacity: 1 !important; }  /* Microsoft Edge */
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity .3s;
 }

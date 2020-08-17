@@ -5,38 +5,38 @@
         <b-col lg="8">
           <b-container fluid="xs" id="basicInfo-container">
             <b-row align-v="center">
-              <b-col md="2">제목<span style="color:red;">*</span></b-col>
-              <b-col md="10">
+              <b-col md="2" sm="3">제목<span style="color:red;">*</span></b-col>
+              <b-col md="10" sm="9">
                 <b-form-input type="text" v-model="recipe.title" required></b-form-input>
               </b-col>
             </b-row>
             <b-row>
-              <b-col md="2">소개말</b-col>
-              <b-col md="10">
-                <b-form-textarea type="textarea" v-model="recipe.description" required></b-form-textarea>
+              <b-col md="2" sm="3">소개말</b-col>
+              <b-col md="10" sm="9">
+                <b-form-textarea type="textarea" v-model="recipe.description"></b-form-textarea>
               </b-col>
             </b-row>
             <b-row align-v="center">
-              <b-col md="2">카테고리<span style="color:red;">*</span></b-col>
-              <b-col md="3">
+              <b-col md="2" sm="3">카테고리<span style="color:red;">*</span></b-col>
+              <b-col md="3" sm="9">
                 <b-form-select v-model="recipe.category_id" :options="categoryOpt" required></b-form-select>
               </b-col>
             </b-row>
             <b-row align-v="center">
-              <b-col md="2">정보</b-col>
-              <b-col md="3">
+              <b-col md="2" sm="3">정보</b-col>
+              <b-col md="3" sm="3">
                 <b-form-select v-model="recipe.servings" :options="servingOpt" required></b-form-select>
               </b-col>
-              <b-col md="3">
+              <b-col md="3" sm="3">
                 <b-form-select v-model="recipe.cooking_time" :options="timeOpt" required></b-form-select>
               </b-col>
-              <b-col md="3">
+              <b-col md="3" sm="3">
                 <b-form-select v-model="recipe.level" :options="levelOpt" required></b-form-select>
               </b-col>
-              <b-col md="1"></b-col>
+              <b-col md="1" sm="0"></b-col>
             </b-row>
 						<b-row align-v="center">
-							<b-col md="2">태그</b-col>
+							<b-col md="2" sm="3">태그</b-col>
 							<b-col>
 								<b-form-tags 
 								input-id="tags-remove-on-delete"
@@ -64,7 +64,7 @@
             </b-row>
             <b-row>
               <b-col>
-                <b-img v-if="this.imageUrl!=null" :src="imageUrl" height="200px" />
+                <b-img v-if="this.imageUrl!=null" :src="imageUrl" height="200px" style="max-width:100%"/>
                 <span v-else></span>
               </b-col>
             </b-row>
@@ -169,6 +169,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 img { display: block; margin: 0px auto; }
 </style>

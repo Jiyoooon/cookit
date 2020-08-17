@@ -258,7 +258,8 @@ router.beforeEach((to, from, next) => {
     })
       .then((ans) => {
         if (ans) {
-          next() 
+          next()
+          store.commit('editor/SET_UPDATETF', false) 
         } else {
           next(false)
         }
@@ -281,7 +282,8 @@ router.beforeEach((to, from, next) => {
     })
       .then((ans) => {
         if (ans) {
-          next() 
+          next()
+          store.commit('editor/SET_UPDATETF', false) 
         } else {
           next(false)
         }

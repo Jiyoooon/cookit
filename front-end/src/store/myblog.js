@@ -8,7 +8,7 @@ export default {
   flag: false,
   namespaced: true,
   state: {
-    myrecipes: null,
+    myrecipes: [],
     likerecipes: null,
     currentshow: 1,
     selectedrecipe: null,
@@ -104,7 +104,10 @@ export default {
           commit('lookaround/initializing',null,{root:true})
           commit('SET_USERINFO', res.data.data)
           commit('lookaround/setRecipequeryUserId',res.data.data.user_id,{root:true})
-          if (rootState.accounts.authUser.user_id == state.selecteduserinfo.user_id) {
+
+          console.log("선택 : "+state.selecteduserinfo.user_id);
+
+          if (rootState.accounts.authUser != null && rootState.accounts.authUser.user_id == state.selecteduserinfo.user_id) {
             dispatch('GoMyBlog')
           } else {
             router.push({ name: 'UserBlogListView', params: { user_id: user_id }})
@@ -112,11 +115,11 @@ export default {
           }
         })
         .catch((err) => {
-          console.err(err.response)
+          console.log(err.response)
         })
     },
     getUserInfo2({dispatch,rootState},user_id){
-      if (rootState.accounts.authUser.user_id == user_id) {
+      if (rootState.accounts.authUser != null && rootState.accounts.authUser.user_id == user_id) {
         dispatch('GoMyBlog')
       } else {
         router.push({ name: 'UserBlogListView', params: { user_id: user_id }})

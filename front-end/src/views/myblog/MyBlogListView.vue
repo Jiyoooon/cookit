@@ -2,10 +2,10 @@
   <div id="blog-view">
     <b-container fluid>
       <b-row>
-        <b-col pr-6 lg="3" md="4" sm="5">
+        <b-col pr-6 lg="3" md="4" sm="6">
           <profile-card id="profild-card" />
         </b-col>
-        <b-col lg="9" md="8" sm="7">
+        <b-col lg="9" md="8" sm="6">
           <div class="select-list">
             <div v-for="(item, index) in sort" @click="ordering(index + 1)" 
             :class="(index+1==order)?'select-item selected':'select-item default'" :key="String(item)">
@@ -88,6 +88,7 @@ export default {
     created() {
         this.SET_USERINFO(this.authUser)
         this.getUserInfo(this.authUser.user_id)
+        this.fetchMyRecipes(this.selecteduserinfo)
         // console.log('!!!!내블로그!!!!')
         // console.log(this.selecteduserinfo)
         // this.fetchMyRecipes()
@@ -141,4 +142,11 @@ export default {
 #blog-searchbar {
   margin: 1em 10%;
 }
+
+@media (max-width: 960px) {
+  #blog-searchbar {
+    margin: 1em 0;
+  }
+}
+
 </style>

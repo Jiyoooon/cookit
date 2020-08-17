@@ -16,18 +16,18 @@
 
       <!-- 버튼 -->
       <div  class="block-btn btn-style2 blog-btn" 
-            v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate && (this.authUser != null)"
+            v-if="(this.authUser != null) && (this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate"
             @click="clickfollow">
         팔로우
       </div>
      
       <div  class="block-btn btn-style2 blog-btn" 
-            v-if="(this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate && (this.authUser != null)"
+            v-if="(this.authUser != null) && (this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate"
             @click="clickunfollow">
         언팔로우
       </div>
       <div  class="block-btn btn-style2 blog-btn" 
-            v-if="this.authUser.user_id === this.selecteduserinfo.user_id"
+            v-if="(this.authUser != null) && this.authUser.user_id === this.selecteduserinfo.user_id"
             @click="GoRecipeCreate">
         글쓰기
       </div>
@@ -77,9 +77,11 @@
       <footer>
         <i v-for="(sns, index) in sns_name_list" :key="index">
           <a v-if="sns_url_list[index]" :href="sns_url_list[index]" target='_blank'>
-            <font-awesome-icon :icon="['fab', sns+'-square']" :id="sns" class="sns-abled"/>
+            <font-awesome-icon :icon="['fab', sns+'-square']" :class="sns+' sns-abled'"></font-awesome-icon>
           </a>
-          <a v-else style="cursor: default"><font-awesome-icon :icon="['fab', sns+'-square']" :id="sns" class="sns-disabled"/></a>
+          <a v-else style="cursor: default">
+            <font-awesome-icon :icon="['fab', sns+'-square']" :class="sns+' sns-disabled'"></font-awesome-icon>
+          </a>
         </i>
       </footer>
     </div>
@@ -163,14 +165,18 @@ export default {
       }
     },
     updated(){
+      console.log("profileCard updated!!")
       this.setfstate()
     },
     created() {
-      if(this.selecteduserinfo.user_id !== this.authUser.user_id)
+      if(this.authUser == null || this.selecteduserinfo.user_id !== this.authUser.user_id)
         this.hituser(this.selecteduserinfo.user_id)
       
       this.getfollowings(this.selecteduserinfo.user_id)
       this.getfollowers(this.selecteduserinfo.user_id)
+      console.log("팔로잉팔로워들!")
+      console.log(this.followers);
+      console.log(this.followings)
 
       // SNS url 만들기
       // 0: 유튜브 1: 인스타그램 2: 트위터 3: 페이스북
@@ -200,7 +206,7 @@ export default {
 .card {
 	width: 100%;
   max-width: 320px;
-  min-width: 246px;
+  min-width: 258px;
 	background: #fff;
 	box-shadow: 0 10px 7px -5px rgba(0, 0, 0, .4);
   margin-bottom: 2em;
@@ -347,38 +353,38 @@ export default {
 
 .card footer {
 	position: relative;
-	padding: 1.2rem;
+	padding: 0.9rem;
   height: 70px;
 	background-color: #eee;
 	text-align: center;
 }
 
 .card footer a {
-	padding: 0 1rem;
-  margin-top: 1em;
+	padding: 0 0.85rem;
   height: 100%;
-  font-size: 1.5em;
+  font-size: 30px;
 	color: black;
 	-webkit-transition: color 0.4s;
 	-moz-transition: color 0.4s;
 	-ms-transition: color 0.4s;
 	-o-transition: color 0.4s;
 	transition: color 0.4s;
+  z-index: 5;
 }
 
-.card footer #facebook {
+.card footer .facebook {
 	color: #395794;
 }
 
-.card footer #youtube {
+.card footer .youtube {
 	color: #c4302b;
 }
 
-.card footer #instagram {
+.card footer .instagram {
 	color: #ED5078;
 }
 
-.card footer #twitter {
+.card footer .twitter {
 	color: #00acee;
 }
 
@@ -387,7 +393,29 @@ export default {
 }
 
 .card footer .sns-disabled {
-  opacity: 25%;
+  /* Required for IE 5, 6, 7 */
+	/* ...or something to trigger hasLayout, like zoom: 1; */
+	zoom: 1;
+		
+	/* Theoretically for IE 8 & 9 (more valid) */	
+	/* ...but not required as filter works too */
+	/* should come BEFORE filter */
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+	
+	/* This works in IE 8 & 9 too */
+	/* ... but also 5, 6, 7 */
+	filter: alpha(opacity=25);
+	
+	/* Older than Firefox 0.9 */
+	-moz-opacity:0.25;
+	
+	/* Safari 1.x (pre WebKit!) */
+	-khtml-opacity: 0.25;
+    
+	/* Modern!
+	/* Firefox 0.9+, Safari 2?, Chrome any?
+	/* Opera 9+, IE 9+ */
+	opacity: 0.25;
   pointer-events: none;
 }
 

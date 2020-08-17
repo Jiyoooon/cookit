@@ -2,19 +2,19 @@
   <div>
     <b-container fluid="lg">
       <b-row align-v="center">
-        <b-col sm="3">아이디(이메일)<span style="color: red">*</span>
+        <b-col cols="4" sm="3">아이디<span style="color: red">*</span>
         </b-col>
         <!-- 아이디 대신 이메일~--> 
-        <b-col sm="9">
+        <b-col cols="8" sm="9">
           {{ userEmail }}
         </b-col>
       </b-row>
 
       <!-- 최대 12 -->
       <b-row>
-        <b-col sm="3" class="mt-2">비밀번호<span style="color: red">*</span>
+        <b-col cols="4" sm="3" class="mt-2">비밀번호<span style="color: red">*</span>
         </b-col>
-        <b-col sm="9">
+        <b-col cols="8" sm="9">
           <b-form-input type="password" aria-describedby="password-feedback" v-model="signupData.config.password" :state="passwordValid" ></b-form-input>
           <b-form-invalid-feedback id="password-feedback">
           영문과 숫자를 포함해 8~12자로 입력하세요. </b-form-invalid-feedback>
@@ -22,10 +22,10 @@
       </b-row>
 
       <b-row>
-        <b-col sm="3" class="mt-2"><!--길이-->
+        <b-col cols="4" sm="3" class="mt-2 reinput"><!--길이-->
           비밀번호 재입력<span style="color: red">*</span>
         </b-col>
-        <b-col sm="9">
+        <b-col cols="8" sm="9">
           <b-form-input type="password" aria-describedby="password-again-feedback" v-model="passwordAgain" :state="passwordAgainValid" ></b-form-input>
           <b-form-invalid-feedback id="password-again-feedback">
           비밀번호가 다릅니다.</b-form-invalid-feedback>
@@ -34,10 +34,10 @@
       
       <!--중복 불가능, 3글자 이상, 특수문자 x 최대 7글자 , -->
       <b-row>
-        <b-col sm="3" class="mt-2">
+        <b-col cols="4" sm="3" class="mt-2">
           <label for="input-userid">닉네임<span style="color: red">*</span></label>
         </b-col>
-        <b-col sm="6">
+        <b-col cols="8" sm="6">
           <b-form-input 
             v-model="signupData.config.nickname"
             :state="NickNameinValid"
@@ -56,8 +56,8 @@
       </b-row>
 
       <b-row align-v="center">
-      <b-col sm="3">프로필 사진</b-col>
-      <b-col sm="6">
+      <b-col cols="4" sm="3" style="padding-right: 0;">프로필 사진</b-col>
+      <b-col cols="8" sm="6">
         <b-form-file ref="file-input" v-model="signupData.config.profile" accept="image/*"
         placeholder="사진 선택" @change="imageUpload"></b-form-file>
       </b-col>
@@ -84,14 +84,14 @@
       </b-row>
         <b-row><b-col> </b-col></b-row>
         <b-row align-v="center" align-h="center">
-            <b-col sm="2"></b-col>
-            <b-col sm="4">
+            <b-col cols="1" sm="2"></b-col>
+            <b-col cols="5" sm="4">
                 <div class="block-btn btn-style1" @click="signup(signupData)" block>가입하기</div>
             </b-col>
-            <b-col sm="4">
+            <b-col cols="5" sm="4">
                 <div class="block-btn btn-style2" @click="$router.go(-1)">취소</div>
             </b-col>
-            <b-col sm="2"></b-col>
+            <b-col cols="1" sm="2"></b-col>
         </b-row>
     </b-container>
   </div>
@@ -245,4 +245,11 @@ import cookies from 'vue-cookies'
 </script>
 
 <style>
+@media (max-width: 496px) {
+  .reinput {
+    padding-right: 0;
+    font-size: 0.92em;
+    margin-top: 0 !important;
+  }
+}
 </style>
