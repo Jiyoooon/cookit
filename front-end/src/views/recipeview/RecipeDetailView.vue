@@ -14,9 +14,12 @@
     <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true" class="view-container"/>
     <commentList data-html2canvas-ignore="true" class="view-container"/>
 
+    <!-- 가장 상위에 타이머 오버레이를 둠 -->
+    <timeroverlay style="z-index:1050" />
+
+    
     <!-- The modal -->
     <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
-        <timeroverlay :timervalue= timestring :overlay = overlay @set-timer-overlay="setTimerOverlay"/>
         <template v-slot:modal-title>
             쿠킹스탭 <b-button @click="doSpeech" id="speechButton">음성인식 시작</b-button>
         </template>
@@ -50,7 +53,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import recipe from '@/components/viewer/Recipe.vue'
 import share from '@/components/viewer/Share.vue'
 import ingredient from '@/components/viewer/Ingredient.vue'
@@ -64,11 +67,10 @@ export default {
     data(){
         return{
             slide:0,
-            timestring:'00:30',
-            overlay:false,
             isSpeaking:false,
             modalState:false,
             timenum:0,
+            modalShow:true,
         }
     },
     components: {
@@ -82,7 +84,7 @@ export default {
         timeDescription,
     },
     computed: {
-        ...mapState('recipes', ['selectedRecipe']),
+        ...mapState('recipes', ['selectedRecipe','overlay']),
         ...mapState('accounts', ['authUser']),
         ...mapGetters('accounts', ['isLoggedIn']),
         checkdeleteauth() {
@@ -92,13 +94,6 @@ export default {
                 return false
             }
         },
-    },
-    watch: {
-        slide:{
-            handler(){
-                
-            }
-        }
     },
     methods: {
         setModalState(state){
@@ -119,8 +114,9 @@ export default {
               this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
           }
         },
-        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments']),
+        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments','startTimer']),
         ...mapActions('editor', ['deleteRecipe']),
+        ...mapMutations('recipes',['SET_TIMER_INIT']),
         startSpeaking() {
             console.log("음성인식 start");
             this.isSpeaking = true;
@@ -142,13 +138,6 @@ export default {
         },
         setTimerOverlay(s){
             this.overlay = s
-        },
-        transTime(t){
-            let mm,ss
-            mm = parseInt(t / 60)
-            ss = t%60+1
-            this.timestring = mm+":"+ss
-            this.setTimerOverlay(true)
         },
     },
     created() {
@@ -185,13 +174,10 @@ export default {
                             self.$refs.recipeCarousel.next();
                         }
                         else{
-                            //console.log("타이머다음")
-                            self.setTimerOverlay(false)
                             let maxtime = self.selectedRecipe.cookingStep[self.slide].time.length-1
                             self.timenum++
                             self.timenum = (self.timenum < maxtime)? self.timenum : maxtime
-                            self.transTime(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
-                            //console.log(self.timenum)
+                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
                         }
                     }
                 })
@@ -202,11 +188,10 @@ export default {
                         }
                         else{
                             //console.log("타이머이전")
-                            self.setTimerOverlay(false)
                             let mintime = 0
                             self.timenum--
                             self.timenum = (self.timenum > mintime)? self.timenum : mintime
-                            self.transTime(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
+                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
                         }
                     }
                 })
@@ -215,7 +200,7 @@ export default {
                         //console.log("타이머 작동");
                         if(self.selectedRecipe.cookingStep[self.slide].time.length){
                             self.timenum = 0
-                            self.transTime(self.selectedRecipe.cookingStep[self.slide].time[0][2])
+                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[0][2])
                         }
                         // self.setTimerOverlay(true)
                     }
@@ -223,8 +208,7 @@ export default {
                 timerclose.forEach(function (item) {
                     if(text.indexOf(item) != -1){
                         if(self.overlay == true){
-                            //console.log("타이머 종료");
-                            self.setTimerOverlay(false)
+                            self.SET_TIMER_INIT()
                         }
                         else{
                             console.log("타이머 동작중이아님")
@@ -243,6 +227,7 @@ export default {
                 }
             }
         }
+        this.SET_TIMER_INIT()
     },
     beforeDestroy() {
         this.stopSpeaking()
