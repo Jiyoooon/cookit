@@ -343,12 +343,10 @@ export default {
       // [*] POST
       axios.post(SERVER.ROUTES.editor.saveRecipe, recipeData, headerConfig)
       .then((res) => {
-        console.log(res)
         return new Promise(() => {
           commit('SET_UPDATETF', false)
-          router.push({ name: 'MyBlogListView'})
+          router.push({ name: 'SelectedRecipe', params: { recipe_id: res.data.recipe_id } })
         })
-        // 레시피 화면으로 redirect 필요
       })
       .catch((err) => {
         console.log(err)
@@ -365,7 +363,7 @@ export default {
         console.log(res)
         return new Promise(() => {
           commit('SET_UPDATETF', false)
-          router.push({ name: 'SelectedRecipe', recipe_id: recipeId })
+          router.push({ name: 'SelectedRecipe', params: { recipe_id: recipeId } })
         })
       })
       .catch((err) => {
