@@ -24,7 +24,7 @@
       <div  class="block-btn btn-style2 blog-btn" 
             v-if="(this.authUser != null) && (this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate"
             @click="clickunfollow">
-        언팔로우
+        팔로우 취소
       </div>
       <div  class="block-btn btn-style2 blog-btn" 
             v-if="(this.authUser != null) && this.authUser.user_id === this.selecteduserinfo.user_id"
