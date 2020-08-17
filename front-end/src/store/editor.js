@@ -366,7 +366,6 @@ export default {
         return new Promise(() => {
           commit('SET_UPDATETF', false)
           router.push({ name: 'SelectedRecipe', recipe_id: recipeId })
-          
         })
       })
       .catch((err) => {
@@ -394,9 +393,8 @@ export default {
           if (ans) {
             const headerConfig = getters.getHeader;
             axios.delete(SERVER.ROUTES.editor.deleteRecipe + String(recipe_id), headerConfig)
-            .then(res => {
-              console.log(res.data)
-              router.push({ name: 'MyBlogListView' })
+            .then(() => {
+              router.go(-1);
             })
             .catch(err => {
               console.err(err.response)

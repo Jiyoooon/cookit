@@ -52,7 +52,10 @@ export default {
     },
     methods: {
       ...mapActions('editor', ['onSubmitButtonforUpdate']),
-      ...mapMutations('editor', ['SET_MAININGR', 'SET_SUBINGR'])
+      ...mapMutations('editor', ['SET_MAININGR', 'SET_SUBINGR']),
+      cancel() {
+        this.$router.go(-1)
+      }
     },
     created() {
       const main = []
