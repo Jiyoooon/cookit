@@ -74,9 +74,8 @@ export default {
         },
     },
     created() {
-        this.sortingredient()
-      console.log(this.essentialIngre)
-    }
+      this.sortingredient()
+    },
 }
 </script>
 

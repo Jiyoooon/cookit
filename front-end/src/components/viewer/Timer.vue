@@ -105,8 +105,6 @@ export default {
         t : String,
     },
     methods:{
-        
-
         updateTimer() {
 
             var timestr;
