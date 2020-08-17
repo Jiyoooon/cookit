@@ -1,7 +1,5 @@
 <template>
 <div>
-    <button @click="clickX(true)">테스트111</button>
-    <button @click="clickX(false)">테스트222</button>
   <v-overlay :value="this.overlayState" z-index=1070>
             <div>
                 <v-btn
