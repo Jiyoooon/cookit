@@ -58,6 +58,7 @@ export default {
         ...mapState('myblog', ['myrecipes'])
     },
     methods: {
+      ...mapMutations('lookaround', ['initializing']),
         afterLeave() {
           this.$root.$emit('triggerScroll')
         },
@@ -102,6 +103,7 @@ export default {
         },
         browsingClick() {
           this.removeActiveClass();
+          this.initializing()
           $("#browsing").addClass("active");
           this.GoLookAroundRecipesView();
         },
