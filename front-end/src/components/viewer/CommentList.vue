@@ -24,11 +24,6 @@ export default {
     },
     methods: {
     },
-    watch: {
-        comments: {
-            deep: true,
-        }
-    },
 }
 </script>
 

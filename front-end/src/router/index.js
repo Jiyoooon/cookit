@@ -232,6 +232,17 @@ router.beforeEach((to, from, next) => {
   //     }) 
   //   }    
   
+  if (!(from.name == 'SelectedRecipe') && (to.name == 'LookAroundRecipeView')) {
+    store.commit('lookaround/initializing')
+    next()
+    console.log(store.state)
+  // } else if ((from.name == 'SelectedRecipe') && (to.name == 'LookAroundRecipeView') && (store.state.accounts.authUser.user_id == store.state.recipes.recipeUser.user_id)) {
+  //   store.commit('lookaround/initializing')
+  //   next()
+  } else {
+    next()
+  }
+
   if (!IsLoggedIn && LoggedInRequired) {
     next({ name: 'Login' })
   } else if (IsLoggedIn && LoggedOutRequired) {
