@@ -34,8 +34,10 @@ export default {
   },
 
   actions: {
-    goRecipe({ commit },  recipe){
-      commit('SET_RECIPE', recipe)
+    goRecipe({ dispatch },  recipe){
+      console.log(recipe)
+      // commit('SET_RECIPE', recipe)
+      dispatch('fetchRecipe', recipe.recipe_id)
       router.push({ name: 'SelectedRecipe', params: { recipe_id: recipe.recipe_id }})
     },
     fetchRecipe({ commit }, recipe_id) {
