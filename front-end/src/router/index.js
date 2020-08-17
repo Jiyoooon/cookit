@@ -244,7 +244,7 @@ router.beforeEach((to, from, next) => {
       window.addEventListener('keypress', function(event) {
         if (event.keyCode == 13) store._vm.$root.$bvModal.hide('modal')
       })
-    store._vm.$root.$bvModal.msgBoxConfirm('수정한 내용이 저장되지 않습니다.', {
+    store._vm.$root.$bvModal.msgBoxConfirm('수정된 내용이 저장되지 않습니다.', {
       title: '정말로 나가시겠습니까?',
       size: 'md',
       buttonSize: 'sm',
@@ -259,7 +259,7 @@ router.beforeEach((to, from, next) => {
       .then((ans) => {
         if (ans) {
           next()
-          store.commit('editor/SET_UPDATETF', false) 
+          store.commit('editor/SET_UPDATETF', false)
         } else {
           next(false)
         }
@@ -268,7 +268,7 @@ router.beforeEach((to, from, next) => {
       window.addEventListener('keypress', function(event) {
         if (event.keyCode == 13) store._vm.$root.$bvModal.hide('modal')
       })
-    store._vm.$root.$bvModal.msgBoxConfirm('수정한 내용이 저장되지 않습니다.', {
+    store._vm.$root.$bvModal.msgBoxConfirm('작성한 내용이 저장되지 않습니다.', {
       title: '정말로 나가시겠습니까?',
       size: 'md',
       buttonSize: 'sm',
@@ -283,7 +283,8 @@ router.beforeEach((to, from, next) => {
       .then((ans) => {
         if (ans) {
           next()
-          store.commit('editor/SET_UPDATETF', false) 
+          store.commit('editor/SET_UPDATETF', false)
+          // router.go(-1);
         } else {
           next(false)
         }

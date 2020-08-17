@@ -4,7 +4,8 @@
       <b-row v-for="(item, index) in ingredients" :key="index">
         <b-col cols="5">
           <b-form-input type="text" list="ingrlist" v-model="item.name" placeholder="재료명"
-          @blur="autoComplete(index)" @keyup.enter="$event.target.blur()" aria-describedby="ingr-feedback" :state="item.valid"></b-form-input>
+          @blur="autoComplete(index)" @keyup.enter="$event.target.blur()" @focus="item.valid=null"
+          aria-describedby="ingr-feedback" :state="item.valid"></b-form-input>
           <b-form-datalist id="ingrlist" :options="ingrQuery"></b-form-datalist>
           <b-form-invalid-feedback id="ingr-feedback">
             재료를 선택해주세요.
@@ -38,11 +39,6 @@ export default {
     ingredients: Array,
     essential: Number
   },
-  data() {
-    return {
-      ingrValid: null
-    }
-  },
   created() {
     this.loadIngredients();
   },
@@ -54,19 +50,18 @@ export default {
     ...mapActions('editor', ['loadIngredients']),
     autoComplete(index) {
       var currVal = this.ingredients[index].name;
-      if(!currVal) {
-        this.ingredients[index].valid = null;
-        return;
-      }
+      this.ingredients[index].valid = null;
+
+      if(!currVal) return;
       var id = 0;
-      var valid = false;
+      var flag = null;
       for (; id < this.ingrQuery.length; id++) {
         if(this.ingrQuery[id].includes(currVal)) {
-          valid = true;
+          flag = true;
           break;
         }
       }
-      if(valid) {
+      if(flag) {
         this.ingredients[index].name = this.ingrQuery[id];
         this.ingredients[index].valid = null;
       }

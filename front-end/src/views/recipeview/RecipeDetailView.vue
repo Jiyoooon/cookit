@@ -1,4 +1,5 @@
 <template>
+<v-app id="inspire">
   <div id="detail-view">
       <recipe class="view-container"/>
       <share :selectedRecipe="selectedRecipe" class="view-container" data-html2canvas-ignore="true" />
@@ -14,42 +15,51 @@
     <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true" class="view-container"/>
     <commentList data-html2canvas-ignore="true" class="view-container"/>
 
+    
     <!-- 가장 상위에 타이머 오버레이를 둠 -->
     <timeroverlay style="z-index:1050" />
-
     
-    <!-- The modal -->
-    <b-modal size="xl" id="my-modal" title="쿠킹스텝" @hide="stopSpeaking">
-        <template v-slot:modal-title>
-            쿠킹스탭 <b-button @click="doSpeech" id="speechButton">음성인식 시작</b-button>
-        </template>
-        <b-carousel
-            v-model="slide"
-            ref="recipeCarousel"
-            id="carousel-fade"
-            style="text-shadow: 1px 1px 2px #000"
-            fade
-            indicators
-            controls
-            :interval="0"
-            
-            img-width=100
-            img-height=100
-            >
+    <!-- 읽기모드 모달 -->
+    <b-modal v-model="modalShow" size="lg" id="my-modal" class="no-drag" @hide="stopSpeaking" style="overflow: hidden;">
+
+      <!-- 모달 타이틀 + 음성인식 시작 버튼 -->
+      <template v-slot:modal-title class="no-drag">{{ selectedRecipe.title }}<b-button @click="doSpeech" id="speechButton">음성인식 시작</b-button></template>
+
+      <!-- b-carousel -->
+      <b-carousel
+        v-model="slide"
+        ref="recipeCarousel"
+        id="carousel-fade"
+        class="carousel-style no-drag"
+        indicators
+        controls
+        no-wrap
+        :interval="0"
+        
+        @sliding-start="onSlideStart"
+        @sliding-end="onSlideEnd"
+      >
+
         <b-carousel-slide
-            :id="'slide-'+cookingstep.steps"
-            v-for="cookingstep in selectedRecipe.cookingStep"
-            :key="cookingstep.cooking_steps_id"
-            :caption="(String)(cookingstep.steps)"
-            :img-src="cookingstep.step_image"
-            style="height:70vh"
-            >
-            <!-- modal-des클래스에 스타일 적용시키면 될듯 -->
-            <timeDescription class="modal-des" :description='cookingstep.description' :time='cookingstep.time' :number="'sub-des-' + cookingstep.steps"/>
+          :id="'slide-'+cookingstep.steps"
+          v-for="cookingstep in selectedRecipe.cookingStep"
+          :key="cookingstep.cooking_steps_id"
+          :caption="'Step. '+(String)(cookingstep.steps)"
+          :img-src="cookingstep.step_image"
+          class="no-drag"
+          style="max-height:70vh;"
+          >
+            <timeDescription class="read-mode" :description='cookingstep.description' :time='cookingstep.time' :number="'sub-des-' + cookingstep.steps"/>
         </b-carousel-slide>
-            </b-carousel>
-        </b-modal>
+      </b-carousel>
+
+      <!-- 닫기 버튼 -->
+      <template v-slot:modal-footer>
+        <b-button style="color:white;" class="float-right no-drag" @click="modalShow=false"> 댣기 </b-button>
+      </template>
+    </b-modal>
   </div>
+</v-app>
 </template>
 
 <script>
@@ -62,10 +72,13 @@ import commentList from '@/components/viewer/CommentList.vue'
 import commentCreate from '@/components/viewer/CommentCreate.vue'
 import timeroverlay from '@/components/viewer/TimerOverlay.vue'
 import timeDescription from '@/components/viewer/TimeDescription.vue'
+import $ from 'jquery'
+
 export default {
     name: 'recipeDetailView',
     data(){
         return{
+          modalShow:false,  // 모달이 열리면 true가 되고 false로 바꾸면 모달이 닫힘
             slide:0,
             isSpeaking:false,
             modalState:false,
@@ -96,14 +109,29 @@ export default {
         },
     },
     methods: {
-        setModalState(state){
-            if(state == true){
-                if(this.overlay == true){
-                    this.setTimerOverlay = false
-                }
-            }
-            this.modalState = state
-        },
+      onSlideStart() {
+        this.sliding = true
+      },
+      onSlideEnd() {
+        this.sliding = false
+      },
+      setModalState(state){
+        // this.doSpeech(); // 읽기모드에서 음성인식 자동시작
+          if(state == true){
+            if(this.overlay == true){
+              this.setTimerOverlay = false
+              }
+          }
+        this.modalState = state
+
+        // 모달 창이 열릴 때 스크롤 없애기 & 부모창 스크롤 및 터치 방지
+        $('html, body').css({'overflow': 'hidden', 'height': '100%'}); // 모달팝업 중 html,body의 scroll을 hidden시킴
+        $('#my-modal').on('scroll touchmove mousewheel', function(event) { // 터치와 마우스휠 스크롤 방지
+          event.preventDefault();
+          event.stopPropagation();
+          return false;
+        });
+      },
         
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
@@ -128,6 +156,11 @@ export default {
             this.isSpeaking = false;
             this.recognition.stop();
             document.getElementById("speechButton").textContent="음성인식 시작";
+
+            
+          // 모달창 닫힐 때 부모창 상태 원상태로 돌리기
+          $('html, body').css({'overflow': 'inherit', 'height': '100%'}); // scroll hidden 해제
+          $('#my-modal').off('scroll touchmove mousewheel'); // 터치 및 마우스휠 스크롤 가능
         },
         doSpeech(){
             if(!this.isSpeaking){
@@ -319,20 +352,38 @@ export default {
   }
 }
 
-    .timerpos {
-        background-color: #eee;
-        z-index: 1;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-    }
-    @media print  {
-        .noprint {
-            display: none;
-        }  
-    }
-    /* 모달에있는 글에 적용할 css */
-    .modal-des{
+.timerpos {
+  background-color: #eee;
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
 
-    }
+@media print  {
+  .noprint {
+    display: none;
+  }  
+}
+
+.no-drag {
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+/* 모달에있는 글에 적용할 css */
+.carousel-style {
+  font-size: 1.5em;
+  text-shadow: 1px 1px 2px black;
+}
+
+@media (max-width: 496px) {
+  .read-mode {
+    color: black;
+    text-shadow: 1px 1px 3px white;
+  }
+}
 </style>

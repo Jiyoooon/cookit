@@ -75,8 +75,7 @@ export default {
 <style>
 .timertext{
     font-weight: bold;
-    color: blue;
-    cursor:pointer;
+    color: #FFC79A;
+    cursor: pointer;
 }
-
 </style>
