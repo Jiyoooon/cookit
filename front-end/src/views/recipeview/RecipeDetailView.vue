@@ -70,7 +70,7 @@
 
       <v-list style="margin: 5px 20px;">
         {{ page }}
-        <timeDescription class="read-mode" :description='selectedRecipe.cookingStep[page].description' :time='selectedRecipe.cookingStep[page].time' :number="'sub-des-' + selectedRecipe.cookingStep[page].steps"/>
+        <timeDescription class="read-mode" :description='propdescription' :time='proptime' :number="'sub-des-' + selectedRecipe.cookingStep[page].steps"/>
       </v-list>
 
       <!-- b-carousel -->
@@ -127,7 +127,9 @@ export default {
           isSpeaking:false,
           modalState:false,
           timenum:0,
-          page:0,
+          page:1,
+          proptime:[],
+          propdescription:'',
         }
     },
     components: {
@@ -166,7 +168,8 @@ export default {
               this.setTimerOverlay = false
               }
           }
-        this.modalState = state
+          this.page = 0
+          this.modalState = state
 
         // 모달 창이 열릴 때 스크롤 없애기 & 부모창 스크롤 및 터치 방지
         // $('html, body').css({'overflow': 'hidden', 'height': '100%'}); // 모달팝업 중 html,body의 scroll을 hidden시킴
@@ -305,6 +308,14 @@ export default {
             }
         }
         this.SET_TIMER_INIT()
+    },
+    watch: {
+      page:{
+        handler(){
+          this.proptime = this.selectedRecipe.cookingStep[this.page].time
+          this.propdescription = this.selectedRecipe.cookingStep[this.page].description
+        }
+      }
     },
     beforeDestroy() {
         this.stopSpeaking()
