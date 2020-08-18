@@ -79,7 +79,7 @@ export default {
     name:'Timer',
     data(){
         return {
-            
+            state:true,
             self : this,
             reloadBtn : $(".reload"),
             timerEl : $(".timer"),
@@ -113,7 +113,7 @@ export default {
             date.setHours(0);
             date.setMinutes(this.time.min);
             date.setSeconds(this.time.sec);
-
+            
             var newDate = new Date(date.valueOf() - 1000);
             var temp = newDate.toTimeString().split(" ");
             var tempsplit = temp[0].split(':');
@@ -124,7 +124,6 @@ export default {
             timestr = this.time.min + this.time.sec;
             this.timeNumbers = timestr.split('');
             this.updateTimerDisplay(this.timeNumbers);
-
             if(timestr === '0000')
                 this.countdownFinished();
 
@@ -132,7 +131,6 @@ export default {
                 setTimeout(this.updateTimer, 1000);
         },
         updateTimerDisplay(arr) {
-            //console.log("째깍")
             this.animateNum(this.minutesGroup.firstNum, arr[0]);
             this.animateNum(this.minutesGroup.secondNum, arr[1]);
             this.animateNum(this.secondsGroup.firstNum, arr[2]);
@@ -150,13 +148,14 @@ export default {
             //console.log("종료")
             // 카운트다운이 종료되면 실행되는 함수
             // css변화를 여기에 주면됨
-            setTimeout(() => {
-                TweenMax.set(this.reloadBtn, { scale: 0.8, display: 'block' });
-                TweenMax.to(this.timerEl, 1, { opacity: 0.2 });
-                TweenMax.to(this.reloadBtn, 0.5, { scale: 1, opacity: 1 }); 
-                var audio = new Audio(require('@/assets/alarmsound.mp3')).play();
-            }, 1000)
-
+            if(this.state == true){
+                setTimeout(() => {
+                    TweenMax.set(this.reloadBtn, { scale: 0.8, display: 'block' });
+                    TweenMax.to(this.timerEl, 1, { opacity: 0.2 });
+                    TweenMax.to(this.reloadBtn, 0.5, { scale: 1, opacity: 1 }); 
+                    var audio = new Audio(require('@/assets/alarmsound.mp3')).play();
+                }, 1000)
+            }
         },
         initTimer(){
             this.reloadBtn = $(".reload")
@@ -177,6 +176,12 @@ export default {
     },
     mounted() { 
         this.initTimer(this.t); 
+    },
+    beforeDestroy() {
+        this.state = false
+        this.time.min="00"
+        this.time.sec="01"
+        this.countdownFinished()
     },
 }
 </script>
