@@ -54,7 +54,7 @@ export default {
   methods:{
     ordering(value){
       this.order = value;
-      $route.meta.scrollToTop = true;
+      this.$route.meta.scrollToTop = true;
     },
         setBusy(){
             this.busy = false
@@ -75,11 +75,20 @@ export default {
     computed:{
         ...mapState('lookaround',['recipes','numberofgetrecipes','ingredients']),
     },
+    watch: {
+      order() {
+        sessionStorage.setItem('ordering', this.order)
+      }
+    },
     updated(){
         if(this.numberofgetrecipes != 0){//가져온 데이터수가 0이 아니면 동작
             this.setBusy()
         }
     },
+    created() {
+      if(sessionStorage.getItem('ordering')) this.order = sessionStorage.getItem('ordering')
+      else this.order = 1;
+    }
 }
 </script>
 

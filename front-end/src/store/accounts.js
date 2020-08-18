@@ -130,56 +130,51 @@ export default {
           alert(err.response)
         })
     },
-
-    GoHome() {
+    clearSearchHistory() {
+      sessionStorage.removeItem('category');
       sessionStorage.removeItem('searching');
       sessionStorage.removeItem('selecting');
+      sessionStorage.removeItem('ordering');
+    },
+    GoHome({dispatch}) {
+      dispatch('clearSearchHistory')
       router.push({ name: 'Home'}).catch(() => {});
     },
 
-    GoSignup() {
-      sessionStorage.removeItem('searching');
-      sessionStorage.removeItem('selecting');
+    GoSignup({dispatch}) {
+      dispatch('clearSearchHistory')
       router.push({ name: 'Signup'}).catch(() => {});
     },
 
-    GoLogin() {
-      sessionStorage.removeItem('searching');
-      sessionStorage.removeItem('selecting');
+    GoLogin({dispatch}) {
+      dispatch('clearSearchHistory')
       router.push({ name: 'Login'}).catch(() => {});
     },
 
-    GoLogout() {
-      sessionStorage.removeItem('searching');
-      sessionStorage.removeItem('selecting');
+    GoLogout({dispatch}) {
+      dispatch('clearSearchHistory')
       router.push({ name: 'Logout'}).catch(() => {});
     },
 
-    GoUserInfo({ commit }) {
-      sessionStorage.removeItem('searching');
-      sessionStorage.removeItem('selecting');
+    GoUserInfo({ commit, dispatch }) {
+      dispatch('clearSearchHistory')
       commit('SET_UPDATETF', false)
       router.push({ name: 'UserInfoView'}).catch(() => {});
     },
 
-    GoEmailAuth() {
-      sessionStorage.removeItem('searching');
-      sessionStorage.removeItem('selecting');
+    GoEmailAuth({dispatch}) {
+      dispatch('clearSearchHistory')
       router.push({ name: 'EmailAuthView'}).catch(() => {});
     },
-    GoPasswordAuth(){
-      sessionStorage.removeItem('searching');
-      sessionStorage.removeItem('selecting');
+    GoPasswordAuth({dispatch}){
+      dispatch('clearSearchHistory')
       router.push({ name: 'PasswordAuthView'}).catch(() => {});
     },
-    GoPasswordFind(){
-      sessionStorage.removeItem('searching');
-      sessionStorage.removeItem('selecting');
+    GoPasswordFind({dispatch}){
+      dispatch('clearSearchHistory')
       router.push({ name: 'PasswordFindView'}).catch(() => {});
     },
     GoRecipeCreate(){
-      sessionStorage.removeItem('searching');
-      sessionStorage.removeItem('selecting');
       router.push({ name: 'RecipeCreateView'}).catch(() => {});
     },
     RedirectAfterUserUpdate() {
@@ -191,8 +186,7 @@ export default {
     },
 
     login({ commit, dispatch, state }, loginData) {
-      sessionStorage.removeItem('searching');
-      sessionStorage.removeItem('selecting');
+      dispatch('clearSearchHistory')
       axios.post(SERVER.ROUTES.accounts.login, loginData)
         .then((res) => {
           if (res.data.result == 'success') {
@@ -246,9 +240,8 @@ export default {
         })
     },
 
-    logout({ commit, getters }) {
-      sessionStorage.remove('searching');
-      sessionStorage.remove('selecting');
+    logout({ commit, getters, dispatch }) {
+      dispatch('clearSearchHistory')
       axios.get(SERVER.ROUTES.accounts.logout, getters.config)
         .then(() => {
           commit('SET_TOKEN', null)

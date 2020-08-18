@@ -51,9 +51,8 @@ export default {
   },
 
   actions: {
-    GoMyBlog() {
-      sessionStorage.removeItem('searching');
-      sessionStorage.removeItem('selecting');
+    GoMyBlog({dispatch}) {
+      dispatch('accounts/clearSearchHistory', null, {root: true});
       router.push({ name: 'MyBlogListView' }).catch(() => {});
     },
     fetchMyRecipes({ rootState, commit }, user) {

@@ -39,7 +39,6 @@ export default {
         state.timestring = mm+":"+ss
     },
     SET_TIMER_INIT(state){
-      //console.log("타이머 초기화")
       state.overlay = false
       state.timestring = ''
     }
@@ -49,8 +48,6 @@ export default {
       commit('SET_TIMESTRING',payload)
     },
     goRecipe({ dispatch },  recipe){
-      console.log(recipe)
-      // commit('SET_RECIPE', recipe)
       dispatch('fetchRecipe', recipe.recipe_id)
       router.push({ name: 'SelectedRecipe', params: { recipe_id: recipe.recipe_id }})
     },
@@ -75,8 +72,7 @@ export default {
     createComment({ state, rootGetters, dispatch }, commentData) {
       if(!commentData.description) return;
       axios.post(SERVER.ROUTES.myrecipe.commentcreate + String(state.selectedRecipe.recipe_id) + '/comments', commentData, rootGetters['accounts/config'])
-      .then(res => {
-        console.log(res.data)
+      .then(() => {
         dispatch('fetchComments')
         // router.push({ name: 'SelectedRecipe', params: { recipe_id: state.selectedRecipe.recipe_id } })
       })
@@ -85,20 +81,17 @@ export default {
       axios.get(SERVER.ROUTES.myrecipe.fetchcomments + String(state.selectedRecipe.recipe_id) + '/comments')
       .then(res => {
         commit('SET_COMMENTS', res.data)
-        console.log(res.data)
       })
     },
     deleteComment({ rootGetters, state, dispatch }, comment_id) {
       axios.delete(SERVER.ROUTES.myrecipe.deletecomment + String(state.selectedRecipe.recipe_id) + '/comments/' + String(comment_id), rootGetters['accounts/config'])
-      .then(res => {
-        console.log(res)
+      .then(() => {
         dispatch('fetchComments')
       })
     },
     updateComment({ rootGetters, state, dispatch, commit }, commentData) {
       axios.put(SERVER.ROUTES.myrecipe.updatecomment + String(state.selectedRecipe.recipe_id) + '/comments/' + String(commentData.comment_id), commentData, rootGetters['accounts/config'])
-      .then(res => {
-        console.log(res)
+      .then(() => {
         dispatch('fetchComments')
         commit('SET_SELECTEDCOMMENT', null)
       })
