@@ -1,6 +1,6 @@
 <template>
 <div>
-  <v-overlay :value="this.overlayState" z-index=1070>
+  <v-overlay :value="this.overlayState" z-index='1070' id="timeroverlay">
             <div>
                 <v-btn
                     icon
@@ -19,12 +19,15 @@
 
 import timervue from '@/components/viewer/Timer.vue'
 import { mapState, mapMutations } from 'vuex'
+
 export default {
     name: 'timerOverlay',
     data(){
         return{
             timervalue:'',
             overlayState:false,
+            leftTime:100,
+            overlayColor:"black",
         }
     },
     components:{
@@ -39,8 +42,8 @@ export default {
         },
         clickX(){
             this.SET_TIMER_INIT()
-         },
-         ...mapMutations('recipes',['SET_OVERLAY','SET_TIMER_INIT'])
+        },
+        ...mapMutations('recipes',['SET_OVERLAY','SET_TIMER_INIT'])
     },
     watch: {
         overlay:{
@@ -72,4 +75,7 @@ export default {
         top: 5vh;
         cursor: pointer;
     }
+    /* .v-overlay{
+        background-color: red;
+    } */
 </style>
