@@ -103,26 +103,6 @@ export default {
         }
       }
     },
-    mounted() {
-      console.log("레시피목록 가져오기 mounted!!!")
-      // this.SET_FLAG(false)
-      // console.log(this.flag)
-    },
-    created() {
-      console.log("레시피목록 가져오기 created")
-      console.log(this.selecteduserinfo)
-      // this.fetchMyRecipes(this.selecteduserinfo)
-      // this.SET_FLAG(false)
-      // console.log(this.flag)
-    },
-    // updated(){
-    //   console.log("레시피목록 가져오기 updated")
-    //   console.log(location)
-    //   // location.reload()
-    //   this.getfollowings(this.selecteduserinfo.user_id)
-    //   this.getfollowers(this.selecteduserinfo.user_id)
-    //   // this.fetchMyRecipes(this.selecteduserinfo);
-    // }
 }
 </script>
 

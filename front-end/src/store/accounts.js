@@ -130,49 +130,63 @@ export default {
           alert(err.response)
         })
     },
-
-    GoHome() {
-      router.push({ name: 'Home'})
+    clearSearchHistory() {
+      sessionStorage.removeItem('category');
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
+      sessionStorage.removeItem('ordering');
+    },
+    GoHome({dispatch}) {
+      dispatch('clearSearchHistory')
+      router.push({ name: 'Home'}).catch(() => {});
     },
 
-    GoSignup() {
-      router.push({ name: 'Signup'})
+    GoSignup({dispatch}) {
+      dispatch('clearSearchHistory')
+      router.push({ name: 'Signup'}).catch(() => {});
     },
 
-    GoLogin() {
-      router.push({ name: 'Login'})
+    GoLogin({dispatch}) {
+      dispatch('clearSearchHistory')
+      router.push({ name: 'Login'}).catch(() => {});
     },
 
-    GoLogout() {
-      router.push({ name: 'Logout'})
+    GoLogout({dispatch}) {
+      dispatch('clearSearchHistory')
+      router.push({ name: 'Logout'}).catch(() => {});
     },
 
-    GoUserInfo({ commit }) {
-      router.push({ name: 'UserInfoView'})
+    GoUserInfo({ commit, dispatch }) {
+      dispatch('clearSearchHistory')
       commit('SET_UPDATETF', false)
+      router.push({ name: 'UserInfoView'}).catch(() => {});
     },
 
-    GoEmailAuth() {
-      router.push({ name: 'EmailAuthView'})
+    GoEmailAuth({dispatch}) {
+      dispatch('clearSearchHistory')
+      router.push({ name: 'EmailAuthView'}).catch(() => {});
     },
-    GoPasswordAuth(){
-      router.push({ name: 'PasswordAuthView'})
+    GoPasswordAuth({dispatch}){
+      dispatch('clearSearchHistory')
+      router.push({ name: 'PasswordAuthView'}).catch(() => {});
     },
-    GoPasswordFind(){
-      router.push({ name: 'PasswordFindView'})
+    GoPasswordFind({dispatch}){
+      dispatch('clearSearchHistory')
+      router.push({ name: 'PasswordFindView'}).catch(() => {});
     },
     GoRecipeCreate(){
-      router.push({ name: 'RecipeCreateView'})
+      router.push({ name: 'RecipeCreateView'}).catch(() => {});
     },
     RedirectAfterUserUpdate() {
-      router.push({ name: 'UserInfoView' })
+      router.push({ name: 'UserInfoView' }).catch(() => {});
     },
 
     RedirectAfterUserDelete() {
-      router.push({ name: 'UserInfoView' })
+      router.push({ name: 'UserInfoView' }).catch(() => {});
     },
 
     login({ commit, dispatch, state }, loginData) {
+      dispatch('clearSearchHistory')
       axios.post(SERVER.ROUTES.accounts.login, loginData)
         .then((res) => {
           if (res.data.result == 'success') {
@@ -185,12 +199,12 @@ export default {
                 if (state.authUser.start_page) {
                   $("#myblog").addClass("active");
                   $("#browsing").removeClass("active");
-                  router.push({ name: 'MyBlogListView'})
+                  router.push({ name: 'MyBlogListView'}).catch(() => {});
                 }
                 else {
                   $("#myblog").removeClass("active");
                   $("#browsing").addClass("active");
-                  router.push({ name: 'LookAroundRecipeView'})
+                  router.push({ name: 'LookAroundRecipeView'}).catch(() => {});
                 }
               }, 500);
             })
@@ -226,7 +240,8 @@ export default {
         })
     },
 
-    logout({ commit, getters }) {
+    logout({ commit, getters, dispatch }) {
+      dispatch('clearSearchHistory')
       axios.get(SERVER.ROUTES.accounts.logout, getters.config)
         .then(() => {
           commit('SET_TOKEN', null)
@@ -236,6 +251,7 @@ export default {
           cookies.remove('auth-token')
           cookies.remove('auth-user')
           cookies.remove('user-email')
+          sessionStorage.clear();
           router.push({ name: 'LookAroundRecipeView'})
         })
         .catch(err => {

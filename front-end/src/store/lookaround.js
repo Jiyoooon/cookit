@@ -29,8 +29,30 @@ export default {
     recipes:[],
     ingredients:null,//모든재료를 저장
     ingrName: [],
+
+    // 0818 은정 추가
+    searching: '', // 검색중인 단어 저장
+    selecting: [
+      {
+        ingredientdata :
+          { name: null,
+            kind: null,
+            id: null },
+        state : null
+      },
+    ],
+    clearSelecting: false
   },
   getters: {
+    getSearching(state) {
+      return state.searching;
+    },
+    getSelecting(state) {
+      return state.selecting;
+    },
+    getClearSelecting(state) {
+      return state.clearSelecting;
+    }
   },
 
   mutations: {
@@ -139,7 +161,15 @@ export default {
     initPage(state){
       state.recipequery.p=0
     },
-
+    SET_SEARCHING(state, payload) {
+      state.searching = payload;
+    },
+    SET_SELECTING(state, payload) {
+      state.selecting = payload;
+    },
+    CLEAR_SELECTING(state, payload) {
+      state.clearSelecting = payload;
+    }
   },
 
   actions: {
@@ -214,7 +244,9 @@ export default {
       })
     },
     GoLookAroundRecipesView() {
-      router.push({ name: 'LookAroundRecipeView',})
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
+      router.push({ name: 'LookAroundRecipeView'}).catch(() => {});
     },
   },
 }
