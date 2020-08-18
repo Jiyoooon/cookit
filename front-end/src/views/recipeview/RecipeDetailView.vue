@@ -5,17 +5,16 @@
       <share :selectedRecipe="selectedRecipe" class="view-container" data-html2canvas-ignore="true" />
       <ingredient class="view-container"/>
       <cooking-step class="view-container"/>
-
-        <!-- 버튼 -->
-        
-      <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" @click="setDialogState(true)"/>
-      <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
+      <tags v-if="selectedRecipe.tag[0]" :selectedRecipe="selectedRecipe" class="view-container"/>
 
       <!-- 댓글 -->
       <comment-create v-if="isLoggedIn" data-html2canvas-ignore="true" class="view-container"/>
       <comment-list data-html2canvas-ignore="true" class="view-container"/>
 
-    
+      <!-- 플로팅 버튼 -->
+      <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" @click="setDialogState(true)"/>
+      <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
+
       <!-- 가장 상위에 타이머 오버레이를 둠 -->
       <timeroverlay style="z-index:1050" />
     
@@ -48,7 +47,6 @@
           ref="recipe-carousel"
         >
           <v-carousel-item
-            :id="'slide-'+cookingstep.steps"
             v-for="cookingstep in selectedRecipe.cookingStep"
             :key="cookingstep.cooking_steps_id"
             class="no-drag"
@@ -100,7 +98,7 @@
 
           <v-list style="margin: 5px 20px;">
             <timeDescription class="read-mode"
-              :description='propdescription' :time='proptime' :number="'sub-des-' + selectedRecipe.cookingStep[page].steps"/>
+              :description='propdescription' :time='proptime' :number="'sub-des-' + page"/>
           </v-list>
         </v-card>
       </v-dialog>
@@ -114,6 +112,7 @@ import recipe from '@/components/viewer/Recipe.vue'
 import share from '@/components/viewer/Share.vue'
 import ingredient from '@/components/viewer/Ingredient.vue'
 import cookingStep from '@/components/viewer/CookingStep.vue'
+import tags from '@/components/viewer/Tags.vue'
 import commentList from '@/components/viewer/CommentList.vue'
 import commentCreate from '@/components/viewer/CommentCreate.vue'
 import timeroverlay from '@/components/viewer/TimerOverlay.vue'
@@ -138,6 +137,7 @@ export default {
         ingredient,
         cookingStep,
         share,
+        tags,
         commentList,
         commentCreate,
         timeroverlay,
@@ -310,6 +310,7 @@ export default {
     watch: {
       page:{
         handler(){
+          if(!this.selectedRecipe.cookingStep[this.page]) return;
           this.proptime = this.selectedRecipe.cookingStep[this.page].time
           this.propdescription = this.selectedRecipe.cookingStep[this.page].description
         }
