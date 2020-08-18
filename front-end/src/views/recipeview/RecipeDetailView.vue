@@ -162,12 +162,11 @@ export default {
     },
     methods: {
       dialogClose() {
-        this.page = 0;
+        this.page = 1;
         this.dialogState = false;
-        this.stopSpeaking();
+        this.doSpeech();
       },
       setDialogState(state){
-        this.doSpeech(); // 읽기모드에서 음성인식 자동시작
           if(state == true){
             if(this.overlay == true){
               this.setTimerOverlay = false
@@ -175,6 +174,8 @@ export default {
           }
           this.page = 0
           this.dialogState = state
+
+          this.doSpeech(); // 읽기모드에서 음성인식 자동시작
 
         // 모달 창이 열릴 때 스크롤 없애기 & 부모창 스크롤 및 터치 방지
         // $('html, body').css({'overflow': 'hidden', 'height': '100%'}); // 모달팝업 중 html,body의 scroll을 hidden시킴
@@ -189,7 +190,6 @@ export default {
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
         gorecipeupdate() {
-          console.log('nnnn')
           if (this.authUser.user_id == this.selectedRecipe.recipe_user) {
               this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
           }
@@ -253,7 +253,7 @@ export default {
                     if(text.indexOf(item) != -1){
                         if(self.overlay==false){
                             // self.$refs.recipeCarousel.next();
-                            this.page++;
+                            self.page++;
                         }
                         else{
                             let maxtime = self.selectedRecipe.cookingStep[self.page].time.length-1
@@ -267,7 +267,7 @@ export default {
                     if(text.indexOf(item) != -1){
                         if(self.overlay==false){
                             // self.$refs.recipeCarousel.prev();
-                            this.page--;
+                            self.page--;
                         }
                         else{
                             //console.log("타이머이전")
