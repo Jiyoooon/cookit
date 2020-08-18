@@ -1,6 +1,6 @@
 <template>
-<v-app id="inspire">
-  <div id="detail-view">
+  <v-app id="inspire">
+    <div id="detail-view">
       <recipe class="view-container"/>
       <share :selectedRecipe="selectedRecipe" class="view-container" data-html2canvas-ignore="true" />
       <ingredient class="view-container"/>
@@ -8,103 +8,109 @@
 
         <!-- 버튼 -->
         
-      <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" @click="setModalState(true)"/>
+      <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" @click="setDialogState(true)"/>
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 
-    <!-- 댓글 -->
-    <commentCreate v-if="isLoggedIn" data-html2canvas-ignore="true" class="view-container"/>
-    <commentList data-html2canvas-ignore="true" class="view-container"/>
+      <!-- 댓글 -->
+      <comment-create v-if="isLoggedIn" data-html2canvas-ignore="true" class="view-container"/>
+      <comment-list data-html2canvas-ignore="true" class="view-container"/>
 
     
-    <!-- 가장 상위에 타이머 오버레이를 둠 -->
-    <timeroverlay style="z-index:1050" />
+      <!-- 가장 상위에 타이머 오버레이를 둠 -->
+      <timeroverlay style="z-index:1050" />
     
-    <!-- 읽기모드 모달 -->
-    <b-modal v-model="modalShow" size="lg" id="my-modal" class="no-drag" @hide="stopSpeaking" style="overflow: hidden;">
-
-      <!-- 모달 타이틀 + 음성인식 시작 버튼 -->
-      <template v-slot:modal-title class="no-drag">{{ selectedRecipe.title }}<b-button @click="doSpeech" id="speechButton">음성인식 시작</b-button></template>
-
-    <!-- <v-carousel
-        :v-model='page'
-        :continuous="false"
-        :cycle="false"
-        :show-arrows="true"
-        delimiter-icon="mdi-minus"
-        height="100%"
-      >
-        <v-carousel-item
-          v-for="cookingstep in selectedRecipe.cookingStep"
-          :key="cookingstep.cooking_steps_id"
+      <!-- 읽기모드 -->
+        <v-dialog
+          v-model="dialogState"
+          @click:outside="dialogClose"
+          height="720"
+          width="960"
         >
-          <v-sheet
-            height="100%"
-            tile
+        <v-card
+          elevation="24"
+          class="mx-auto"
+        >
+          <v-card-title>
+            <span class="subtitle">Step. {{ page + 1 }}</span>
+          </v-card-title>
+
+        <v-carousel
+          v-model="page"
+          :continuous="false"
+          :cycle="false"
+          :show-arrows="true"
+          hide-delimiter-background
+          delimiter-icon="mdi-minus"
+          height="450"
+          ref="recipe-carousel"
+        >
+          <v-carousel-item
+            :id="'slide-'+cookingstep.steps"
+            v-for="cookingstep in selectedRecipe.cookingStep"
+            :key="cookingstep.cooking_steps_id"
+            class="no-drag"
           >
-          <b-img :src="cookingstep.step_image"></b-img>
+            <v-sheet
+              height="100%"
+              tile
+            >
+              <v-row
+                class="fill-height"
+                align="center"
+                justify="center"
+              >
+              <b-img :src="cookingstep.step_image" height="450"></b-img>
+              </v-row>
+              <v-row
+                align="end"
+                justify="center">
+                <div class="display-3">Step. {{ cookingstep.step }}</div>
+              </v-row>
           </v-sheet>
         </v-carousel-item>
-      </v-carousel> -->
-      
-      <b-carousel
-        v-model="page"
-        ref="recipeCarousel"
-        id="carousel-fade"
-        class="carousel-style no-drag"
-        indicators
-        controls
-        no-wrap
-        :interval="0"
-      >
-        <b-carousel-slide
-          :id="'slide-'+cookingstep.steps"
-          v-for="cookingstep in selectedRecipe.cookingStep"
-          :key="cookingstep.cooking_steps_id"
-          :caption="'Step. '+(String)(cookingstep.steps)"
-          :img-src="cookingstep.step_image"
-          class="no-drag"
-          img-height=""
+      </v-carousel>
+
+          <!-- <b-carousel
+            v-model="page"
+            ref="recipeCarousel"
+            id="carousel-fade"
+            class="carousel-style no-drag"
+            indicators
+            controls
+            no-wrap
+            :interval="0"
+            img-height="320px"
+            img-width="480px"
           >
-        </b-carousel-slide>
-      </b-carousel>
+            <b-carousel-slide
+              :id="'slide-'+cookingstep.steps"
+              v-for="cookingstep in selectedRecipe.cookingStep"
+              :key="cookingstep.cooking_steps_id"
+              :caption="'Step. '+(String)(cookingstep.steps)"
+              :img-src="cookingstep.step_image"
+              class="no-drag"
+              img-height="320px"
+              img-width="480px"
+            >
+            </b-carousel-slide>
+          </b-carousel> -->
 
-      <v-list style="margin: 5px 20px;">
-        {{ page }}
-        <timeDescription class="read-mode" :description='propdescription' :time='proptime' :number="'sub-des-' + selectedRecipe.cookingStep[page].steps"/>
-      </v-list>
-
-      <!-- b-carousel -->
-      <!-- <b-carousel
-        v-model="slide"
-        ref="recipeCarousel"
-        id="carousel-fade"
-        class="carousel-style no-drag"
-        indicators
-        controls
-        no-wrap
-        :interval="0"
-      >
-
-        <b-carousel-slide
-          :id="'slide-'+cookingstep.steps"
-          v-for="cookingstep in selectedRecipe.cookingStep"
-          :key="cookingstep.cooking_steps_id"
-          :caption="'Step. '+(String)(cookingstep.steps)"
-          :img-src="cookingstep.step_image"
-          class="no-drag"
-          style="max-height:70vh;"
-          >
-            <timeDescription class="read-mode" :description='cookingstep.description' :time='cookingstep.time' :number="'sub-des-' + cookingstep.steps"/>
-        </b-carousel-slide>
-      </b-carousel> -->
-
-      <!-- 닫기 버튼 -->
-      <template v-slot:modal-footer>
-        <b-button style="color:white;" class="float-right no-drag" @click="modalShow=false"> 닫기 </b-button>
-      </template>
-    </b-modal>
-  </div>
-</v-app>
+          <v-list style="margin: 5px 20px;">
+            <timeDescription class="read-mode"
+              :description='propdescription' :time='proptime' :number="'sub-des-' + selectedRecipe.cookingStep[page].steps"/>
+          </v-list>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary"
+              text
+              @click="dialogClose"
+            > 닫기 </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+  </v-app>
 </template>
 
 <script>
@@ -123,13 +129,13 @@ export default {
     name: 'recipeDetailView',
     data(){
         return{
-          modalShow:false,  // 모달이 열리면 true가 되고 false로 바꾸면 모달이 닫힘
-          isSpeaking:false,
-          modalState:false,
-          timenum:0,
-          page:1,
-          proptime:[],
-          propdescription:'',
+          dialogState: false,  // 읽기모드가 열리면 true가 되고 false로 바꾸면 모달이 닫힘
+          isSpeaking: false,
+          modalState: false,
+          timenum: 0,
+          page: 1,
+          proptime: [],
+          propdescription: '',
         }
     },
     components: {
@@ -155,21 +161,20 @@ export default {
         },
     },
     methods: {
-      onSlideStart() {
-        this.sliding = true
+      dialogClose() {
+        this.page = 0;
+        this.dialogState = false;
+        this.stopSpeaking();
       },
-      onSlideEnd() {
-        this.sliding = false
-      },
-      setModalState(state){
-        // this.doSpeech(); // 읽기모드에서 음성인식 자동시작
+      setDialogState(state){
+        this.doSpeech(); // 읽기모드에서 음성인식 자동시작
           if(state == true){
             if(this.overlay == true){
               this.setTimerOverlay = false
               }
           }
           this.page = 0
-          this.modalState = state
+          this.dialogState = state
 
         // 모달 창이 열릴 때 스크롤 없애기 & 부모창 스크롤 및 터치 방지
         // $('html, body').css({'overflow': 'hidden', 'height': '100%'}); // 모달팝업 중 html,body의 scroll을 hidden시킴
@@ -196,13 +201,13 @@ export default {
             console.log("음성인식 start");
             this.isSpeaking = true;
             this.recognition.start();
-            document.getElementById("speechButton").textContent="음성인식 종료";
+            // document.getElementById("speechButton").textContent="음성인식 종료";
         },
         stopSpeaking(){
             console.log("음성인식 stop");
             this.isSpeaking = false;
             this.recognition.stop();
-            document.getElementById("speechButton").textContent="음성인식 시작";
+            // document.getElementById("speechButton").textContent="음성인식 시작";
 
             
           // 모달창 닫힐 때 부모창 상태 원상태로 돌리기
@@ -251,36 +256,38 @@ export default {
                 next.forEach(function (item) {
                     if(text.indexOf(item) != -1){
                         if(self.overlay==false){
-                            self.$refs.recipeCarousel.next();
+                            // self.$refs.recipeCarousel.next();
+                            this.page++;
                         }
                         else{
-                            let maxtime = self.selectedRecipe.cookingStep[self.slide].time.length-1
+                            let maxtime = self.selectedRecipe.cookingStep[self.page].time.length-1
                             self.timenum++
                             self.timenum = (self.timenum < maxtime)? self.timenum : maxtime
-                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
+                            self.startTimer(self.selectedRecipe.cookingStep[self.page].time[self.timenum][2])
                         }
                     }
                 })
                 prev.forEach(function (item) {
                     if(text.indexOf(item) != -1){
                         if(self.overlay==false){
-                            self.$refs.recipeCarousel.prev();
+                            // self.$refs.recipeCarousel.prev();
+                            this.page--;
                         }
                         else{
                             //console.log("타이머이전")
                             let mintime = 0
                             self.timenum--
                             self.timenum = (self.timenum > mintime)? self.timenum : mintime
-                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
+                            self.startTimer(self.selectedRecipe.cookingStep[self.page].time[self.timenum][2])
                         }
                     }
                 })
                 timer.forEach(function (item) {
                     if(text.indexOf(item) != -1){
                         //console.log("타이머 작동");
-                        if(self.selectedRecipe.cookingStep[self.slide].time.length){
+                        if(self.selectedRecipe.cookingStep[self.page].time.length){
                             self.timenum = 0
-                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[0][2])
+                            self.startTimer(self.selectedRecipe.cookingStep[self.page].time[0][2])
                         }
                         // self.setTimerOverlay(true)
                     }
@@ -320,11 +327,6 @@ export default {
     beforeDestroy() {
         this.stopSpeaking()
     },
-    // watch: {
-    //   page() {
-    //     console.log(this.selectedRecipe.cookingStep[this.page].description)
-    //   }
-    // }
 }
 </script>
 
@@ -435,15 +437,8 @@ export default {
 }
 
 /* 모달에있는 글에 적용할 css */
-.carousel-style {
-  font-size: 1.5em;
-  text-shadow: 1px 1px 2px black;
+.read-mode {
+  font-size: 1.2em;
 }
 
-@media (max-width: 496px) {
-  .read-mode {
-    color: black;
-    text-shadow: 1px 1px 3px white;
-  }
-}
 </style>
