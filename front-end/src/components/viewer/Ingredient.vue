@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-container fluid>
+      <b-row><b-col></b-col></b-row>
       <b-row align-v="center">
         <b-col class="text-center mr-3 ml-3">
           <h3 style="font-weight:700;">재료</h3>
