@@ -37,11 +37,12 @@
         <v-carousel
           v-model="page"
           :continuous="false"
-          :cycle="true"
+          :cycle="false"
           :show-arrows="true"
           hide-delimiter-background
           delimiter-icon="mdi-minus"
           height="450"
+          ref="recipe-carousel"
         >
           <v-carousel-item
             :id="'slide-'+cookingstep.steps"
@@ -166,7 +167,7 @@ export default {
         this.stopSpeaking();
       },
       setDialogState(state){
-        // this.doSpeech(); // 읽기모드에서 음성인식 자동시작
+        this.doSpeech(); // 읽기모드에서 음성인식 자동시작
           if(state == true){
             if(this.overlay == true){
               this.setTimerOverlay = false
@@ -200,13 +201,13 @@ export default {
             console.log("음성인식 start");
             this.isSpeaking = true;
             this.recognition.start();
-            document.getElementById("speechButton").textContent="음성인식 종료";
+            // document.getElementById("speechButton").textContent="음성인식 종료";
         },
         stopSpeaking(){
             console.log("음성인식 stop");
             this.isSpeaking = false;
             this.recognition.stop();
-            document.getElementById("speechButton").textContent="음성인식 시작";
+            // document.getElementById("speechButton").textContent="음성인식 시작";
 
             
           // 모달창 닫힐 때 부모창 상태 원상태로 돌리기
@@ -255,36 +256,38 @@ export default {
                 next.forEach(function (item) {
                     if(text.indexOf(item) != -1){
                         if(self.overlay==false){
-                            self.$refs.recipeCarousel.next();
+                            // self.$refs.recipeCarousel.next();
+                            this.page++;
                         }
                         else{
-                            let maxtime = self.selectedRecipe.cookingStep[self.slide].time.length-1
+                            let maxtime = self.selectedRecipe.cookingStep[self.page].time.length-1
                             self.timenum++
                             self.timenum = (self.timenum < maxtime)? self.timenum : maxtime
-                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
+                            self.startTimer(self.selectedRecipe.cookingStep[self.page].time[self.timenum][2])
                         }
                     }
                 })
                 prev.forEach(function (item) {
                     if(text.indexOf(item) != -1){
                         if(self.overlay==false){
-                            self.$refs.recipeCarousel.prev();
+                            // self.$refs.recipeCarousel.prev();
+                            this.page--;
                         }
                         else{
                             //console.log("타이머이전")
                             let mintime = 0
                             self.timenum--
                             self.timenum = (self.timenum > mintime)? self.timenum : mintime
-                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[self.timenum][2])
+                            self.startTimer(self.selectedRecipe.cookingStep[self.page].time[self.timenum][2])
                         }
                     }
                 })
                 timer.forEach(function (item) {
                     if(text.indexOf(item) != -1){
                         //console.log("타이머 작동");
-                        if(self.selectedRecipe.cookingStep[self.slide].time.length){
+                        if(self.selectedRecipe.cookingStep[self.page].time.length){
                             self.timenum = 0
-                            self.startTimer(self.selectedRecipe.cookingStep[self.slide].time[0][2])
+                            self.startTimer(self.selectedRecipe.cookingStep[self.page].time[0][2])
                         }
                         // self.setTimerOverlay(true)
                     }

@@ -229,12 +229,14 @@ export default {
         font-size: 205px;
         line-height: 160px;
         font-weight: bold;
+        color: white;
     }
     .timer--clock .clock-separator {
         width: auto;
         float: left;
         display: block;
         height: 156px;
+        color: white;
     }
     .timer--clock .clock-separator p {
         width: auto;
