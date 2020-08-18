@@ -335,6 +335,7 @@ export default {
       }
     },
     selectedcategory() {
+      sessionStorage.setItem('category', this.selectedcategory);
       this.setRecipequeryCategory(this.selectedcategory);
       this.initPage();
       this.initRecipes();
@@ -345,6 +346,11 @@ export default {
     }
   },
   created() {
+    if (sessionStorage.getItem('category'))
+      this.selectedcategory = sessionStorage.getItem('category');
+    else
+      this.selected = [];
+
     if (sessionStorage.getItem('searching'))
       this.searchtextT = sessionStorage.getItem('searching');
     else
