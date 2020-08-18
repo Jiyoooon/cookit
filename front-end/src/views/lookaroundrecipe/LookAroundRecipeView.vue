@@ -77,7 +77,7 @@ export default {
     },
     watch: {
       order() {
-        sessionStorage.setItem('ordering', this.order)
+        sessionStorage.setItem('ordering', Number(this.order))
       }
     },
     updated(){
@@ -86,7 +86,7 @@ export default {
         }
     },
     created() {
-      if(sessionStorage.getItem('ordering')) this.order = sessionStorage.getItem('ordering')
+      if(sessionStorage.getItem('ordering')) this.order = Number(sessionStorage.getItem('ordering'))
       else this.order = 1;
     }
 }

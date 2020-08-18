@@ -54,7 +54,6 @@ export default {
        state.validEmail = data
      },
      SET_UPDATETF(state, value) {
-       console.log('fsdfsf')
        state.updateTF = value
      },
      SET_FOLLOWERS(state, followers) {
