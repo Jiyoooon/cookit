@@ -247,7 +247,7 @@ export default {
                 let next = ['다음', '담', '탐', '정', '형', '황', '방', '항', '앞으로', '넥스트'];
                 let prev = ['전', '뒤로', '위로', '귀로', '디로'];
                 let timer = ['타이머', '타임', '차이머'];
-                let timerclose = ['종료', '닫기'];
+                let timerclose = ['종료', '닫기' , '중지','그만'];
 
                 var self = this;
 
@@ -292,11 +292,11 @@ export default {
                 })
                 timerclose.forEach(function (item) {
                     if(text.indexOf(item) != -1){
-                        if(self.overlay == true){
-                            self.SET_TIMER_INIT()
+                        if(self.overlay == false){
+                            self.dialogClose()
                         }
                         else{
-                            console.log("타이머 동작중이아님")
+                            self.SET_TIMER_INIT()
                         }
                     }
                 })
