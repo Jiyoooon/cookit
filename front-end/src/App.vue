@@ -3,7 +3,7 @@
     <header id="app-header">
       <b-navbar toggleable="sm" type="light" variant="">
     <b-navbar-brand href="#">
-        <img id="mainlogo" @click="mainLogoClick" src="./assets/logo.jpg" style="height: 5em; padding: 0px 2em">
+        <img id="mainlogo" @click="GoHome" src="./assets/logo.jpg" style="height: 5em; padding: 0px 2em">
     </b-navbar-brand>
     <nav class="nav-menu">
       <div id="myblog" @click="myBlogClick">내 블로그</div>
@@ -11,12 +11,12 @@
     </nav>
     <nav class="nav-side">
       <div v-if="!isLoggedIn">
-        <div class="nav-side-item btn-style1" id="signup" @click="joinClick">Join</div>
-        <div class="nav-side-item btn-style2" id="login" @click="signinClick">Sign In</div>
+        <div class="nav-side-item btn-style1" id="signup" @click="GoEmailAuth">Join</div>
+        <div class="nav-side-item btn-style2" id="login" @click="GoLogin">Sign In</div>
       </div>
       <div v-else>
-        <div class="nav-side-item btn-style1" id="userInfo" @click="myinfoClick">My Info</div>
-        <div class="nav-side-item btn-style2" id="logout" @click="logoutClick">Log out</div>
+        <div class="nav-side-item btn-style1" id="userInfo" @click="GoPasswordAuth">My Info</div>
+        <div class="nav-side-item btn-style2" id="logout" @click="GoLogout">Log out</div>
       </div>
     </nav>
   </b-navbar>
@@ -49,12 +49,22 @@
 import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
 import $ from 'jquery'
 
+// 새로고침 전에 둘러보기 검색기록 지움
 $(window).on('beforeunload', function() {
+  // sessionStorage.removeItem('category');
+  // sessionStorage.removeItem('searching');
+  // sessionStorage.removeItem('selecting');
+  // sessionStorage.removeItem('ordering');
   sessionStorage.clear();
 })
 
 export default {
     name: 'AppHeader',
+    data() {
+      return {
+        currPage: 0,
+      }
+    },
     computed: {
         // ...mapState([ 'me' ]),
         ...mapGetters('accounts', ['isLoggedIn']),
@@ -66,67 +76,33 @@ export default {
         afterLeave() {
           this.$root.$emit('triggerScroll')
         },
-        clearSearchHistory() {
-          sessionStorage.remove('searching');
-          sessionStorage.remove('selecting');
-        },
-        removeActiveClass() {
-          $("#myblog").removeClass("active");
-          $("#browsing").removeClass("active");
-        },
-        mainLogoClick() {
-          this.removeActiveClass();
-          this.GoHome();
-        },
-        joinClick(){
-          this.removeActiveClass();
-          this.GoEmailAuth();
-        },
-        signinClick(){
-          this.removeActiveClass();
-          this.GoLogin();
-        },
-        myinfoClick(){
-          this.removeActiveClass();
-          this.GoPasswordAuth();
-        },
-        logoutClick(){
-          this.removeActiveClass();
-          this.GoLogout();
-        },
         myBlogClick() {
-          if(!this.isLoggedIn) {
-            this.removeActiveClass();
-            this.GoLogin();
-          }
+          if(!this.isLoggedIn) this.GoLogin();
           else {
-            $("#myblog").addClass("active");
-            $("#browsing").removeClass("active");
             this.SET_USERINFO(this.authUser)
-            this.SET_CURRENTSHOW(1)
             this.setRecipequeryUserId(this.authUser.nickname)
             this.GoMyBlog();
           }
         },
         browsingClick() {
-          this.removeActiveClass();
-          $("#browsing").addClass("active");
           this.initializing();
-          sessionStorage.removeItem('searching');
-          sessionStorage.removeItem('selecting');
-          if(this.$route.name == 'LookAroundRecipeView')
+          this.clearSearchHistory();
+          if(this.$route.name == 'LookAroundRecipeView') {
             this.$router.go();
-          else this.GoLookAroundRecipesView();
+          }
+          else {
+            this.GoLookAroundRecipesView();
+          }
         },
-        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout']),
+        ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout', 'clearSearchHistory']),
         ...mapActions('myblog',['GoMyBlog']),
         ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
-        ...mapMutations('myblog',['SET_USERINFO', 'SET_CURRENTSHOW']),
+        ...mapMutations('myblog',['SET_USERINFO']),
         ...mapMutations('lookaround',['setRecipequeryUserId', 'CLEAR_SELECTING']),
     },
     created(){
-      this.getIngredients()
-    }
+      this.getIngredients();
+    },
 }
 </script>
 
