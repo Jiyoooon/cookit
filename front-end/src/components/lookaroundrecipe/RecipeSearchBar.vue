@@ -22,6 +22,7 @@
             @keydown.enter="searchRecipe"
             placeholder="레시피 제목 검색"
             single-line
+            ref="recipeSearchBar"
           />
         </b-col>
         <b-col sm="2">
@@ -143,7 +144,7 @@
 <script>
 import SelectedSource from "@/components/lookaroundrecipe/SelectedSource.vue";
 import $ from 'jquery'
-import { mapActions, mapState, mapMutations } from "vuex";
+import { mapActions, mapState, mapMutations, mapGetters } from "vuex";
 export default {
   name: "RecipeSearchBar",
   data() {
@@ -290,12 +291,19 @@ export default {
     },
     // 추가끝
     ...mapActions("lookaround", [ "setRecipequery", "getFilteredRecipes" ]),
-    ...mapMutations("lookaround", [ "initPage", "setRecipequeryCategory", "initRecipes","setRecipequeryOrder" ]),
+    ...mapMutations("lookaround", [ "initPage", "setRecipequeryCategory", "initRecipes","setRecipequeryOrder", "SET_SEARCHING", "SET_SELECTING", "CLEAR_SELECTING" ]),
+    ...mapGetters("lookaround", ['getSearching', 'getSelecting', 'getClearSelecting'])
   },
   computed: {
-    ...mapState("lookaround", ["ingredients", "recipequery"]),
+    ...mapState("lookaround", ["ingredients", "recipequery", 'clearSelecting']),
   },
   watch: {
+    searchtextT() {
+      sessionStorage.setItem('searching', this.searchtextT);
+    },
+    selected() {
+      sessionStorage.setItem('selecting', JSON.stringify(this.selected));
+    },
     // 넣을 재료 자동 완성 리스트
     searchtextS(val) {
       this.focus1 = null
@@ -335,6 +343,17 @@ export default {
     order() {
       this.searchRecipe();
     }
+  },
+  created() {
+    if (sessionStorage.getItem('searching'))
+      this.searchtextT = sessionStorage.getItem('searching');
+    else
+      this.searchtextT = '';
+    
+    if (sessionStorage.getItem('selecting'))
+      this.selected = JSON.parse(sessionStorage.getItem('selecting'));
+    else
+      this.selected = [];
   },
 };
 </script>

@@ -80,9 +80,6 @@ export default {
             this.setBusy()
         }
     },
-    created(){
-        // this.initializing()
-    }
 }
 </script>
 

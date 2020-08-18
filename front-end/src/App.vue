@@ -24,7 +24,7 @@
   <hr id="divider">
   <div id="app-router">
     <transition name="fade" mode="out-in" @after-leave="afterLeave" :key="$route.fullPath">
-      <router-view></router-view>
+      <router-view :key="$route.fullPath"></router-view>
     </transition>
   </div>
   <footer id="app-footer">
@@ -49,6 +49,10 @@
 import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
 import $ from 'jquery'
 
+$(window).on('beforeunload', function() {
+  sessionStorage.clear();
+})
+
 export default {
     name: 'AppHeader',
     computed: {
@@ -58,16 +62,19 @@ export default {
         ...mapState('myblog', ['myrecipes'])
     },
     methods: {
-      ...mapMutations('lookaround', ['initializing']),
+      ...mapMutations('lookaround', ['initializing', 'SET_SEARCHING']),
         afterLeave() {
           this.$root.$emit('triggerScroll')
+        },
+        clearSearchHistory() {
+          sessionStorage.remove('searching');
+          sessionStorage.remove('selecting');
         },
         removeActiveClass() {
           $("#myblog").removeClass("active");
           $("#browsing").removeClass("active");
         },
         mainLogoClick() {
-          console.log($("#myblog"));
           this.removeActiveClass();
           this.GoHome();
         },
@@ -103,23 +110,23 @@ export default {
         },
         browsingClick() {
           this.removeActiveClass();
-          this.initializing()
           $("#browsing").addClass("active");
-          this.GoLookAroundRecipesView();
+          this.initializing();
+          sessionStorage.removeItem('searching');
+          sessionStorage.removeItem('selecting');
+          if(this.$route.name == 'LookAroundRecipeView')
+            this.$router.go();
+          else this.GoLookAroundRecipesView();
         },
         ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout']),
         ...mapActions('myblog',['GoMyBlog']),
         ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
         ...mapMutations('myblog',['SET_USERINFO', 'SET_CURRENTSHOW']),
-        ...mapMutations('lookaround',['setRecipequeryUserId']),
-        gorecipeupdate() {
-          console.log('nnnn')
-          this.$router.push({ name: 'RecipeUpdateView'})
-        }
+        ...mapMutations('lookaround',['setRecipequeryUserId', 'CLEAR_SELECTING']),
     },
     created(){
       this.getIngredients()
-    },
+    }
 }
 </script>
 

@@ -52,7 +52,9 @@ export default {
 
   actions: {
     GoMyBlog() {
-      router.push({ name: 'MyBlogListView' })
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
+      router.push({ name: 'MyBlogListView' }).catch(() => {});
     },
     fetchMyRecipes({ rootState, commit }, user) {
       commit('lookaround/initializing',null,{root:true})

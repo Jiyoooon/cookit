@@ -132,47 +132,67 @@ export default {
     },
 
     GoHome() {
-      router.push({ name: 'Home'})
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
+      router.push({ name: 'Home'}).catch(() => {});
     },
 
     GoSignup() {
-      router.push({ name: 'Signup'})
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
+      router.push({ name: 'Signup'}).catch(() => {});
     },
 
     GoLogin() {
-      router.push({ name: 'Login'})
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
+      router.push({ name: 'Login'}).catch(() => {});
     },
 
     GoLogout() {
-      router.push({ name: 'Logout'})
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
+      router.push({ name: 'Logout'}).catch(() => {});
     },
 
     GoUserInfo({ commit }) {
-      router.push({ name: 'UserInfoView'})
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
       commit('SET_UPDATETF', false)
+      router.push({ name: 'UserInfoView'}).catch(() => {});
     },
 
     GoEmailAuth() {
-      router.push({ name: 'EmailAuthView'})
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
+      router.push({ name: 'EmailAuthView'}).catch(() => {});
     },
     GoPasswordAuth(){
-      router.push({ name: 'PasswordAuthView'})
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
+      router.push({ name: 'PasswordAuthView'}).catch(() => {});
     },
     GoPasswordFind(){
-      router.push({ name: 'PasswordFindView'})
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
+      router.push({ name: 'PasswordFindView'}).catch(() => {});
     },
     GoRecipeCreate(){
-      router.push({ name: 'RecipeCreateView'})
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
+      router.push({ name: 'RecipeCreateView'}).catch(() => {});
     },
     RedirectAfterUserUpdate() {
-      router.push({ name: 'UserInfoView' })
+      router.push({ name: 'UserInfoView' }).catch(() => {});
     },
 
     RedirectAfterUserDelete() {
-      router.push({ name: 'UserInfoView' })
+      router.push({ name: 'UserInfoView' }).catch(() => {});
     },
 
     login({ commit, dispatch, state }, loginData) {
+      sessionStorage.removeItem('searching');
+      sessionStorage.removeItem('selecting');
       axios.post(SERVER.ROUTES.accounts.login, loginData)
         .then((res) => {
           if (res.data.result == 'success') {
@@ -227,6 +247,8 @@ export default {
     },
 
     logout({ commit, getters }) {
+      sessionStorage.remove('searching');
+      sessionStorage.remove('selecting');
       axios.get(SERVER.ROUTES.accounts.logout, getters.config)
         .then(() => {
           commit('SET_TOKEN', null)

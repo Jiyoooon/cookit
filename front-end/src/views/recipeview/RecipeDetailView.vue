@@ -33,6 +33,8 @@
         >
           <v-card-title>
             <span class="subtitle">Step. {{ page + 1 }}</span>
+            <v-spacer></v-spacer>
+            <i class="mdi mdi-close" @click="dialogClose" style="cursor: pointer; color: #888; padding: 0px 5px;"></i>
           </v-card-title>
 
         <v-carousel
@@ -100,14 +102,6 @@
             <timeDescription class="read-mode"
               :description='propdescription' :time='proptime' :number="'sub-des-' + selectedRecipe.cookingStep[page].steps"/>
           </v-list>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="primary"
-              text
-              @click="dialogClose"
-            > 닫기 </v-btn>
-          </v-card-actions>
         </v-card>
       </v-dialog>
     </div>
@@ -435,7 +429,8 @@ export default {
 
 /* 모달에있는 글에 적용할 css */
 .read-mode {
-  font-size: 1.2em;
+  font-size: 1.1em;
+  margin: 0.5em 0.2em 0.8em 0.2em;
 }
 
 </style>
