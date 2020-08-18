@@ -98,9 +98,10 @@ export default {
         ...mapActions('myblog',['GoMyBlog']),
         ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
         ...mapMutations('myblog',['SET_USERINFO']),
-        ...mapMutations('lookaround',['setRecipequeryUserId', 'CLEAR_SELECTING']),
+        ...mapMutations('lookaround',['setRecipequeryUserId']),
     },
     created(){
+      console.log("created")
       this.getIngredients();
     },
 }

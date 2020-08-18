@@ -244,8 +244,6 @@ export default {
       })
     },
     GoLookAroundRecipesView() {
-      sessionStorage.removeItem('searching');
-      sessionStorage.removeItem('selecting');
       router.push({ name: 'LookAroundRecipeView'}).catch(() => {});
     },
   },

@@ -291,11 +291,11 @@ export default {
     },
     // 추가끝
     ...mapActions("lookaround", [ "setRecipequery", "getFilteredRecipes" ]),
-    ...mapMutations("lookaround", [ "initPage", "setRecipequeryCategory", "initRecipes","setRecipequeryOrder", "SET_SEARCHING", "SET_SELECTING", "CLEAR_SELECTING" ]),
-    ...mapGetters("lookaround", ['getSearching', 'getSelecting', 'getClearSelecting'])
+    ...mapMutations("lookaround", [ "initPage", "setRecipequeryCategory", "initRecipes","setRecipequeryOrder", ]),
+    ...mapGetters("lookaround", ['getSearching', 'getSelecting', ])
   },
   computed: {
-    ...mapState("lookaround", ["ingredients", "recipequery", 'clearSelecting']),
+    ...mapState("lookaround", ["ingredients", "recipequery", ]),
   },
   watch: {
     searchtextT() {
