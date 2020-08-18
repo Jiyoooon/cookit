@@ -180,17 +180,9 @@ export default {
             if(state == 2){// n초 이하일때
                 var inter = setInterval(() => {
                     item.css('color', 'white')
-                    setTimeout(() => {
-                        item.css('color', 'red')
-                    }, 500)
-                    if(this.time.sec == 2){
-                        clearInterval(inter)
-                    }
-                }, 1000)
-
-                var inter2 = setInterval(() => {
                     item2.css('color', 'white')
                     setTimeout(() => {
+                        item.css('color', 'red')
                         item2.css('color', 'red')
                     }, 500)
                     if(this.time.sec == 2){
