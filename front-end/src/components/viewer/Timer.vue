@@ -178,6 +178,7 @@ export default {
         this.initTimer(this.t); 
     },
     beforeDestroy() {
+        console.log("디스트로이")
         this.state = false
         this.time.min="00"
         this.time.sec="01"

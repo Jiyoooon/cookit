@@ -165,6 +165,7 @@ export default {
       dialogClose() {
         this.page = 1;
         this.dialogState = false;
+            this.SET_TIMER_INIT()
         this.doSpeech();
       },
       setDialogState(state){

@@ -45,12 +45,14 @@ export default {
     watch: {
         overlay:{
             handler(){
+                console.log("overlay핸들러")
                 this.setoverlay()
             },
             deep:true,
         },
         timestring:{
             handler(){
+                console.log("timestring핸들러")
                 if(this.timestring!=''){
                 this.setTimerValue(this.timestring)
                 this.SET_OVERLAY(true)}
