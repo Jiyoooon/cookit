@@ -242,14 +242,10 @@ export default {
             this.recognition.onresult = (event) => {
                 var text = event.results[event.resultIndex][0].transcript;
                 console.log(text);
-                let next = ['다음','형','황','방','항'
-                            , '앞으로'
-                            , '넥스트'];
-                let prev = ['이전'
-                            , '뒤로','위로','귀로','디로'
-                            ,];
-                let timer = ['타이머'];
-                let timerclose = ['종료','닫기'];
+                let next = ['다음', '담', '탐', '정', '형', '황', '방', '항', '앞으로', '넥스트'];
+                let prev = ['이전', '전', '뒤로', '위로', '귀로', '디로', '뒤'];
+                let timer = ['타이머', '타임', '차이머'];
+                let timerclose = ['종료', '닫기'];
 
                 var self = this;
 
