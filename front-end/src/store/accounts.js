@@ -199,12 +199,12 @@ export default {
                 if (state.authUser.start_page) {
                   $("#myblog").addClass("active");
                   $("#browsing").removeClass("active");
-                  router.push({ name: 'MyBlogListView'})
+                  router.push({ name: 'MyBlogListView'}).catch(() => {});
                 }
                 else {
                   $("#myblog").removeClass("active");
                   $("#browsing").addClass("active");
-                  router.push({ name: 'LookAroundRecipeView'})
+                  router.push({ name: 'LookAroundRecipeView'}).catch(() => {});
                 }
               }, 500);
             })
@@ -251,6 +251,7 @@ export default {
           cookies.remove('auth-token')
           cookies.remove('auth-user')
           cookies.remove('user-email')
+          sessionStorage.clear();
           router.push({ name: 'LookAroundRecipeView'})
         })
         .catch(err => {
