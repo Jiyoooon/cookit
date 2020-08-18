@@ -245,7 +245,7 @@ export default {
                 var text = event.results[event.resultIndex][0].transcript;
                 console.log(text);
                 let next = ['다음', '담', '탐', '정', '형', '황', '방', '항', '앞으로', '넥스트'];
-                let prev = ['이전', '전', '뒤로', '위로', '귀로', '디로', '뒤'];
+                let prev = ['전', '뒤로', '위로', '귀로', '디로'];
                 let timer = ['타이머', '타임', '차이머'];
                 let timerclose = ['종료', '닫기'];
 
@@ -254,10 +254,10 @@ export default {
                 next.forEach(function (item) {
                     if(text.indexOf(item) != -1){
                         if(self.overlay==false){
-                            // self.$refs.recipeCarousel.next();
-                            self.page++;
+                            (self.page < self.selectedRecipe.cookingStep.length-1 )? self.page++ : self.page
                         }
                         else{
+                            // 타이머 다음
                             let maxtime = self.selectedRecipe.cookingStep[self.page].time.length-1
                             self.timenum++
                             self.timenum = (self.timenum < maxtime)? self.timenum : maxtime
@@ -265,11 +265,11 @@ export default {
                         }
                     }
                 })
+
                 prev.forEach(function (item) {
                     if(text.indexOf(item) != -1){
                         if(self.overlay==false){
-                            // self.$refs.recipeCarousel.prev();
-                            self.page--;
+                            (self.page > 0 )? self.page-- : self.page
                         }
                         else{
                             //console.log("타이머이전")
