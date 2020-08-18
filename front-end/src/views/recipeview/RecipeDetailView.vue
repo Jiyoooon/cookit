@@ -23,6 +23,7 @@
         <v-dialog
           v-model="dialogState"
           @click:outside="dialogClose"
+          @keydown.esc="dialogClose"
           height="720"
           width="960"
         >
