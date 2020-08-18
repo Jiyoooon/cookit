@@ -516,7 +516,7 @@ export default {
           id: 'modal'
         })
       } else {
-        
+        const sns_name = ['Youtube', 'Instagram', 'Twitter', 'Facebook']
         const formData = new FormData()
         formData.append('email', signupData.config.email)
         formData.append('password', signupData.config.password)
@@ -524,6 +524,10 @@ export default {
         formData.append('profile', signupData.config.profile)
         formData.append('intro', signupData.config.intro)
         formData.append('image_name', signupData.config.image_name)
+        for (let i=0; i<4; i++) {
+          formData.append(`sns_list[${i}].sns_name`, sns_name[i])
+          formData.append(`sns_list[${i}].sns_url`, null)
+        }
 
         // for (let key of formData.entries()) {
         //   console.log(`${key}`)
