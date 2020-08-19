@@ -69,7 +69,7 @@ export default {
         objectType: 'feed',
         content: {
           title: this.selectedRecipe.title, 
-          description: this.selectedRecipe.description,
+          description: this.selectedRecipe.description ? this.selectedRecipe.description : '',
           imageUrl: this.selectedRecipe.main_image,
           link: {
           webUrl: this.currUrl,
