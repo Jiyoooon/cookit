@@ -23,6 +23,8 @@
           v-model="dialogState"
           @click:outside="dialogClose"
           @keydown.esc="dialogClose"
+          @keydown.left="dialogPageMove('l')"
+          @keydown.right="dialogPageMove('r')"
           height="720"
           width="960"
         >
@@ -156,6 +158,14 @@ export default {
         },
     },
     methods: {
+      dialogPageMove(dir){
+            if(dir== 'l'){ // 왼쪽이동
+              (this.page > 0 )? this.page-- : this.page
+            }
+            else if(dir == 'r'){ // 오른쪽 이동
+              (this.page < this.selectedRecipe.cookingStep.length-1 )? this.page++ : this.page
+            }
+      },
       dialogClose() {
         this.page = 1;
         this.dialogState = false;
