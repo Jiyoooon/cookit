@@ -236,10 +236,11 @@ export default {
       console.log(this.selectedRecipe)
     },
     created() {
+      console.log('rhkdus')
         this.fetchRecipe(this.$route.params.recipe_id)
         this.fetchRecipeUser()
-        this.fetchComments(this.$route.params.recipe_id)
-        this.hitupRecipe(this.$route.params.recipe_id)
+        this.fetchComments()
+        // this.hitupRecipe(this.$route.params.recipe_id)
         
         if (!('webkitSpeechRecognition' in window)) {
             document.getElementById("speechButton").style.display = "none";

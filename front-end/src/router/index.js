@@ -233,6 +233,10 @@ router.beforeEach((to, from, next) => {
   //     }) 
   //   }    
   
+  if (from.name == 'SelectedRecipe') {
+    store.dispatch('recipes/hitupRecipe')
+  }
+
   if (!(from.name == 'SelectedRecipe') && (to.name == 'LookAroundRecipeView')) {
     store.commit('lookaround/initializing')
     next()
