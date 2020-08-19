@@ -173,7 +173,8 @@ export default {
       dispatch('clearSearchHistory')
       router.push({ name: 'PasswordFindView'}).catch(() => {});
     },
-    GoRecipeCreate(){
+    GoRecipeCreate({ commit,state }){
+      commit('recipes/SET_USER', state.authUser, { root: true })
       router.push({ name: 'RecipeCreateView'}).catch(() => {});
     },
     RedirectAfterUserUpdate() {
