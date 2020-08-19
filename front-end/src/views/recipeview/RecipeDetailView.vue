@@ -23,6 +23,8 @@
           v-model="dialogState"
           @click:outside="dialogClose"
           @keydown.esc="dialogClose"
+          @keydown.left="dialogPageMove('l')"
+          @keydown.right="dialogPageMove('r')"
           height="720"
           width="960"
         >
@@ -156,6 +158,14 @@ export default {
         },
     },
     methods: {
+      dialogPageMove(dir){
+            if(dir== 'l'){ // 왼쪽이동
+              (this.page > 0 )? this.page-- : this.page
+            }
+            else if(dir == 'r'){ // 오른쪽 이동
+              (this.page < this.selectedRecipe.cookingStep.length-1 )? this.page++ : this.page
+            }
+      },
       dialogClose() {
         this.page = 1;
         this.dialogState = false;
@@ -221,7 +231,14 @@ export default {
             this.overlay = s
         },
     },
+    mounted() {
+      console.log("detail-mounted")
+      console.log(this.selectedRecipe)
+    },
     created() {
+      console.log("detail-created")
+      console.log(this.selectedRecipe)
+
         this.fetchRecipe(this.$route.params.recipe_id),
         this.fetchRecipeUser()
         this.fetchComments()
@@ -238,8 +255,8 @@ export default {
             this.recognition.onresult = (event) => {
                 var text = event.results[event.resultIndex][0].transcript;
                 console.log(text);
-                let next = ['다음', '담', '탐', '정', '형', '황', '방', '항', '앞으로', '넥스트'];
-                let prev = ['전', '뒤로', '위로', '귀로', '디로'];
+                let next = ['다음', '담', '당', '탐', '정', '형', '황', '방', '항', '앞으로', '아크로', '넥스트'];
+                let prev = ['이전', '이정', '뒤로', '위로', '귀로', '디로', '기록'];
                 let timer = ['타이머', '타임', '차이머'];
                 let timerclose = ['종료', '닫기' , '중지','그만'];
 

@@ -234,11 +234,11 @@ export default {
       }
       
       for (let i = 0; i < ingredients.length; i++) {
-        if (ingredients[i].name == null && ingredients[i].quantity == null) continue;
+        if (ingredients[i].name == null) continue;
         for (let [key, value] of Object.entries(ingredients[i])) {
           if(key == "valid") continue;
-          if (!value) continue;
-          // console.log(`ingredients[${i}].${key}: ${value}`)
+          if(key != "is_essential" && !value) continue;
+          console.log(`ingredients[${i}].${key}: ${value}`)
           recipeData.append(`ingredients[${i}].${key}`, value)
         }
       }

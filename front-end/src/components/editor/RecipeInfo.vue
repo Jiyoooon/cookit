@@ -86,7 +86,7 @@ export default {
       return {
         imageUrl: null,
         categoryOpt: [
-					{ value: 0, text: '-- 선택 --', disabled: true },
+					{ value: 0, text: '-- 선택 --'},
 					{ value: 1, text: '밥' },
 					{ value: 2, text: '면' },
 					{ value: 3, text: '탕/찌개' },
@@ -97,14 +97,14 @@ export default {
 					{ value: 8, text: '기타' }
 				],
 				servingOpt: [
-					{ value: 0, text: '-- 인원 --', disabled: true },
+					{ value: 0, text: '-- 인원 --'},
 					{ value: 1, text: '혼자' },
 					{ value: 2, text: '둘이서' },
 					{ value: 3, text: '3~4인' },
 					{ value: 4, text: '5인 이상' }
 				],
         timeOpt: [
-					{ value: 0, text: '-- 시간 --', disabled: true },
+					{ value: 0, text: '-- 시간 --' },
 					{ value: 1, text: '15분 이하' },
 					{ value: 2, text: '15~30분' }, 
 					{ value: 3, text: '30분~1시간' },
@@ -112,7 +112,7 @@ export default {
 					{ value: 5, text: '2시간 이상' },
 				],
         levelOpt: [
-					{ value: 0, text: '-- 난이도 --', disabled: true },
+					{ value: 0, text: '-- 난이도 --' },
 					{ value: 1, text: '★☆☆☆☆' },
 					{ value: 2, text: '★★☆☆☆' }, 
 					{ value: 3, text: '★★★☆☆' },
