@@ -231,14 +231,7 @@ export default {
             this.overlay = s
         },
     },
-    mounted() {
-      console.log("detail-mounted")
-      console.log(this.selectedRecipe)
-    },
     created() {
-      console.log("detail-created")
-      console.log(this.selectedRecipe)
-
         this.fetchRecipe(this.$route.params.recipe_id),
         this.fetchRecipeUser()
         this.fetchComments()
