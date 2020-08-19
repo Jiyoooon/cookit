@@ -42,7 +42,7 @@
           <span class="label">팔로워</span>
           <v-dialog v-model="follower" scrollable max-width="300px">
             <template v-slot:activator="{ on, attrs }">
-              <span class="value" @click="getfollowers(selecteduserinfo.user_id)" v-bind="attrs" v-on="on">{{ userfollowers }}</span>
+              <span class="value" v-bind="attrs" v-on="on">{{ userfollowers }}</span>
             </template>
             <v-card>
               <v-card-title>팔로워</v-card-title>
@@ -58,7 +58,7 @@
           <span class="label">팔로잉</span>
           <v-dialog v-model="following" scrollable max-width="300px">
             <template v-slot:activator="{ on, attrs }">
-              <span class="value" @click="getfollowings(selecteduserinfo.user_id)" v-bind="attrs" v-on="on">{{ userfollowings }}</span>
+              <span class="value" v-bind="attrs" v-on="on">{{ userfollowings }}</span>
             </template>
             <v-card>
               <v-card-title>팔로잉</v-card-title>
@@ -118,6 +118,10 @@ export default {
     },
     methods: {
       setfstate(){
+        // console.log("myfollowings")
+        // console.log(this.myfollowings)
+        // console.log("myfollowers")
+        // console.log(this.myfollowers)
         if(this.myfollowings.findIndex(x => x.user_id === this.selecteduserinfo.user_id)<0)
           this.fstate = false
         else
@@ -143,7 +147,7 @@ export default {
       },
       ...mapActions('accounts',['GoRecipeCreate','hituser']),
       ...mapGetters('accounts', ['isLoggedIn']),
-      ...mapActions('storage',['follow','unfollow','getfollowings','getfollowers']),
+      ...mapActions('storage',['follow','unfollow','getfollowings','getfollowers'])
     },
     watch: {
       myfollowings:{
@@ -163,6 +167,9 @@ export default {
       }
     },
     updated(){
+      console.log("profilecard updated")
+      // console.log(this.followers)
+      // console.log(this.followings)
       this.setfstate()
       for (let item of this.selecteduserinfo.sns_list) {
         if (item.sns_name == 'youtube') this.sns_url_list[0] = item.sns_url;
@@ -172,6 +179,7 @@ export default {
       }
     },
     created() {
+      console.log("profilecard created")
       if(this.authUser == null || this.selecteduserinfo.user_id !== this.authUser.user_id)
         this.hituser(this.selecteduserinfo.user_id)
       

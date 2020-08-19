@@ -35,7 +35,8 @@ export default {
     },
     computed: {
          ...mapState('myblog', ['myrecipes','selectedRecipe', 'selecteduserinfo']),
-        ...mapState('accounts', ['authUser'])
+        ...mapState('accounts', ['authUser']),
+        ...mapState('storage',['followings','followers','getfollowings','getfollowers']),
     },
     methods: {
         ...mapActions('myblog', ['fetchMyRecipes', 'getUserInfo']),
@@ -43,15 +44,15 @@ export default {
     },
     created() {
         // console.log(this.selecteduserinfo)
+        console.log("userbloglist created~!!!!!!!")
         this.SET_USERINFO({//들어가는 블로그의 유저정보
             user_id: this.$route.params.user_id,
         },)
         this.getUserInfo(this.$route.params.user_id)
         this.fetchMyRecipes(this.selecteduserinfo) 
         
-        // console.log("userbloglistview created")
-        // console.log(this.myrecipes)
-        // console.log('?????????')
+        // this.getfollowings(this.selecteduserinfo.user_id)
+        // this.getfollowers(this.selecteduserinfo.user_id)
     },
 }
 </script>

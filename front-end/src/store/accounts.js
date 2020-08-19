@@ -342,7 +342,7 @@ export default {
       axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
           commit('SET_USER', res.data.data)
-          dispatch('storage/getfollowings',state.authUser.user_id,{root : true})
+          dispatch('storage/getmyfollowings',state.authUser.user_id,{root : true})
         })
         .catch((err) => {
           alert(err.response)
