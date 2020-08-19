@@ -238,7 +238,7 @@ export default {
               this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
           }
         },
-        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments','startTimer']),
+        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments','startTimer', 'hitupRecipe']),
         ...mapActions('editor', ['deleteRecipe']),
         ...mapMutations('recipes',['SET_TIMER_INIT']),
         startSpeaking() {
@@ -272,7 +272,8 @@ export default {
     created() {
         this.fetchRecipe(this.$route.params.recipe_id),
         this.fetchRecipeUser()
-        this.fetchComments()
+        this.fetchComments(this.$route.params.recipe_id)
+        this.hitupRecipe(this.$route.params.recipe_id)
         
         if (!('webkitSpeechRecognition' in window)) {
             document.getElementById("speechButton").style.display = "none";
@@ -286,8 +287,8 @@ export default {
             this.recognition.onresult = (event) => {
                 var text = event.results[event.resultIndex][0].transcript;
                 console.log(text);
-                let next = ['다음', '담', '탐', '정', '형', '황', '방', '항', '앞으로'];
-                let prev = ['전', '뒤로', '위로', '귀로', '디로'];
+                let next = ['다음', '담', '당', '탐', '정', '형', '황', '방', '항', '앞으로', '아크로'];
+                let prev = ['이전', '이정', '뒤로', '위로', '귀로', '디로', '기록'];
                 let timer = ['타이머', '타임', '차이머'];
                 let timerclose = ['종료', '닫기' , '중지','그만'];
 
