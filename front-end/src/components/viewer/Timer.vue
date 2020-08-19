@@ -203,7 +203,6 @@ export default {
             deep:true,
             handler(){
                 if(this.time.min == 0 && this.time.sec < 6 && this.cssFlag){
-                    console.log("css적용") 
                     this.cssFlag = false
                     this.blinkTimer(2)
                 }
