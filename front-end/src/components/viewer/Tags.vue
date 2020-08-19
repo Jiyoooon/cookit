@@ -15,9 +15,6 @@ export default {
   props: {
     selectedRecipe: Object,
   },
-  created() {
-    console.log(this.selectedRecipe.tag)
-  }
 }
 </script>
 
