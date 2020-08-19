@@ -79,6 +79,7 @@ export default {
     name:'Timer',
     data(){
         return {
+            cssFlag:true, // 타이머 종료시 단 한번만 css적용시키기 위함
             state:true,
             self : this,
             reloadBtn : $(".reload"),
@@ -201,13 +202,13 @@ export default {
         time:{
             deep:true,
             handler(){
-                if(this.time.min == 0){
-                    if(this.time.sec == 6 ){
-                        this.blinkTimer(2)
-                    }
-                    else if(this.time.sec == 0){
-                        this.blinkTimer(1)
-                    }
+                if(this.time.min == 0 && this.time.sec < 6 && this.cssFlag){
+                    console.log("css적용") 
+                    this.cssFlag = false
+                    this.blinkTimer(2)
+                }
+                else if(this.time.sec == 0){
+                    this.blinkTimer(1)
                 }
             }
         },
