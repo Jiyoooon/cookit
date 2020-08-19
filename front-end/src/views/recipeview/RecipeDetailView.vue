@@ -200,7 +200,7 @@ export default {
               this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
           }
         },
-        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments','startTimer']),
+        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments','startTimer', 'hitupRecipe']),
         ...mapActions('editor', ['deleteRecipe']),
         ...mapMutations('recipes',['SET_TIMER_INIT']),
         startSpeaking() {
@@ -236,12 +236,10 @@ export default {
       console.log(this.selectedRecipe)
     },
     created() {
-      console.log("detail-created")
-      console.log(this.selectedRecipe)
-
-        this.fetchRecipe(this.$route.params.recipe_id),
+        this.fetchRecipe(this.$route.params.recipe_id)
         this.fetchRecipeUser()
-        this.fetchComments()
+        this.fetchComments(this.$route.params.recipe_id)
+        this.hitupRecipe(this.$route.params.recipe_id)
         
         if (!('webkitSpeechRecognition' in window)) {
             document.getElementById("speechButton").style.display = "none";
