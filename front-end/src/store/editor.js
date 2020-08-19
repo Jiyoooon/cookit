@@ -393,7 +393,7 @@ export default {
             const headerConfig = getters.getHeader;
             axios.delete(SERVER.ROUTES.editor.deleteRecipe + String(recipe_id), headerConfig)
             .then(() => {
-              router.go(-1);
+              router.push({name: 'MyBlogListView'}).catch(() => {});
             })
             .catch(err => {
               console.err(err.response)

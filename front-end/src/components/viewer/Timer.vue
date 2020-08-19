@@ -79,7 +79,7 @@ export default {
     name:'Timer',
     data(){
         return {
-            
+            state:true,
             self : this,
             reloadBtn : $(".reload"),
             timerEl : $(".timer"),
@@ -113,7 +113,7 @@ export default {
             date.setHours(0);
             date.setMinutes(this.time.min);
             date.setSeconds(this.time.sec);
-
+            
             var newDate = new Date(date.valueOf() - 1000);
             var temp = newDate.toTimeString().split(" ");
             var tempsplit = temp[0].split(':');
@@ -124,7 +124,6 @@ export default {
             timestr = this.time.min + this.time.sec;
             this.timeNumbers = timestr.split('');
             this.updateTimerDisplay(this.timeNumbers);
-
             if(timestr === '0000')
                 this.countdownFinished();
 
@@ -132,7 +131,6 @@ export default {
                 setTimeout(this.updateTimer, 1000);
         },
         updateTimerDisplay(arr) {
-            //console.log("째깍")
             this.animateNum(this.minutesGroup.firstNum, arr[0]);
             this.animateNum(this.minutesGroup.secondNum, arr[1]);
             this.animateNum(this.secondsGroup.firstNum, arr[2]);
@@ -150,13 +148,14 @@ export default {
             //console.log("종료")
             // 카운트다운이 종료되면 실행되는 함수
             // css변화를 여기에 주면됨
-            setTimeout(() => {
-                TweenMax.set(this.reloadBtn, { scale: 0.8, display: 'block' });
-                TweenMax.to(this.timerEl, 1, { opacity: 0.2 });
-                TweenMax.to(this.reloadBtn, 0.5, { scale: 1, opacity: 1 }); 
-                var audio = new Audio(require('@/assets/alarmsound.mp3')).play();
-            }, 1000)
-
+            if(this.state == true){
+                setTimeout(() => {
+                    TweenMax.set(this.reloadBtn, { scale: 0.8, display: 'block' });
+                    TweenMax.to(this.timerEl, 1, { opacity: 0.2 });
+                    TweenMax.to(this.reloadBtn, 0.5, { scale: 1, opacity: 1 }); 
+                    var audio = new Audio(require('@/assets/alarmsound.mp3')).play();
+                }, 1000)
+            }
         },
         initTimer(){
             this.reloadBtn = $(".reload")
@@ -174,9 +173,53 @@ export default {
             this.time.sec =this.t.split(':')[1]
             setTimeout(this.updateTimer, 1000)
         },
+        blinkTimer(state) {
+            var item = $('.timer--clock .clock-display-grp .number-grp .number-grp-wrp .num p')
+            var item2 = $('.timer--clock .clock-separator')
+
+            if(state == 2){// n초 이하일때
+                var inter = setInterval(() => {
+                    item.css('color', 'white')
+                    item2.css('color', 'white')
+                    setTimeout(() => {
+                        item.css('color', 'red')
+                        item2.css('color', 'red')
+                    }, 500)
+                    if(this.time.sec == 2){
+                        clearInterval(inter)
+                    }
+                }, 1000)
+            }
+            else if(state == 1){// 타이머 종료시
+                item.css('color','white')
+                item2.css('color','white')
+                
+            }
+        },
+    },
+    watch: {
+        time:{
+            deep:true,
+            handler(){
+                if(this.time.min == 0){
+                    if(this.time.sec == 6 ){
+                        this.blinkTimer(2)
+                    }
+                    else if(this.time.sec == 0){
+                        this.blinkTimer(1)
+                    }
+                }
+            }
+        },
     },
     mounted() { 
         this.initTimer(this.t); 
+    },
+    beforeDestroy() {
+        this.state = false
+        this.time.min="00"
+        this.time.sec="01"
+        this.countdownFinished()
     },
 }
 </script>
@@ -229,12 +272,14 @@ export default {
         font-size: 205px;
         line-height: 160px;
         font-weight: bold;
+        color: white;
     }
     .timer--clock .clock-separator {
         width: auto;
         float: left;
         display: block;
         height: 156px;
+        color: white;
     }
     .timer--clock .clock-separator p {
         width: auto;

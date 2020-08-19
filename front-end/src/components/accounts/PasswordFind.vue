@@ -20,7 +20,13 @@
           <div v-if="!userEmailValid" class="block-btn btn-style3">새 비밀번호 전송</div>
           <div v-else class="block-btn btn-style1" @click='sendNewPassword(userEmail)'>새 비밀번호 전송</div>
         </b-col>
-      </b-row> 
+      </b-row>
+      <b-row><b-col></b-col></b-row>
+      <b-row align-v="center" align-h="center">
+        <b-col cols="4"></b-col>
+        <b-col cols="4"><div class="block-btn btn-style2"  @click="$router.go(-1)" block>취소</div></b-col>
+        <b-col cols="4"></b-col>
+      </b-row>
   </b-container>
   </div>
 </template>

@@ -139,7 +139,15 @@ export default {
     initPage(state){
       state.recipequery.p=0
     },
-
+    SET_SEARCHING(state, payload) {
+      state.searching = payload;
+    },
+    SET_SELECTING(state, payload) {
+      state.selecting = payload;
+    },
+    CLEAR_SELECTING(state, payload) {
+      state.clearSelecting = payload;
+    }
   },
 
   actions: {
@@ -214,7 +222,7 @@ export default {
       })
     },
     GoLookAroundRecipesView() {
-      router.push({ name: 'LookAroundRecipeView',})
+      router.push({ name: 'LookAroundRecipeView'}).catch(() => {});
     },
   },
 }

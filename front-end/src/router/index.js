@@ -16,6 +16,7 @@ import MyBlogListView from '../views/myblog/MyBlogListView.vue'
 import UserBlogListView from '../views/myblog/UserBlogListView.vue'
 import RecipeDetailView from '../views/recipeview/RecipeDetailView.vue'
 import store from '../store'
+import $ from 'jquery'
 
 
 
@@ -235,7 +236,7 @@ router.beforeEach((to, from, next) => {
   if (!(from.name == 'SelectedRecipe') && (to.name == 'LookAroundRecipeView')) {
     store.commit('lookaround/initializing')
     next()
-    console.log(store.state)
+    // console.log(store.state)
   // } else if ((from.name == 'SelectedRecipe') && (to.name == 'LookAroundRecipeView') && (store.state.accounts.authUser.user_id == store.state.recipes.recipeUser.user_id)) {
   //   store.commit('lookaround/initializing')
   //   next()
@@ -246,7 +247,7 @@ router.beforeEach((to, from, next) => {
   if (!IsLoggedIn && LoggedInRequired) {
     next({ name: 'Login' })
   } else if (IsLoggedIn && LoggedOutRequired) {
-    next({ name: 'LookAroundRecipeView' })
+    next({name: 'Home'})
   } else if (!IsAuthorized && AuthorizedRequired) {
     next({ name: 'EmailAuthView' })
   } else if (!IsPasswordAuth && AuthPasswordRequired) {
@@ -304,6 +305,32 @@ router.beforeEach((to, from, next) => {
       next()
     } 
 
+
+    // 상단바 클래스 지정
+    if (to.name == 'MyBlogListView') {
+      $("#myblog").addClass("active");
+      $("#browsing").removeClass("active");
+    }
+    else next();
+
+    if (to.name == 'LookAroundRecipeView') {
+      $("#myblog").removeClass("active");
+      $("#browsing").addClass("active");
+    }
+    else next();
+
+    if (to.name == 'logout') {
+      $("#myblog").removeClass("active");
+      $("#browsing").addClass("active");
+    }
+    else next();
+
+    const setDefaultClass = ['Home', 'Signup', 'Login', 'PasswordAuthView', 'EmailAuthView' ]
+    if (setDefaultClass.includes(to.name)) {
+      $("#myblog").removeClass("active");
+      $("#browsing").removeClass("active");
+    }
+    else next();
 })
 
 export default router
