@@ -99,6 +99,12 @@ public class RecipeServiceImpl implements RecipeService {
 	@Override
 	public int addRecipe(RecipeDetail recipeDetail, String baseUrl) {
 		String imageName;
+		
+		System.out.println("ingredients");
+		List<Ingredient> in = recipeDetail.getIngredients();
+		for(Ingredient ii : in) System.out.println(ii);
+		
+				
 		if (recipeDetail.getRecipe_user() != null && recipeDetail.getRecipe_user() > 0)
 			imageName = recipeDetail.getRecipe_user() + Long.toString(System.currentTimeMillis());
 		else
@@ -150,6 +156,7 @@ public class RecipeServiceImpl implements RecipeService {
 		
 		if (recipeDetail.getIngredients() != null) {
 			for (Ingredient i : recipeDetail.getIngredients()) {
+				if(i.getName() == null || i.getName().equals("")) continue;
 				recipeDao.checkIngredients(i);
 				recipeDao.addIngredients(recipe_id, i);
 			}
