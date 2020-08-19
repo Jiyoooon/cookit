@@ -79,6 +79,7 @@ export default {
     name:'Timer',
     data(){
         return {
+            cssFlag:true, // 타이머 종료시 단 한번만 css적용시키기 위함
             state:true,
             self : this,
             reloadBtn : $(".reload"),
@@ -172,6 +173,43 @@ export default {
             this.time.min =this.t.split(':')[0]
             this.time.sec =this.t.split(':')[1]
             setTimeout(this.updateTimer, 1000)
+        },
+        blinkTimer(state) {
+            var item = $('.timer--clock .clock-display-grp .number-grp .number-grp-wrp .num p')
+            var item2 = $('.timer--clock .clock-separator')
+
+            if(state == 2){// n초 이하일때
+                var inter = setInterval(() => {
+                    item.css('color', 'white')
+                    item2.css('color', 'white')
+                    setTimeout(() => {
+                        item.css('color', 'red')
+                        item2.css('color', 'red')
+                    }, 500)
+                    if(this.time.sec == 2){
+                        clearInterval(inter)
+                    }
+                }, 1000)
+            }
+            else if(state == 1){// 타이머 종료시
+                item.css('color','white')
+                item2.css('color','white')
+                
+            }
+        },
+    },
+    watch: {
+        time:{
+            deep:true,
+            handler(){
+                if(this.time.min == 0 && this.time.sec < 6 && this.cssFlag){
+                    this.cssFlag = false
+                    this.blinkTimer(2)
+                }
+                else if(this.time.sec == 0){
+                    this.blinkTimer(1)
+                }
+            }
         },
     },
     mounted() { 

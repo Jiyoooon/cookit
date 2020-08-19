@@ -15,19 +15,19 @@
       </div>
 
       <!-- 버튼 -->
-      <div  class="block-btn btn-style2 blog-btn" 
-            v-if="(this.authUser != null) && (this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate"
+      <div class="block-btn btn-style2 blog-btn" 
+            v-if="isLoggedIn && (this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate"
             @click="clickfollow">
         팔로우
       </div>
      
       <div  class="block-btn btn-style2 blog-btn" 
-            v-if="(this.authUser != null) && (this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate"
+            v-if="isLoggedIn && (this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate"
             @click="clickunfollow">
         팔로우 취소
       </div>
       <div  class="block-btn btn-style2 blog-btn" 
-            v-if="(this.authUser != null) && this.authUser.user_id === this.selecteduserinfo.user_id"
+            v-if="isLoggedIn && this.authUser.user_id === this.selecteduserinfo.user_id"
             @click="GoRecipeCreate">
         글쓰기
       </div>
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { mapState,mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import followerList from '@/components/myblog/FollowerList.vue'
 import followingList from '@/components/myblog/FollowingList.vue'
 
@@ -131,7 +131,6 @@ export default {
       },
       clickfollow(){
         this.follow(this.selecteduserinfo.user_id)
-        console.log(this.myfollowings)
       },
       clickunfollow(){
         this.unfollow(this.selecteduserinfo.user_id)
@@ -140,11 +139,10 @@ export default {
         this.$router.go(0)
       },
       getfollowersagain(){
-        console.log("팔로워 다시가져오기");
         this.getfollowers(this.selecteduserinfo.user_id);
-        console.log(this.followers);
       },
       ...mapActions('accounts',['GoRecipeCreate','hituser']),
+      ...mapGetters('accounts', ['isLoggedIn']),
       ...mapActions('storage',['follow','unfollow','getfollowings','getfollowers']),
     },
     watch: {
@@ -165,9 +163,7 @@ export default {
       }
     },
     updated(){
-      console.log("profileCard updated!!")
       this.setfstate()
-      console.log(this.selecteduserinfo)
       for (let item of this.selecteduserinfo.sns_list) {
         if (item.sns_name == 'youtube') this.sns_url_list[0] = item.sns_url;
         else if (item.sns_name == 'instagram') this.sns_url_list[1] = item.sns_url;
@@ -181,12 +177,10 @@ export default {
       
       this.getfollowings(this.selecteduserinfo.user_id)
       this.getfollowers(this.selecteduserinfo.user_id)
-      console.log("팔로잉팔로워들!")
-      console.log(this.followers);
-      console.log(this.followings)
-      console.log(this.selecteduserinfo)
+      
       // SNS url 만들기
       // 0: 유튜브 1: 인스타그램 2: 트위터 3: 페이스북
+      if(!this.selecteduserinfo.sns_list) return;
       for (let item of this.selecteduserinfo.sns_list) {
         if (item.sns_name == 'youtube') this.sns_url_list[0] = item.sns_url;
         else if (item.sns_name == 'instagram') this.sns_url_list[1] = item.sns_url;

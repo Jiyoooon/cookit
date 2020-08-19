@@ -60,15 +60,15 @@
     <b-row>
       <b-col cols="1"></b-col>
       <b-col cols="10" class="info-title">
-        <div>
+        <div v-if="selectedRecipe.servings">
           <div id="serving">인원</div>
           <div id="serving-item">{{ this.serving[selectedRecipe.servings] }}</div>
         </div>
-        <div>
+        <div v-if="selectedRecipe.cooking_time">
           <div id="time">소요시간</div>
           <div id="time-item">{{ this.cooking_time[selectedRecipe.cooking_time] }}</div>
         </div>
-        <div>
+        <div v-if="selectedRecipe.level">
           <div id="level">난이도</div>
           <div id="level-item">{{ this.level[selectedRecipe.level] }}</div>
         </div>

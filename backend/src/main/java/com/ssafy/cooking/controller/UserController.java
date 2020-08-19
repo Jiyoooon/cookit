@@ -234,7 +234,6 @@ public class UserController {
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	HttpStatus status = null;
     	
-//    	System.out.println("login");
 //    	response.setHeader("Access-Control-Allow-Origin", "*");
 //      response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
 //      response.setHeader("Access-Control-Max-Age", "3600");
@@ -249,7 +248,6 @@ public class UserController {
 	    		map.put("cause", "db에서 데이터 찾을 수 없음");
 			} else {//로그인 성공
 				String token = jwtService.create(Integer.toString(user.getUser_id()));
-//				System.out.println("생성한 토큰 : "+token);
 				map.put("result", "success");
 				map.put("token", token);
 				response.addHeader("token", token);
@@ -575,12 +573,9 @@ public class UserController {
     	
     	String from_user = (String) claims.get("uid");
     	
-//    	System.out.println(from_user+"=>"+to_user+" 팔로우");
-    	
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	try {
 	    	if(userService.follow(from_user, to_user) > 0) {
-//	    		System.out.println("팔로우성공");
 	    		map.put("result", "success");
 	    	}else map.put("result", "fail");
     	}catch(Exception e) {
@@ -599,7 +594,6 @@ public class UserController {
     	
     	String from_user = (String) claims.get("uid");
     	
-//    	System.out.println(from_user+"=>"+to_user+"언팔로우");
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	
     	if(userService.unfollow(from_user, to_user) > 0) {

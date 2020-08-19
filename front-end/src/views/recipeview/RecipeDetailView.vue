@@ -5,17 +5,16 @@
       <share :selectedRecipe="selectedRecipe" class="view-container" data-html2canvas-ignore="true" />
       <ingredient class="view-container"/>
       <cooking-step class="view-container"/>
-
-        <!-- 버튼 -->
-        
-      <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" @click="setDialogState(true)"/>
-      <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
+      <tags v-if="selectedRecipe.tag[0]" :selectedRecipe="selectedRecipe" class="view-container"/>
 
       <!-- 댓글 -->
       <comment-create v-if="isLoggedIn" data-html2canvas-ignore="true" class="view-container"/>
       <comment-list data-html2canvas-ignore="true" class="view-container"/>
 
-    
+      <!-- 플로팅 버튼 -->
+      <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" @click="setDialogState(true)"/>
+      <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
+
       <!-- 가장 상위에 타이머 오버레이를 둠 -->
       <timeroverlay style="z-index:1050" />
     
@@ -33,6 +32,8 @@
         >
           <v-card-title>
             <span class="subtitle">Step. {{ page + 1 }}</span>
+            <v-spacer></v-spacer>
+            <i class="mdi mdi-close" @click="dialogClose" style="cursor: pointer; color: #888; padding: 0px 5px;"></i>
           </v-card-title>
 
         <v-carousel
@@ -46,7 +47,6 @@
           ref="recipe-carousel"
         >
           <v-carousel-item
-            :id="'slide-'+cookingstep.steps"
             v-for="cookingstep in selectedRecipe.cookingStep"
             :key="cookingstep.cooking_steps_id"
             class="no-drag"
@@ -98,16 +98,8 @@
 
           <v-list style="margin: 5px 20px;">
             <timeDescription class="read-mode"
-              :description='propdescription' :time='proptime' :number="'sub-des-' + selectedRecipe.cookingStep[page].steps"/>
+              :description='propdescription' :time='proptime' :number="'sub-des-' + page"/>
           </v-list>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="primary"
-              text
-              @click="dialogClose"
-            > 닫기 </v-btn>
-          </v-card-actions>
         </v-card>
       </v-dialog>
     </div>
@@ -120,6 +112,7 @@ import recipe from '@/components/viewer/Recipe.vue'
 import share from '@/components/viewer/Share.vue'
 import ingredient from '@/components/viewer/Ingredient.vue'
 import cookingStep from '@/components/viewer/CookingStep.vue'
+import tags from '@/components/viewer/Tags.vue'
 import commentList from '@/components/viewer/CommentList.vue'
 import commentCreate from '@/components/viewer/CommentCreate.vue'
 import timeroverlay from '@/components/viewer/TimerOverlay.vue'
@@ -144,6 +137,7 @@ export default {
         ingredient,
         cookingStep,
         share,
+        tags,
         commentList,
         commentCreate,
         timeroverlay,
@@ -247,7 +241,7 @@ export default {
                 let next = ['다음', '담', '탐', '정', '형', '황', '방', '항', '앞으로', '넥스트'];
                 let prev = ['전', '뒤로', '위로', '귀로', '디로'];
                 let timer = ['타이머', '타임', '차이머'];
-                let timerclose = ['종료', '닫기'];
+                let timerclose = ['종료', '닫기' , '중지','그만'];
 
                 var self = this;
 
@@ -292,11 +286,11 @@ export default {
                 })
                 timerclose.forEach(function (item) {
                     if(text.indexOf(item) != -1){
-                        if(self.overlay == true){
-                            self.SET_TIMER_INIT()
+                        if(self.overlay == false){
+                            self.dialogClose()
                         }
                         else{
-                            console.log("타이머 동작중이아님")
+                            self.SET_TIMER_INIT()
                         }
                     }
                 })
@@ -317,6 +311,7 @@ export default {
     watch: {
       page:{
         handler(){
+          if(!this.selectedRecipe.cookingStep[this.page]) return;
           this.proptime = this.selectedRecipe.cookingStep[this.page].time
           this.propdescription = this.selectedRecipe.cookingStep[this.page].description
         }
@@ -436,7 +431,8 @@ export default {
 
 /* 모달에있는 글에 적용할 css */
 .read-mode {
-  font-size: 1.2em;
+  font-size: 1.1em;
+  margin: 0.5em 0.2em 0.8em 0.2em;
 }
 
 </style>

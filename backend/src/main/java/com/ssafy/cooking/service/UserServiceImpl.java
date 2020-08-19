@@ -71,11 +71,6 @@ public class UserServiceImpl implements UserService{
 		List<SNS> existSNS = userDao.getAllSNS();
 		List<SNS> linkedSNS = userDao.getAllLinkedSNS(uid);
 		
-		System.out.println("existSNS");
-		for(SNS sns : existSNS) System.out.println(sns);
-		System.out.println("linkedSNS");
-		for(SNS sns : linkedSNS) System.out.println(sns);
-		
 		int len = linkedSNS.size();
 		for(int i = 0, idx = 0; i < existSNS.size() && idx < len; i++) {
 			String curr = existSNS.get(i).getSns_name();
@@ -86,8 +81,6 @@ public class UserServiceImpl implements UserService{
 			}
 		}
 		
-		System.out.println("after");
-		for(SNS sns : existSNS) System.out.println(sns);
 		user.setSns_list(existSNS);
 		return user;
 	}

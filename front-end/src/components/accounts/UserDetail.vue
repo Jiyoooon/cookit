@@ -335,6 +335,13 @@ export default {
         }
       }
     },
+    mounted() {
+      for (let i=0; i<4; i++) {
+        if(this.updateData.sns_list[i].sns_url ==null){
+          this.updateData.sns_list[i].sns_url=''
+        }
+      }
+    },
 }
 </script>
 

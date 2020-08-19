@@ -15,8 +15,8 @@ import com.ssafy.cooking.dto.RecipeDetail;
 public interface RecipeDao {
 	
 	int addRecipe(Recipe recipe);
-	void checkIngredients(int recipe_id, List<Ingredient> ingredients);
-	int addIngredients(int recipe_id, List<Ingredient> ingredients);
+	void checkIngredients(Ingredient ingredient);
+	int addIngredients(int recipe_id, Ingredient ingredient);
 	int addCookingsteps(int recipe_id, List<CookingStep> cookingSteps);
 	List<Recipe> getRecipes(int start, int end, Integer id, String user, String[] query, Integer category, Integer order, Integer likeUser, String filter);
 

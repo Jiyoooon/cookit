@@ -10,8 +10,8 @@ export default {
   state: {
     myrecipes: [],
     likerecipes: null,
-    currentshow: 1,
     selectedrecipe: null,
+    currentshow: 1,
     selecteduserinfo:{//들어가는 블로그의 유저정보
       email: null,
       hits: null,
@@ -51,8 +51,9 @@ export default {
   },
 
   actions: {
-    GoMyBlog() {
-      router.push({ name: 'MyBlogListView' })
+    GoMyBlog({dispatch}) {
+      dispatch('accounts/clearSearchHistory', null, {root: true});
+      router.push({ name: 'MyBlogListView' }).catch(() => {});
     },
     fetchMyRecipes({ rootState, commit }, user) {
       commit('lookaround/initializing',null,{root:true})
