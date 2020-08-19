@@ -179,6 +179,8 @@ export default {
       
       // SNS url 만들기
       // 0: 유튜브 1: 인스타그램 2: 트위터 3: 페이스북
+      if(!this.selecteduserinfo.sns_list) return;
+      console.log(this.selecteduserinfo.sns_list)
       for (let item of this.selecteduserinfo.sns_list) {
         if (item.sns_name == 'youtube') this.sns_url_list[0] = item.sns_url;
         else if (item.sns_name == 'instagram') this.sns_url_list[1] = item.sns_url;
