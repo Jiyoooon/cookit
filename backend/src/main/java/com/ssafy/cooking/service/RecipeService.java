@@ -37,4 +37,6 @@ public interface RecipeService {
 	public int reviseRecipe(Integer uid, RecipeDetail recipeData, String baseUrl);
 
 	public int setLike(int recipe_id, int uid);
+
+	public void plusRecipeHit(int recipe_id);
 }

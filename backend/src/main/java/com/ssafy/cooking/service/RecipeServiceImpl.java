@@ -311,4 +311,10 @@ public class RecipeServiceImpl implements RecipeService {
 			return 0;
 		}
 	}
+
+	@Override
+	public void plusRecipeHit(int recipe_id) {
+		recipeDao.upHits(recipe_id);
+		
+	}
 }

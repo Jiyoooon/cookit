@@ -178,11 +178,19 @@ public class RecipeController {
 			RecipeDetail recipeDetail = new RecipeDetail(recipes.get(0));
 			recipeDetail.setIngredients(recipeservice.getIngredients(recipe_id));
 			recipeDetail.setCookingStep(recipeservice.getCookingSteps(recipe_id));
-			recipeservice.upHits(recipe_id);
+//			recipeservice.upHits(recipe_id);
 			return new ResponseEntity<RecipeDetail>(recipeDetail, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<RecipeDetail>(new RecipeDetail(), HttpStatus.OK);
 		}
+	}
+	
+	// 레시피 조회수++
+	@ApiOperation(value = "id로 레시피 조회수++")
+	@GetMapping("hits/{id}")
+	public void plusRecipeHits(@PathVariable("id") int recipe_id, HttpServletRequest request)
+			throws Exception {
+		recipeservice.plusRecipeHit(recipe_id);
 	}
 
 	@ApiOperation(value = "레시피 수정하기", notes = "레시피 추가한다.")
