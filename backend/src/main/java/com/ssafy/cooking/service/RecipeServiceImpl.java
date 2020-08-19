@@ -38,7 +38,7 @@ public class RecipeServiceImpl implements RecipeService {
 		
 		String[] q = null;
 		if(query != null)
-			q = query.split("#|@|&| |-|/|!|%|^|(|)|_|=|~|`");
+			q = query.split("#|@|&| |-|/|!|%|_|=|~|`");
 		
 		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, q, category, order, likeUser, filter);
 		for (Recipe r : recipes) {
@@ -149,8 +149,10 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 		
 		if (recipeDetail.getIngredients() != null) {
-			recipeDao.checkIngredients(recipe_id, recipeDetail.getIngredients());
-			recipeDao.addIngredients(recipe_id, recipeDetail.getIngredients());
+			for (Ingredient i : recipeDetail.getIngredients()) {
+				recipeDao.checkIngredients(i);
+				recipeDao.addIngredients(recipe_id, i);
+			}
 		}
 
 		return recipe_id;
@@ -211,7 +213,9 @@ public class RecipeServiceImpl implements RecipeService {
 			
 			if (recipeData.getIngredients() != null) {
 				recipeDao.deleteIngredients(recipe_id);
-				recipeDao.addIngredients(recipe_id, recipeData.getIngredients());
+				for (Ingredient i : recipeData.getIngredients()) {
+					recipeDao.addIngredients(recipe_id, i);
+				}
 			}
 		}
 		
@@ -273,7 +277,7 @@ public class RecipeServiceImpl implements RecipeService {
 		
 		String[] q = null;
 		if(query != null)
-			q = query.split("#|@|&| |-|/|!|%|^|(|)|_|=|~|`");
+			q = query.split("#|@|&| |-|/|!|%|_|=|~|`");
 		
 		List<Recipe> recipes = recipeDao.getRecipes2(start, end, id, user, q, category, order, likeUser,
 				hate_large, hate_medium, hate_small, like_large, like_medium, like_small);

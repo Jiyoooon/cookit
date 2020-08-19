@@ -18,28 +18,20 @@
 	</insert>
 	
 	<insert id = "checkIngredients">
-		<foreach collection="ingredients" item="ingre" separator=",">
-			<if test="ingre.name != null and ingre.name != ''">
 			INSERT INTO Food_ingredient_small(food_ingredient_medium_id, small)
-								SELECT 49, #{ingre.name} FROM dual
+								SELECT 49, #{name} FROM dual
 								WHERE NOT EXISTS
 								( SELECT food_ingredient_medium_id, small
 									FROM Food_ingredient_small
-									WHERE small = #{ingre.name} )
-									</if>
-		</foreach>
+									WHERE small = #{name} )
 	</insert>
 	<insert id = "addIngredients">				
-		<foreach collection="ingredients" item="ingre">
-			<if test="ingre.name != null and ingre.name != ''">
-			INSERT INTO Ingredient(
-						recipe_id, food_ingredient_small_id, is_essential, quantity
-					)
-					(
-						SELECT #{recipe_id}, food_ingredient_small_id, #{ingre.is_essential}, #{ingre.quantity} FROM Food_ingredient_small WHERE small = #{ingre.name}
-					)
-			</if>
-		</foreach>
+		INSERT INTO Ingredient(
+					recipe_id, food_ingredient_small_id, is_essential, quantity
+				)
+				(
+					SELECT #{recipe_id}, food_ingredient_small_id, #{ingredient.is_essential}, #{ingredient.quantity} FROM Food_ingredient_small WHERE small = #{ingredient.name}
+				)
 	</insert>
 	<insert id = "addCookingsteps">
 		INSERT INTO Cooking_steps(
