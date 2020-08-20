@@ -141,7 +141,7 @@ export default {
   },
   created() {
     this.facebookUrl = "https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent('http://i3a201.p.ssafy.io/recipe/'+this.selectedRecipe.recipe_id);
-    this.currUrl = "http://i3a201.p.ssafy.io/recipe/"+this.selectedRecipe.recipe_id;
+    this.currUrl = "https://i3a201.p.ssafy.io/recipe/"+this.selectedRecipe.recipe_id;
   }
 }
 </script>

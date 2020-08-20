@@ -11,7 +11,7 @@ import moduleMyBlog from '@/store/myblog.js'
 import moduleStorage from '@/store/storage.js'
 
 Vue.use(Vuex)
-axios.defaults.baseURL = 'http://i3a201.p.ssafy.io:8080/cooking-0.0.1-SNAPSHOT';
+axios.defaults.baseURL = 'https://i3a201.p.ssafy.io:8443/cooking-0.0.1-SNAPSHOT';
 
 // 0809 : index.js가 너무 길어져서 불편하니까 모듈별로 .js 파일을 분리했습니당
 // 전역으로 사용할 것들은 아래에 작성해주세요 (ex. 스크롤 제일 위로 올리기 등)

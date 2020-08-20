@@ -122,7 +122,7 @@ Vue.use(VueRouter)
         },
         {
           property: 'og:image',
-          content: 'http://i3a201.p.ssafy.io:8080/images/logo/logo.png'
+          content: 'https://i3a201.p.ssafy.io:8443/images/logo/logo.png'
         }
       ]
     }
