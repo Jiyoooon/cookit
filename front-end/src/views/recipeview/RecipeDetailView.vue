@@ -364,6 +364,12 @@ export default {
           this.proptime = this.selectedRecipe.cookingStep[this.page].time
           this.propdescription = this.selectedRecipe.cookingStep[this.page].description
         }
+      },
+      selectedRecipe:{
+        handler(){
+          this.fetchRecipeUser()
+          this.fetchComments()
+        }
       }
     },
     beforeDestroy() {
