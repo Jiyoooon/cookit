@@ -355,7 +355,7 @@ export default {
         if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
       })
       if (!updateData.valid.password) {
-        this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
+        this._vm.$root.$bvModal.msgBoxOk('비밀번호를 확인해 주세요.', {
           title: 'Confirmation',
           size: 'sm',
           buttonSize: 'sm',
@@ -567,7 +567,7 @@ export default {
                   router.push({ name: 'Home'})
                 })
             } else {
-              this._vm.$root.$bvModal.msgBoxOk('이미지 파일이 올바르지 않습니다.', {
+              this._vm.$root.$bvModal.msgBoxOk('가입 형식이 올바르지 않습니다.', {
                 title: 'Confirmation',
                 size: 'sm',
                 buttonSize: 'sm',
