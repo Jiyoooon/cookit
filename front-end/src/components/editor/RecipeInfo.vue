@@ -61,6 +61,9 @@
                 <b-form-file enctype="multipart/form-data" v-model="recipe.main_image_file" accept="image/*" placeholder="음식 대표사진"
                   @change="setThumbnail"></b-form-file>
               </b-col>
+              <b-col sm="4">
+                <div class="block-btn btn-style1" @click="deleteMain_Image_File">사진 삭제</div>
+              </b-col>
             </b-row>
             <b-row>
               <b-col>
@@ -122,7 +125,7 @@ export default {
       }
     },
     methods: {
-      ...mapMutations('editor', ['SET_UPDATETF']),
+      ...mapMutations('editor', ['SET_UPDATETF','deleteMain_Image_File']),
         setThumbnail(e) {
 					const file = e.target.files;
 					if (file.length == 0) return;

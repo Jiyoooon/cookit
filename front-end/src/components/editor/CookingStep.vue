@@ -21,15 +21,21 @@
         <b-col lg="4">
 					<b-container fluid>
             <b-row>
-              <b-col cols="11">
-                <b-form-file enctype="multipart/form-data" v-model="step.step_image_file" accept="image/*" placeholder="사진 추가"
-                  :id="index+''" @change="setThumbnail"></b-form-file>
-              </b-col>
-							<b-col cols="1">
-								<div style="display:block; text-align:right;">
-									<b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer;" @click="deleteCookingStep(index)"></b-icon>
-								</div>
-							</b-col>
+				<b-col cols="7">
+					<b-form-file enctype="multipart/form-data" v-model="step.step_image_file" accept="image/*" placeholder="사진 추가"
+						:id="index+''" @change="setThumbnail"></b-form-file>
+				</b-col>
+
+				<b-col cols="4" @click="deleteStepImage(index)">
+					<div class="block-btn btn-style1" >사진 삭제</div>
+				</b-col>
+
+				<b-col cols="1">
+					<div style="display:block; text-align:right;">
+						<b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer;" @click="deleteCookingStep(index)"></b-icon>
+					</div>
+				</b-col>
+
             </b-row>
             <b-row>
               <b-col>
@@ -69,6 +75,10 @@ export default {
 			const index = Number(e.path[0].id);
 			console.log(e.path[0])
 			this.cookingStep[index].step_image_url = URL.createObjectURL(file);
+		},
+		deleteStepImage(index){
+			this.cookingStep[index].step_image_url=null
+			this.cookingStep[index].step_image_file=null
 		},
 	},
 	watch: {
