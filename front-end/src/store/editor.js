@@ -52,7 +52,7 @@ export default {
         if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
       })
       // [*] 제목이랑 카테고리 필수 & 글자수 제한
-      console.log(store)
+      // console.log(store)
       if(!state.recipe.title) {
         store._vm.$root.$bvModal.msgBoxOk('레시피 제목을 입력하세요.', {
           title: 'Confirmation',
@@ -238,7 +238,7 @@ export default {
         for (let [key, value] of Object.entries(ingredients[i])) {
           if(key == "valid") continue;
           if(key != "is_essential" && !value) continue;
-          console.log(`ingredients[${i}].${key}: ${value}`)
+          // console.log(`ingredients[${i}].${key}: ${value}`)
           recipeData.append(`ingredients[${i}].${key}`, value)
         }
       }
@@ -248,8 +248,8 @@ export default {
           && state.cookingStep[i].step_image_file == null) continue;
         for (let [key, value] of Object.entries(state.cookingStep[i])) {
           if (!value) continue;
-          if (key == "step_image_url") continue;
-          // console.log(`cookingStep[${i}].${key}: ${value}`)
+          // if (key == "step_image_url") continue;
+          console.log(`cookingStep[${i}].${key}: ${value}`)
           recipeData.append(`cookingStep[${i}].${key}`, value)
         }
       }
@@ -272,6 +272,7 @@ export default {
     },
     SET_COOKINGSTEP(state, data) {
       state.cookingStep = data
+      console.log(state.cookingStep)
     },
     SET_MAININGR(state, data) {
       state.mainIngr = data
@@ -299,13 +300,45 @@ export default {
       ref.splice(data.index, 1);
     },
     addCookingStep(state) {
-      state.cookingStep.push({
-        steps: state.cookingStep.length + 1,
-        description: null,
-        tip: null,
-        step_image_file: null,
-        step_image_url: null
-      },)
+      const that = this
+      window.addEventListener('keypress', function(event) {
+        if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
+      })
+      const idx = state.cookingStep.length
+      // console.log(state.cookingStep[idx-1])
+      // console.log('???')
+      if (state.cookingStep.length) {
+        const content = state.cookingStep[idx-1].description
+        if (content || (!content && !idx)) {
+          state.cookingStep.push({
+            steps: state.cookingStep.length + 1,
+            description: null,
+            tip: null,
+            step_image_file: null,
+            step_image_url: null
+          },)
+        } else {
+          store._vm.$root.$bvModal.msgBoxOk('이전 스텝을 작성해주세요.', {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true,
+            id: 'modal'
+          })
+        }
+      } else {
+        state.cookingStep.push({
+          steps: state.cookingStep.length + 1,
+          description: null,
+          tip: null,
+          step_image_file: null,
+          step_image_url: null
+        })
+      }
+      console.log(state.cookingStep)
     },
     deleteCookingStep(state, id) {
       state.cookingStep.splice(id, 1);
@@ -361,6 +394,9 @@ export default {
     onSubmitButtonforUpdate({ getters, commit, dispatch }) {
       if(!getters.isValidRecipe) return;
       const recipeData = getters.getRecipeData;
+      for(let [key, value] of recipeData.entries()){
+        console.log(`${key} : ${value}`);
+     }
       const recipeId = router.history.current.params.recipe_id;
       recipeData.append('recipe_id', `${recipeId}`)
       const headerConfig = getters.getHeader;

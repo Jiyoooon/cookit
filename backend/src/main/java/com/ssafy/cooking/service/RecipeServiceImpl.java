@@ -41,6 +41,11 @@ public class RecipeServiceImpl implements RecipeService {
 		if(query != null)
 			q = query.split("#|@|&| |-|/|!|%|_|=|~|`");
 		
+		if(q == null || q.length == 0) {
+			q = null;
+		}
+
+		
 		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, q, category, order, likeUser, filter);
 		for (Recipe r : recipes) {
 			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "" 
@@ -321,6 +326,10 @@ public class RecipeServiceImpl implements RecipeService {
 		String[] q = null;
 		if(query != null)
 			q = query.split("#|@|&| |-|/|!|%|_|=|~|`");
+
+		if(q == null || q.length == 0) {
+			q = null;
+		}
 		
 		List<Recipe> recipes = recipeDao.getRecipes2(start, end, id, user, q, category, order, likeUser,
 				hate_large, hate_medium, hate_small, like_large, like_medium, like_small);
@@ -352,5 +361,22 @@ public class RecipeServiceImpl implements RecipeService {
 	public void plusRecipeHit(int recipe_id) {
 		recipeDao.upHits(recipe_id);
 		
+	}
+
+	@Override
+	public List<Recipe> getRandom(String baseUrl) {
+		List<Recipe> recipes = recipeDao.getRandom();
+		for (Recipe r : recipes) {
+			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "" 
+					|| (!new File("/var/lib/tomcat8/webapps/images/profile/"+r.getRecipe_user_profileImage()).exists())) {
+				r.setRecipe_user_profileImage(baseUrl + "/images/profile/default_image.png");
+			}
+			else {
+				r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
+			}
+			r.setLike(recipeDao.getLikeList(r.getRecipe_id()));
+			r.setTag(r.getTagString().split(","));
+		}
+		return recipes;
 	}
 }
