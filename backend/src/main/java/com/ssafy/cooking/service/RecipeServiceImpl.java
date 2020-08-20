@@ -40,6 +40,11 @@ public class RecipeServiceImpl implements RecipeService {
 		if(query != null)
 			q = query.split("#|@|&| |-|/|!|%|_|=|~|`");
 		
+		if(q == null || q.length == 0) {
+			q = null;
+		}
+
+		
 		List<Recipe> recipes = recipeDao.getRecipes(start, end, id, user, q, category, order, likeUser, filter);
 		for (Recipe r : recipes) {
 			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "" 
@@ -285,6 +290,10 @@ public class RecipeServiceImpl implements RecipeService {
 		String[] q = null;
 		if(query != null)
 			q = query.split("#|@|&| |-|/|!|%|_|=|~|`");
+
+		if(q == null || q.length == 0) {
+			q = null;
+		}
 		
 		List<Recipe> recipes = recipeDao.getRecipes2(start, end, id, user, q, category, order, likeUser,
 				hate_large, hate_medium, hate_small, like_large, like_medium, like_small);
