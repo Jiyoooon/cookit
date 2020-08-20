@@ -15,6 +15,7 @@
       </div>
 
       <!-- 버튼 -->
+      <div v-if="this.authUser">
       <div class="block-btn btn-style2 blog-btn" 
             v-if="isLoggedIn && (this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate"
             @click="clickfollow">
@@ -31,7 +32,7 @@
             @click="GoRecipeCreate">
         글쓰기
       </div>
-
+      </div>
       <!-- 조회수, 팔로워, 팔로잉 -->
       <div class="stats">
         <div class="stat">
