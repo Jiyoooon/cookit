@@ -145,11 +145,11 @@
 				ORDER BY create_date DESC
 			</when>
 			<when test="order == 2">
-				ORDER BY hits DESC
+				ORDER BY hits DESC, create_date DESC
 			</when>
 			<when test="order == 3">
-				GROUP BY  recipe_id	
-				ORDER BY count(l.recipe_id) DESC
+				GROUP BY recipe_id	
+				ORDER BY count(l.recipe_id) DESC, create_date DESC
 			</when>
 		</choose>
 		LIMIT #{start}, #{end}
@@ -345,11 +345,11 @@
 				ORDER BY create_date DESC
 			</when>
 			<when test="order == 2">
-				ORDER BY hits DESC
+				ORDER BY hits DESC, create_date DESC
 			</when>
 			<when test="order == 3">
 				GROUP BY  recipe_id	
-				ORDER BY count(l.recipe_id) DESC
+				ORDER BY count(l.recipe_id) DESC, create_date DESC
 			</when>
 		</choose>
 		Limit #{start}, #{end}

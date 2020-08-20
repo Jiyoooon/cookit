@@ -7,7 +7,7 @@
     </b-navbar-brand>
     <nav class="nav-menu">
       <div id="myblog" @click="myBlogClick">내 블로그</div>
-      <div id="browsing" @click="browsingClick">둘러보기</div>
+      <div id="browsing" @click="browsingClick">둘러보기</div> 
     </nav>
     <nav class="nav-side">
       <div v-if="!isLoggedIn">

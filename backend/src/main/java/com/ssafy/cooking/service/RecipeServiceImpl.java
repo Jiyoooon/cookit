@@ -99,17 +99,23 @@ public class RecipeServiceImpl implements RecipeService {
 	@Override
 	public int addRecipe(RecipeDetail recipeDetail, String baseUrl) {
 		String imageName;
+		
+		System.out.println("ingredients");
+		List<Ingredient> in = recipeDetail.getIngredients();
+		for(Ingredient ii : in) System.out.println(ii);
+		
+				
 		if (recipeDetail.getRecipe_user() != null && recipeDetail.getRecipe_user() > 0)
 			imageName = recipeDetail.getRecipe_user() + Long.toString(System.currentTimeMillis());
 		else
 			imageName = Long.toString(System.currentTimeMillis());
 		
-		if(recipeDetail.getCooking_time() == null || recipeDetail.getCooking_time() == 0)
-			recipeDetail.setCooking_time(1);
-		if(recipeDetail.getLevel() == null || recipeDetail.getLevel() == 0)
-			recipeDetail.setLevel(1);
-		if(recipeDetail.getServings() == null || recipeDetail.getServings() == 0)
-			recipeDetail.setServings(1);
+		if(recipeDetail.getCooking_time() == null)
+			recipeDetail.setCooking_time(0);
+		if(recipeDetail.getLevel() == null)
+			recipeDetail.setLevel(0);
+		if(recipeDetail.getServings() == null)
+			recipeDetail.setServings(0);
 
 		if (recipeDetail.getCategory_id() == null || recipeDetail.getCategory_id() == 0)
 			recipeDetail.setCategory_id(8);
@@ -150,6 +156,7 @@ public class RecipeServiceImpl implements RecipeService {
 		
 		if (recipeDetail.getIngredients() != null) {
 			for (Ingredient i : recipeDetail.getIngredients()) {
+				if(i.getName() == null || i.getName().equals("")) continue;
 				recipeDao.checkIngredients(i);
 				recipeDao.addIngredients(recipe_id, i);
 			}
@@ -303,5 +310,11 @@ public class RecipeServiceImpl implements RecipeService {
 			recipeDao.setLike(recipe_id, uid);
 			return 0;
 		}
+	}
+
+	@Override
+	public void plusRecipeHit(int recipe_id) {
+		recipeDao.upHits(recipe_id);
+		
 	}
 }

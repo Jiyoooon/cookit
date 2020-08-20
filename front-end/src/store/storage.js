@@ -38,7 +38,6 @@ export default {//로컬스토리지에 저장할 필요가 있는 정보들은 
   
     actions: {
       getfollowings({commit},user){
-        // console.log("getfollowing!!!!")
         axios.get(SERVER.ROUTES.accounts.following + String(user))
         .then(res => {
           commit('SET_FOLLOWINGS',{ user : user, array : res.data})
@@ -49,7 +48,6 @@ export default {//로컬스토리지에 저장할 필요가 있는 정보들은 
       },
 
       getfollowers({commit},user){
-        // console.log("getfollower!!!!")
         axios.get(SERVER.ROUTES.accounts.follower + String(user))
         .then(res => {
           commit('SET_FOLLOWERS',{user : user, array : res.data})

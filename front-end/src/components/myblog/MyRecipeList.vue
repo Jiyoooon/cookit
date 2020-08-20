@@ -101,7 +101,7 @@ export default {
           // this.currentPageItems();
           // this.totalRows();
         }
-      }
+      },
     },
 }
 </script>

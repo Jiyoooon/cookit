@@ -93,14 +93,14 @@ export default {
         // console.log(this.selecteduserinfo)
         // this.fetchMyRecipes()
     },
-    // watch: {
-    //     myrecipes: {
-    //         deep: true,
-    //         handler() {
+    watch: {
+        myrecipes: {
+            deep: true,
+            handler() {
                 
-    //         }
-    //     }
-    // },
+            }
+        }
+    },
 }
 </script>
 
