@@ -291,6 +291,9 @@ export default {
         valid: null
       })
     },
+    deleteMain_Image_File(state){
+      state.recipe.main_image_file = null
+    },
     deleteIngredient(state, data) {
       const ref = data.essential ? state.mainIngr : state.subIngr;
       ref.splice(data.index, 1);
