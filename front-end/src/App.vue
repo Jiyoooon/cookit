@@ -37,7 +37,7 @@
       <li>차보람</li>
       <div class="copyright">
         Copyright ©
-        <a href="http://www.ssafy.com"><strong>Samsung SW Academy For Youth</strong></a>
+        <a href="https://www.ssafy.com"><strong>Samsung SW Academy For Youth</strong></a>
         All Rights Reserved.
       </div>
     </ul>

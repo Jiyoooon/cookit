@@ -152,7 +152,7 @@ export default {
           passwordAgain: null,
         },
         sns_base: [
-          'http://www.youtube.com/', 'https://www.instagram.com/', 'https://twitter.com/', 'https://www.facebook.com'
+          'https://www.youtube.com/', 'https://www.instagram.com/', 'https://twitter.com/', 'https://www.facebook.com'
         ],
         file:null,
         options: [
