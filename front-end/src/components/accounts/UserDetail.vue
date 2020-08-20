@@ -148,13 +148,13 @@ export default {
             { sns_name: 'Instagram', sns_url: ''},
             { sns_name: 'Twitter', sns_url: ''},
             { sns_name: 'Facebook', sns_url: ''},
-          ]
+          ],
+          passwordAgain: null,
         },
         sns_base: [
           'http://www.youtube.com/', 'https://www.instagram.com/', 'https://twitter.com/', 'https://www.facebook.com'
         ],
         file:null,
-        passwordAgain: null,
         options: [
           { text: '내 블로그', value: true },
           { text: '둘러보기', value: false },
@@ -263,9 +263,10 @@ export default {
         })
       },
       checkPasswordValidValue() {
-        if (!this.updateData.config.password && !this.passwordAgain) {
+        if (!this.updateData.config.password && !this.updateData.passwordAgain) { // 적은 패스워드가 없고, 패스워드 재입력 값이 없으면
+          console.log("아무것도 적지않음")
           this.updateData.valid.password = true
-        } else if(this.passwordAgainValid) {
+        } else if(this.passwordValid && this.passwordAgainValid) {// 패스워드 재입력한 결과가 참이면
           this.updateData.valid.password = true
         } else {
           this.updateData.valid.password = false
