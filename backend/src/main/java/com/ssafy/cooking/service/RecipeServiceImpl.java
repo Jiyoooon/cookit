@@ -100,11 +100,6 @@ public class RecipeServiceImpl implements RecipeService {
 	public int addRecipe(RecipeDetail recipeDetail, String baseUrl) {
 		String imageName;
 		
-		System.out.println("ingredients");
-		List<Ingredient> in = recipeDetail.getIngredients();
-		for(Ingredient ii : in) System.out.println(ii);
-		
-				
 		if (recipeDetail.getRecipe_user() != null && recipeDetail.getRecipe_user() > 0)
 			imageName = recipeDetail.getRecipe_user() + Long.toString(System.currentTimeMillis());
 		else
@@ -139,6 +134,8 @@ public class RecipeServiceImpl implements RecipeService {
 		if (recipeDetail.getCookingStep() != null) {
 			for (int i = 0; i < recipeDetail.getCookingStep().size(); i++) {
 				CookingStep step = recipeDetail.getCookingStep().get(i);
+				
+				if(step.getDescription() == null || step.getDescription().equals("")) continue;
 				
 				if (step.getStep_image_file() != null) {
 					try {
