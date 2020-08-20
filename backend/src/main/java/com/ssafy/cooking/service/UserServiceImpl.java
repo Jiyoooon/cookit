@@ -100,8 +100,8 @@ public class UserServiceImpl implements UserService{
 			//user.getImage_name() == null => 프로필 내림
 			else if(imageName == null || imageName.trim().equals("")) {
 				removeProfile(Integer.toString(user.getUser_id()));
-				user.setProfile_image("");
-				user.setImage_name("");
+	    		user.setProfile_image("default_image.png");
+	    		user.setImage_name("default_image.png");
 			}
 			//수정 X
 			else{
