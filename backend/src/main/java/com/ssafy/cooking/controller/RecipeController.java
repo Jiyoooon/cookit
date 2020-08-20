@@ -86,6 +86,16 @@ public class RecipeController {
 				recipeservice.getRecipes2(p, id, user, query, category, order, likeUser, filter, baseUrl),
 				HttpStatus.OK);
 	}
+	
+	@GetMapping("/random")
+	public ResponseEntity<List<Recipe>> getUserRecipes2(HttpServletRequest request) throws Exception {
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+//		System.out.println("query = " + query);
+//		System.out.println("user = " + user);
+		return new ResponseEntity<List<Recipe>>(
+				recipeservice.getRandom(baseUrl),
+				HttpStatus.OK);
+	}
 
 	@ApiOperation(value = "모든 재료 목록 가져오기", notes = "재료 목록을 불러온다")
 	@GetMapping("/ingredients")
