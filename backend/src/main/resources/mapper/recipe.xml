@@ -95,6 +95,16 @@
 		WHERE 	recipe_id = #{recipe_id} AND steps > #{size}
 	</delete>
 	
+	<select id="getRandom" resultType="Recipe">
+		SELECT r.recipe_id, r.recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
+				r.category_id, r.title, r.description, r.main_image, r.servings, r.cooking_time, r.level,
+				r.tag as tagString, r.hits, r.create_date, r.update_date, r.delete_date, (select count(*) from Comments c where r.recipe_id = c.recipe_id) as comments
+		FROM Recipe r
+		JOIN User u on r.recipe_user = u.user_id
+		ORDER BY RAND()
+		LIMIT 6
+	</select>
+	
 	<select id="getRecipes" resultType="Recipe">
 		SELECT r.recipe_id, r.recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
 		r.category_id, r.title, r.description, r.main_image, r.servings, r.cooking_time, r.level,

@@ -323,4 +323,21 @@ public class RecipeServiceImpl implements RecipeService {
 		recipeDao.upHits(recipe_id);
 		
 	}
+
+	@Override
+	public List<Recipe> getRandom(String baseUrl) {
+		List<Recipe> recipes = recipeDao.getRandom();
+		for (Recipe r : recipes) {
+			if(r.getRecipe_user_profileImage() == null || r.getRecipe_user_profileImage() == "" 
+					|| (!new File("/var/lib/tomcat8/webapps/images/profile/"+r.getRecipe_user_profileImage()).exists())) {
+				r.setRecipe_user_profileImage(baseUrl + "/images/profile/default_image.png");
+			}
+			else {
+				r.setRecipe_user_profileImage(baseUrl + "/images/profile/"+r.getRecipe_user_profileImage());
+			}
+			r.setLike(recipeDao.getLikeList(r.getRecipe_id()));
+			r.setTag(r.getTagString().split(","));
+		}
+		return recipes;
+	}
 }
