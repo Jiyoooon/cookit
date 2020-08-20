@@ -46,6 +46,9 @@ export default {
             saveRecipe: '/recipe/token/save',
             updateRecipe: '/recipe/token/revise',
             deleteRecipe: '/recipe/token/'
+        },
+        home: {
+            randomRecipe: '/recipe/random'
         }
     }
 }

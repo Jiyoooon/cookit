@@ -9,6 +9,7 @@ import moduleLookAround from '@/store/lookaround.js'
 import moduleRecipes from '@/store/recipes.js'
 import moduleMyBlog from '@/store/myblog.js'
 import moduleStorage from '@/store/storage.js'
+import moduleHome from '@/store/home.js'
 
 Vue.use(Vuex)
 axios.defaults.baseURL = 'https://i3a201.p.ssafy.io:8443/cooking-0.0.1-SNAPSHOT';
@@ -32,6 +33,7 @@ export default new Vuex.Store({
     editor: moduleEditor,
     lookaround: moduleLookAround,
     storage: moduleStorage,
+    home: moduleHome,
   },
   plugins: [
     createPersistedState({
