@@ -101,7 +101,7 @@
           <v-list style="margin: 5px 20px;">
             <timeDescription class="read-mode"
               :description='propdescription' :time='proptime' :number="'sub-des-' + page"/>
-          <v-container style="position:absolute; text-align:right; bottom:5px; right:5px">
+          <v-container style="position:absolute; text-align:right; bottom:5px; right:5px; width:50px">
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-icon
