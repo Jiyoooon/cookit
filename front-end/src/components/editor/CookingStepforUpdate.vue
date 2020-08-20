@@ -110,7 +110,10 @@ export default {
         deep: true,
         handler() {
           for (let i=0; i < this.cookingStep.length; i++) {
-            if (!(this.cookingStep[i].description == this.selectedRecipe.cookingStep[i].description) ||
+            if(i >= this.selectedRecipe.cookingStep.length){
+              this.SET_UPDATETF(true)
+            }
+            else if (!(this.cookingStep[i].description == this.selectedRecipe.cookingStep[i].description) ||
             !(this.cookingStep[i].tips == this.selectedRecipe.cookingStep[i].tips) ||
             !(this.cookingStep[i].step_image_file == this.selectedRecipe.cookingStep[i].step_image_file)
             ) {
