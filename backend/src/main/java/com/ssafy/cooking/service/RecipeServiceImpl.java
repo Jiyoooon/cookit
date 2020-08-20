@@ -19,6 +19,7 @@ import com.ssafy.cooking.dto.FoodIngredient;
 import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
 import com.ssafy.cooking.dto.RecipeDetail;
+import com.ssafy.cooking.dto.User;
 import com.ssafy.cooking.util.Timer;
 
 @Service
@@ -73,6 +74,7 @@ public class RecipeServiceImpl implements RecipeService {
 				cs.setTime(Timer.getTimer(cs.getDescription()));
 			}
 		}
+		
 		return cookingSteps;
 	}
 
@@ -132,10 +134,15 @@ public class RecipeServiceImpl implements RecipeService {
 		int recipe_id = recipeDetail.getRecipe_id();
 
 		if (recipeDetail.getCookingStep() != null) {
-			for (int i = 0; i < recipeDetail.getCookingStep().size(); i++) {
+			for (int i = 0, idx = 1; i < recipeDetail.getCookingStep().size(); i++) {
 				CookingStep step = recipeDetail.getCookingStep().get(i);
+
+				if(step.getDescription() == null || step.getDescription().equals("")) {
+					recipeDetail.getCookingStep().remove(i--);
+					continue;
+				}
 				
-				if(step.getDescription() == null || step.getDescription().equals("")) continue;
+				recipeDetail.getCookingStep().get(i).setSteps(idx++);
 				
 				if (step.getStep_image_file() != null) {
 					try {
@@ -169,6 +176,20 @@ public class RecipeServiceImpl implements RecipeService {
 		fos.close();
 	}
 	
+	public void removeFile(String saveFileName) throws IOException{
+		String filePath = "/var/lib/tomcat8/webapps/images/recipe/";
+		String[] str =  saveFileName.split("/");
+		String fileName = str[str.length-1];
+//		System.out.println(filePath+fileName);
+		try {
+			File file = new File(filePath+fileName);
+			if(file.exists()) file.delete();
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public int reviseRecipe(Integer uid, RecipeDetail recipeData, String baseUrl) {
 		String imageName;
@@ -193,19 +214,37 @@ public class RecipeServiceImpl implements RecipeService {
 			int recipe_id = recipeData.getRecipe_id();
 			
 			if (recipeData.getCookingStep() != null) {
-				for (int i = 0; i < recipeData.getCookingStep().size(); i++) {
+				for (int i = 0, stepIdx = 1; i < recipeData.getCookingStep().size(); i++) {
 					CookingStep step = recipeData.getCookingStep().get(i);
-
-					if (step.getStep_image_file() != null) {
+					
+					if(step.getDescription() == null || step.getDescription().equals("")) {
+						recipeData.getCookingStep().remove(i--);
+						continue;
+					}
+					recipeData.getCookingStep().get(i).setSteps(stepIdx++);
+					/*
+					 * image_file == null && image == null 	=> 이미지 삭제 또는 없는 상태  	=> url = null로
+					 * image_file == null && image != null 	=> 이 이미지 그대로 		
+					 * image_file != null 					=> 이미지 변경
+					 * 
+					 */
+					
+					if(step.getStep_image_file() == null) {
+						if(step.getStep_image() == null || step.getStep_image().equals("")) {
+							recipeData.getCookingStep().get(i).setStep_image(null);//이미지 지우기
+						}//else면 이미지 들어온 그대로
+					}else {//이미지 수정
 						try {
 							String stepImageName = imageName + Integer.toString(i);
 							writeFile(step.getStep_image_file(), stepImageName, baseUrl);
 							recipeData.getCookingStep().get(i)
-									.setStep_image(baseUrl + "/images/recipe/" + stepImageName + ".jpg");
+							.setStep_image(baseUrl + "/images/recipe/" + stepImageName + ".jpg");
+							
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					}
+					
 				}
 
 				for (CookingStep s : recipeData.getCookingStep()) {

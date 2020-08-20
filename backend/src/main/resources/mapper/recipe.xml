@@ -79,9 +79,7 @@
 		ON DUPLICATE KEY UPDATE
 			description = #{step.description}
 			, tip = #{step.tip}
-			<if test="step.step_image != null and step.step_image != ''">
 			, step_image = #{step.step_image}
-			</if>
 			, update_date = now()
 	</update>
 
@@ -378,5 +376,9 @@
 	<select id="getLikeList" resultType="Integer">
 		SELECT like_user FROM Likes
 		WHERE recipe_id = #{recipe_id}
+	</select>
+	
+	<select id="getCookingStep" resultType="CookingStep" parameterType="int">
+		SELECT * FROM Cooking_steps WHERE recipe_id = #{recipe_id} and cooking_steps_id = #{step_id}
 	</select>
 </mapper>
