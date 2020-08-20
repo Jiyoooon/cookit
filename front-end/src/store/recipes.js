@@ -47,8 +47,12 @@ export default {
     startTimer({commit},payload){
       commit('SET_TIMESTRING',payload)
     },
-    goRecipe({ dispatch },  recipe){
-      dispatch('fetchRecipe', recipe.recipe_id)
+    hitupRecipe({ state }) {
+      axios.get(SERVER.ROUTES.recipeview.fetchrecipe + String(`hits/${state.selectedRecipe.recipe_id}`))
+      console.log('????')
+    },
+    goRecipe(context, recipe){
+      context.dispatch('fetchRecipe', recipe.recipe_id)
       router.push({ name: 'SelectedRecipe', params: { recipe_id: recipe.recipe_id }})
     },
     fetchRecipe({ commit }, recipe_id) {
@@ -77,7 +81,7 @@ export default {
         // router.push({ name: 'SelectedRecipe', params: { recipe_id: state.selectedRecipe.recipe_id } })
       })
     },
-    fetchComments({ state, commit }) {
+    fetchComments({ commit,state }) {
       axios.get(SERVER.ROUTES.myrecipe.fetchcomments + String(state.selectedRecipe.recipe_id) + '/comments')
       .then(res => {
         commit('SET_COMMENTS', res.data)

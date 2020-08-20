@@ -173,7 +173,8 @@ export default {
       dispatch('clearSearchHistory')
       router.push({ name: 'PasswordFindView'}).catch(() => {});
     },
-    GoRecipeCreate(){
+    GoRecipeCreate({ commit,state }){
+      commit('recipes/SET_USER', state.authUser, { root: true })
       router.push({ name: 'RecipeCreateView'}).catch(() => {});
     },
     RedirectAfterUserUpdate() {
@@ -342,7 +343,7 @@ export default {
       axios.get(SERVER.ROUTES.accounts.baseuser, getters.config)
         .then((res) => {
           commit('SET_USER', res.data.data)
-          dispatch('storage/getfollowings',state.authUser.user_id,{root : true})
+          dispatch('storage/getmyfollowings',state.authUser.user_id,{root : true})
         })
         .catch((err) => {
           alert(err.response)
@@ -448,7 +449,6 @@ export default {
             window.addEventListener('keypress', function(event) {
               if (event.keyCode == 13) that._vm.$root.$bvModal.hide('modal')
             })
-          console.log(this)
           this._vm.$root.$bvModal.msgBoxOk('비밀번호가 일치하지 않습니다.', {
             title: 'Confirmation',
             size: 'sm',

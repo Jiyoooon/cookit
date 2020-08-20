@@ -234,11 +234,11 @@ export default {
       }
       
       for (let i = 0; i < ingredients.length; i++) {
-        if (ingredients[i].name == null && ingredients[i].quantity == null) continue;
+        if (ingredients[i].name == null) continue;
         for (let [key, value] of Object.entries(ingredients[i])) {
           if(key == "valid") continue;
-          if (!value) continue;
-          // console.log(`ingredients[${i}].${key}: ${value}`)
+          if(key != "is_essential" && !value) continue;
+          console.log(`ingredients[${i}].${key}: ${value}`)
           recipeData.append(`ingredients[${i}].${key}`, value)
         }
       }
@@ -341,10 +341,13 @@ export default {
       const recipeData = getters.getRecipeData;
       const headerConfig = getters.getHeader;
       // [*] POST
+      // commit('recipes/SET_USER', rootState.accounts.authuser)
       axios.post(SERVER.ROUTES.editor.saveRecipe, recipeData, headerConfig)
       .then((res) => {
         return new Promise(() => {
           commit('SET_UPDATETF', false)
+          commit('recipes/SET_RECIPE', null, { root: true })
+          commit('recipes/SET_COMMENTS', null, { root: true })
           router.push({ name: 'SelectedRecipe', params: { recipe_id: res.data.recipe_id } })
         })
       })

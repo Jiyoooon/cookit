@@ -79,6 +79,7 @@ export default {
     name:'Timer',
     data(){
         return {
+            cssFlag:true, // 타이머 종료시 단 한번만 css적용시키기 위함
             state:true,
             self : this,
             reloadBtn : $(".reload"),
@@ -201,13 +202,12 @@ export default {
         time:{
             deep:true,
             handler(){
-                if(this.time.min == 0){
-                    if(this.time.sec == 6 ){
-                        this.blinkTimer(2)
-                    }
-                    else if(this.time.sec == 0){
-                        this.blinkTimer(1)
-                    }
+                if(this.time.min == 0 && this.time.sec < 6 && this.cssFlag){
+                    this.cssFlag = false
+                    this.blinkTimer(2)
+                }
+                else if(this.time.sec == 0){
+                    this.blinkTimer(1)
                 }
             }
         },
@@ -288,6 +288,29 @@ export default {
         line-height: 130px;
         font-weight: bold;
     }
+
+    @media (max-width: 496px) {
+      .timer {
+        margin-left: -10.6em;
+        margin-top: -10em;
+        height: 180px;
+      }
+      .timer--clock .clock-display-grp .number-grp .number-grp-wrp .num p {
+        font-size: 8em;
+        line-height: 120px;
+      }
+      .timer--clock .clock-separator p {
+        font-size: 8em;
+        line-height: 110px;
+      }
+      .reload {
+        position: absolute;
+        top: 0 !important;
+        left: 50%;
+        font-size: 3em;
+      }
+    }
+
     .timer h4 {
         width: 100%;
         font-size: 10px;

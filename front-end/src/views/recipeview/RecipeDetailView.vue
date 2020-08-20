@@ -23,6 +23,8 @@
           v-model="dialogState"
           @click:outside="dialogClose"
           @keydown.esc="dialogClose"
+          @keydown.left="dialogPageMove('l')"
+          @keydown.right="dialogPageMove('r')"
           height="720"
           width="960"
         >
@@ -99,7 +101,45 @@
           <v-list style="margin: 5px 20px;">
             <timeDescription class="read-mode"
               :description='propdescription' :time='proptime' :number="'sub-des-' + page"/>
+          <v-container style="position:absolute; text-align:right; bottom:5px; right:5px">
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon
+                  color="grey"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                >mdi-help-circle</v-icon>
+              </template>
+              <span>
+                <strong>가로보기는 다음과 같은 음성명령어를 제공합니다.</strong>
+                <br><br>
+                다음페이지 : 다음, 앞으로
+                <br>
+                이전페이지 : 이전, 뒤로
+                <br>
+                가로보기 종료 : 종료, 닫기, 중지, 그만
+                <br><br>
+                <strong>타이머</strong>
+                <ul>
+                <li> 첫번째 시간 시작 : 타이머</li> 
+                <li> 다음 시간 시작 : 다음, 앞으로</li>
+                <li> 다음 시간 시작 : 이전, 뒤로</li> 
+                <li> 종료 : 종료, 닫기, 중지, 그만</li>
+                </ul>
+              </span>
+            </v-tooltip>
+          </v-container>
+          
           </v-list>
+          
+          <!-- <v-tooltip bottom> -->
+              <!-- <b-container style="text-align:right; position:absolute; bottom:0px; left: 0px; font-size:1.5rem">
+              <b-form-text id="tags-remove-on-delete-help" style="margin: 0 auto;">
+            <b-icon class="mr-1" icon="question-circle-fill" variant="secondary"></b-icon>
+            </b-form-text>
+              </b-container> -->
+          <!-- </v-tooltip> -->
         </v-card>
       </v-dialog>
     </div>
@@ -156,6 +196,14 @@ export default {
         },
     },
     methods: {
+      dialogPageMove(dir){
+            if(dir== 'l'){ // 왼쪽이동
+              (this.page > 0 )? this.page-- : this.page
+            }
+            else if(dir == 'r'){ // 오른쪽 이동
+              (this.page < this.selectedRecipe.cookingStep.length-1 )? this.page++ : this.page
+            }
+      },
       dialogClose() {
         this.page = 1;
         this.dialogState = false;
@@ -190,7 +238,7 @@ export default {
               this.$router.push({ name: 'RecipeUpdateView', params: { recipe_id: this.selectedRecipe.recipe_id }})
           }
         },
-        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments','startTimer']),
+        ...mapActions('recipes', ['fetchRecipe', 'fetchRecipeUser', 'fetchComments','startTimer', 'hitupRecipe']),
         ...mapActions('editor', ['deleteRecipe']),
         ...mapMutations('recipes',['SET_TIMER_INIT']),
         startSpeaking() {
@@ -225,6 +273,7 @@ export default {
         this.fetchRecipe(this.$route.params.recipe_id),
         this.fetchRecipeUser()
         this.fetchComments()
+        // this.hitupRecipe(this.$route.params.recipe_id)
         
         if (!('webkitSpeechRecognition' in window)) {
             document.getElementById("speechButton").style.display = "none";
@@ -238,8 +287,8 @@ export default {
             this.recognition.onresult = (event) => {
                 var text = event.results[event.resultIndex][0].transcript;
                 console.log(text);
-                let next = ['다음', '담', '탐', '정', '형', '황', '방', '항', '앞으로', '넥스트'];
-                let prev = ['전', '뒤로', '위로', '귀로', '디로'];
+                let next = ['다음', '담', '당', '탐', '정', '형', '황', '방', '항', '앞으로', '아크로'];
+                let prev = ['이전', '이정', '뒤로', '위로', '귀로', '디로', '기록'];
                 let timer = ['타이머', '타임', '차이머'];
                 let timerclose = ['종료', '닫기' , '중지','그만'];
 

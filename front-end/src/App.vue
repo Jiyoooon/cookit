@@ -7,7 +7,7 @@
     </b-navbar-brand>
     <nav class="nav-menu">
       <div id="myblog" @click="myBlogClick">내 블로그</div>
-      <div id="browsing" @click="browsingClick">둘러보기</div>
+      <div id="browsing" @click="browsingClick">둘러보기</div> 
     </nav>
     <nav class="nav-side">
       <div v-if="!isLoggedIn">
@@ -80,6 +80,7 @@ export default {
           if(!this.isLoggedIn) this.GoLogin();
           else {
             this.SET_USERINFO(this.authUser)
+            this.SET_CURRENTSHOW(1)
             this.setRecipequeryUserId(this.authUser.nickname)
             this.GoMyBlog();
           }
@@ -97,7 +98,7 @@ export default {
         ...mapActions('accounts', ['GoLogin', 'GoSignup', 'GoHome', 'GoPasswordAuth', 'GoLogout', 'GoEmailAuth', 'logout', 'clearSearchHistory']),
         ...mapActions('myblog',['GoMyBlog']),
         ...mapActions('lookaround', ['GoLookAroundRecipesView','getIngredients']),
-        ...mapMutations('myblog',['SET_USERINFO']),
+        ...mapMutations('myblog',['SET_USERINFO', 'SET_CURRENTSHOW']),
         ...mapMutations('lookaround',['setRecipequeryUserId']),
     },
     created(){

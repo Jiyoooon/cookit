@@ -172,7 +172,7 @@ router.beforeEach((to, from, next) => {
   const RequiredPasswordAuth = ['UserInfoView']
   const RecipeUpdate = ['RecipeUpdateView', 'RecipeCreateView']
   const BeforeUpdated = ['Logout', 'MyBlogListView', 'Login', 'Signup', 'EmailAuthView', 'PasswordFindView', 
-  'LookAroundRecipeView', 'Home', 'RecipeCreateView', 'RecipeUpdateView', 'UserBlogListView', 'SelectedRecipe',]
+  'LookAroundRecipeView', 'Home', 'RecipeCreateView', 'RecipeUpdateView', 'UserBlogListView', 'SelectedRecipe', 'PasswordAuthView']
 
   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
   const IsAuthorized = Vue.$cookies.isKey('user-email')
@@ -233,18 +233,14 @@ router.beforeEach((to, from, next) => {
   //     }) 
   //   }    
   
+  if (from.name == 'SelectedRecipe') {
+    store.dispatch('recipes/hitupRecipe')
+  }
+
   if (!(from.name == 'SelectedRecipe') && (to.name == 'LookAroundRecipeView')) {
     store.commit('lookaround/initializing')
     next()
-    // console.log(store.state)
-  // } else if ((from.name == 'SelectedRecipe') && (to.name == 'LookAroundRecipeView') && (store.state.accounts.authUser.user_id == store.state.recipes.recipeUser.user_id)) {
-  //   store.commit('lookaround/initializing')
-  //   next()
-  } else {
-    next()
-  }
-
-  if (!IsLoggedIn && LoggedInRequired) {
+  } else if (!IsLoggedIn && LoggedInRequired) {
     next({ name: 'Login' })
   } else if (IsLoggedIn && LoggedOutRequired) {
     next({name: 'Home'})
@@ -253,9 +249,9 @@ router.beforeEach((to, from, next) => {
   } else if (!IsPasswordAuth && AuthPasswordRequired) {
     next({ name: 'PasswordAuthView' })
   } else if (FromUserInfo && FromUserInfoTo && store.state.accounts.updateTF) {
-      window.addEventListener('keypress', function(event) {
-        if (event.keyCode == 13) store._vm.$root.$bvModal.hide('modal')
-      })
+    window.addEventListener('keypress', function(event) {
+      if (event.keyCode == 13) store._vm.$root.$bvModal.hide('modal')
+    })
     store._vm.$root.$bvModal.msgBoxConfirm('수정된 내용이 저장되지 않습니다.', {
       title: '정말로 나가시겠습니까?',
       size: 'md',
@@ -277,9 +273,10 @@ router.beforeEach((to, from, next) => {
         }
       }) 
   } else if (FromRecipeUpdate && FromUserInfoTo && store.state.editor.updateTF) {
-      window.addEventListener('keypress', function(event) {
-        if (event.keyCode == 13) store._vm.$root.$bvModal.hide('modal')
-      })
+    console.log('11111111')
+    window.addEventListener('keypress', function(event) {
+      if (event.keyCode == 13) store._vm.$root.$bvModal.hide('modal')
+    })
     store._vm.$root.$bvModal.msgBoxConfirm('작성한 내용이 저장되지 않습니다.', {
       title: '정말로 나가시겠습니까?',
       size: 'md',
@@ -294,10 +291,12 @@ router.beforeEach((to, from, next) => {
     })
       .then((ans) => {
         if (ans) {
+          console.log('222222')
           next()
           store.commit('editor/SET_UPDATETF', false)
           // router.go(-1);
         } else {
+          console.log('33333')
           next(false)
         }
       }) 
@@ -311,26 +310,26 @@ router.beforeEach((to, from, next) => {
       $("#myblog").addClass("active");
       $("#browsing").removeClass("active");
     }
-    else next();
+    // else next();
 
     if (to.name == 'LookAroundRecipeView') {
       $("#myblog").removeClass("active");
       $("#browsing").addClass("active");
     }
-    else next();
+    // else next();
 
     if (to.name == 'logout') {
       $("#myblog").removeClass("active");
       $("#browsing").addClass("active");
     }
-    else next();
+    // else next();
 
     const setDefaultClass = ['Home', 'Signup', 'Login', 'PasswordAuthView', 'EmailAuthView' ]
     if (setDefaultClass.includes(to.name)) {
       $("#myblog").removeClass("active");
       $("#browsing").removeClass("active");
     }
-    else next();
+    // else next();
 })
 
 export default router

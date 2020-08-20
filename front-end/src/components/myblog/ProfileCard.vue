@@ -15,19 +15,19 @@
       </div>
 
       <!-- 버튼 -->
-      <div  class="block-btn btn-style2 blog-btn" 
-            v-if="(this.authUser != null) && (this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate"
+      <div class="block-btn btn-style2 blog-btn" 
+            v-if="isLoggedIn && (this.authUser.user_id !== this.selecteduserinfo.user_id) && !this.fstate"
             @click="clickfollow">
         팔로우
       </div>
      
       <div  class="block-btn btn-style2 blog-btn" 
-            v-if="(this.authUser != null) && (this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate"
+            v-if="isLoggedIn && (this.authUser.user_id !== this.selecteduserinfo.user_id) && this.fstate"
             @click="clickunfollow">
         팔로우 취소
       </div>
       <div  class="block-btn btn-style2 blog-btn" 
-            v-if="(this.authUser != null) && this.authUser.user_id === this.selecteduserinfo.user_id"
+            v-if="isLoggedIn && this.authUser.user_id === this.selecteduserinfo.user_id"
             @click="GoRecipeCreate">
         글쓰기
       </div>
@@ -42,7 +42,7 @@
           <span class="label">팔로워</span>
           <v-dialog v-model="follower" scrollable max-width="300px">
             <template v-slot:activator="{ on, attrs }">
-              <span class="value" @click="getfollowers(selecteduserinfo.user_id)" v-bind="attrs" v-on="on">{{ userfollowers }}</span>
+              <span class="value" v-bind="attrs" v-on="on">{{ userfollowers }}</span>
             </template>
             <v-card>
               <v-card-title>팔로워</v-card-title>
@@ -58,7 +58,7 @@
           <span class="label">팔로잉</span>
           <v-dialog v-model="following" scrollable max-width="300px">
             <template v-slot:activator="{ on, attrs }">
-              <span class="value" @click="getfollowings(selecteduserinfo.user_id)" v-bind="attrs" v-on="on">{{ userfollowings }}</span>
+              <span class="value" v-bind="attrs" v-on="on">{{ userfollowings }}</span>
             </template>
             <v-card>
               <v-card-title>팔로잉</v-card-title>
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { mapState,mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import followerList from '@/components/myblog/FollowerList.vue'
 import followingList from '@/components/myblog/FollowingList.vue'
 
@@ -118,6 +118,10 @@ export default {
     },
     methods: {
       setfstate(){
+        // console.log("myfollowings")
+        // console.log(this.myfollowings)
+        // console.log("myfollowers")
+        // console.log(this.myfollowers)
         if(this.myfollowings.findIndex(x => x.user_id === this.selecteduserinfo.user_id)<0)
           this.fstate = false
         else
@@ -142,7 +146,8 @@ export default {
         this.getfollowers(this.selecteduserinfo.user_id);
       },
       ...mapActions('accounts',['GoRecipeCreate','hituser']),
-      ...mapActions('storage',['follow','unfollow','getfollowings','getfollowers']),
+      ...mapGetters('accounts', ['isLoggedIn']),
+      ...mapActions('storage',['follow','unfollow','getfollowings','getfollowers'])
     },
     watch: {
       myfollowings:{
@@ -162,6 +167,9 @@ export default {
       }
     },
     updated(){
+      console.log("profilecard updated")
+      // console.log(this.followers)
+      // console.log(this.followings)
       this.setfstate()
       for (let item of this.selecteduserinfo.sns_list) {
         if (item.sns_name == 'youtube') this.sns_url_list[0] = item.sns_url;
@@ -171,6 +179,7 @@ export default {
       }
     },
     created() {
+      console.log("profilecard created")
       if(this.authUser == null || this.selecteduserinfo.user_id !== this.authUser.user_id)
         this.hituser(this.selecteduserinfo.user_id)
       
@@ -179,6 +188,7 @@ export default {
       
       // SNS url 만들기
       // 0: 유튜브 1: 인스타그램 2: 트위터 3: 페이스북
+      if(!this.selecteduserinfo.sns_list) return;
       for (let item of this.selecteduserinfo.sns_list) {
         if (item.sns_name == 'youtube') this.sns_url_list[0] = item.sns_url;
         else if (item.sns_name == 'instagram') this.sns_url_list[1] = item.sns_url;
