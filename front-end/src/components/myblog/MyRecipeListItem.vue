@@ -5,7 +5,7 @@
             <!-- Thumbnail-->
             <div class="thumbnail">
                 <div @click="gouserblog">
-                  <b-img class="user_profile" :src='recipe.recipe_user_profileImage' onerror="this.src='http://i3a201.p.ssafy.io:8080/images/profile/default_image.png'"
+                  <b-img class="user_profile" :src='recipe.recipe_user_profileImage' onerror="this.src='https://i3a201.p.ssafy.io:8443/images/profile/default_image.png'"
                   style="cursor:pointer;" rounded="circle" thumbnail></b-img>
                 </div>
                   <b-img :v-if="recipe.main_image" class="main_image" @click="goRecipe(recipe)" :src='recipe.main_image' style="cursor:pointer" center/>

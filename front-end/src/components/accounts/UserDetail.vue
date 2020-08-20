@@ -160,7 +160,7 @@ export default {
           { text: '둘러보기', value: false },
         ],
         imageURL: null,
-        imageURL2: 'http://i3a201.p.ssafy.io:8080/images/profile/default_image.png',
+        imageURL2: 'https://i3a201.p.ssafy.io:8443/images/profile/default_image.png',
       }
     },
     computed: {
