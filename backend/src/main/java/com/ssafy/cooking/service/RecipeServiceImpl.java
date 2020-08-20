@@ -231,12 +231,22 @@ public class RecipeServiceImpl implements RecipeService {
 					 * image_file == null && image == null 	=> 이미지 삭제 또는 없는 상태  	=> url = null로
 					 * image_file == null && image != null 	=> 이 이미지 그대로 		
 					 * image_file != null 					=> 이미지 변경
-					 * 
 					 */
-					
-					if(step.getStep_image_file() == null) {
-						if(step.getStep_image() == null || step.getStep_image().equals("")) {
-							recipeData.getCookingStep().get(i).setStep_image(null);//이미지 지우기
+					CookingStep ori = null;
+					if(step.getCooking_steps_id() != null) {
+						//이전에 있었던 step
+						ori = recipeDao.getCookingStep(recipeData.getRecipe_id(), step.getCooking_steps_id());
+					}
+					if(step.getStep_image_file() == null) {//이미지 지우기
+						if(step.getStep_image() == null || step.getStep_image().equals("")) {//이전에 이미지 있었으면 지우기
+//							if(ori != null && ori.getStep_image() != null) {
+//								try {
+//									removeFile(ori.getStep_image());
+//								} catch (IOException e) {
+//									e.printStackTrace();
+//								}
+//							}
+							recipeData.getCookingStep().get(i).setStep_image(null);
 						}//else면 이미지 들어온 그대로
 					}else {//이미지 수정
 						try {
