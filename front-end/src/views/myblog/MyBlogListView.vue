@@ -30,6 +30,7 @@ import profileCard from '@/components/myblog/ProfileCard.vue'
 import myRecipeList from '@/components/myblog/MyRecipeList.vue'
 import likeRecipeList from '@/components/myblog/LikeRecipeList.vue'
 import { mapActions, mapState, mapMutations } from 'vuex'
+import $ from 'jquery'
 // import recipeVue from '@/components/recipeview/recipe.vue'
 
 export default {
@@ -101,6 +102,10 @@ export default {
             }
         }
     },
+    mounted() {
+      $("#myblog").addClass("active");
+      $("#browsing").removeClass("active");
+    }
 }
 </script>
 

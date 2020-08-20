@@ -310,26 +310,22 @@ router.beforeEach((to, from, next) => {
       $("#myblog").addClass("active");
       $("#browsing").removeClass("active");
     }
-    // else next();
 
     if (to.name == 'LookAroundRecipeView') {
       $("#myblog").removeClass("active");
       $("#browsing").addClass("active");
     }
-    // else next();
 
     if (to.name == 'logout') {
       $("#myblog").removeClass("active");
       $("#browsing").addClass("active");
     }
-    // else next();
 
     const setDefaultClass = ['Home', 'Signup', 'Login', 'PasswordAuthView', 'EmailAuthView' ]
     if (setDefaultClass.includes(to.name)) {
       $("#myblog").removeClass("active");
       $("#browsing").removeClass("active");
     }
-    // else next();
 })
 
 export default router

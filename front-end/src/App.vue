@@ -3,7 +3,7 @@
     <header id="app-header">
       <b-navbar toggleable="sm" type="light" variant="">
     <b-navbar-brand href="#">
-        <img id="mainlogo" @click="GoHome" src="./assets/logo.jpg" style="height: 5em; padding: 0px 2em">
+        <img id="mainlogo" @click="GoHome" src="./assets/logo.jpg" style="height: 5em; padding: 0px 1.6em 0 2em">
     </b-navbar-brand>
     <nav class="nav-menu">
       <div id="myblog" @click="myBlogClick">내 블로그</div>
@@ -78,6 +78,9 @@ export default {
         },
         myBlogClick() {
           if(!this.isLoggedIn) this.GoLogin();
+          if (this.$route.name == 'MyBlogListView') {
+            this.$router.go();
+          }
           else {
             this.SET_USERINFO(this.authUser)
             this.SET_CURRENTSHOW(1)
@@ -214,7 +217,7 @@ export default {
   user-select: none;
 }
 
-@media (max-width: 506px) {
+@media (max-width: 488px) {
   .nav-menu {
     margin-left: auto;
     margin-right: auto;
