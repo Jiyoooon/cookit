@@ -259,7 +259,7 @@ export default {
         })
         .catch((err) => {
           console.log(err.response)
-          alert('!!!')
+          // alert('!!!')
         })
       },
       checkPasswordValidValue() {

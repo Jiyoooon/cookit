@@ -209,7 +209,8 @@ export default {
         commit('setRecipequeryPage',res.data.length)
       })
       .catch((err) => {
-        alert(err)
+        // alert(err)
+        console.log(err)
       })
     },
     getIngredients({commit}){
@@ -218,7 +219,8 @@ export default {
         commit('setIngredients', res.data)
       })
       .catch((err) => {
-        alert(err)
+        // alert(err)
+        console.log(err)
       })
     },
     GoLookAroundRecipesView() {
