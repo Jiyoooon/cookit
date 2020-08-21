@@ -87,6 +87,15 @@ export default {
     //     this.recipelen = this.selectedRecipe.length
     // },
     created() {
+      if (sessionStorage.getItem('order')) {
+        console.log(this.order)
+        this.order = sessionStorage.getItem('order');
+        this.ordering(this.order)
+      }
+      else
+        this.order = 1;
+      this.ordering(this.order);
+
         this.SET_USERINFO(this.authUser)
         this.getUserInfo(this.authUser.user_id)
         this.fetchMyRecipes(this.selecteduserinfo)
@@ -100,6 +109,10 @@ export default {
             handler() {
                 
             }
+        },
+        order() {
+          sessionStorage.setItem('order', this.order);
+          this.ordering(this.order)
         }
     },
     mounted() {

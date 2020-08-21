@@ -20,7 +20,14 @@
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
 import MyRecipeListItem from './MyRecipeListItem.vue'
-
+import $ from 'jquery'
+$(window).on('beforeunload', function() {
+  // sessionStorage.removeItem('category');
+  // sessionStorage.removeItem('searching');
+  // sessionStorage.removeItem('selecting');
+  // sessionStorage.removeItem('ordering');
+  sessionStorage.clear();
+})
 export default {
     name: 'LikeRecipeList',
     props:{

@@ -134,6 +134,7 @@ export default {
       sessionStorage.removeItem('searching');
       sessionStorage.removeItem('selecting');
       sessionStorage.removeItem('ordering');
+      sessionStorage.removeItem('order')
     },
     GoHome({dispatch}) {
       dispatch('clearSearchHistory')

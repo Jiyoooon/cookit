@@ -49,7 +49,6 @@ export default {
     },
     hitupRecipe({ state }) {
       axios.get(SERVER.ROUTES.recipeview.fetchrecipe + String(`hits/${state.selectedRecipe.recipe_id}`))
-      console.log('????')
     },
     goRecipe(context, recipe){
       context.dispatch('fetchRecipe', recipe.recipe_id)
