@@ -10,12 +10,12 @@
 	<div class="grid-item grid-item--secondary  grid-item--content">
 		<article class="article  article--align-right">
 			<a href="/myblog">
-			<h5 class="rotate rotate--right">My blog<br/></h5></a>
+			<h5 class="rotate rotate--right">My blog<br/> </h5></a>
 		</article>
 		<article class="article">
 			<h4><span>이제부터</span> <span>요리할 땐,</span></h4>
 			<h1 style="font-weight:bold; font-style:italic;">COOKIT</h1>
-			<p>편리하고 스마트한 요리를 즐겨보세요!</p>
+			<p>{{ message }}</p>
 		</article>
 	</div>
 	<div class="grid-item grid-item--secondary">
@@ -52,8 +52,11 @@ export default {
     name: 'Home',
     data() {
       return {
-         mainProps: { blank: false, blankColor: '#777', width: 75, height: 75, class: 'm1' },
-         image: [],
+        mainProps: { blank: false, blankColor: '#777', width: 75, height: 75, class: 'm1' },
+				image: [],
+				messageArr: [ '편리하고 스마트하게 요리하세요!', '재료 필터링으로 스마트하게', '음성 인식으로 편리하게',
+				'쿠킷과 함께 하세요!', '든든한 요리 동반자, 쿠킷', '나만의 요리 친구, 쿠킷', '나만의 비밀 레시피, 쿠킷', '언제나 어디서나, 쿠킷' ],
+				message: ""
       }
     },
     computed: {
@@ -76,7 +79,8 @@ export default {
       })
       for(let i = 0; i < 4; i++) {
         this.image.push(arr[i]);
-      }
+			}
+			this.message = this.messageArr[this.image[0] % 8];
     }
 }
 </script>
