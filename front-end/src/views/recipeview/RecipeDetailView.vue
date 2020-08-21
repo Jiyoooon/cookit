@@ -13,24 +13,18 @@
 
       <!-- 플로팅 버튼 -->
       <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                  color="grey"
-                  dark
-                  v-bind="attrs"
-                  v-on="on"
-                >mdi-help-circle</v-icon>
-                <font-awesome-icon id="read-btn" class="noprint" v-bind="attrs" v-on="on" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" @click="setDialogState(true)"/>
-              </template>
-              <span>
-                <strong>가로보기</strong> 모드입니다.<br>
-                클릭하면 음성 인식이 바로 활성화되며,<br>
-                음성 인식을 위해서는<br>
-                <strong>마이크 접근 허용</strong>이 필요합니다.<br>
-                명령어에 대한 자세한 안내는<br>
-                가로보기 창의 <strong>?</strong> 버튼을 참고해주세요.
-              </span>
-            </v-tooltip>
+        <template v-slot:activator="{ on, attrs }">
+          <font-awesome-icon id="read-btn" class="noprint" v-bind="attrs" v-on="on" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" @click="setDialogState(true)"/>
+        </template>
+        <span>
+          <strong>가로보기</strong> 모드입니다.<br>
+          클릭하면 음성 인식이 바로 활성화되며,<br>
+          음성 인식을 위해서는<br>
+          <strong>마이크 접근 허용</strong>이 필요합니다.<br>
+          명령어에 대한 자세한 안내는<br>
+          가로보기 창의 <v-icon color="grey" dark>mdi-help-circle</v-icon> 버튼을 참고해주세요.
+          </span>
+        </v-tooltip>
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 
       <!-- 가장 상위에 타이머 오버레이를 둠 -->
