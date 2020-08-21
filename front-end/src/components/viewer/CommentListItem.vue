@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid>
+  <b-container>
     <b-row align-v="center">
       <!-- 유저 아이콘, 별명, 작성일 -->
       <b-col cols="8" class="text-left ml-3 mr-n3">

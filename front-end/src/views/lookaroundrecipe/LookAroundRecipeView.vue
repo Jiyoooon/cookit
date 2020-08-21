@@ -36,6 +36,7 @@ import InfiniteLoading from 'vue-infinite-loading'
 import RecipeSearchBar from "@/components/lookaroundrecipe/RecipeSearchBar.vue"
 import recipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
 import { mapState, mapActions, mapMutations } from 'vuex'
+import $ from 'jquery'
 export default {
   data(){
     return{
@@ -88,6 +89,10 @@ export default {
     created() {
       if(sessionStorage.getItem('ordering')) this.order = Number(sessionStorage.getItem('ordering'))
       else this.order = 1;
+    },
+    mounted() {
+      $("#myblog").removeClass("active");
+      $("#browsing").addClass("active");
     }
 }
 </script>

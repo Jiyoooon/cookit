@@ -12,7 +12,19 @@
       <comment-list data-html2canvas-ignore="true" class="view-container"/>
 
       <!-- 플로팅 버튼 -->
-      <font-awesome-icon id="read-btn" class="noprint" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" @click="setDialogState(true)"/>
+      <v-tooltip top>
+        <template v-slot:activator="{ on, attrs }">
+          <font-awesome-icon id="read-btn" class="noprint" v-bind="attrs" v-on="on" v-b-modal="'my-modal'" :icon="['fas', 'book-open']" @click="setDialogState(true)"/>
+        </template>
+        <span>
+          <strong>가로보기</strong> 모드입니다.<br>
+          클릭하면 음성 인식이 바로 활성화되며,<br>
+          음성 인식을 위해서는<br>
+          <strong>마이크 접근 허용</strong>이 필요합니다.<br>
+          명령어에 대한 자세한 안내는<br>
+          가로보기 창의 <v-icon color="grey" dark>mdi-help-circle</v-icon> 버튼을 참고해주세요.
+          </span>
+        </v-tooltip>
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
 
       <!-- 가장 상위에 타이머 오버레이를 둠 -->
@@ -112,20 +124,19 @@
                 >mdi-help-circle</v-icon>
               </template>
               <span>
+                <br>
                 <strong>가로보기는 다음과 같은 음성명령어를 제공합니다.</strong>
                 <br><br>
-                다음페이지 : 다음, 앞으로
-                <br>
-                이전페이지 : 이전, 뒤로
-                <br>
-                가로보기 종료 : 종료, 닫기, 중지, 그만
+                다음 페이지 : <kbd>다음</kbd>, <kbd>앞으로</kbd><br>
+                이전 페이지 : <kbd>이전</kbd>, <kbd>뒤로</kbd><br>
+                타이머 시작 : <kbd>타이머</kbd><br>
+                타이머 및 가로보기 종료 : <kbd>종료</kbd>, <kbd>닫기</kbd>, <kbd>중지</kbd>, <kbd>그만</kbd>
                 <br><br>
-                <strong>타이머</strong>
+                <strong>한 단계에 타이머가 여러개인 경우</strong>
                 <ul>
-                <li> 첫번째 시간 시작 : 타이머</li> 
-                <li> 다음 시간 시작 : 다음, 앞으로</li>
-                <li> 다음 시간 시작 : 이전, 뒤로</li> 
-                <li> 종료 : 종료, 닫기, 중지, 그만</li>
+                <li> 첫번째 시간 시작 : <kbd>타이머</kbd></li> 
+                <li> 다음 시간 시작 : <kbd>다음</kbd>, <kbd>앞으로</kbd></li>
+                <li> 이전 시간 시작 : <kbd>이전</kbd>, <kbd>뒤로</kbd></li> 
                 </ul>
               </span>
             </v-tooltip>
@@ -242,13 +253,13 @@ export default {
         ...mapActions('editor', ['deleteRecipe']),
         ...mapMutations('recipes',['SET_TIMER_INIT']),
         startSpeaking() {
-            console.log("음성인식 start");
+            // console.log("음성인식 start");
             this.isSpeaking = true;
             this.recognition.start();
             // document.getElementById("speechButton").textContent="음성인식 종료";
         },
         stopSpeaking(){
-            console.log("음성인식 stop");
+            // console.log("음성인식 stop");
             this.isSpeaking = false;
             this.recognition.stop();
             // document.getElementById("speechButton").textContent="음성인식 시작";
@@ -286,7 +297,7 @@ export default {
 
             this.recognition.onresult = (event) => {
                 var text = event.results[event.resultIndex][0].transcript;
-                console.log(text);
+                // console.log(text);
                 let next = ['다음', '담', '당', '탐', '정', '형', '황', '방', '항', '앞으로', '아크로'];
                 let prev = ['이전', '이정', '뒤로', '위로', '귀로', '디로', '기록'];
                 let timer = ['타이머', '타임', '차이머'];

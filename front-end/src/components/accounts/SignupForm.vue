@@ -221,7 +221,7 @@ import cookies from 'vue-cookies'
         })
         .catch((err) => {
           console.log(err.response)
-          alert('!!!')
+          // alert('!!!')
         })
       },
       ...mapActions('accounts', ['signup', 'signup2']),

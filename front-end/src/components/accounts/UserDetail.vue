@@ -152,7 +152,7 @@ export default {
           passwordAgain: null,
         },
         sns_base: [
-          'http://www.youtube.com/', 'https://www.instagram.com/', 'https://twitter.com/', 'https://www.facebook.com'
+          'https://www.youtube.com/', 'https://www.instagram.com/', 'https://twitter.com/', 'https://www.facebook.com'
         ],
         file:null,
         options: [
@@ -259,12 +259,11 @@ export default {
         })
         .catch((err) => {
           console.log(err.response)
-          alert('!!!')
+          // alert('!!!')
         })
       },
       checkPasswordValidValue() {
         if (!this.updateData.config.password && !this.updateData.passwordAgain) { // 적은 패스워드가 없고, 패스워드 재입력 값이 없으면
-          console.log("아무것도 적지않음")
           this.updateData.valid.password = true
         } else if(this.passwordValid && this.passwordAgainValid) {// 패스워드 재입력한 결과가 참이면
           this.updateData.valid.password = true

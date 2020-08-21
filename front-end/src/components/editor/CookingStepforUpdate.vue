@@ -31,15 +31,15 @@
                 <b-img v-if="imageUrl[index]!=null" :src="imageUrl[index]" height="180px" style="max-width:100%"/>
                 <span v-else></span>
               </b-col>
-              <b-col sm="3" v-if="imageUrl[index]">
-                <div class="text-btn" @click="selectBasicImage(index)">삭제</div>
-              </b-col>
+            </b-row>
+            <b-row v-if="imageUrl[index]">
+              <div class="text-btn" style="margin: 0 auto;" @click="selectBasicImage(index)">사진 삭제</div>
             </b-row>
           </b-container>
         </b-col>
 				<b-col sm="1">
 					<b-container fluid="lg">
-						<b-row>
+						<b-row align-v="end">
 							<b-col><b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer" @click="deleteCookingStep1(index)"></b-icon></b-col>
 						</b-row>
 					</b-container>
@@ -78,16 +78,16 @@ export default {
       const file = e.target.files[0];
       // console.log(file)
       const index = Number(e.path[0].id);
-      console.log(index)
+      // console.log(index)
       if (!file) {
         this.imageUrl[index] = this.selectedRecipe.cookingStep[index].step_image
         this.cookingStep[index].step_image = this.selectedRecipe.cookingStep[index].step_image
         return
       }
       this.imageUrl[index] = URL.createObjectURL(file);
-      console.log(this.selectedRecipe.cookingStep)
+      // console.log(this.selectedRecipe.cookingStep)
       this.cookingStep[index].step_image = URL.createObjectURL(file);
-      console.log(this.imageUrl)
+      // console.log(this.imageUrl)
     },
     deleteCookingStep1(index) {
       this.imageUrl.splice(index, 1)
@@ -117,8 +117,8 @@ export default {
             this.imageUrl[`${i}`] = this.selectedRecipe.cookingStep[i].step_image
             cookstep.push(step)
         }
-        console.log(this.selectedRecipe.cookingStep)
-        console.log(this.imageUrl)
+        // console.log(this.selectedRecipe.cookingStep)
+        // console.log(this.imageUrl)
         // console.log(this.selectedRecipe.cookingStep)
         this.SET_COOKINGSTEP(cookstep)
     },

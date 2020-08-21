@@ -120,13 +120,13 @@ export default {
               })
               .catch((err) => {
                 console.log(err.response)
-                alert(err.response)
+                // alert(err.response)
               })
           }
         })
         .catch(err => {
           console.log(err.response)
-          alert(err.response)
+          // alert(err.response)
         })
     },
     clearSearchHistory() {
@@ -236,7 +236,7 @@ export default {
           cookies.remove('auth-user')
           cookies.remove('user-email')
           router.push({ name: 'Login'})
-          alert(err.response)
+          // alert(err.response)
         })
     },
 
@@ -256,7 +256,7 @@ export default {
         })
         .catch(err => {
           console.log(err.response)
-          alert(err.response.data.cause)
+          // alert(err.response.data.cause)
         })
     },
 
@@ -304,7 +304,7 @@ export default {
       })
       .catch(err => {
         console.log(err.response)
-        alert(err.response)
+        // alert(err.response)
       })
     },
 
@@ -336,7 +336,7 @@ export default {
       })
       .catch(err => {
         console.log(err.response)
-        alert(err.response)
+        // alert(err.response)
        })
     },
     fetchUser({ state, getters, commit, dispatch}) {
@@ -346,7 +346,8 @@ export default {
           dispatch('storage/getmyfollowings',state.authUser.user_id,{root : true})
         })
         .catch((err) => {
-          alert(err.response)
+          console.log(err)
+          // alert(err.response)
         })
     },
     updateUser({ dispatch, state, commit }, updateData) {
@@ -432,7 +433,7 @@ export default {
           })
           .catch((err) => {
             console.log(err.response)
-            alert(err.response.data.error)
+            // alert(err.response.data.error)
           })
       }
     },
@@ -463,7 +464,7 @@ export default {
       })
       .catch((err) => {
         console.log(err.response)
-        alert(err.response)
+        // alert(err.response)
       })
     },
     sendNewPassword({ dispatch }, email) {
@@ -500,7 +501,7 @@ export default {
       })
       .catch((err) => {
         console.log(err.response)
-        alert(err.response)
+        // alert(err.response)
       })
     },
     signup({ commit, dispatch }, signupData) {
@@ -581,7 +582,7 @@ export default {
           })
           .catch((err) => {
             console.log(err.response)
-            alert(err.response)
+            // alert(err.response)
           })
         }
     },
@@ -605,7 +606,7 @@ export default {
         console.log(res)
       })
       .catch(err => {
-        alert(err.response)
+        // alert(err.response)
         console.log(err)
       })
     }
