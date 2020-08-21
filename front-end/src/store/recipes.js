@@ -41,7 +41,7 @@ export default {
     SET_TIMER_INIT(state){
       state.overlay = false
       state.timestring = ''
-    }
+    },
   },
   actions: {
     startTimer({commit},payload){

@@ -283,6 +283,17 @@ export default {
     SET_INGRQUERY(state, data) {
       state.ingrQuery = data
     },
+    SET_InitialValue(state,selectedRecipe){
+      state.recipe.title = selectedRecipe.title
+      state.recipe.description = selectedRecipe.description
+      state.recipe.category_id = selectedRecipe.category_id
+      state.recipe.servings = selectedRecipe.servings
+      state.recipe.cooking_time = selectedRecipe.cooking_time
+      state.recipe.level = selectedRecipe.level
+      state.recipe.tag = selectedRecipe.tag
+      state.recipe.main_image_file = selectedRecipe.main_image_file
+      state.recipe.main_image = selectedRecipe.main_image
+    },
     addIngredient(state, essential) {
       const ref = essential ? state.mainIngr : state.subIngr;
       ref.push({
