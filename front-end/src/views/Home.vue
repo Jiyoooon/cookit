@@ -3,13 +3,14 @@
     <header class="header" data-menustate="closed">
       <div class="grid-item  grid-item--primary">
       <b-img :src="getImageUrl(0)" class="object-fit" />
-      <a href="#" class="logo">
-			<h1>COOKIT</h1>
+      <a href="/lookAroundRecipe" class="logo">
+			<h1>Recipes</h1>
 		</a>
 	</div>
 	<div class="grid-item grid-item--secondary  grid-item--content">
 		<article class="article  article--align-right">
-			<h5 class="rotate rotate--right">SSAFY<br/>@Seoul</h5>
+			<a href="/myblog">
+			<h5 class="rotate rotate--right">My blog<br/></h5></a>
 		</article>
 		<article class="article">
 			<h4><span>이제부터</span> <span>요리할 땐,</span></h4>
@@ -124,7 +125,7 @@ h1, .h1 {
 	color: white;
 	font-family: 'Roboto', sans-serif;
 	font-weight: 400;
-	font-size: 2.4rem;
+	font-size: 2rem;
 	margin-bottom: 0;
 }
 h2, h3 {
@@ -180,7 +181,7 @@ img, svg {
 }
 .article {
   font-size: 0.9em;
-	padding: 1rem 2rem 1.8rem 1.4rem;
+	padding: 1rem;
   color: white;
 }
 .article + .article {
