@@ -127,7 +127,7 @@ export default {
       }
     },
     methods: {
-      ...mapMutations('editor', ['SET_UPDATETF']),
+      ...mapMutations('editor', ['SET_UPDATETF','SET_InitialValue']),
         setThumbnail(e) {
           const file = e.target.files;
           
@@ -144,13 +144,7 @@ export default {
           this.imageUrl = URL.createObjectURL(file[0])
         },
         inputInitialValue() {
-            this.recipe.title = this.selectedRecipe.title
-            this.recipe.description = this.selectedRecipe.description
-            this.recipe.category_id = this.selectedRecipe.category_id
-            this.recipe.servings = this.selectedRecipe.servings
-            this.recipe.cooking_time = this.selectedRecipe.cooking_time
-            this.recipe.level = this.selectedRecipe.level
-            this.recipe.tag = this.selectedRecipe.tag
+            this.SET_InitialValue(this.selectedRecipe)
             this.imageUrl = this.selectedRecipe.main_image
         },
         selectMainBasicImage(){
