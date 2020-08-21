@@ -28,15 +28,22 @@
 
 ![01_blog](notes/gifs/01_blog.gif)
 
+  <br>
+
 - 내가 작성한 레시피와 좋아요한 레시피 모아보기
+
   ![10_mine](notes/gifs/10_mine.gif)
 
+  <br>
+
 - 관심있는 유저를 팔로우 할 수 있는 기능
+
   ![12_follow](notes/gifs/12_follow.PNG)
 
   <br>
 
 - 글쓰기 시 재료 입력 자동 완성
+
   ![11_ingr](notes/gifs/11_ingr.gif)
 
 <br>
@@ -44,11 +51,14 @@
 ### 🍰 둘러보기
 
 ![02_recipes](notes/gifs/02_recipes.gif)
-<br>
+
+  <br>
 
 - 카테고리별, 제목 및 태그, 최신순, 조회순, 추천순으로 다양하게 검색
 
-  ![04_category](notes/gifs/04_category.gif)<br>
+  ![04_category](notes/gifs/04_category.gif)
+
+  <br>
 
 - 재료 필터링으로 원하는 레시피를 보다 쉽고 편하게 검색 가능
 
@@ -59,7 +69,6 @@
 - 나중에 보고 싶은 레시피에 좋아요 누르기
 
   ![12_like](notes/gifs/12_like.gif)
-  <br>
 
 <br>
 
@@ -67,7 +76,7 @@
 
 ![03_viewer](notes/gifs/03_viewer.gif)
 
-<br>
+  <br>
 
 - 시간 부분 자동 인식되는 타이머
 
@@ -76,6 +85,7 @@
   <br>
 
 - 가로보기에서 자동으로 음성 인식 활성화
+
   ![09_speech](notes/gifs/09_speech.gif)
 
 <br>
