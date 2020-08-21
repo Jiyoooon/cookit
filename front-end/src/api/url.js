@@ -1,9 +1,5 @@
 export default {
-<<<<<<< HEAD
-    URL: 'http://d269e2b2d442.ngrok.io',
-=======
     URL: 'https://i3a201.p.ssafy.io:8443/cooking-0.0.1-SNAPSHOT/',
->>>>>>> develop
     ROUTES: {
         accounts: {
             signup: '/user/join',
@@ -14,11 +10,7 @@ export default {
             getcomments: '/user/comments/',
             checkemail: '/user/dup/email/',
             checknickname: '/user/dup/nickname/',
-<<<<<<< HEAD
-            checkpassword: '/user/check/password',
-=======
             checkpassword: '/user/token/password',
->>>>>>> develop
             getfollowers: '/user/followers/',
             checkkey: '/user/verification/check/',
             requestkey: '/user/verification/send/',
@@ -43,8 +35,6 @@ export default {
             deletecomment: '/recipe/token/',
             updatecomment: '/recipe/token/'
         },
-<<<<<<< HEAD
-=======
         lookaroundrecipe:{
             getfilteredrecipes: '/recipe/recipes2',
             getingredients: '/recipe/ingredients',
@@ -60,6 +50,5 @@ export default {
         home: {
             randomRecipe: '/recipe/random'
         }
->>>>>>> develop
     }
 }

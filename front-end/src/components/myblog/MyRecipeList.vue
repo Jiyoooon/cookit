@@ -1,33 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <b-container>
-      <b-row>
-      <MyRecipeListItem id="abc" @click="selectedRecipe(recipe.id)" v-for="recipe in myrecipes" :key="recipe.id" :recipe="recipe"/>
-      </b-row>
-  </b-container>
-</template>
-
-<script>
-import { mapState, mapActions } from 'vuex'
-
-import MyRecipeListItem from './MyRecipeListItem.vue'
-
-export default {
-    name: 'MyRecipeList',
-    components: {
-        MyRecipeListItem,
-    },
-    computed: {
-        ...mapState('myblog', ['myrecipes'])
-    },
-    methods: {
-        ...mapActions('myblog', ['fetchMyRecipes', 'selectedRecipe'])
-    },
-    created() {
-        this.fetchMyRecipes()
-    }
-    
-=======
   <div>
     <router-view :key="$route.fullPath"/>
       <v-container fluid grid-list-md >
@@ -139,21 +110,10 @@ export default {
         }
       },
     },
->>>>>>> develop
 }
 </script>
 
 <style>
-<<<<<<< HEAD
-    #abc {
-        margin: 0;
-        padding: 0;
-    }
-    #abc:hover {
-        cursor: pointer;
-        color: orange;
-    }
-=======
 
 #pagination {
   margin-left: auto;
@@ -166,5 +126,4 @@ export default {
   background-color: grey !important;
   border-color: lightgrey !important;
 }
->>>>>>> develop
 </style>

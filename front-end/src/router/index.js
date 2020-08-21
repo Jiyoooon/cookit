@@ -170,11 +170,6 @@ const router = new VueRouter({
   scrollBehavior
 })
 
-<<<<<<< HEAD
-// router.beforeEach((to, from, next) => {
-//   const RequiredLoggedInPages = ['Logout', 'PasswordAuthView'] //'UserInfoView', 'UserUpdate', 'UserDelete' 추가
-//   const RequiredLoggedOutPages = ['Login', 'Signup']
-=======
 router.beforeEach((to, from, next) => {
   const RequiredLoggedInPages = ['Logout', 'PasswordAuthView', 'UserInfoView', 'UserDelete', 'MyBlogListView'] 
   const RequiredLoggedOutPages = ['Login', 'Signup', 'EmailAuthView', 'PasswordFindView']
@@ -187,26 +182,11 @@ router.beforeEach((to, from, next) => {
   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
   const IsAuthorized = Vue.$cookies.isKey('user-email')
   const IsPasswordAuth = Vue.$cookies.isKey('password-check')
->>>>>>> develop
 
 //   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
 //   const LoggedInRequired = RequiredLoggedInPages.includes(to.name)
 //   const LoggedOutRequired = RequiredLoggedOutPages.includes(to.name)
 
-<<<<<<< HEAD
-//   if (!IsLoggedIn && LoggedInRequired) {
-//     next({ name: 'Login'})
-//   } else {
-//     next()
-//   }
-
-//   if (IsLoggedIn && LoggedOutRequired) {
-//     next({ name: 'Home'})
-//   } else {
-//     next()
-//   }
-// })
-=======
   const FromUserInfo = RequiredPasswordAuth.includes(from.name)
   const FromUserInfoTo = BeforeUpdated.includes(to.name)
   const FromRecipeUpdate = RecipeUpdate.includes(from.name)
@@ -351,6 +331,5 @@ router.beforeEach((to, from, next) => {
       $("#browsing").removeClass("active");
     }
 })
->>>>>>> develop
 
 export default router

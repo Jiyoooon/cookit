@@ -1,11 +1,5 @@
 <template>
   <div>
-<<<<<<< HEAD
-    <b-container fluid="sm">
-      <b-row v-for="(item, index) in items" :key="index">
-        <b-col sm="5">
-          <b-form-input type="text" v-model="item.name" required></b-form-input>
-=======
     <b-container fluid>
       <b-row v-for="(item, index) in ingredients" :key="index">
         <b-col cols="5">
@@ -16,23 +10,10 @@
           <b-form-invalid-feedback id="ingr-feedback">
             재료를 선택해주세요.
           </b-form-invalid-feedback>
->>>>>>> develop
         </b-col>
         <b-col cols="5">
           <b-form-input type="text" v-model="item.quantity" placeholder="무게 / 수량"></b-form-input>
         </b-col>
-<<<<<<< HEAD
-        <b-col>
-          <b-button id="deleteBtn" @click="deleteItem(index)">X</b-button>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col sm="3"></b-col>
-        <b-col sm="4">
-          <b-button variant="primary" id="addBtn" @click="addItem" block>추가</b-button>
-        </b-col>
-        <b-col sm="5"></b-col>
-=======
         <b-col cols="2">
           <b-icon icon="backspace-fill" variant="warning" style="cursor: pointer" @click="deleteIngredient({index, essential})"></b-icon>
         </b-col>
@@ -44,18 +25,14 @@
           </div>
         </b-col>
         <b-col cols="2"></b-col>
->>>>>>> develop
       </b-row>
     </b-container>
   </div>
 </template>
 
 <script>
-<<<<<<< HEAD
-=======
 import { mapMutations, mapActions, mapState } from 'vuex'
 
->>>>>>> develop
 export default {
   name: 'Ingredients',
   data() {
@@ -70,13 +47,6 @@ export default {
     ...mapState('editor', ['ingrQuery']),
   },
   methods: {
-<<<<<<< HEAD
-    addItem() {
-      this.items.push({ name: "", quantity: "" });
-    },
-    deleteItem(index) {
-      this.items.splice(index, 1)
-=======
     ...mapMutations('editor', ['addIngredient', 'deleteIngredient', 'SET_UPDATETF']),
     ...mapActions('editor', ['loadIngredients']),
     autoComplete(index) {
@@ -108,7 +78,6 @@ export default {
       handler() {
         this.SET_UPDATETF(true)
       }
->>>>>>> develop
     }
   }
 }

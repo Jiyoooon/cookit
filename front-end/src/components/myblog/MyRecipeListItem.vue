@@ -1,22 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div class="col-lg-4">
-      <b-card
-    :title="recipe.title"
-    img-src="https://picsum.photos/600/300/?image=25"
-    img-alt="Image"
-    img-top
-    tag="article"
-    style="max-width: 20rem;"
-    class="mb-2"
-  >
-    <b-card-text>
-      {{ recipe.content }}
-    </b-card-text>
-
-  </b-card>
-  </div>
-=======
 <div class="container">
         <!-- Post-->
         <div class="post-module">
@@ -58,7 +40,6 @@
             </div>
         </div>
 </div>
->>>>>>> develop
 </template>
 
 <script>

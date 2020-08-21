@@ -1,34 +1,16 @@
 <template>
-<<<<<<< HEAD
-  <div id="recipePage">
-    <div id="recipeInfo">
-=======
   <div id="editor">
     <div class="editor-container">
->>>>>>> develop
       <h2>레시피 정보</h2>
       <hr>
       <recipeInfo></recipeInfo>
     </div>
-<<<<<<< HEAD
-    <div id="ingredients">
-=======
     <div class="editor-container">
->>>>>>> develop
       <h2>재료</h2>
       <hr>
       <b-container fluid>
         <b-row>
           <b-col class="mt-3">주재료</b-col>
-<<<<<<< HEAD
-          <b-col sm="5"><ingredient></ingredient></b-col>
-          <b-col class="mt-3">부재료</b-col>
-          <b-col sm="5"><ingredient></ingredient></b-col>
-        </b-row>
-      </b-container>
-    </div>
-    <div id="steps">
-=======
           <b-col md="5"><ingredient :ingredients="mainIngr" :essential=1></ingredient></b-col>
           <b-col class="mt-3">부재료</b-col>
           <b-col md="5"><ingredient :ingredients="subIngr" :essential=0></ingredient></b-col>
@@ -36,13 +18,10 @@
       </b-container>
     </div>
     <div class="editor-container">
->>>>>>> develop
       <h2>조리 과정</h2>
       <hr>
       <cooking-step></cooking-step>
     </div>
-<<<<<<< HEAD
-=======
     <div>
       <b-container fluid>
         <b-row>
@@ -53,7 +32,6 @@
         </b-row>
       </b-container>
     </div>
->>>>>>> develop
   </div>
 </template>
 
@@ -61,10 +39,7 @@
 import RecipeInfo from '@/components/editor/RecipeInfo.vue'
 import Ingredient from '@/components/editor/Ingredient.vue'
 import CookingStep from '@/components/editor/CookingStep.vue'
-<<<<<<< HEAD
-=======
 import { mapState, mapActions, mapMutations } from 'vuex'
->>>>>>> develop
 
 export default {
     name: 'RecipeCreateView',
@@ -77,14 +52,6 @@ export default {
       }
     },
     methods: {
-<<<<<<< HEAD
-      addItem() {
-
-      },
-      deleteItem() {
-
-      }
-=======
       ...mapActions('editor', ['onSubmitButton']),
       ...mapMutations('editor', ['SET_RECIPE', 'SET_COOKINGSTEP', 'SET_MAININGR', 'SET_SUBINGR']),
       cancel() {
@@ -123,7 +90,6 @@ export default {
       { name: null, quantity: null, is_essential: 0 },
       ])
 
->>>>>>> develop
     }
 }
 </script>
@@ -182,13 +148,10 @@ export default {
   color: #74BCB4;
   cursor: default;
 }
-<<<<<<< HEAD
-=======
 
 /* 완전 경고 빨간색 버튼 */
 .btn-style4 {
   background-color: darkred;
   color: white;
 }
->>>>>>> develop
 </style>

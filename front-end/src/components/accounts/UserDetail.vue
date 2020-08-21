@@ -1,64 +1,32 @@
 <template>
   <div id="userinfo">
     <b-container fluid="lg" id="userinfo-container">
-<<<<<<< HEAD
-    <b-row align-v="center">
-      <b-col sm="3">아이디</b-col>
-      <b-col sm="9">
-        user.username
-      </b-col>
-    </b-row>
-    <b-row align-v="center">
-      <b-col sm="3">이메일</b-col>
-      <b-col sm="9">
-        user.email
-=======
     <b-row align-v="center">
 
       <!-- 이메일 -->
       <b-col cols="4" sm="3">아이디</b-col>
       <b-col cols="8" sm="9">
         {{ authUser.email }}
->>>>>>> develop
       </b-col>
     </b-row>
 
     <!-- 비밀번호 -->
     <b-row align-v="center">
-<<<<<<< HEAD
-      <b-col sm="3">비밀번호</b-col>
-      <b-col sm="9">
-        <b-form-input type="password" id="password" placeholder="비밀번호 변경 시 입력하세요." aria-describedby="password-feedback" v-model="password" :state="passwordValid"></b-form-input>
-=======
       <b-col cols="4" sm="3"><label for="input-none">비밀번호</label></b-col>
       <b-col cols="8" sm="9">
         <b-form-input type="password" placeholder="비밀번호 변경 시 입력하세요." aria-describedby="password-feedback" v-model="updateData.config.password" :state="passwordValid"></b-form-input>
->>>>>>> develop
         <b-form-invalid-feedback id="password-feedback">
           영문자와 숫자를 포함해 8글자 이상으로 입력하세요. </b-form-invalid-feedback>
       </b-col>
     </b-row>
     <b-row align-v="center">
-<<<<<<< HEAD
-      <b-col sm="3">비밀번호 재입력</b-col>
-      <b-col sm="9">
-        <b-form-input type="password" id="password" aria-describedby="password-again-feedback" v-model="passwordAgain" :state="passwordAgainValid"></b-form-input>
-=======
       <b-col cols="4" sm="3" style="font-size:0.92em;">비밀번호 재입력</b-col>
       <b-col cols="8" sm="9">
         <b-form-input type="password" aria-describedby="password-again-feedback" v-model="updateData.passwordAgain" :state="passwordAgainValid"></b-form-input>
->>>>>>> develop
         <b-form-invalid-feedback id="password-again-feedback">
           비밀번호가 다릅니다.</b-form-invalid-feedback>
       </b-col>
     </b-row>
-<<<<<<< HEAD
-    <b-row align-v="center">
-      <b-col sm="3">닉네임</b-col>
-      <b-col sm="9">
-        user.nickname
-      </b-col>
-=======
 
     <!-- 닉네임 -->
     <b-row>
@@ -81,17 +49,10 @@
           <div v-if="!NickNameinValid || !IsNicknameChanged" class="block-btn btn-style3" block>중복 확인</div>
           <div v-else class="block-btn btn-style1" @click='nicknameCheck(updateData.config.nickname)'>중복 확인</div>
         </b-col>
->>>>>>> develop
     </b-row>
 
     <!-- 프로필 사진 -->
     <b-row align-v="center">
-<<<<<<< HEAD
-      <b-col sm="3">프로필 사진</b-col>
-      <b-col sm="9">
-        <b-form-file v-model="profileImage" class="mt-3" accept="image/*" plain></b-form-file>
-        <div class="mt-3">Selected file: {{ profileImage ? profileImage.name : '' }}</div>
-=======
       <b-col cols="4" sm="3" style="padding-right:0">프로필 사진</b-col>
       <b-col cols="8" sm="6">
         <b-form-file ref="file-input" v-model="updateData.config.profile" accept="image/*"
@@ -99,7 +60,6 @@
       </b-col>
 			<b-col sm="3">
         <div class="block-btn btn-style1" @click="selectBasicImage">사진 삭제</div>
->>>>>>> develop
       </b-col>
     </b-row>
     <b-row v-if="imageURL"> 
@@ -127,21 +87,6 @@
     <b-row align-v="center">
       <b-col sm="3">메인화면 선택</b-col>
       <b-col sm="9">
-<<<<<<< HEAD
-        <b-form-radio-group v-model="mainSelected" name="radio-options-slots">
-          <b-form-radio value="blog">내 블로그</b-form-radio>
-          <b-form-radio value="browsing">둘러보기</b-form-radio>
-        </b-form-radio-group>
-      </b-col>
-    </b-row>
-    <b-row align-v="center" align-h="center">
-      <b-col sm="2"></b-col>
-      <b-col sm="4">
-        <b-button type="submit" variant="primary" id="updateButton" to="/userUpdate" block>수정</b-button>
-      </b-col>
-      <b-col sm="4">
-        <b-button variant="danger" id="deleteButton" @click="showMsgBoxTwo" block>탈퇴</b-button>
-=======
         <b-form-radio-group v-model="updateData.config.start_page" :options="options" name="radio-options-slots"/>
       </b-col>
     </b-row>
@@ -158,7 +103,6 @@
       :id="sns.sns_name.toLowerCase()"/> {{ sns.sns_name }}</b-col>
       <b-col cols="9">
         <b-form-input v-model="updateData.sns_list[index].sns_url" :placeholder="sns_base[index]" class="form-control"></b-form-input>
->>>>>>> develop
       </b-col>
     </b-row>
 
@@ -176,27 +120,14 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import { mapActions } from 'vuex'
-=======
 import axios from 'axios'
 import { mapActions, mapState, mapMutations } from 'vuex'
 import SERVER from '../../api/url.js'
->>>>>>> develop
 
 export default {
     name: 'UserDetail',
     data() {
       return {
-<<<<<<< HEAD
-        password: '',
-        passwordAgain: '',
-        profileImage: '',
-        mainSelected: '',
-      }
-    },
-    computed: {
-=======
         updateData: {
           valid: {
             password: true,
@@ -234,7 +165,6 @@ export default {
     },
     computed: {
       ...mapState('accounts', ['authUser', 'updateTF']),
->>>>>>> develop
       passwordValid() {
         const len = this.password.length
         if (len == 0) return null;
@@ -252,33 +182,6 @@ export default {
         if (len == 0) return null;
         if(len > 0 && this.password == this.passwordAgain) return true;
         return false;
-<<<<<<< HEAD
-      }
-    },
-    methods: {
-      ...mapActions('accounts', ['DeleteUser']),
-      showMsgBoxTwo() {
-        this.boxTwo = ''
-        this.$bvModal.msgBoxConfirm('데이ㅓ 복구 ㄴㄴ', {
-          title: '정말로 탈퇴하시겠습니까?',
-          size: 'lg',
-          buttonSize: 'sm',
-          okVariant: 'danger',
-          okTitle: 'YES',
-          cancelTitle: 'NO',
-          footerClass: 'p-2',
-          hideHeaderClose: false,
-          centered: true
-        })
-          .then((ans) => {
-            if (ans) {
-              this.DeleteUser()
-            }
-          })
-          .catch(err => console.log(err.response))
-      }
-    }
-=======
       },
       NickNameinValid(){
         if(!this.updateData.config.nickname) return null
@@ -438,13 +341,10 @@ export default {
         }
       }
     },
->>>>>>> develop
 }
 </script>
 
 <style>
-<<<<<<< HEAD
-=======
 .custom-file-input:lang(en) ~ .custom-file-label::after {
   content: '파일찾기';
 }
@@ -478,5 +378,4 @@ export default {
     display: none;
   }
 }
->>>>>>> develop
 </style>

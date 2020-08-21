@@ -12,20 +12,6 @@
         <hr id="divider">
         <div class="RecipeArray">
         <v-container fluid grid-list-md>
-<<<<<<< HEAD
-            <v-layout row wrap>
-                <v-flex xs12 sm6 md4 lg3 xl2 v-for="x in 10" :key=x >
-                    <RecipeCard >
-                    </RecipeCard>
-                </v-flex>
-            </v-layout>
-
-
-        <v-btn @click="scrollToTop" id="button-bottom">
-            ^
-        </v-btn>
-
-=======
             <v-layout row wrap >
                 <v-flex xs12 sm6 md4 lg3 xl2 v-for="(recipeinfo, index) in recipes" :key="index" style="margin:auto%; padding:12px 12px;" >
                     <recipe-card :recipe="recipeinfo" ></recipe-card>
@@ -39,7 +25,6 @@
             <div v-if="numberofgetrecipes == 0">더 이상 불러올 레시피가 없어요. 다시 검색해볼까요?</div>
         </div>
         <!-- <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
->>>>>>> develop
         </v-container>
         <v-btn icon>
             <v-icon>mdi-share-variant</v-icon>
@@ -51,23 +36,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollmonitor/1.2.0/scrollMonitor.js"></script>
 <script>
-<<<<<<< HEAD
-import RecipeSearchBar from "@/components/lookaroundrecipe/RecipeSearchBar.vue"
-import RecipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
-export default {
-    data(){
-        return{
-            
-        }
-    },
-    components:{
-        RecipeSearchBar,
-        RecipeCard,
-    },
-    methods:{
-        getRecipes (){
-            console.log("레시피가져오기")
-=======
 import InfiniteLoading from 'vue-infinite-loading'
 import RecipeSearchBar from "@/components/lookaroundrecipe/RecipeSearchBar.vue"
 import recipeCard from "@/components/lookaroundrecipe/RecipeCard.vue"
@@ -102,14 +70,10 @@ export default {
             setTimeout(() => {
                 this.getFilteredRecipes()
             },1000);
->>>>>>> develop
         },
         scrollToTop(){
             window.scroll({top:0,left:0,behavior:'smooth'})//==scroll(0,0)과 같다 => 0,0위치로 이동하는 메소드
         },
-<<<<<<< HEAD
-    },
-=======
         ...mapActions('lookaround',['getFilteredRecipes','alertfortest']),
         ...mapMutations('lookaround',['initializing']),
     },
@@ -134,19 +98,10 @@ export default {
       $("#myblog").removeClass("active");
       $("#browsing").addClass("active");
     }
->>>>>>> develop
 }
 </script>
 
 <style>
-<<<<<<< HEAD
-    #button-bottom{
-        position: fixed;
-        right: 5vw;
-        bottom: 10vh;
-        border: 0.1vh solid rgb(226, 151, 64);
-    }
-=======
 #lookaround {
   width: 90%;
   min-height: 200vh;
@@ -155,7 +110,6 @@ export default {
   background-color: #fff;
   padding: 4em 1em 8em 1em;
 }
->>>>>>> develop
 
 @media (max-width: 496px) {
   #lookaround {
