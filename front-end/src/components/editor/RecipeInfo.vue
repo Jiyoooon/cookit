@@ -61,15 +61,15 @@
                 <b-form-file enctype="multipart/form-data" v-model="recipe.main_image_file" accept="image/*" placeholder="음식 대표사진"
                   @change="setThumbnail"></b-form-file>
               </b-col>
-              <b-col sm="4">
-                <div class="block-btn btn-style1" @click="deleteMain_Image_File">사진 삭제</div>
-              </b-col>
             </b-row>
             <b-row>
               <b-col>
                 <b-img v-if="recipe.main_image_file!=null" :src="imageUrl" height="200px" style="max-width:100%"/>
                 <span v-else></span>
               </b-col>
+            </b-row>
+						<b-row v-if="recipe.main_image_file!=null">
+              <div class="text-btn" style="margin: 0 auto;" @click="deleteMain_Image_File">사진 삭제</div>
             </b-row>
           </b-container>
         </b-col>

@@ -26,10 +26,6 @@
 						:id="index+''" @change="setThumbnail"></b-form-file>
 				</b-col>
 
-				<b-col cols="4" @click="deleteStepImage(index)">
-					<div class="block-btn btn-style1" >사진 삭제</div>
-				</b-col>
-
 				<b-col cols="1">
 					<div style="display:block; text-align:right;">
 						<b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer;" @click="deleteCookingStep(index)"></b-icon>
@@ -42,6 +38,9 @@
                 <b-img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" style="max-width:100%" />
                 <span v-else></span>
               </b-col>
+            </b-row>
+						<b-row v-if="step.step_image_file!=null">
+              <div class="text-btn" style="margin: 0 auto;" @click="deleteStepImage(index)">사진 삭제</div>
             </b-row>
           </b-container>
         </b-col>

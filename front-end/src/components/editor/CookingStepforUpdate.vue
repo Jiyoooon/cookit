@@ -31,15 +31,15 @@
                 <b-img v-if="imageUrl[index]!=null" :src="imageUrl[index]" height="180px" style="max-width:100%"/>
                 <span v-else></span>
               </b-col>
-              <b-col sm="3" v-if="imageUrl[index]">
-                <div class="text-btn" @click="selectBasicImage(index)">삭제</div>
-              </b-col>
+            </b-row>
+            <b-row v-if="imageUrl[index]">
+              <div class="text-btn" style="margin: 0 auto;" @click="selectBasicImage(index)">사진 삭제</div>
             </b-row>
           </b-container>
         </b-col>
 				<b-col sm="1">
 					<b-container fluid="lg">
-						<b-row>
+						<b-row align-v="end">
 							<b-col><b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer" @click="deleteCookingStep1(index)"></b-icon></b-col>
 						</b-row>
 					</b-container>
