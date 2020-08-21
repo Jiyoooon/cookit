@@ -203,7 +203,12 @@ public class RecipeServiceImpl implements RecipeService {
 		else
 			imageName = Long.toString(System.currentTimeMillis());
 		
-		if (recipeData.getMain_image_file() != null && !recipeData.getMain_image_file().isEmpty()) {
+		if (recipeData.getMain_image_file() == null) {
+			if(recipeData.getMain_image() == null || recipeData.getMain_image().equals("")) {//메인 이미지 삭제
+				recipeData.setMain_image(baseUrl + "/images/recipe/default.jpg");
+			}
+		}
+		else if (recipeData.getMain_image_file() != null && !recipeData.getMain_image_file().isEmpty()) {
 			try {
 				writeFile(recipeData.getMain_image_file(), imageName, baseUrl);
 			} catch (IOException e) {
