@@ -105,7 +105,7 @@ export default {
         ...mapMutations('lookaround',['setRecipequeryUserId']),
     },
     created(){
-      console.log("created")
+      // console.log("created")
       this.getIngredients();
     },
 }
