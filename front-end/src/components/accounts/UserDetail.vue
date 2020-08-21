@@ -264,7 +264,6 @@ export default {
       },
       checkPasswordValidValue() {
         if (!this.updateData.config.password && !this.updateData.passwordAgain) { // 적은 패스워드가 없고, 패스워드 재입력 값이 없으면
-          console.log("아무것도 적지않음")
           this.updateData.valid.password = true
         } else if(this.passwordValid && this.passwordAgainValid) {// 패스워드 재입력한 결과가 참이면
           this.updateData.valid.password = true

@@ -249,7 +249,7 @@ export default {
         for (let [key, value] of Object.entries(state.cookingStep[i])) {
           if (!value) continue;
           // if (key == "step_image_url") continue;
-          console.log(`cookingStep[${i}].${key}: ${value}`)
+          // console.log(`cookingStep[${i}].${key}: ${value}`)
           recipeData.append(`cookingStep[${i}].${key}`, value)
         }
       }
@@ -272,7 +272,7 @@ export default {
     },
     SET_COOKINGSTEP(state, data) {
       state.cookingStep = data
-      console.log(state.cookingStep)
+      // console.log(state.cookingStep)
     },
     SET_MAININGR(state, data) {
       state.mainIngr = data
@@ -338,7 +338,7 @@ export default {
           step_image_url: null
         })
       }
-      console.log(state.cookingStep)
+      // console.log(state.cookingStep)
     },
     deleteCookingStep(state, id) {
       state.cookingStep.splice(id, 1);

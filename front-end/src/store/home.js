@@ -42,7 +42,7 @@ export default {
       getRandomRecipes({commit}) {
         axios.get(SERVER.ROUTES.home.randomRecipe)
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
           commit('SET_RANDOM', res.data)
         })
         .catch((err) => {

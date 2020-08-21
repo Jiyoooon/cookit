@@ -242,13 +242,13 @@ export default {
         ...mapActions('editor', ['deleteRecipe']),
         ...mapMutations('recipes',['SET_TIMER_INIT']),
         startSpeaking() {
-            console.log("음성인식 start");
+            // console.log("음성인식 start");
             this.isSpeaking = true;
             this.recognition.start();
             // document.getElementById("speechButton").textContent="음성인식 종료";
         },
         stopSpeaking(){
-            console.log("음성인식 stop");
+            // console.log("음성인식 stop");
             this.isSpeaking = false;
             this.recognition.stop();
             // document.getElementById("speechButton").textContent="음성인식 시작";
@@ -286,7 +286,7 @@ export default {
 
             this.recognition.onresult = (event) => {
                 var text = event.results[event.resultIndex][0].transcript;
-                console.log(text);
+                // console.log(text);
                 let next = ['다음', '담', '당', '탐', '정', '형', '황', '방', '항', '앞으로', '아크로'];
                 let prev = ['이전', '이정', '뒤로', '위로', '귀로', '디로', '기록'];
                 let timer = ['타이머', '타임', '차이머'];

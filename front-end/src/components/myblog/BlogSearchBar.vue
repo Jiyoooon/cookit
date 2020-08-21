@@ -34,7 +34,7 @@ import { mapActions, mapState } from 'vuex'
     },
     methods: {
         searchRecipe(){//버튼을 눌렀을때,
-            console.log(this.searchtext)
+            // console.log(this.searchtext)
             this.setRecipequery2({query:this.searchtext, current:this.currentshow})
             setTimeout(() => {
                 // this.fortest()
