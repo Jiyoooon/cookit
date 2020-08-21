@@ -42,7 +42,7 @@ export default {
     computed: {
     },
     methods: {
-        ...mapActions('accounts', ['login', 'GoSignup','GoPasswordFind'])
+        ...mapActions('accounts', ['login', 'GoEmailAuth','GoPasswordFind'])
     }
   }
 
