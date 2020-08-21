@@ -83,7 +83,7 @@ export default {
         })
         .catch((err) => {
           console.err(err.response)
-          alert(err.response.data.cause)
+          // alert(err.response.data.cause)
         })
     },
     fetchLikeRecipes({ rootState, commit, state }) {

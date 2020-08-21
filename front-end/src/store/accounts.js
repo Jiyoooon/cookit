@@ -346,7 +346,8 @@ export default {
           dispatch('storage/getmyfollowings',state.authUser.user_id,{root : true})
         })
         .catch((err) => {
-          alert(err.response)
+          console.log(err)
+          // alert(err.response)
         })
     },
     updateUser({ dispatch, state, commit }, updateData) {
