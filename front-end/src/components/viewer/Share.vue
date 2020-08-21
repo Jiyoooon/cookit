@@ -62,8 +62,8 @@ export default {
       window.open(this.facebookUrl);
     },
     shareByKakao(){
-      console.log(this.selectedRecipe)
-      console.log(this.currUrl)
+      // console.log(this.selectedRecipe)
+      // console.log(this.currUrl)
       Kakao.Link.sendDefault({
         // container: '#kakao-link-btn',
         objectType: 'feed',
@@ -104,13 +104,13 @@ export default {
       canvas.width = pageWidth
 
       let ele = document.querySelector('#detail-view')
-      console.log(document);
+      // console.log(document);
       let width = ele.offsetWidth // 셀렉트한 요소의 px 너비
       let height = ele.offsetHeight // 셀렉트한 요소의 px 높이
       let imgHeight = pageWidth * height/width // 이미지 높이값 px to mm 변환
 
       if(!ele){
-        console.warn('recipe is not exist.')
+        // console.warn('recipe is not exist.')
         return false
       }
       html2canvas(ele).then(function(canvas) {
@@ -128,7 +128,7 @@ export default {
               pdf.addImage(imgData, 'png', 0, position, pageWidth, imgHeight)
               heightLeft -= pageHeight
             }
-            console.log(pdf)
+            // console.log(pdf)
             pdf.save('cookit-recipe'.toLowerCase() +'.pdf')
           })
         })

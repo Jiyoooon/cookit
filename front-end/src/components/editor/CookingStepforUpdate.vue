@@ -78,16 +78,16 @@ export default {
       const file = e.target.files[0];
       // console.log(file)
       const index = Number(e.path[0].id);
-      console.log(index)
+      // console.log(index)
       if (!file) {
         this.imageUrl[index] = this.selectedRecipe.cookingStep[index].step_image
         this.cookingStep[index].step_image = this.selectedRecipe.cookingStep[index].step_image
         return
       }
       this.imageUrl[index] = URL.createObjectURL(file);
-      console.log(this.selectedRecipe.cookingStep)
+      // console.log(this.selectedRecipe.cookingStep)
       this.cookingStep[index].step_image = URL.createObjectURL(file);
-      console.log(this.imageUrl)
+      // console.log(this.imageUrl)
     },
     deleteCookingStep1(index) {
       this.imageUrl.splice(index, 1)
@@ -117,8 +117,8 @@ export default {
             this.imageUrl[`${i}`] = this.selectedRecipe.cookingStep[i].step_image
             cookstep.push(step)
         }
-        console.log(this.selectedRecipe.cookingStep)
-        console.log(this.imageUrl)
+        // console.log(this.selectedRecipe.cookingStep)
+        // console.log(this.imageUrl)
         // console.log(this.selectedRecipe.cookingStep)
         this.SET_COOKINGSTEP(cookstep)
     },

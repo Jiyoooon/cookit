@@ -168,7 +168,7 @@ export default {
       }
     },
     updated(){
-      console.log("profilecard updated")
+      // console.log("profilecard updated")
       // console.log(this.followers)
       // console.log(this.followings)
       this.setfstate()
@@ -180,7 +180,7 @@ export default {
       }
     },
     created() {
-      console.log("profilecard created")
+      // console.log("profilecard created")
       if(this.authUser == null || this.selecteduserinfo.user_id !== this.authUser.user_id)
         this.hituser(this.selecteduserinfo.user_id)
       

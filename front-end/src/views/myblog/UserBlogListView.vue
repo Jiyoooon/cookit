@@ -44,7 +44,7 @@ export default {
     },
     created() {
         // console.log(this.selecteduserinfo)
-        console.log("userbloglist created~!!!!!!!")
+        // console.log("userbloglist created~!!!!!!!")
         this.SET_USERINFO({//들어가는 블로그의 유저정보
             user_id: this.$route.params.user_id,
         },)

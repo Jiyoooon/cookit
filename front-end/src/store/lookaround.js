@@ -63,8 +63,8 @@ export default {
       state.recipequery.category = payload
     },
     setRecipequeryOrder(state,payload){
-      console.log(payload)
-      console.log(typeof(payload))
+      // console.log(payload)
+      // console.log(typeof(payload))
       state.recipequery.order = payload
     },
     setRecipequery(state,payload){
@@ -164,8 +164,8 @@ export default {
       dispatch('getFilteredRecipes')
     },
     setRecipequery2({commit,state,rootState},payload){
-      console.log(payload)
-      console.log(rootState.myblog.selecteduserinfo)
+      // console.log(payload)
+      // console.log(rootState.myblog.selecteduserinfo)
       commit('setRecipequery',payload)
       let trecipequery = state.recipequery
       const current = payload.current
@@ -183,7 +183,7 @@ export default {
       const filter = {
         params: trecipequery
       }
-      console.log(trecipequery)
+      // console.log(trecipequery)
       axios.get(SERVER.ROUTES.lookaroundrecipe.getfilteredrecipes,filter)
       .then((res) => {
         commit('initializing')
