@@ -79,8 +79,8 @@ export default {
         },
         gouserblog(){
           // this.getUserInfo(this.recipe.recipe_user)
-          console.log("authUser!!")
-          console.log(this.authUser);
+          // console.log("authUser!!")
+          // console.log(this.authUser);
           if (this.authUser != null && this.authUser.user_id == this.recipe.recipe_user)
             this.$router.push({ name: 'MyBlogListView'})
           else

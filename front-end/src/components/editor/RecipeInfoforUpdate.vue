@@ -162,7 +162,7 @@ export default {
     created() {
       // console.log(this.selectedRecipe)
         this.inputInitialValue()
-        console.log(this.updateTF)
+        // console.log(this.updateTF)
     },
     watch: {
       recipe: {
