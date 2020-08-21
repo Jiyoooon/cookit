@@ -37,11 +37,7 @@
         <b-col cols="4" sm="3" class="mt-2">
           <label for="input-userid">닉네임<span style="color: red">*</span></label>
         </b-col>
-<<<<<<< HEAD
-        <b-col sm="8">
-=======
         <b-col cols="8" sm="6">
->>>>>>> develop
           <b-form-input 
             v-model="signupData.config.nickname"
             :state="NickNameinValid"
@@ -53,27 +49,9 @@
             닉네임이 올바르지 않습니다.<br>(영문/숫자 4~12자, 한글 2~6자 & 특수문자 불가능)
           </b-form-invalid-feedback>
         </b-col>
-<<<<<<< HEAD
-        <b-col sm="1">
-          <b-button v-if="!NickNameinValid" disabled variant="primary" block>중복확인</b-button>
-          <b-button v-else variant="primary" @click='nicknameCheck(signupData.config.nickname)'>중복확인</b-button>
-        </b-col>
-      </b-row>
-
-
-      <b-row align-v="center">
-        <b-col>
-          프로필사진
-        </b-col>
-        <b-col sm="9">
-          <b-form-file ref = "file-input" v-model="signupData.config.profile_image" class="mt-3" accept=".jpg, .png, .jpeg" plain></b-form-file>
-          
-          <div class="mt-3"><b-button variant="primary" @click="clearFiles" plain>파일 제거</b-button> 선택된사진: {{ signupData.config.profile_image ?signupData.config.profile_image.name : '' }}</div>
-=======
         <b-col sm="3">
           <div v-if="!NickNameinValid" class="block-btn btn-style3" block>중복 확인</div>
           <div v-else class="block-btn btn-style1" @click='nicknameCheck(signupData.config.nickname)'>중복 확인</div>
->>>>>>> develop
         </b-col>
       </b-row>
 
@@ -106,15 +84,9 @@
       </b-row>
         <b-row><b-col> </b-col></b-row>
         <b-row align-v="center" align-h="center">
-<<<<<<< HEAD
-            <b-col sm="2"></b-col>
-            <b-col sm="4">
-                <b-button type="submit" variant="primary" id="signButton" @click="signup(signupData)" block>확인</b-button>
-=======
             <b-col cols="1" sm="2"></b-col>
             <b-col cols="5" sm="4">
                 <div class="block-btn btn-style1" @click="signup(signupData)" block>가입하기</div>
->>>>>>> develop
             </b-col>
             <b-col cols="5" sm="4">
                 <div class="block-btn btn-style2" @click="$router.go(-1)">취소</div>
@@ -122,12 +94,6 @@
             <b-col cols="1" sm="2"></b-col>
         </b-row>
     </b-container>
-<<<<<<< HEAD
-    <!--이미지 입력Form-->
-    <!-- Plain mode -->
-    
-=======
->>>>>>> develop
   </div>
 
   
@@ -151,14 +117,9 @@ import axios from 'axios'
             email: null,
             password: null,
             nickname: null,
-<<<<<<< HEAD
-            profile_image: null,
-            intro: null,
-=======
             profile: null,
             image_name: '',
             intro: '',
->>>>>>> develop
           }
         },
         file:null,
@@ -184,11 +145,7 @@ import axios from 'axios'
       },
       passwordAgainValid() {
         if(!this.passwordAgain) return null
-<<<<<<< HEAD
-        if(this.passwordAgain.length > 0 && this.signupData.password == this.passwordAgain) return true;
-=======
         if(this.passwordAgain.length > 0 && this.signupData.config.password == this.passwordAgain) return true;
->>>>>>> develop
         return false;
       },
       NickNameinValid(){
@@ -197,12 +154,7 @@ import axios from 'axios'
         var NickNamelen = 0
         var nameflag = true
         for (var i = 0; i < len; i++) {
-<<<<<<< HEAD
-          const ch = this.signupData.nickname[i]
-          console.log("ch: " + ch)
-=======
           const ch = this.signupData.config.nickname[i]
->>>>>>> develop
           if(('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'z')||('A' <= ch && ch <= 'Z')){
             NickNamelen++
           }
@@ -240,8 +192,6 @@ import axios from 'axios'
             })
           if (res.data.result == 'success') {
             this.signupData.valid.nickname = true
-<<<<<<< HEAD
-=======
             this.$bvModal.msgBoxOk('확인되었습니다.', {
             title: 'Confirmation',
             size: 'sm',
@@ -265,7 +215,6 @@ import axios from 'axios'
             id: 'modal'
             })
             this.signupData.valid.nickname = false
->>>>>>> develop
           }
         })
         .catch((err) => {
@@ -273,9 +222,6 @@ import axios from 'axios'
           // alert('!!!')
         })
       },
-<<<<<<< HEAD
-      ...mapActions('accounts', ['signup']),
-=======
       ...mapActions('accounts', ['signup', 'signup2']),
       checkPasswordValidValue() {
         if(this.passwordAgainValid) {
@@ -292,15 +238,11 @@ import axios from 'axios'
     },
     updated() {
       this.checkPasswordValidValue()
->>>>>>> develop
     }
   }
 </script>
 
 <style>
-<<<<<<< HEAD
-
-=======
 @media (max-width: 496px) {
   .reinput {
     padding-right: 0;
@@ -308,5 +250,4 @@ import axios from 'axios'
     margin-top: 0 !important;
   }
 }
->>>>>>> develop
 </style>

@@ -81,7 +81,10 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 export default {
-    name: 'RecipeInfo',
+		name: 'RecipeInfo',
+		computed: {
+			...mapState('editor', ['recipe'])
+		},
     data() {
       return {
         imageUrl: null,

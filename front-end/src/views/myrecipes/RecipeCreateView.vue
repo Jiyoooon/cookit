@@ -46,10 +46,8 @@ export default {
     components: {
       RecipeInfo, Ingredient, CookingStep
     },
-    data() {
-      return {
-        items: [],
-      }
+    computed: {
+      ...mapState('editor', ['mainIngr', 'subIngr'])
     },
     methods: {
       ...mapActions('editor', ['onSubmitButton']),

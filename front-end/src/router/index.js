@@ -4,7 +4,6 @@ import SignupView from '../views/accounts/SignupView.vue'
 import LoginView from '../views/accounts/LoginView.vue'
 import LogoutView from '../views/accounts/LogoutView.vue'
 import UserDeleteView from '../views/accounts/UserDeleteView.vue'
-import UserUpdateView from '../views/accounts/UserUpdateView.vue'
 import UserInfoView from '../views/accounts/UserInfoView.vue'
 import PasswordAuthView from '../views/accounts/PasswordAuthView.vue'
 import PasswordFindView from '../views/accounts/PasswordFindView.vue'
@@ -18,6 +17,7 @@ import UserBlogListView from '../views/myblog/UserBlogListView.vue'
 import RecipeDetailView from '../views/recipeview/RecipeDetailView.vue'
 import store from '../store'
 import $ from 'jquery'
+
 
 
 Vue.use(VueRouter)
@@ -51,11 +51,6 @@ Vue.use(VueRouter)
     path: '/userDelete',
     name: 'UserDelete',
     component: UserDeleteView
-  },
-  {
-    path: '/userUpdate',
-    name: 'UserUpdate',
-    component: UserUpdateView
   },
   {
     path: '/userInfo',
@@ -183,9 +178,10 @@ router.beforeEach((to, from, next) => {
   const IsAuthorized = Vue.$cookies.isKey('user-email')
   const IsPasswordAuth = Vue.$cookies.isKey('password-check')
 
-//   const IsLoggedIn = Vue.$cookies.isKey('auth-token')
-//   const LoggedInRequired = RequiredLoggedInPages.includes(to.name)
-//   const LoggedOutRequired = RequiredLoggedOutPages.includes(to.name)
+  const LoggedInRequired = RequiredLoggedInPages.includes(to.name)
+  const LoggedOutRequired = RequiredLoggedOutPages.includes(to.name)
+  const AuthorizedRequired = RequiredAuthorized.includes(to.name)
+  const AuthPasswordRequired = RequiredPasswordAuth.includes(to.name)
 
   const FromUserInfo = RequiredPasswordAuth.includes(from.name)
   const FromUserInfoTo = BeforeUpdated.includes(to.name)

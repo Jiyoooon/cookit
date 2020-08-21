@@ -7,7 +7,7 @@
           <b-container fluid="lg" id="step-container">
             <b-row align-v="center">
               <b-col>
-								<b-form-textarea type="textarea" id="description" rows="3" maxrows="3" v-model="step.description" required no-resize></b-form-textarea>
+								<b-form-textarea type="textarea" id="description" rows="3" max-rows="3" v-model="step.description" required no-resize></b-form-textarea>
 							</b-col>
             </b-row>
 						<b-row align-v="center">
@@ -46,15 +46,20 @@
         </b-col>
       </b-row>
 			<b-row>
-				<b-col sm="3"></b-col>
-				<b-col sm="4"><b-button variant="primary" id="addBtn" @click="addStep" block>추가</b-button></b-col>
-				<b-col sm="5"></b-col>
+				<b-col sm="4"></b-col>
+				<b-col sm="4">
+          <div @click="addCookingStep" style="width: 6em; display: block; margin: 0px auto; align-text: center; cursor: pointer">
+            <b-icon class="mr-1" icon="plus-square-fill" variant="warning"></b-icon>추가</div>
+				</b-col>
+				<b-col sm="4"></b-col>
 			</b-row>
     </b-container>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 export default {
 	name: 'CookingStep',
 	computed: {
