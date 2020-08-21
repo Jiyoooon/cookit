@@ -49,12 +49,13 @@
 import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
 import $ from 'jquery'
 
-// 새로고침 전에 둘러보기 검색기록 지움
+// 새로고침 전에 세션 스토리지 지움
 $(window).on('beforeunload', function() {
   // sessionStorage.removeItem('category');
   // sessionStorage.removeItem('searching');
   // sessionStorage.removeItem('selecting');
   // sessionStorage.removeItem('ordering');
+  // sessionStorage.removeItem('order');
   sessionStorage.clear();
 })
 
