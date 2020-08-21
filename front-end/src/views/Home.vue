@@ -26,11 +26,11 @@
 	</div>
 	<div class="grid-item grid-item--tertiary grid-item--content">
 		<article v-if="!isLoggedIn" class="article">
-			<p>아직 회원이 아니신가요? COOKIT을 누려보세요!</p>
+			<p>아직 회원이 아니신가요?<br>COOKIT을 누려보세요!</p>
       <div style="float:right;"><a href="/emailAuth">→ 회원가입</a></div>
 		</article>
     <article v-else class="article">
-      <p>본인만의 레시피가 있나요? COOKIT에 공유해보세요!</p>
+      <p>본인만의 레시피가 있나요?<br>COOKIT에 공유해보세요!</p>
       <div style="float:right;"><a href="/recipeCreate">→ 레시피 쓰러 가기</a></div>
     </article>
 	</div>
