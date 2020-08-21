@@ -35,9 +35,10 @@ import { mapMutations, mapActions, mapState } from 'vuex'
 
 export default {
   name: 'Ingredients',
-  props: {
-    ingredients: Array,
-    essential: Number
+  data() {
+    return {
+      items: [ { name: "", quantity: ""}, { name: "", quantity: "" } ],
+    }
   },
   created() {
     this.loadIngredients();
@@ -83,4 +84,5 @@ export default {
 </script>
 
 <style>
+
 </style>

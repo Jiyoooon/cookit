@@ -24,8 +24,11 @@
 						<if test="intro != null and intro != ''">
 							, intro
 						</if>
+<<<<<<< HEAD
+=======
 						, image_name
 						, hits
+>>>>>>> develop
 						, create_date
 					) values(
 						#{password}
@@ -37,8 +40,11 @@
 						<if test="intro != null and intro != ''">
 							, #{intro}
 						</if>
+<<<<<<< HEAD
+=======
 						, #{image_name}
 						, 0
+>>>>>>> develop
 						, now()
 					)
 	</insert>
@@ -56,7 +62,11 @@
 	</delete>
 	
 	<select id="getUser" resultType="User">
+<<<<<<< HEAD
+		SELECT user_id, email, nickname, profile_image, intro, create_date
+=======
 		SELECT user_id, email, nickname, profile_image, intro, image_name, hits, start_page, create_date
+>>>>>>> develop
 		FROM User
 		WHERE user_id = #{uid}
 	</select>
@@ -66,7 +76,6 @@
 		SET nickname = #{nickname}
 			, profile_image = #{profile_image}
 			, intro = #{intro}
-			, image_name = #{image_name}
 			<if test="password != null and password != ''">
 				, password = #{password}
 			</if>
@@ -102,6 +111,12 @@
 		FROM User
 		WHERE user_id = #{uid} AND password = #{password}
 	</select>
+	
+	<update id="updatePassword" parameterType="string">
+		UPDATE User
+		SET password = #{password}
+		WHERE user_id = #{uid}	
+	</update>
 	
 	
 	<update id="updatePasswordByEmail" parameterType="string">

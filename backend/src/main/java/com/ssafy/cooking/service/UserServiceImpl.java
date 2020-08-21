@@ -2,7 +2,13 @@ package com.ssafy.cooking.service;
 
 import java.io.File;
 import java.io.IOException;
+<<<<<<< HEAD
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+=======
 import java.sql.Timestamp;
+>>>>>>> develop
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
@@ -10,6 +16,12 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -41,6 +53,13 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
+	public int signup(User user) {
+		int userId = userDao.selectNextUserId();
+		return userDao.signup(user) > 0 ? userId : -1;
+	}
+
+	@Override
+	@Transactional
 	public int delete(String uid) throws IOException {
 		//이미지 폴더에서 삭제
 		try{
@@ -50,6 +69,18 @@ public class UserServiceImpl implements UserService{
 		}
 		return userDao.delete(uid);
 	}
+
+//	
+//	public Resource loadFileAsResource(String fileName) throws MalformedURLException {
+//		Resource rs = null;
+//		String filePath = 
+//		try {
+//			File path = new File(fileName);
+//		}catch(MalformedURLException e) {
+//			throw new MalformedURLException();
+//		}
+//		return null;
+//	}
 	
 	
 	
@@ -85,13 +116,73 @@ public class UserServiceImpl implements UserService{
 		return user;
 	}
 	
+<<<<<<< HEAD
+	
+	@Override
+	@Transactional
+	public HashMap<String, Object> getUserResource(String uid) throws IOException {
+		String separator = File.separator;
+		String filePath = "C:\\SSAFY\\commonpjt\\profile";
+//		String filePath = "/app/images/profile";
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		
+		Resource rs = null;
+		HttpHeaders header = new HttpHeaders();
+		User user = userDao.getUser(uid);
+		String oriName = user.getProfile_image();
+		map.put("user", user);
+		
+		
+		//프로필 사진 없으면 user정보만 return
+		if(oriName == null || oriName.equals("")) {
+			map.put("resource", null);
+			return map;
+		}
+		
+		String fileName = filePath + separator + user.getProfile_image();
+		File target = new File(fileName);
+		
+		if(target.exists()) {
+			try {
+				String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));
+				if(mimeType == null) mimeType = "octet-stream";
+				
+				rs = new UrlResource(target.toURI());
+				
+				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\""+rs.getFilename()+"\"");
+				header.setContentType(MediaType.parseMediaType(mimeType));
+				
+				map.put("resource", rs);
+				map.put("header", header);
+				
+				return map;
+			}catch(IOException e) {
+				e.printStackTrace();
+				logger.warn("서버 폴더에서 이미지 호출 실패");
+				map.put("resource", null);
+				return map;
+			}
+		}else {
+			logger.warn("profile_image값은 있는데 서버 폴더에서 이미지 찾지 못함");
+			map.put("resource", null);
+			return map;
+		}
+		
+	}
+
+=======
+>>>>>>> develop
 	@Override
 	@Transactional
 	public int reviseUser(MultipartFile profile, User user) throws IOException {
-		String imageName = user.getImage_name();
-		User oriUser = userDao.getUser(Integer.toString(user.getUser_id()));
-		
 		try {
+<<<<<<< HEAD
+			//새로 입력받은 프로필 이미지가 비어있으면 서버에서 삭제 후 profile_image = null로 갱신
+			if(profile == null) {
+				removeProfile(Integer.toString(user.getUser_id()));
+				user.setProfile_image("");
+=======
 			//profile != null => 프로필 수정
 			if(profile != null) {
 				removeProfile(Integer.toString(user.getUser_id()));
@@ -102,11 +193,11 @@ public class UserServiceImpl implements UserService{
 				removeProfile(Integer.toString(user.getUser_id()));
 	    		user.setProfile_image("default_image.png");
 	    		user.setImage_name("default_image.png");
+>>>>>>> develop
 			}
-			//수정 X
-			else{
-				user.setProfile_image(oriUser.getProfile_image());
-				user.setImage_name(oriUser.getImage_name());
+			//새로 입력받은 프로필 이미지가 null이 아니면 본래 저장소에 새로 저장
+			else {
+				writeProfile(profile, user.getUser_id(), user);
 			}
 		}catch(IOException e) {
 			throw new IOException();
@@ -194,6 +285,10 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+	@Override
+	public boolean updatePassword(String uid, String password) {
+		return userDao.updatePassword(uid, password) > 0 ? true : false;
+	}
 
 	@Override
 	public boolean isConfirmedEmail(String email) {
@@ -218,8 +313,8 @@ public class UserServiceImpl implements UserService{
 
 	public boolean removeProfile(String uid) throws IOException{
 		String separator = File.separator;
-//		String filePath = "C:\\SSAFY\\commonpjt\\profile";
-		String filePath = "/var/lib/tomcat8/webapps/images/profile";
+		String filePath = "C:\\SSAFY\\commonpjt\\profile";
+//		String filePath = "/app/images/profile";
 		
 		User user = userDao.getUser(uid);
 		String fileName = user.getProfile_image();
@@ -242,11 +337,9 @@ public class UserServiceImpl implements UserService{
 	}
 	public boolean writeProfile(MultipartFile profile, int userId, User user) {
 		String separator = File.separator;
-//		String filePath = "C:\\SSAFY\\commonpjt\\profile";
-    	String filePath = "/var/lib/tomcat8/webapps/images/profile";
+		String filePath = "C:\\SSAFY\\commonpjt\\profile";
+//    	String filePath = "/app/images/profile";
 		String oriName = profile.getOriginalFilename();
-		user.setImage_name(oriName);
-		
 		String extension = oriName.substring(oriName.lastIndexOf("."));//확장자
 		String timestamp = new Timestamp(System.currentTimeMillis()).toString();
 		
@@ -257,6 +350,16 @@ public class UserServiceImpl implements UserService{
 			profile.transferTo(new File(fileFullPath));
 			user.setProfile_image(fileName);
 			
+//    			ImageIO.write(profile, extension, new File(fileFullPath));
+			
+			
+//    			Runtime.getRuntime().exec("chmod 777 " + fileFullPath);
+//    			File newFile = new File(fileFullPath);
+//    			newFile.setExecutable(true, false); 
+//    			newFile.setReadable(true, false); 
+//    			newFile.setWritable(true, false);
+			
+//    			new File(fileFullPath).createNewFile();
 			return true;
 		}catch(IOException e) {
 			logger.info("Error save profile file, filepath : "+fileFullPath);
@@ -267,16 +370,20 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int signup(MultipartFile profile, User user) throws IOException {
+	public int signup2(MultipartFile profile, User user) throws IOException {
     	
         if(userDao.isDupEmail(user.getEmail()) > 0) {//중복된 이메일
         	return -1;
         }
-        
+//    	File dir = new File(filePath); //파일 저장 경로 확인, 없으면 만든다.
+//    	if (!dir.exists()) {
+//    		dir.mkdirs();
+//    	}
 		int nextId = userDao.selectNextUserId();
     	if(profile != null) {
     		try{
     			if(!writeProfile(profile, nextId, user)) {
+//    				System.out.println("파일 저장 실패,,");
     				throw new IOException();
     			}
     		}catch(IOException e) {

@@ -26,6 +26,10 @@
         </div>
         <!-- <infinite-loading @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
         </v-container>
+        <v-btn icon>
+            <v-icon>mdi-share-variant</v-icon>
+        </v-btn>
+        <div id="bottomSensor"></div>
         </div>
     </div>
 </template>

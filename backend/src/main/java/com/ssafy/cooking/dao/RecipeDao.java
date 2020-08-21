@@ -9,6 +9,13 @@ import com.ssafy.cooking.dto.CookingStep;
 import com.ssafy.cooking.dto.FoodIngredient;
 import com.ssafy.cooking.dto.Ingredient;
 import com.ssafy.cooking.dto.Recipe;
+<<<<<<< HEAD
+import com.ssafy.cooking.dto.User;
+
+@Mapper
+public interface RecipeDao {
+	List<Recipe> getRecipes(int start, int end, Integer id, Integer user, String query, Integer category, String filter);
+=======
 import com.ssafy.cooking.dto.RecipeDetail;
 
 @Mapper
@@ -19,15 +26,22 @@ public interface RecipeDao {
 	int addIngredients(int recipe_id, Ingredient ingredient);
 	int addCookingsteps(int recipe_id, List<CookingStep> cookingSteps);
 	List<Recipe> getRecipes(int start, int end, Integer id, String user, String[] query, Integer category, Integer order, Integer likeUser, String filter);
+>>>>>>> develop
 
 	List<Ingredient> getIngredients(int recipe_id);
 	List<CookingStep> getCookingSteps(int recipe_id);
 
+<<<<<<< HEAD
+=======
 	void upHits(int recipe_id);
 	int deleteRecipe(int recipe_id, int uid);
 	
+>>>>>>> develop
 	List<Comment> getCommnets(int recipe_id);
+
 	int addCommnet(int recipe_id, Comment comment);
+<<<<<<< HEAD
+=======
 	int modifyComment(Comment comment, int uid);
 	int deleteComment(int comment_id, int uid);
 	List<FoodIngredient> getSmallIngredients();
@@ -47,4 +61,5 @@ public interface RecipeDao {
 	void deleteIngredients(int recipe_id);
 	CookingStep getCookingStep(int recipe_id, int step_id);
 	List<Recipe> getRandom();
+>>>>>>> develop
 }

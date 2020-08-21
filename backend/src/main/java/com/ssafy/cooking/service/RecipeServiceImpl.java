@@ -1,15 +1,17 @@
 package com.ssafy.cooking.service;
 
+<<<<<<< HEAD
+=======
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+>>>>>>> develop
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.cooking.dao.RecipeDao;
 import com.ssafy.cooking.dto.Comment;
@@ -23,12 +25,22 @@ import com.ssafy.cooking.dto.User;
 import com.ssafy.cooking.util.Timer;
 
 @Service
+<<<<<<< HEAD
+public class RecipeServiceImpl implements RecipeService{
+
+=======
 public class RecipeServiceImpl implements RecipeService {
 	
+>>>>>>> develop
 	@Autowired
 	private RecipeDao recipeDao;
 
 	@Override
+<<<<<<< HEAD
+	public List<Recipe> getRecipes(Integer p, Integer id, Integer user, String query, Integer category, String filter) {
+		if(p == null) {
+			p = 0;
+=======
 	public List<Recipe> getRecipes(Integer p, Integer id, String user, String query, Integer category, Integer order, Integer likeUser, String filter, String baseUrl) {
 		int start = 0;
 		int end = Integer.MAX_VALUE;
@@ -43,6 +55,7 @@ public class RecipeServiceImpl implements RecipeService {
 		
 		if(q == null || q.length == 0) {
 			q = null;
+>>>>>>> develop
 		}
 
 		
@@ -104,6 +117,11 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
+<<<<<<< HEAD
+	public void addRecipe(RecipeDetail recipeDetail) {
+		// TODO Auto-generated method stub
+		
+=======
 	public int addRecipe(RecipeDetail recipeDetail, String baseUrl) {
 		String imageName;
 		
@@ -298,6 +316,7 @@ public class RecipeServiceImpl implements RecipeService {
 	@Override
 	public int modifyComment(Comment comment, int uid) {
 		return recipeDao.modifyComment(comment, uid);
+>>>>>>> develop
 	}
 
 	@Override

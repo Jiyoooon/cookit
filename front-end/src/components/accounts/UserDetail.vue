@@ -79,7 +79,7 @@
     <b-row>
       <b-col sm="3" class="mt-2">소개글</b-col>
       <b-col sm="9"><b-form-textarea
-       v-model="updateData.config.intro" id="textarea" rows="3" max-rows="6"></b-form-textarea>
+      id="textarea" rows="3" max-rows="6"></b-form-textarea>
       </b-col>
     </b-row>
 
@@ -166,22 +166,21 @@ export default {
     computed: {
       ...mapState('accounts', ['authUser', 'updateTF']),
       passwordValid() {
-        if (!this.updateData.config.password) return null;
-        const len = this.updateData.config.password.length
+        const len = this.password.length
+        if (len == 0) return null;
         if (len < 8) return false;
         var numFlag = false, alphaFlag = false
         for (var i = 0; i < len; i++) {
-          const ch = this.updateData.config.password[i]
+          const ch = this.password[i]
           if ('0' <= ch && ch <= '9') numFlag = true
           else if ('a' <= ch && ch <= 'z') alphaFlag = true
         }
         return numFlag && alphaFlag
       },
       passwordAgainValid() {
-        if (!this.updateData.passwordAgain) return null;
-        const len = this.updateData.passwordAgain.length
-      
-        if(len > 0 && this.updateData.config.password == this.updateData.passwordAgain) return true;
+        const len = this.passwordAgain.length
+        if (len == 0) return null;
+        if(len > 0 && this.password == this.passwordAgain) return true;
         return false;
       },
       NickNameinValid(){

@@ -12,7 +12,7 @@ export default {
             checknickname: '/user/dup/nickname/',
             checkpassword: '/user/token/password',
             getfollowers: '/user/followers/',
-            checkkey: '/user/verification/check',
+            checkkey: '/user/verification/check/',
             requestkey: '/user/verification/send/',
             sendnewpassword: '/user/password/',
             follow: '/user/token/follow/',

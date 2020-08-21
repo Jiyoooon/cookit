@@ -103,7 +103,6 @@
 import { mapState, mapActions } from 'vuex'
 import SERVER from '../../api/url.js'
 import axios from 'axios'
-import cookies from 'vue-cookies'
 
   export default {
     name:'signup',
@@ -111,11 +110,11 @@ import cookies from 'vue-cookies'
       return {
         signupData: {
           valid: {
-            password: false,
+            password: this.passwordAgainValid,
             nickname: false,
           },
           config: {
-            email: cookies.get('user-email'),
+            email: null,
             password: null,
             nickname: null,
             profile: null,
@@ -125,7 +124,6 @@ import cookies from 'vue-cookies'
         },
         file:null,
         passwordAgain: null,
-        imageURL: null,
       }
     },
     computed: {
@@ -137,12 +135,12 @@ import cookies from 'vue-cookies'
         var numberpattern = /[0-9]/
         var alphapattern = /[a-zA-Z]/
         var IsAvailable = true
-      
-        if (!this.signupData.config.password) {
+        //console.log(this.signupData.Password)
+        if (!this.signupData.password) {
           return null
         }
         
-        if (!(alphapattern.test(this.signupData.config.password)&&numberpattern.test(this.signupData.config.password)&&availablepassword.test(this.signupData.config.password))) IsAvailable = false
+        if (!(alphapattern.test(this.signupData.password)&&numberpattern.test(this.signupData.password)&&availablepassword.test(this.signupData.password))) IsAvailable = false
         return IsAvailable
       },
       passwordAgainValid() {
@@ -151,8 +149,8 @@ import cookies from 'vue-cookies'
         return false;
       },
       NickNameinValid(){
-        if(!this.signupData.config.nickname) return null
-        const len = this.signupData.config.nickname.length
+        if(!this.signupData.nickname) return null
+        const len = this.signupData.nickname.length
         var NickNamelen = 0
         var nameflag = true
         for (var i = 0; i < len; i++) {
@@ -174,8 +172,8 @@ import cookies from 'vue-cookies'
       },
       CommentLimit(){
         var commentState = null
-        if(!this.signupData.config.intro) return null
-        if(this.signupData.config.intro.length >100)
+        if(!this.signupData.intro) return null
+        if(this.signupData.intro.length >100)
           commentState = false
         return commentState
       },
@@ -186,7 +184,7 @@ import cookies from 'vue-cookies'
         this.$refs['file-input'].reset()
       },
       nicknameCheck(nickname) {
-        axios.get(SERVER.ROUTES.accounts.checknickname + String(nickname))
+        axios.get(SERVER.ROUTES.accounts.nicknameCheck + String(nickname))
         .then((res) => {
           let that = this
           window.addEventListener('keypress', function(event) {

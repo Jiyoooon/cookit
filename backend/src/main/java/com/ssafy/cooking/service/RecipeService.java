@@ -22,6 +22,9 @@ public interface RecipeService {
 
 	public int addCommnet(int recipe_id, Comment comment);
 
+<<<<<<< HEAD
+	public void addRecipe(RecipeDetail recipeDetail);
+=======
 	public int addRecipe(RecipeDetail recipeDetail, String baseUrl);
 
 	public int deleteRecipe(int recipe_id, int uid);
@@ -41,4 +44,5 @@ public interface RecipeService {
 	public int setLike(int recipe_id, int uid);
 
 	public void plusRecipeHit(int recipe_id);
+>>>>>>> develop
 }
