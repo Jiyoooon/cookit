@@ -273,7 +273,7 @@ router.beforeEach((to, from, next) => {
         }
       }) 
   } else if (FromRecipeUpdate && FromUserInfoTo && store.state.editor.updateTF) {
-    console.log('11111111')
+    // console.log('11111111')
     window.addEventListener('keypress', function(event) {
       if (event.keyCode == 13) store._vm.$root.$bvModal.hide('modal')
     })
@@ -291,12 +291,12 @@ router.beforeEach((to, from, next) => {
     })
       .then((ans) => {
         if (ans) {
-          console.log('222222')
+          // console.log('222222')
           next()
           store.commit('editor/SET_UPDATETF', false)
           // router.go(-1);
         } else {
-          console.log('33333')
+          // console.log('33333')
           next(false)
         }
       }) 
