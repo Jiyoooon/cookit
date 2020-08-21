@@ -130,20 +130,19 @@
                 >mdi-help-circle</v-icon>
               </template>
               <span>
+                <br>
                 <strong>가로보기는 다음과 같은 음성명령어를 제공합니다.</strong>
                 <br><br>
-                다음페이지 : 다음, 앞으로
-                <br>
-                이전페이지 : 이전, 뒤로
-                <br>
-                가로보기 종료 : 종료, 닫기, 중지, 그만
+                다음 페이지 : <kbd>다음</kbd>, <kbd>앞으로</kbd><br>
+                이전 페이지 : <kbd>이전</kbd>, <kbd>뒤로</kbd><br>
+                타이머 시작 : <kbd>타이머</kbd><br>
+                타이머 및 가로보기 종료 : <kbd>종료</kbd>, <kbd>닫기</kbd>, <kbd>중지</kbd>, <kbd>그만</kbd>
                 <br><br>
-                <strong>타이머</strong>
+                <strong>한 단계에 타이머가 여러개인 경우</strong>
                 <ul>
-                <li> 첫번째 시간 시작 : 타이머</li> 
-                <li> 다음 시간 시작 : 다음, 앞으로</li>
-                <li> 다음 시간 시작 : 이전, 뒤로</li> 
-                <li> 종료 : 종료, 닫기, 중지, 그만</li>
+                <li> 첫번째 시간 시작 : <kbd>타이머</kbd></li> 
+                <li> 다음 시간 시작 : <kbd>다음</kbd>, <kbd>앞으로</kbd></li>
+                <li> 이전 시간 시작 : <kbd>이전</kbd>, <kbd>뒤로</kbd></li> 
                 </ul>
               </span>
             </v-tooltip>
