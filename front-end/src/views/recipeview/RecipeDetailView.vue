@@ -28,7 +28,7 @@
                 음성 인식을 위해서는<br>
                 <strong>마이크 접근 허용</strong>이 필요합니다.<br>
                 명령어에 대한 자세한 안내는<br>
-                가로보기 창의 <v-icon color="grey" dark>mdi-help-circle</v-icon>을 참고해주세요.
+                가로보기 창의 <strong>?</strong> 버튼을 참고해주세요.
               </span>
             </v-tooltip>
       <font-awesome-icon id="top-btn" class="noprint" @click="scrollToTop" :icon="['fas', 'angle-up']" />
