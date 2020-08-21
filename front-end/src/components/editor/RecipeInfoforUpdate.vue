@@ -69,7 +69,7 @@
               </b-col>
             </b-row>
 
-            <b-row v-if="this.imageUrl!=''">
+            <b-row v-if="this.imageUrl!=''"> 
               <div class="text-btn" style="margin: 0 auto;" @click="selectMainBasicImage()">사진 삭제</div>
             </b-row>
           </b-container>
