@@ -24,6 +24,11 @@
 						<if test="intro != null and intro != ''">
 							, intro
 						</if>
+<<<<<<< HEAD
+=======
+						, image_name
+						, hits
+>>>>>>> develop
 						, create_date
 					) values(
 						#{password}
@@ -35,6 +40,11 @@
 						<if test="intro != null and intro != ''">
 							, #{intro}
 						</if>
+<<<<<<< HEAD
+=======
+						, #{image_name}
+						, 0
+>>>>>>> develop
 						, now()
 					)
 	</insert>
@@ -52,7 +62,11 @@
 	</delete>
 	
 	<select id="getUser" resultType="User">
+<<<<<<< HEAD
 		SELECT user_id, email, nickname, profile_image, intro, create_date
+=======
+		SELECT user_id, email, nickname, profile_image, intro, image_name, hits, start_page, create_date
+>>>>>>> develop
 		FROM User
 		WHERE user_id = #{uid}
 	</select>
@@ -71,17 +85,25 @@
 	</update>
 	
 	<select id="getFollowers" resultType="User">
-		SELECT u.user_id, u.id, u.email, u.nickname, u.profile_image, u.intro
+		SELECT u.user_id, u.email, u.nickname, u.profile_image, u.image_name
 		FROM User u
 		JOIN Following f ON u.user_id = f.from_user
-		WHERE u.user_id = #{uid};
+		WHERE f.to_user = #{uid};
+	</select>
+	
+	<select id="getFollowings" resultType="User">
+		SELECT u.user_id, u.email, u.nickname, u.profile_image, u.image_name
+		FROM User u
+		JOIN Following f ON u.user_id = f.to_user
+		WHERE f.from_user = #{uid};
 	</select>
 	
 	<select id="getCommnets" resultType="Comment">
-		SELECT c.recipe_id, c.description, c.create_date
+		SELECT c.comment_id, c.comment_user as comment_user_id, u.nickname as comment_user_name,
+		c.recipe_id, c.description, c.create_date, c.update_date
 		FROM Comments c
-		JOIN User u ON u.user_id = c.comm_user
-		WHERE u.user_id = #{uid};
+		join User u on c.comment_user = u.user_id
+		WHERE u.user_id = #{recipe_id}
 	</select>
 	
 	<select id="checkPassword" parameterType="string" resultType="int">
@@ -134,4 +156,94 @@
 		WHERE table_name = 'User'
 		AND table_schema = DATABASE()
 	</select>
+	
+	
+	<select id="getFilterings" parameterType="string" resultType="Filter">
+		SELECT 	filtering_id, filtering_name, filtering_user as filtering_user_id, create_date
+				, hate_large, hate_medium, hate_small
+				, like_large, like_medium, like_small
+		FROM 	Filtering
+		WHERE	filtering_user = #{uid}
+	</select>
+	
+	<insert id="insertFiltering" parameterType="Filter">
+		INSERT	into Filtering(
+					filtering_name
+					, filtering_user
+					, hate_large
+					, hate_medium
+					, hate_small
+					, like_large
+					, like_medium
+					, like_small
+				)
+				values(
+					#{filtering_name}
+					, #{filtering_user_id}
+					, #{hate_large}
+					, #{hate_medium}
+					, #{hate_small}
+					, #{like_large}
+					, #{like_medium}
+					, #{like_small}
+				)
+	</insert>
+	
+	<delete id="deleteFiltering" parameterType="string">
+		DELETE FROM Filtering
+		WHERE filtering_id = #{id}
+	
+	</delete>
+	
+	<update id="plusBlogHits" parameterType="string">
+		UPDATE User set hits = hits + 1
+		WHERE user_id = #{uid}
+	</update>
+	
+	
+	<insert id="follow" parameterType="string">
+		INSERT 	into Following(from_user, to_user)
+				values(#{from}, #{to})
+	</insert>
+	
+	<delete id="unfollow" parameterType="string">
+		DELETE 	from Following
+		WHERE 	1 = 1
+				AND from_user = #{from} 
+				AND to_user = #{to}
+	</delete>
+	
+	
+	<select id="getAllLinkedSNS" parameterType="string" resultType="SNS">
+		SELECT ls.sns_user, ls.sns_url, ls.create_date, s.sns_name
+		FROM Linked_sns ls
+		LEFT JOIN SNS s using(sns_id) 
+		WHERE ls.sns_user = #{uid}
+		ORDER BY sns_id
+	</select>
+	
+	<insert id="insertLinkedSNS" parameterType="string">
+		INSERT into Linked_sns(sns_user, sns_url, sns_id)
+						VALUES(#{uid}, #{url}, (SELECT sns_id FROM SNS WHERE sns_name = #{name}))
+	</insert>
+	
+	<select id="getAllSNS" resultType="SNS">
+		SELECT sns_name FROM SNS
+	</select>
+	
+	<!-- xx -->
+	<select id="getLinkedSNS" parameterType="string" resultType="SNS">
+		SELECT sns_user, sns_name, sns_url
+		FROM Linked_sns
+		WHERE 	sns_user = #{uid} 
+				and sns_name = #{name}
+	</select>
+	
+	
+	<delete id="deleteLinkedSNS" parameterType="string">
+		DELETE 	FROM Linked_sns
+		WHERE 	sns_user = #{uid}
+	</delete>
+	
+	
 </mapper>

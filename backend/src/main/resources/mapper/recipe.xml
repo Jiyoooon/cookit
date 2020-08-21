@@ -4,65 +4,400 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ssafy.cooking.dao.RecipeDao">
-	<select id="getRecipes" resultType="Recipe">
-		SELECT recipe_id, recipe_user, u.nickname as recipe_user_name,
-		category_id, title, description, main_image, servings, cooking_time,
-		tag, r.hits as hits, r.create_date as create_date, r.update_date as
-		update_date, r.delete_date as delete_date
+<<<<<<< HEAD
+=======
+	<insert id = "addRecipe">
+		INSERT INTO Recipe(
+						recipe_user, category_id, title, description, 
+						main_image, servings, cooking_time, level, tag
+					) VALUES (
+						#{recipe_user}, #{category_id}, #{title}, #{description},
+						#{main_image}, #{servings}, #{cooking_time}, #{level}, #{tagString}
+					)
+			<selectKey keyProperty="recipe_id" resultType="Integer">
+			SELECT LAST_INSERT_ID()
+			</selectKey>
+	</insert>
+	
+	<insert id = "checkIngredients">
+			INSERT INTO Food_ingredient_small(food_ingredient_medium_id, small)
+								SELECT 49, #{name} FROM dual
+								WHERE NOT EXISTS
+								( SELECT food_ingredient_medium_id, small
+									FROM Food_ingredient_small
+									WHERE small = #{name} )
+	</insert>
+	<insert id = "addIngredients">				
+		INSERT INTO Ingredient(
+					recipe_id, food_ingredient_small_id, is_essential, quantity
+				)
+				(
+					SELECT #{recipe_id}, food_ingredient_small_id, #{ingredient.is_essential}, #{ingredient.quantity} FROM Food_ingredient_small WHERE small = #{ingredient.name}
+				)
+	</insert>
+	<insert id = "addCookingsteps">
+		INSERT INTO Cooking_steps(
+						recipe_id, steps, description, tip, step_image
+					) VALUES
+					<foreach collection="cookingSteps" item="step" separator=",">
+					(
+						#{recipe_id}, #{step.steps}, #{step.description}, #{step.tip}, #{step.step_image}
+					)
+					</foreach>
+					
+	</insert>
+
+	<update id="reviseRecipe">
+		UPDATE Recipe
+		SET update_date = now()
+			, category_id = #{recipeData.category_id}
+			, title = #{recipeData.title}
+			, description = #{recipeData.description}
+			, servings = #{recipeData.servings}
+			, cooking_time = #{recipeData.cooking_time}
+			, level = #{recipeData.level}
+			, tag = #{recipeData.tagString}
+			<if test="recipeData.main_image != null and recipeData.main_image != ''">
+			, main_image = #{recipeData.main_image}
+			</if>
+		WHERE recipe_id = #{recipeData.recipe_id}
+		AND recipe_user = #{uid}
+	</update>
+
+	<update id="reviseCookingsteps">
+		INSERT INTO Cooking_steps (
+			recipe_id
+			, steps
+			, description
+			, tip
+			, step_image
+		) VALUES (
+			#{recipe_id}
+			, #{step.steps}
+			, #{step.description}
+			, #{step.tip}
+			, #{step.step_image}
+		)
+		ON DUPLICATE KEY UPDATE
+			description = #{step.description}
+			, tip = #{step.tip}
+			, step_image = #{step.step_image}
+			, update_date = now()
+	</update>
+
+	<delete id="deleteIngredients">
+		DELETE FROM Ingredient
+		WHERE 	recipe_id = #{recipe_id}
+	</delete>
+
+	<delete id="deleteCookingSteps">
+		DELETE FROM Cooking_steps
+		WHERE 	recipe_id = #{recipe_id} AND steps > #{size}
+	</delete>
+	
+	<select id="getRandom" resultType="Recipe">
+		SELECT r.recipe_id, r.recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
+				r.category_id, r.title, r.description, r.main_image, r.servings, r.cooking_time, r.level,
+				r.tag as tagString, r.hits, r.create_date, r.update_date, r.delete_date, (select count(*) from Comments c where r.recipe_id = c.recipe_id) as comments
 		FROM Recipe r
-		join User u on r.recipe_user = u.user_id
-		WHERE 1 = 1
-		<if test="query != null and query != ''">
-			AND title LIKE CONCAT('%', #{query}, '%')
+		JOIN User u on r.recipe_user = u.user_id
+		ORDER BY RAND()
+		LIMIT 6
+	</select>
+	
+>>>>>>> develop
+	<select id="getRecipes" resultType="Recipe">
+		SELECT r.recipe_id, r.recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
+		r.category_id, r.title, r.description, r.main_image, r.servings, r.cooking_time, r.level,
+		r.tag as tagString, r.hits, r.create_date, r.update_date, r.delete_date, count(c.comment_id) as comment_cnt
+		FROM Recipe r
+		JOIN User u on r.recipe_user = u.user_id
+		JOIN Comments c on r.recipe_id = c.recipe_id
+		<if test="order != null and order == 3">
+        	LEFT JOIN Likes l USING(recipe_id)
 		</if>
-		<if test="id != null and id != ''">
-			AND recipe_id = #{id}
+		<if test="likeUser != null and likeUser != ''">
+			<choose>
+			<when test="user != null and user != ''">
+        		LEFT JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</when>
+			<otherwise>
+        		JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</otherwise>
+        	</choose>
+		</if>
+		WHERE 1 = 1
+		<if test="query != null">
+			AND ( 
+			<foreach collection="query" item="q" separator="AND">
+				(title LIKE CONCAT('%', #{q}, '%')
+				OR tag LIKE CONCAT('%', #{q}, '%'))
+			</foreach>
+			)
+		</if>
+		<if test="id != null and id != '' and id != 0">
+			AND r.recipe_id = #{id}
 		</if>
 		<if test="user != null and user != ''">
-			AND recipe_user = #{user}
+			<choose>
+				<when test="likeUser != null and likeUser != ''">
+					AND (l.like_user IS NOT NULL OR recipe_user = #{user})
+				</when>
+				<otherwise>
+					AND recipe_user = #{user}
+				</otherwise>
+			</choose>
 		</if>
 		<if test="category != null and category != ''">
-			AND category = #{category}
+			AND category_id = #{category}
 		</if>
-		Limit #{start}, #{end}
-		;
+		<choose>
+			<when test="order == null or order == 1">
+				ORDER BY create_date DESC
+			</when>
+			<when test="order == 2">
+				ORDER BY hits DESC, create_date DESC
+			</when>
+			<when test="order == 3">
+				GROUP BY recipe_id	
+				ORDER BY count(l.recipe_id) DESC, create_date DESC
+			</when>
+		</choose>
+		LIMIT #{start}, #{end}
 	</select>
+	
+	<update id="upHits">
+		UPDATE Recipe
+		SET hits = hits + 1
+		WHERE recipe_id = #{recipe_id}
+	</update>
 	
 	<select id="getIngredients" resultType="Ingredient">
 		SELECT recipe_ingredient_id, recipe_id, 
 		i.food_ingredient_small_id, s.small as food_ingredient_small_name, 
 		is_essential, quantity, create_date, update_date
 		FROM Ingredient i
-        join Food_ingredient_small s on i.food_ingredient_small_id = s.food_ingredient_small_id
+        JOIN Food_ingredient_small s on i.food_ingredient_small_id = s.food_ingredient_small_id
 		WHERE i.recipe_id = #{recipe_id}
 	</select>
 	
 	<select id="getCookingSteps" resultType="CookingStep">
 		SELECT cooking_steps_id, recipe_id, 
-		steps, description, tip, step_image
-		create_date, update_date, time
+		steps, description, tip, step_image,
+		create_date, update_date
 		FROM Cooking_steps
 		WHERE recipe_id = #{recipe_id}
 	</select>
 	
+<<<<<<< HEAD
+=======
+	<delete id="deleteRecipe">
+		DELETE FROM Recipe
+		WHERE recipe_id = #{recipe_id} AND recipe_user = #{uid}
+	</delete>
+	
+>>>>>>> develop
 	<select id="getCommnets" resultType="Comment">
 		SELECT comment_id, comment_user as comment_user_id, u.nickname as comment_user_name,
-		recipe_id, c.description, 
+		recipe_id, c.description, u.profile_image as comment_user_profileImage,
 		c.create_date, c.update_date, c.delete_date
 		FROM Comments c
-		join User u on c.comment_user = u.user_id
+		JOIN User u on c.comment_user = u.user_id
 		WHERE recipe_id = #{recipe_id}
+		ORDER BY create_date DESC
 	</select>
 	
 	<insert id = "addCommnet">
-		insert into Comments(
+		INSERT INTO Comments(
 						comment_user
 						, recipe_id
 						, description
-					) values(
+					) VALUES (
 						#{comment.comment_user_id}
 						, #{recipe_id}
 						, #{comment.description}
 					)
 	</insert>
+<<<<<<< HEAD
+=======
+	
+	<update id="modifyComment">
+		UPDATE Comments
+		SET description = #{comment.description}
+			, update_date = now()
+		WHERE comment_id = #{comment.comment_id} AND comment_user = #{uid}
+	</update>
+	
+	<delete id="deleteComment">
+		DELETE FROM Comments
+		WHERE comment_id = #{comment_id} AND comment_user = #{uid}
+	</delete>
+	
+	<select id="getSmallIngredients" resultType="FoodIngredient">
+		SELECT small as 'name', 'small' as 'kind', food_ingredient_small_id as 'id' FROM cooking.Food_ingredient_small
+	</select>
+	
+	<select id="getMediumIngredients" resultType="FoodIngredient">
+		SELECT medium as 'name', 'medium' as 'kind', food_ingredient_medium_id as 'id' FROM cooking.Food_ingredient_medium
+	</select>
+	
+	<select id="getLargeIngredients" resultType="FoodIngredient">
+		SELECT large as 'name', 'large' as 'kind', food_ingredient_large_id as 'id' FROM cooking.Food_ingredient_large
+	</select>
+	
+	<select id="getSmallIngredientsArray" resultType="string">
+		SELECT small FROM cooking.Food_ingredient_small
+	</select>
+	
+	<select id="getRecipes2" resultType="Recipe">
+		SELECT r.recipe_id, r.recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
+				r.category_id, r.title, r.description, r.main_image, r.servings, r.cooking_time, r.level,
+				r.tag as tagString, r.hits, r.create_date, r.update_date, r.delete_date, k.cnt, (select count(*) from Comments c where r.recipe_id = c.recipe_id) as comments
+		FROM Recipe r JOIN (
+			SELECT a.recipe_id, count(a.recipe_id) as cnt
+			FROM 
+				(
+				<choose>
+					<when test="like_small != null or like_medium != null or like_large != null">
+						<if test="like_small != null">
+							<foreach collection="like_small" item="likes" separator=" UNION ALL ">
+							SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id = (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE small = #{likes})
+							</foreach>
+						</if>
+						<if test="like_small != null and like_medium != null">
+							UNION ALL
+						</if>
+						<if test="like_medium != null">
+							<foreach collection="like_medium" item="likem" separator=" UNION ALL ">
+	                    	SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id IN (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE food_ingredient_medium_id = (SELECT food_ingredient_medium_id FROM Food_ingredient_medium WHERE medium = #{likem}))
+	                    	</foreach>
+	                    </if>
+						<if test="like_large != null and (like_small != null or like_medium != null)">
+							UNION ALL
+						</if>
+						<if test="like_large != null">
+							<foreach collection="like_large" item="likel" separator=" UNION ALL ">
+	                  		SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id IN (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE food_ingredient_medium_id IN (SELECT food_ingredient_medium_id FROM Food_ingredient_medium WHERE food_ingredient_large_id = (SELECT food_ingredient_large_id FROM Food_ingredient_large WHERE large = #{likel})))
+	                  		</foreach>
+	                    </if>
+	                </when>
+	                <otherwise>
+	                	SELECT DISTINCT recipe_id FROM Recipe
+	                </otherwise>
+                </choose>
+				) as a
+				<if test="hate_small != null or hate_medium != null or hate_large != null">
+					LEFT JOIN
+					(
+						<if test="hate_small != null">
+							<foreach collection="hate_small" item="hates" separator=" UNION ALL ">
+							SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id = (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE small = #{hates})
+							</foreach>
+						</if>
+						<if test="hate_small != null and hate_medium != null">
+							UNION ALL
+						</if>
+						<if test="hate_medium != null">
+							<foreach collection="hate_medium" item="hatem" separator=" UNION ALL ">
+	                    	SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id IN (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE food_ingredient_medium_id = (SELECT food_ingredient_medium_id FROM Food_ingredient_medium WHERE medium = #{hatem}))
+	                    	</foreach>
+	                    </if>
+						<if test="hate_large != null and (hate_small != null or hate_medium != null)">
+							UNION ALL
+						</if>
+						<if test="hate_large != null">
+							<foreach collection="hate_large" item="hatel" separator=" UNION ALL ">
+	                  		SELECT DISTINCT recipe_id FROM Ingredient WHERE food_ingredient_small_id IN (SELECT food_ingredient_small_id FROM Food_ingredient_small WHERE food_ingredient_medium_id IN (SELECT food_ingredient_medium_id FROM Food_ingredient_medium WHERE food_ingredient_large_id = (SELECT food_ingredient_large_id FROM Food_ingredient_large WHERE large = #{hatel})))
+	                  		</foreach>
+	                    </if>
+					) as b USING (recipe_id)
+					WHERE b.recipe_id IS NULL
+				</if>
+			GROUP BY a.recipe_id
+			ORDER BY count(a.recipe_id) desc
+		) as k
+		USING (recipe_id)
+		JOIN User u on r.recipe_user = u.user_id
+		<if test="order != null and order == 3">
+        	LEFT JOIN Likes l USING (recipe_id)
+		</if>
+		<if test="likeUser != null and likeUser != ''">
+			<choose>
+			<when test="user != null and user != ''">
+        		LEFT JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</when>
+			<otherwise>
+        		JOIN (select * FROM Likes WHERE like_user  = #{likeUser}) l USING (recipe_id)
+        	</otherwise>
+        	</choose>
+		</if>
+		WHERE 1 = 1
+		<if test="query != null">
+			AND ( 
+			<foreach collection="query" item="q" separator="AND">
+				(title LIKE CONCAT('%', #{q}, '%')
+				OR tag LIKE CONCAT('%', #{q}, '%'))
+			</foreach>
+			)
+		</if>
+		<if test="id != null and id != '' and id != 0">
+			AND r.recipe_id = #{id}
+		</if>
+		<if test="user != null and user != ''">
+			<choose>
+				<when test="likeUser != null and likeUser != ''">
+					AND (l.like_user IS NOT NULL OR recipe_user = #{user})
+				</when>
+				<otherwise>
+					AND recipe_user = #{user}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="category != null and category != ''">
+			AND category_id = #{category}
+		</if>
+		<choose>
+			<when test="order == null or order == 1">
+				ORDER BY create_date DESC
+			</when>
+			<when test="order == 2">
+				ORDER BY hits DESC, create_date DESC
+			</when>
+			<when test="order == 3">
+				GROUP BY  recipe_id	
+				ORDER BY count(l.recipe_id) DESC, create_date DESC
+			</when>
+		</choose>
+		Limit #{start}, #{end}
+	</select>
+	
+
+	<update id="updateTime">
+		UPDATE Cooking_steps
+		SET Time = #{time}
+		WHERE cooking_steps_id = #{cooking_steps_id}
+	</update>
+	
+	<insert id = "setLike">
+		INSERT INTO Likes
+				(recipe_id, like_user)
+				VALUES
+				(#{recipe_id}, #{uid})
+	</insert>
+	
+	<delete id = "deleteLike">
+		DELETE FROM Likes
+		WHERE recipe_id = #{recipe_id} 
+			AND like_user = #{uid}
+	</delete>
+	
+	<select id="getLikeList" resultType="Integer">
+		SELECT like_user FROM Likes
+		WHERE recipe_id = #{recipe_id}
+	</select>
+	
+	<select id="getCookingStep" resultType="CookingStep" parameterType="int">
+		SELECT * FROM Cooking_steps WHERE recipe_id = #{recipe_id} and cooking_steps_id = #{step_id}
+	</select>
+>>>>>>> develop
 </mapper>

@@ -1,5 +1,5 @@
 <template>
-  <div id="userDetail">
+  <div id="acc_wrapper">
     <h2>회원정보 조회</h2>
     <hr>
     <userDetail />
@@ -17,9 +17,4 @@ export default {
 </script>
 
 <style>
-  #userDetail {
-    width: 50%;
-    display: block;
-    margin: 0px auto;
-  }
 </style>

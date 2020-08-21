@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <UserDelete id="userdelete-vue"/>
+  <div id="acc_wrapper">
+    <UserDelete/>
   </div>
 </template>
 
@@ -15,9 +15,4 @@ export default {
 </script>
 
 <style>
-  #userdelete-vue{
-    width: 40%;
-    display: block;
-    margin: 0px auto;
-  }
 </style>

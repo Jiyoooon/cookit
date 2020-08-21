@@ -1,15 +1,14 @@
 package com.ssafy.cooking.service;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
+import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.SNS;
 import com.ssafy.cooking.dto.User;
 
 public interface UserService {
@@ -21,7 +20,8 @@ public interface UserService {
 	public int signup(User user);
 	public int delete(String uid) throws IOException;
 	public int reviseUser(MultipartFile profile, User user) throws IOException;
-	public List<User> getFollowers(String uid);
+	public List<User> getFollowers(String uid, String baseUrl);
+	public List<User> getFollowings(String uid, String baseUrl);
 	public List<Comment> getCommnets(String uid);
 	public boolean checkPassword(String uid, String password);
 	public void sendTmpPasswordEmail(String password, String email) throws Exception;
@@ -30,7 +30,22 @@ public interface UserService {
 	public int addEmailConfirm(String email, String code);
 	public boolean checkConfirmCode(EmailConfirm emailConfirm);
 	public void removeConfirmCode(String email);
+<<<<<<< HEAD
 	public int signup2(MultipartFile profile, User user) throws IOException;
 	public HashMap<String, Object> getUserResource(String uid) throws IOException;
 	public User getUser(String uid);
+=======
+	public int signup(MultipartFile profile, User user) throws IOException;
+	public User getUser(String uid, String baseUrl);
+	public List<Filter> getFilterings(String uid);
+	public int removeFiltering(String filterId);
+	public int addFiltering(Filter filter);
+	public int plusBlogHits(String uid);
+	
+	public int follow(String from_user, String to_user);
+	public int unfollow(String from_user, String to_user);
+	
+	public List<SNS> getLinkedSNS(String uid);
+	public int addLinkedSNS(String uid, String name, String url);
+>>>>>>> develop
 }

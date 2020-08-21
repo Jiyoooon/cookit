@@ -6,9 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import org.thymeleaf.util.StringUtils;
 
 import com.ssafy.cooking.service.JwtService;
 
@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtInterceptor extends HandlerInterceptorAdapter {
 	Logger logger = LoggerFactory.getLogger("io.ojw.mall.interceptor.JwtInterceptor");
-	private static final String TOKEN = "jwt-auth-token";
+	private static final String TOKEN = HttpHeaders.AUTHORIZATION;
 	
 	@Autowired
 	private JwtService jwtService;
@@ -26,43 +26,31 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		final String token = request.getHeader(TOKEN);
-		
-		logger.debug("JwtInterceptor > preHandle > token: " + token);
-		
-		if (StringUtils.equals(request.getMethod(), "OPTIONS")) {
-			logger.debug("if request options method is options, return true");
-			
+		response.setHeader("Access-Control-Allow-Origin", "*");
+	    response.setHeader("Access-Control-Allow-Methods","*");
+	    response.setHeader("Access-Control-Max-Age", "3600");
+	    response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+	    response.setHeader("Access-Control-Allow-Credentials", "true");
+		//option 요청은 바로 통과
+//	    System.out.println(request.getMethod()+", "+request.getMethod().equals("OPTIONS"));
+//	    System.out.println(request.getParameter("password"));
+//	    System.out.println(request.getHeader(HttpHeaders.CONTENT_TYPE));
+//	    System.out.println("들어온 ㅋ토큰 : "+request.getHeader(HttpHeaders.AUTHORIZATION));
+	    
+		if(request.getMethod().equals("OPTIONS")) {
 			return true;
+		}else {
+			String token = request.getHeader(TOKEN);
+	    	if(token != null && token.length() > 0 && token.split(" ").length == 2) {
+				token = token.split(" ")[1];
+				
+				if(!jwtService.checkValid(token)) {//토큰 유효성 체크
+					throw new SecurityException("토큰 유효하지 않음");
+				}
+			}else {
+				throw new SecurityException("토큰 존재하지 않음");
+			}
 		}
-		
-		if(token != null && jwtService.checkValid(token)){
-			return true;
-		}else{
-			throw new Exception();
-		}
+		return true;
 	}
-	
-//	@Override
-//	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-//			throws Exception {
-//		System.out.println(request.getMethod()+" : "+request.getServletPath());
-//		//option 요청은 바로 통과
-//		if(request.getMethod().equals("OPTION")) {
-//			return true;
-//		}else {
-//			//request의 parameter에서 auth_token으로 넘어온 부분을 찾음
-//			//String token = request.getParameter("auth-token");
-//			String token = request.getHeader("jwt-auth-token");
-//			if(token != null && token.length() > 0) {
-//				jwtService.checkValid(token);
-//				return true;
-//			}else {
-//				throw new RuntimeException("인증 토큰이 없습니다.");
-//			}
-//		}
-//	}
-	
-	
-	
 }

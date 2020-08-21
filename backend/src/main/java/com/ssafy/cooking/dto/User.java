@@ -1,11 +1,8 @@
 package com.ssafy.cooking.dto;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.List;
 
-import org.springframework.core.io.Resource;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -37,7 +34,27 @@ public class User implements Serializable{
 	private String sns_token_id;
 	private String sns_connect_date;
 	
+<<<<<<< HEAD
 	private byte[] image;
+=======
+	private String image_url;
+	private String image_name;
+	
+	private List<SNS> sns_list;
+	
+	public List<SNS> getSns_list() {
+		return sns_list;
+	}
+	public void setSns_list(List<SNS> sns_list) {
+		this.sns_list = sns_list;
+	}
+	public String getImage_name() {
+		return image_name;
+	}
+	public void setImage_name(String image_name) {
+		this.image_name = image_name;
+	}
+>>>>>>> develop
 	public int getUser_id() {
 		return user_id;
 	}
@@ -135,7 +152,11 @@ public class User implements Serializable{
 				+ ", nickname=" + nickname + ", intro=" + intro + ", start_page=" + start_page + ", profile_image="
 				+ profile_image + ", hits=" + hits + ", create_date=" + create_date + ", update_date=" + update_date
 				+ ", sns_type=" + sns_type + ", sns_token_id=" + sns_token_id + ", sns_connect_date=" + sns_connect_date
+<<<<<<< HEAD
 				+ ", image=" + Arrays.toString(image) + "]";
+=======
+				+ ", image_url=" + image_url + ", image_name=" + image_name + ", sns_list=" + sns_list + "]";
+>>>>>>> develop
 	}
 	
 	

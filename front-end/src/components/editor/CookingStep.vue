@@ -1,9 +1,16 @@
 <template>
   <div>
+<<<<<<< HEAD
     <b-container fluid="lg">
       <b-row v-for="(step, index) in steps" :key="index">
 				<b-col sm="1" class="mt-3"><h5>Step {{index + 1}}.</h5></b-col>
         <b-col sm="7">
+=======
+    <b-container fluid>
+      <b-row v-for="(step, index) in cookingStep" :key="index">
+				<b-col lg="1" class="mt-3"><h5>Step {{index + 1}}.</h5></b-col>
+        <b-col lg="7">
+>>>>>>> develop
           <b-container fluid="lg" id="step-container">
             <b-row align-v="center">
               <b-col>
@@ -13,27 +20,42 @@
 						<b-row align-v="center">
 							<b-col sm="1">💡 Tip</b-col>
 							<b-col>
+<<<<<<< HEAD
 								<b-form-textarea type="textarea" id="tip" rows="1" maxrows="2" v-model="step.tip" placeholder="팁이 있다면 알려주세요!" required no-resize></b-form-textarea>
+=======
+								<b-form-textarea type="textarea" id="tip" rows="1" max-rows="2" v-model="step.tip" class="form-control" placeholder="팁이 있다면 알려주세요!" required no-resize></b-form-textarea>
+>>>>>>> develop
 							</b-col>
 						</b-row>
           </b-container>
         </b-col>
-        <b-col sm="3">
-					<b-container fluid="lg">
+        <b-col lg="4">
+					<b-container fluid>
             <b-row>
-              <b-col>
-                <b-form-file v-model="step.imageFile" accept="image/*" placeholder="사진 추가"
-                  @change="setThumbnail"></b-form-file>
-              </b-col>
+				<b-col cols="7">
+					<b-form-file enctype="multipart/form-data" v-model="step.step_image_file" accept="image/*" placeholder="사진 추가"
+						:id="index+''" @change="setThumbnail"></b-form-file>
+				</b-col>
+
+				<b-col cols="1">
+					<div style="display:block; text-align:right;">
+						<b-icon class="mt-2" icon="backspace-fill" variant="warning" style="cursor: pointer;" @click="deleteCookingStep(index)"></b-icon>
+					</div>
+				</b-col>
+
             </b-row>
             <b-row>
               <b-col>
-                <img v-if="step.imageFile" :src="imageUrl" height="180px">
+                <b-img v-if="step.step_image_file!=null" :src="step.step_image_url" height="180px" style="max-width:100%" />
                 <span v-else></span>
               </b-col>
             </b-row>
+						<b-row v-if="step.step_image_file!=null">
+              <div class="text-btn" style="margin: 0 auto;" @click="deleteStepImage(index)">사진 삭제</div>
+            </b-row>
           </b-container>
         </b-col>
+<<<<<<< HEAD
 				<b-col sm="1">
 					<b-container fluid="lg">
 						<b-row>
@@ -41,6 +63,8 @@
 						</b-row>
 					</b-container>
 				</b-col>
+=======
+>>>>>>> develop
       </b-row>
 			<b-row>
 				<b-col sm="3"></b-col>
@@ -54,6 +78,7 @@
 <script>
 export default {
 	name: 'CookingStep',
+<<<<<<< HEAD
 	data() {
 		return {
 			steps: [
@@ -71,10 +96,36 @@ export default {
 		deleteStep(index) {
       this.steps.splice(index, 1)
 		},
+=======
+	computed: {
+		...mapState('editor', ['cookingStep'])
+	},
+	methods: {
+		...mapMutations('editor', ['addCookingStep', 'deleteCookingStep', 'SET_UPDATETF']),
+>>>>>>> develop
 		setThumbnail(e) {
 			const file = e.target.files[0];
-			this.imageUrl = URL.createObjectURL(file);
+			if(!file) return;
+			// console.log(e)
+			const index = Number(e.path[0].id);
+			// console.log(e.path[0])
+			this.cookingStep[index].step_image_url = URL.createObjectURL(file);
 		},
+		deleteStepImage(index){
+			this.cookingStep[index].step_image_url=null
+			this.cookingStep[index].step_image_file=null
+		},
+<<<<<<< HEAD
+=======
+	},
+	watch: {
+		cookingStep: {
+			deep: true,
+			handler() {
+				this.SET_UPDATETF(true)
+			}
+		}
+>>>>>>> develop
 	}
 }
 </script>

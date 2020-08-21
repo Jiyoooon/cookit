@@ -2,9 +2,13 @@ package com.ssafy.cooking.service;
 
 import java.io.File;
 import java.io.IOException;
+<<<<<<< HEAD
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+=======
+import java.sql.Timestamp;
+>>>>>>> develop
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
@@ -28,6 +32,8 @@ import com.ssafy.cooking.controller.UserController;
 import com.ssafy.cooking.dao.UserDao;
 import com.ssafy.cooking.dto.Comment;
 import com.ssafy.cooking.dto.EmailConfirm;
+import com.ssafy.cooking.dto.Filter;
+import com.ssafy.cooking.dto.SNS;
 import com.ssafy.cooking.dto.User;
 import com.ssafy.cooking.util.SHA256;
 
@@ -77,11 +83,40 @@ public class UserServiceImpl implements UserService{
 //	}
 	
 	
+	
+	//////////////////////////////////////////////////////
 	@Override
-	public User getUser(String uid) {
-		return userDao.getUser(uid);
+	@Transactional
+	public User getUser(String uid, String baseUrl) {
+		User user = userDao.getUser(uid);
+		
+		String fileFullPath = "/var/lib/tomcat8/webapps/images/profile/"+user.getProfile_image();
+		
+		if(!new File(fileFullPath).exists()) {
+			user.setImage_name(null);
+			user.setImage_url(baseUrl+"/images/profile/default_image.png");
+		}else {
+			user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
+		}
+		
+		List<SNS> existSNS = userDao.getAllSNS();
+		List<SNS> linkedSNS = userDao.getAllLinkedSNS(uid);
+		
+		int len = linkedSNS.size();
+		for(int i = 0, idx = 0; i < existSNS.size() && idx < len; i++) {
+			String curr = existSNS.get(i).getSns_name();
+			String u = linkedSNS.get(idx).getSns_name();
+			
+			if(curr.equals(u)) {
+				existSNS.get(i).setSns_url(linkedSNS.get(idx++).getSns_url());
+			}
+		}
+		
+		user.setSns_list(existSNS);
+		return user;
 	}
 	
+<<<<<<< HEAD
 	
 	@Override
 	@Transactional
@@ -136,14 +171,29 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+=======
+>>>>>>> develop
 	@Override
 	@Transactional
 	public int reviseUser(MultipartFile profile, User user) throws IOException {
 		try {
+<<<<<<< HEAD
 			//새로 입력받은 프로필 이미지가 비어있으면 서버에서 삭제 후 profile_image = null로 갱신
 			if(profile == null) {
 				removeProfile(Integer.toString(user.getUser_id()));
 				user.setProfile_image("");
+=======
+			//profile != null => 프로필 수정
+			if(profile != null) {
+				removeProfile(Integer.toString(user.getUser_id()));
+				writeProfile(profile, user.getUser_id(), user);
+			}
+			//user.getImage_name() == null => 프로필 내림
+			else if(imageName == null || imageName.trim().equals("")) {
+				removeProfile(Integer.toString(user.getUser_id()));
+	    		user.setProfile_image("default_image.png");
+	    		user.setImage_name("default_image.png");
+>>>>>>> develop
 			}
 			//새로 입력받은 프로필 이미지가 null이 아니면 본래 저장소에 새로 저장
 			else {
@@ -152,12 +202,41 @@ public class UserServiceImpl implements UserService{
 		}catch(IOException e) {
 			throw new IOException();
 		}
-		return userDao.reviseUser(user);
+		
+		if(userDao.reviseUser(user) > 0) {
+			List<SNS> snsList = user.getSns_list();
+			userDao.deleteLinkedSNS(Integer.toString(user.getUser_id()));
+			for(SNS sns : snsList) {
+				if(sns.getSns_name() != null && sns.getSns_name() != "") {
+					userDao.insertLinkedSNS(Integer.toString(user.getUser_id()), sns.getSns_name(), sns.getSns_url());
+				}
+			}
+			return 1;
+		}else return 0;
 	}
 
 	@Override
-	public List<User> getFollowers(String uid) {
-		return userDao.getFollowers(uid);
+	public List<User> getFollowers(String uid, String baseUrl) {
+		List<User> users = userDao.getFollowers(uid);
+		for(User user : users) {
+			String imageName = user.getProfile_image();
+			if(imageName != null && !imageName.equals("")) {
+				user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
+			}
+		}
+		return users;
+	}
+
+	@Override
+	public List<User> getFollowings(String uid, String baseUrl) {
+		List<User> users = userDao.getFollowings(uid);
+		for(User user : users) {
+			String imageName = user.getProfile_image();
+			if(imageName != null && !imageName.equals("")) {
+				user.setImage_url(baseUrl+"/images/profile/"+user.getProfile_image());
+			}
+		}
+		return users;
 	}
 
 	@Override
@@ -240,7 +319,7 @@ public class UserServiceImpl implements UserService{
 		User user = userDao.getUser(uid);
 		String fileName = user.getProfile_image();
 		
-		if(fileName == null || fileName.equals("")) {//프로필 이미지 원래 없었음
+		if(fileName == null || fileName.equals("") || fileName.equals("default_image.png")) {//프로필 이미지 원래 없거나 기본이미지
 			return true;
 		}
 		
@@ -262,12 +341,13 @@ public class UserServiceImpl implements UserService{
 //    	String filePath = "/app/images/profile";
 		String oriName = profile.getOriginalFilename();
 		String extension = oriName.substring(oriName.lastIndexOf("."));//확장자
+		String timestamp = new Timestamp(System.currentTimeMillis()).toString();
 		
-		String fileName = "profile_image_"+userId+extension;//파일명
+		String fileName = "profile_image_"+timestamp+extension;//파일명
 		String fileFullPath = filePath+separator+fileName;
 		try {
 //    			파일 저장
-			profile.transferTo(new File(fileFullPath));//window
+			profile.transferTo(new File(fileFullPath));
 			user.setProfile_image(fileName);
 			
 //    			ImageIO.write(profile, extension, new File(fileFullPath));
@@ -309,6 +389,9 @@ public class UserServiceImpl implements UserService{
     		}catch(IOException e) {
     			e.printStackTrace();
     		}
+    	}else {
+    		user.setProfile_image("default_image.png");
+    		user.setImage_name("default_image.png");
     	}
     	
     	user.setPassword(SHA256.testSHA256(user.getPassword()));
@@ -316,6 +399,43 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
-	
+	@Override
+	public List<Filter> getFilterings(String uid) {
+		return userDao.getFilterings(uid);
+	}
 
+	@Override
+	public int removeFiltering(String filterId) {
+		return userDao.deleteFiltering(filterId);
+	}
+
+	@Override
+	public int addFiltering(Filter filter) {
+		return userDao.insertFiltering(filter);
+	}
+
+	@Override
+	public int plusBlogHits(String uid) {
+		return userDao.plusBlogHits(uid);
+	}
+
+	@Override
+	public int follow(String from_user, String to_user) {
+		return userDao.follow(from_user, to_user);
+	}
+
+	@Override
+	public int unfollow(String from_user, String to_user) {
+		return userDao.unfollow(from_user, to_user);
+	}
+	
+	@Override
+	public List<SNS> getLinkedSNS(String uid) {
+		return userDao.getAllLinkedSNS(uid);
+	}
+
+	@Override
+	public int addLinkedSNS(String uid, String name, String url) {
+		return userDao.insertLinkedSNS(uid, name, url);
+	}
 }

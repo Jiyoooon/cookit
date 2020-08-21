@@ -1,5 +1,5 @@
 <template>
-  <div id="signupForm">
+  <div id="acc_wrapper">
     <h2>회원가입</h2>
     <hr>
     <signupForm/>
@@ -17,9 +17,4 @@
 </script>
 
 <style>
-  #signupForm{
-    width: 50%;
-    display: block;
-    margin: 0px auto;
-  }
 </style>

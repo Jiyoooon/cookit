@@ -1,43 +1,21 @@
 <template>
   <div>
     <b-container fluid="lg" id ="login-container">
-      <b-row align-v = "center">
-        <b-col sm="2">
-          <label for="login-email">Email:</label>
-        </b-col>
-        <b-col sm="7">
-          <b-form-input 
-            id="login-email" 
-            v-model="loginData.email"
-            aria-describedby="input-email-feedback"
-            placeholder="email"
-            trim
-            >
+      <b-row align-v="center" align-h="center">
+        <b-col sm="2">이메일</b-col>
+        <b-col sm="8">
+          <b-form-input id="login-email" v-model="loginData.email">
           </b-form-input>
-          <b-form-invalid-feedback id="input-email-feedback">
-            영어와 숫자를 혼합하여 입력하여 주세요.(3자이상 8자이하)
-          </b-form-invalid-feedback>
         </b-col>
       </b-row>  
 
-      <b-row align-v = "center">
-        <b-col sm="2">
-          <label for="login-password">Password:</label>
-        </b-col>
-        <b-col sm="7">
-          <b-form-input
-            type="password" 
-            id="login-passwod" 
-            v-model="loginData.password"
-            aria-describedby="input-password-feedback"
-            placeholder="Password"
-            trim
-            >
+      <b-row align-v="center" align-h="center">
+        <b-col sm="2">비밀번호</b-col>
+        <b-col sm="8">
+          <b-form-input type="password" id="login-password" v-model="loginData.password" @keyup.enter="login(loginData)">
           </b-form-input>
-          <b-form-invalid-feedback id="input-password-feedback">
-            영문자와 숫자를 포함해 8글자 이상으로 입력하세요.
-          </b-form-invalid-feedback>
         </b-col>
+<<<<<<< HEAD
       </b-row>  
 
       <b-row align-v="center">
@@ -51,6 +29,14 @@
           <b-col sm="3">
             <b-button variant="info" @click="GoPasswordFind" block>비밀번호 찾기</b-button>
           </b-col>
+=======
+      </b-row>
+      <b-row><b-col></b-col></b-row>
+      <b-row align-v="center" align-h="center">
+        <div class="inline-block-btn btn-style1" @click="login(loginData)"><strong>로그인</strong></div>
+        <div class="inline-block-btn btn-style2" @click="GoEmailAuth">회원가입</div>
+        <div class="inline-block-btn btn-style2" @click="GoPasswordFind">비밀번호 찾기</div>
+>>>>>>> develop
       </b-row>    
     </b-container>
   </div>
@@ -80,7 +66,7 @@ export default {
 
 <style>
 #login-container{
-  margin-left: auto;
-  margin-right: auto;
+  width: 90%;
+  margin: 0px auto;
 }
 </style>

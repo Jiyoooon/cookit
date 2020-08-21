@@ -22,6 +22,7 @@
 	</properties>
 
 	<dependencies>
+<<<<<<< HEAD
 		<!-- jackson -->
 	<!-- 
 		<dependency>
@@ -51,6 +52,23 @@
 		    <version>2.9.2</version>
 		</dependency> -->
         
+=======
+		<!-- google speech-to-text api -->
+		<dependency>
+		    <groupId>com.google.cloud</groupId>
+		    <artifactId>libraries-bom</artifactId>
+		    <version>8.0.0</version>
+		    <type>pom</type>
+		    <scope>import</scope>
+	    </dependency>
+	    
+		<dependency>
+		    <groupId>com.google.cloud</groupId>
+		    <artifactId>google-cloud-speech</artifactId>
+		    <version>1.24.0</version>
+		</dependency>
+
+>>>>>>> develop
 	
 		<!-- file upload -->
 		<dependency>
@@ -111,7 +129,8 @@
 		<dependency>
 		    <groupId>org.projectlombok</groupId>
 		    <artifactId>lombok</artifactId>
-		    <version>1.16.10</version> <!--버전은 그때 맞춰서-->
+		    <version>1.18.2</version>
+		    <scope>provided</scope>
 		</dependency>
 		
 		<dependency>

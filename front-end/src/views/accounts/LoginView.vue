@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>로그인</h1>
+  <div id="acc_wrapper">
+    <h2>로그인</h2>
     <hr>
     <Login id='login-vue'/>
   </div>
@@ -18,9 +18,4 @@ export default {
 </script>
 
 <style>
-  #login-vue{
-    width: 50%;
-    display: block;
-    margin: 0px auto;
-  }
 </style>

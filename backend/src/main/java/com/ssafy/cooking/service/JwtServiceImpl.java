@@ -17,7 +17,6 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.netty.util.Constant;
 import lombok.extern.slf4j.Slf4j;
 
 @Component

@@ -1,18 +1,14 @@
 <template>
   <div>
-    <b-container fluid="lg" id ="passwordfind-container">
-      <b-row align-v = "center">
-        <b-col sm="1"></b-col>
-        <b-col sm="2">
-          <label for="input-email">E-mail</label>
-        </b-col>
-        <b-col sm="5">
+    <b-container fluid>
+      <b-row align-v="center">
+        <b-col sm="12" md="2">이메일</b-col>
+        <b-col sm="7" md="6">
           <b-form-input 
             id="input-email" 
             v-model="userEmail"
             :state="userEmailValid"
             aria-describedby="email-feedback"
-            placeholder="이메일"
             trim
             >
           </b-form-input>
@@ -20,12 +16,17 @@
             이메일을 확인해주세요.
           </b-form-invalid-feedback>
         </b-col>
-        <b-col sm="3">
-          <b-button v-if="!userEmailValid" disabled variant="primary" block>새 비밀번호 전송</b-button>
-          <b-button v-else variant="primary" @click='sendNewPassword(userEmail)'>새 비밀번호 전송</b-button>
+        <b-col sm="5" md="4">
+          <div v-if="!userEmailValid" class="block-btn btn-style3">새 비밀번호 전송</div>
+          <div v-else class="block-btn btn-style1" @click='sendNewPassword(userEmail)'>새 비밀번호 전송</div>
         </b-col>
-        <b-col sm="1"></b-col>
-      </b-row> 
+      </b-row>
+      <b-row><b-col></b-col></b-row>
+      <b-row align-v="center" align-h="center">
+        <b-col cols="4"></b-col>
+        <b-col cols="4"><div class="block-btn btn-style2"  @click="$router.go(-1)" block>취소</div></b-col>
+        <b-col cols="4"></b-col>
+      </b-row>
   </b-container>
   </div>
 </template>
