@@ -10,7 +10,7 @@
 	<div class="grid-item grid-item--secondary  grid-item--content">
 		<article class="article  article--align-right">
 			<a href="/myblog">
-			<h5 class="rotate rotate--right">My blog<br/> </h5></a>
+			<h5 class="rotate rotate--right" style="padding-bottom:1em;">My blog</h5></a>
 		</article>
 		<article class="article">
 			<h4><span>이제부터</span> <span>요리할 땐,</span></h4>
