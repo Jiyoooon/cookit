@@ -329,7 +329,7 @@ export default {
             step_image_url: null
           },)
         } else {
-          store._vm.$root.$bvModal.msgBoxOk('이전 스텝을 작성해주세요.', {
+          store._vm.$root.$bvModal.msgBoxOk('조리 과정이 비어있습니다. 먼저 작성해주세요.', {
             title: 'Confirmation',
             size: 'sm',
             buttonSize: 'sm',

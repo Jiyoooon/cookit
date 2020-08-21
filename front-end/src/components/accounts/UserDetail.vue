@@ -79,7 +79,7 @@
     <b-row>
       <b-col sm="3" class="mt-2">소개글</b-col>
       <b-col sm="9"><b-form-textarea
-      id="textarea" rows="3" max-rows="6"></b-form-textarea>
+       v-model="updateData.config.intro" id="textarea" rows="3" max-rows="6"></b-form-textarea>
       </b-col>
     </b-row>
 
@@ -152,7 +152,7 @@ export default {
           passwordAgain: null,
         },
         sns_base: [
-          'https://www.youtube.com/', 'https://www.instagram.com/', 'https://twitter.com/', 'https://www.facebook.com'
+          'http://www.youtube.com/', 'https://www.instagram.com/', 'https://twitter.com/', 'https://www.facebook.com'
         ],
         file:null,
         options: [
@@ -166,21 +166,22 @@ export default {
     computed: {
       ...mapState('accounts', ['authUser', 'updateTF']),
       passwordValid() {
-        const len = this.password.length
-        if (len == 0) return null;
+        if (!this.updateData.config.password) return null;
+        const len = this.updateData.config.password.length
         if (len < 8) return false;
         var numFlag = false, alphaFlag = false
         for (var i = 0; i < len; i++) {
-          const ch = this.password[i]
+          const ch = this.updateData.config.password[i]
           if ('0' <= ch && ch <= '9') numFlag = true
           else if ('a' <= ch && ch <= 'z') alphaFlag = true
         }
         return numFlag && alphaFlag
       },
       passwordAgainValid() {
-        const len = this.passwordAgain.length
-        if (len == 0) return null;
-        if(len > 0 && this.password == this.passwordAgain) return true;
+        if (!this.updateData.passwordAgain) return null;
+        const len = this.updateData.passwordAgain.length
+      
+        if(len > 0 && this.updateData.config.password == this.updateData.passwordAgain) return true;
         return false;
       },
       NickNameinValid(){
@@ -258,11 +259,12 @@ export default {
         })
         .catch((err) => {
           console.log(err.response)
-          // alert('!!!')
+          alert('!!!')
         })
       },
       checkPasswordValidValue() {
         if (!this.updateData.config.password && !this.updateData.passwordAgain) { // 적은 패스워드가 없고, 패스워드 재입력 값이 없으면
+          console.log("아무것도 적지않음")
           this.updateData.valid.password = true
         } else if(this.passwordValid && this.passwordAgainValid) {// 패스워드 재입력한 결과가 참이면
           this.updateData.valid.password = true
