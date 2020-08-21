@@ -68,6 +68,10 @@
                 <span v-else></span>
               </b-col>
             </b-row>
+
+            <b-row v-if="this.imageUrl!=''">
+              <div class="text-btn" style="margin: 0 auto;" @click="selectMainBasicImage()">사진 삭제</div>
+            </b-row>
           </b-container>
         </b-col>
       </b-row>
@@ -125,7 +129,13 @@ export default {
     methods: {
       ...mapMutations('editor', ['SET_UPDATETF']),
         setThumbnail(e) {
-					const file = e.target.files;
+          const file = e.target.files;
+          
+          if(!file){
+            this.imageUrl = this.recipe.main_image
+            return
+          }
+
 					if (file.length == 0) {
             this.imageUrl = this.selectedRecipe.main_image
             return;
@@ -142,6 +152,11 @@ export default {
             this.recipe.level = this.selectedRecipe.level
             this.recipe.tag = this.selectedRecipe.tag
             this.imageUrl = this.selectedRecipe.main_image
+        },
+        selectMainBasicImage(){
+          this.imageUrl = ''
+          this.recipe.main_image_file = ''
+          this.recipe.main_image = ''
         }
     },
     created() {
