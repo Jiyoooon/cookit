@@ -21,7 +21,7 @@
         <b-col lg="4">
 					<b-container fluid>
             <b-row>
-				<b-col cols="7">
+				<b-col cols="11">
 					<b-form-file enctype="multipart/form-data" v-model="step.step_image_file" accept="image/*" placeholder="사진 추가"
 						:id="index+''" @change="setThumbnail"></b-form-file>
 				</b-col>
