@@ -4,8 +4,6 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ssafy.cooking.dao.RecipeDao">
-<<<<<<< HEAD
-=======
 	<insert id = "addRecipe">
 		INSERT INTO Recipe(
 						recipe_user, category_id, title, description, 
@@ -105,7 +103,6 @@
 		LIMIT 6
 	</select>
 	
->>>>>>> develop
 	<select id="getRecipes" resultType="Recipe">
 		SELECT r.recipe_id, r.recipe_user, u.nickname as recipe_user_name, u.profile_image as recipe_user_profileImage,
 		r.category_id, r.title, r.description, r.main_image, r.servings, r.cooking_time, r.level,
@@ -189,14 +186,11 @@
 		WHERE recipe_id = #{recipe_id}
 	</select>
 	
-<<<<<<< HEAD
-=======
 	<delete id="deleteRecipe">
 		DELETE FROM Recipe
 		WHERE recipe_id = #{recipe_id} AND recipe_user = #{uid}
 	</delete>
 	
->>>>>>> develop
 	<select id="getCommnets" resultType="Comment">
 		SELECT comment_id, comment_user as comment_user_id, u.nickname as comment_user_name,
 		recipe_id, c.description, u.profile_image as comment_user_profileImage,
@@ -218,8 +212,6 @@
 						, #{comment.description}
 					)
 	</insert>
-<<<<<<< HEAD
-=======
 	
 	<update id="modifyComment">
 		UPDATE Comments
@@ -399,5 +391,4 @@
 	<select id="getCookingStep" resultType="CookingStep" parameterType="int">
 		SELECT * FROM Cooking_steps WHERE recipe_id = #{recipe_id} and cooking_steps_id = #{step_id}
 	</select>
->>>>>>> develop
 </mapper>

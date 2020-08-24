@@ -22,7 +22,6 @@
 	</properties>
 
 	<dependencies>
-<<<<<<< HEAD
 		<!-- jackson -->
 	<!-- 
 		<dependency>
@@ -52,7 +51,6 @@
 		    <version>2.9.2</version>
 		</dependency> -->
         
-=======
 		<!-- google speech-to-text api -->
 		<dependency>
 		    <groupId>com.google.cloud</groupId>
@@ -68,7 +66,6 @@
 		    <version>1.24.0</version>
 		</dependency>
 
->>>>>>> develop
 	
 		<!-- file upload -->
 		<dependency>

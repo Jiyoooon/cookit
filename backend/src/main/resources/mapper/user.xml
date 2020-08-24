@@ -24,11 +24,8 @@
 						<if test="intro != null and intro != ''">
 							, intro
 						</if>
-<<<<<<< HEAD
-=======
 						, image_name
 						, hits
->>>>>>> develop
 						, create_date
 					) values(
 						#{password}
@@ -40,11 +37,8 @@
 						<if test="intro != null and intro != ''">
 							, #{intro}
 						</if>
-<<<<<<< HEAD
-=======
 						, #{image_name}
 						, 0
->>>>>>> develop
 						, now()
 					)
 	</insert>
@@ -62,11 +56,7 @@
 	</delete>
 	
 	<select id="getUser" resultType="User">
-<<<<<<< HEAD
-		SELECT user_id, email, nickname, profile_image, intro, create_date
-=======
 		SELECT user_id, email, nickname, profile_image, intro, image_name, hits, start_page, create_date
->>>>>>> develop
 		FROM User
 		WHERE user_id = #{uid}
 	</select>
