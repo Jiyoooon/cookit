@@ -24,15 +24,12 @@ public interface UserDao {
 	public List<User> getFollowings(String uid);
 	public List<Comment> getCommnets(String uid);
 	public int checkPassword(String uid, String password);
-	public int updatePassword(String uid, String password);
+	public void updatePasswordByEmail(String email, String password);
 	public int isConfirmedEmail(String email);
 	public int insertEmailConfirm(String email, String code);
 	public int checkConfirmCode(EmailConfirm emailConfirm);
 	public void deleteConfirmCode(String email);
 	public int selectNextUserId();
-<<<<<<< HEAD
-	public void updatePasswordByEmail(String email, String password);
-=======
 	public List<Filter> getFilterings(String uid);
 	public int insertFiltering(Filter filter);
 	public int deleteFiltering(String id);
@@ -47,5 +44,4 @@ public interface UserDao {
 	public int deleteLinkedSNS(String uid);
 //	public void initialSNS(String uid, String[] snsList);
 	public List<SNS> getAllSNS();
->>>>>>> develop
 }

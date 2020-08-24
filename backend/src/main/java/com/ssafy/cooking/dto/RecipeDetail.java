@@ -1,16 +1,9 @@
 package com.ssafy.cooking.dto;
 
-<<<<<<< HEAD
-import java.util.List;
-
-public class RecipeDetail {
-	private Recipe recipe;
-=======
 import java.util.Arrays;
 import java.util.List;
 
 public class RecipeDetail extends Recipe {
->>>>>>> develop
 	private List<Ingredient> ingredients;
 	private List<CookingStep> cookingStep;
 	

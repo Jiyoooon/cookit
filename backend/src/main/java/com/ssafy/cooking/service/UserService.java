@@ -17,7 +17,6 @@ public interface UserService {
 	public boolean isDupNickname(String nickname);
 	
 	public User signin(String email, String password);
-	public int signup(User user);
 	public int delete(String uid) throws IOException;
 	public int reviseUser(MultipartFile profile, User user) throws IOException;
 	public List<User> getFollowers(String uid, String baseUrl);
@@ -25,16 +24,10 @@ public interface UserService {
 	public List<Comment> getCommnets(String uid);
 	public boolean checkPassword(String uid, String password);
 	public void sendTmpPasswordEmail(String password, String email) throws Exception;
-	public boolean updatePassword(String string, String password);
 	public boolean isConfirmedEmail(String email);
 	public int addEmailConfirm(String email, String code);
 	public boolean checkConfirmCode(EmailConfirm emailConfirm);
 	public void removeConfirmCode(String email);
-<<<<<<< HEAD
-	public int signup2(MultipartFile profile, User user) throws IOException;
-	public HashMap<String, Object> getUserResource(String uid) throws IOException;
-	public User getUser(String uid);
-=======
 	public int signup(MultipartFile profile, User user) throws IOException;
 	public User getUser(String uid, String baseUrl);
 	public List<Filter> getFilterings(String uid);
@@ -47,5 +40,4 @@ public interface UserService {
 	
 	public List<SNS> getLinkedSNS(String uid);
 	public int addLinkedSNS(String uid, String name, String url);
->>>>>>> develop
 }

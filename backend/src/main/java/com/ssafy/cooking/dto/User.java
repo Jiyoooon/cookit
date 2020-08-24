@@ -34,9 +34,6 @@ public class User implements Serializable{
 	private String sns_token_id;
 	private String sns_connect_date;
 	
-<<<<<<< HEAD
-	private byte[] image;
-=======
 	private String image_url;
 	private String image_name;
 	
@@ -54,7 +51,6 @@ public class User implements Serializable{
 	public void setImage_name(String image_name) {
 		this.image_name = image_name;
 	}
->>>>>>> develop
 	public int getUser_id() {
 		return user_id;
 	}
@@ -139,12 +135,11 @@ public class User implements Serializable{
 	public void setSns_connect_date(String sns_connect_date) {
 		this.sns_connect_date = sns_connect_date;
 	}
-	
-	public byte[] getImage() {
-		return image;
+	public String getImage_url() {
+		return image_url;
 	}
-	public void setImage(byte[] image) {
-		this.image = image;
+	public void setImage_url(String image_url) {
+		this.image_url = image_url;
 	}
 	@Override
 	public String toString() {
@@ -152,16 +147,8 @@ public class User implements Serializable{
 				+ ", nickname=" + nickname + ", intro=" + intro + ", start_page=" + start_page + ", profile_image="
 				+ profile_image + ", hits=" + hits + ", create_date=" + create_date + ", update_date=" + update_date
 				+ ", sns_type=" + sns_type + ", sns_token_id=" + sns_token_id + ", sns_connect_date=" + sns_connect_date
-<<<<<<< HEAD
-				+ ", image=" + Arrays.toString(image) + "]";
-=======
 				+ ", image_url=" + image_url + ", image_name=" + image_name + ", sns_list=" + sns_list + "]";
->>>>>>> develop
 	}
-	
-	
-	
-	
 	
 	
 }
